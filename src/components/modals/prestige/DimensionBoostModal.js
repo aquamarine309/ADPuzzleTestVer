@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     handleYesClick() {
-      if (!DimBoost.purchasedBoosts > 0) return;
+      if (DimBoost.purchasedBoosts > 0) return;
       requestDimensionBoost(this.bulk);
       EventHub.ui.offAll(this);
     }
