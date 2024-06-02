@@ -1,4 +1,4 @@
-import TWEEN from "../modules/Tween.js";
+import TWEEN from "../modules/tween.js";
 
 import { ElectronRuntime, SteamRuntime } from "./steam/index.js";
 
