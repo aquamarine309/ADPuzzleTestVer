@@ -119,7 +119,7 @@ export const normalChallenges = [
     description: () => `there is normal matter which rises once you have at least ${formatInt(1)} 2nd Antimatter ` +
       "Dimension. If it exceeds your antimatter, it will Dimension Boost without giving the bonus.",
     name: "Automated Antimatter Galaxies",
-    reward: "Antimatter Galaxies Autobuyer",
+    reward: "Antimatter Galaxies and their Autobuyer",
     lockedAt: DC.D16,
   },
   {

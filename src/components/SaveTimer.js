@@ -3,9 +3,6 @@ export default {
   data() {
     return {
       currentTime: 0,
-      cloudSaveEnabled: false,
-      lastLocalSave: 0,
-      lastCloudSave: 0,
       showTimeSinceSave: false,
       saveDisabled: false,
     };

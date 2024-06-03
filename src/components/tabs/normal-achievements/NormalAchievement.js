@@ -29,10 +29,13 @@ export default {
       realityUnlocked: false,
       garbleTimer: 0,
       garbleKey: 0,
-      achievementTime: 0,
+      achievementTime: 0
     };
   },
   computed: {
+    showBtn() {
+      return this.buttonAch && this.buttonAch.id === this.id;
+    },
     id() {
       return this.achievement.id;
     },
@@ -103,6 +106,9 @@ export default {
       return this.achievementTime === 0
         ? "Given at Speedrun start"
         : `Achieved after ${TimeSpan.fromMilliseconds(this.achievementTime).toStringShort()}`;
+    },
+    buttonAch() {
+      return Puzzle.buttonAch;
     }
   },
   beforeDestroy() {
@@ -167,6 +173,10 @@ export default {
         else modified += raw[i];
       }
       return modified;
+    },
+    handleClick() {
+      if (!this.showBtn) return;
+      this.buttonAch.clickFn();
     }
   },
   template: `
@@ -175,6 +185,7 @@ export default {
     :style="styleObject"
     @mouseenter="onMouseEnter"
     @mouseleave="onMouseLeave"
+    @click="handleClick"
     data-v-normal-achievement
   >
     <HintText
@@ -226,6 +237,11 @@ export default {
           data-v-normal-achievement
         >
           {{ achievedTime }}
+        </div>
+        <div v-if="showBtn">
+          <button class="c-achievement-button">
+            {{ buttonAch.text }}
+          </button>
         </div>
       </template>
     </div>

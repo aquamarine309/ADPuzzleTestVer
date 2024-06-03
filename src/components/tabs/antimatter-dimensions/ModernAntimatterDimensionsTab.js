@@ -29,12 +29,18 @@ export default {
       hasContinuum: false,
       isContinuumActive: false,
       multiplierText: "",
+      randomDimOrder: false
     };
   },
   computed: {
     sacrificeTooltip() {
       return `Boosts 8th Antimatter Dimension by ${formatX(this.sacrificeBoost, 2, 2)}`;
     },
+    range() {
+      const base = Array.range(1, 8);
+      if (this.randomDimOrder) return base.sort(() => Math.random() - 0.5);
+      return base;
+    }
   },
   methods: {
     maxAll() {
@@ -80,6 +86,7 @@ export default {
       this.buy10Mult.copyFrom(AntimatterDimensions.buyTenMultiplier);
 
       this.multiplierText = `Buy 10 Dimension purchase multiplier: ${formatX(this.buy10Mult, 2, 2)}`;
+      this.randomDimOrder = Puzzle.randomDimOrder;
       if (!isSacrificeUnlocked) return;
       this.isSacrificeAffordable = Sacrifice.canSacrifice;
       this.currentSacrifice.copyFrom(Sacrifice.totalBoost);
@@ -123,7 +130,7 @@ export default {
     <TickspeedRow />
     <div class="l-dimensions-container">
       <AntimatterDimensionRow
-        v-for="tier in 8"
+        v-for="tier in range"
         :key="tier"
         :tier="tier"
       />

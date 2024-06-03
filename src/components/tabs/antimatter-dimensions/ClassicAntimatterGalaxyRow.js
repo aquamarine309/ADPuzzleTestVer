@@ -91,6 +91,8 @@ export default {
   },
   methods: {
     update() {
+      this.showGalaxy = NormalChallenge(11).isCompleted;
+      if (!this.showGalaxy) return;
       this.type = Galaxy.type;
       this.galaxies.normal = player.galaxies + GalaxyGenerator.galaxies;
       this.galaxies.replicanti = Replicanti.galaxies.total;
@@ -117,6 +119,7 @@ export default {
   template: `
   <div
     class="c-dimension-row c-antimatter-dim-row c-antimatter-prestige-row"
+    v-if="showGalaxy"
     data-v-assic-antimatter-galaxy-row
   >
     <div

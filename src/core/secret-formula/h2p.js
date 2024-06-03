@@ -228,7 +228,7 @@ Play entry will update itself with additional entries for new resources as you e
 <br>
 - <b>AM</b>: Antimatter<br>
 - <b>AD</b>: Antimatter Dimension<br>
-- <b>AG</b>: Antimatter Galaxy<br>
+- <b>AG</b>: <b onclick="Puzzle.tryBuyingFirstGalaxy()">Antimatter Galaxy</b><br>
 ${PlayerProgress.infinityUnlocked() ? "- <b>IP</b>: Infinity Point<br>" : ""}
 ${PlayerProgress.infinityUnlocked() ? "- <b>NC</b>: Normal Challenge<br>" : ""}
 ${PlayerProgress.infinityUnlocked() ? "- <b>IC</b>: Infinity Challenge<br>" : ""}

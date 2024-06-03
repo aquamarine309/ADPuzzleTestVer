@@ -132,8 +132,9 @@ function galaxyReset() {
   EventHub.dispatch(GAME_EVENT.GALAXY_RESET_AFTER);
 }
 
-export function manualRequestGalaxyReset(bulk) {
+export function manualRequestGalaxyReset(bulk, requiresChall = true) {
   if (!Galaxy.canBeBought || !Galaxy.requirement.isSatisfied) return;
+  if (requiresChall && !NormalChallenge(11).isCompleted) return;
   if (GameEnd.creditsEverClosed) return;
   if (RealityUpgrade(7).isLockingMechanics && player.galaxies > 0) {
     RealityUpgrade(7).tryShowWarningModal();

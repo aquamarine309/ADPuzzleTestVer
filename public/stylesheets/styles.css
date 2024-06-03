@@ -9291,3 +9291,13 @@ input.o-automator-block-input {
 .c-dim-boost-text {
   text-shadow: 0 0 0.1rem var(--color-text);
 }
+
+.c-achievement-button {
+  border: 0.2rem solid var(--color-accent);
+  background-color: var(--color-base);
+  padding: 0.2rem;
+  margin: 0.1rem;
+  color: var(--color-accent);
+  border-radius: 0.5rem;
+  font-family: Typewriter, sans-serif;
+}

@@ -23,6 +23,7 @@ export default {
         remote: null,
       },
       hasTutorial: false,
+      showGalaxy: false
     };
   },
   computed: {
@@ -87,6 +88,8 @@ export default {
   },
   methods: {
     update() {
+      this.showGalaxy = NormalChallenge(11).isCompleted;
+      if (!this.showGalaxy) return;
       this.type = Galaxy.type;
       this.galaxies.normal = player.galaxies + GalaxyGenerator.galaxies;
       this.galaxies.replicanti = Replicanti.galaxies.total;
@@ -117,7 +120,10 @@ export default {
     },
   },
   template: `
-  <div class="reset-container galaxy">
+  <div
+    v-if="showGalaxy"
+    class="reset-container galaxy"
+  >
     <h4>{{ typeName }} ({{ sumText }})</h4>
     <span>Requires: {{ formatInt(requirement.amount) }} {{ dimName }} Antimatter D</span>
     <span v-if="hasIncreasedScaling">{{ costScalingText }}</span>

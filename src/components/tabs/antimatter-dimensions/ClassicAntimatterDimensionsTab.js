@@ -25,8 +25,16 @@ export default {
       buy10Mult: new Decimal(0),
       currentSacrifice: new Decimal(0),
       hasRealityButton: false,
-      multiplierText: ""
+      multiplierText: "",
+      randomDimOrder: false
     };
+  },
+  computed: {
+    range() {
+      const base = Array.range(1, 8);
+      if (this.randomDimOrder) return base.sort(() => Math.random() - 0.5);
+      return base;
+    }
   },
   methods: {
     update() {
@@ -40,6 +48,7 @@ export default {
         ? ` | Dimensional Sacrifice multiplier: ${formatX(this.currentSacrifice, 2, 2)}`
         : "";
       this.multiplierText = `Buy 10 Dimension purchase multiplier: ${formatX(this.buy10Mult, 2, 2)}${sacText}`;
+      this.randomDimOrder = Puzzle.randomDimOrder;
     },
     quickReset() {
       softReset(-1, true, true);
@@ -52,7 +61,7 @@ export default {
     <TickspeedRow />
     <div class="l-dimensions-container">
       <AntimatterDimensionRow
-        v-for="tier in 8"
+        v-for="tier in range"
         :key="tier"
         :tier="tier"
       />
