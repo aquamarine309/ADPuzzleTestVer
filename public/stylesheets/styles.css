@@ -9318,6 +9318,7 @@ input.o-automator-block-input {
 
 .l-big-crunch-containter {
   margin: 2rem;
+  width: 100%;
 }
 
 .o-resource-circle-node {

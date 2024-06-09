@@ -46,7 +46,7 @@ class LogicUpgradeState extends BitPurchasableMechanicState {
     this.hasPlayerLock = false;
   }
   
-  onPurchase() {
+  onPurchased() {
     const id = this.id;
     if (id <= 7) {
       GameCache.invalidate();
@@ -63,7 +63,7 @@ export const LogicUpgrade = id => LogicUpgradeState.index[id];
 
 export const LogicUpgrades = {
   /**
-   * @type {(RealityUpgradeState|RebuyableRealityUpgradeState)[]}
+   * @type {LogicUpgradeState[]}
    */
   all: LogicUpgradeState.index.compact()
 };
