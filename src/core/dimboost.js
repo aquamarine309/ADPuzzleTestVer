@@ -109,7 +109,7 @@ export class DimBoost {
     } else if (tier === 8) {
       amount += Math.round((targetResets - 5) * (15 - discount));
     } else if (tier === Puzzle.maxTier) {
-      amount += Math.round((targetResets - tier) * (15 - discount));
+      amount += Math.round((targetResets - 1) * (15 - discount));
     }
     if (EternityChallenge(5).isRunning) {
       amount += Math.pow(targetResets - 1, 3) + targetResets - 1;
