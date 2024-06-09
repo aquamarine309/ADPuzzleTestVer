@@ -19,7 +19,8 @@ export function updateNormalAndInfinityChallenges(diff) {
   }
 
   if (NormalChallenge(3).isRunning) {
-    player.chall3Pow = player.chall3Pow.times(DC.D1_0025.pow(diff * (Math.log(DimBoost.purchasedBoosts + 1) + 1))).clampMax(DC.E200);
+    const multiplier = Math.pow(Math.log(DimBoost.purchasedBoosts * Currency.infinities.value.add(1).ln() + 1), 1.3) + 1;
+    player.chall3Pow = player.chall3Pow.times(DC.D1_0025.pow(diff * multiplier)).clampMax(DC.E200.pow(1 / Math.pow(Puzzle.maxTier, 2)));
   }
 
   if (NormalChallenge(2).isRunning) {

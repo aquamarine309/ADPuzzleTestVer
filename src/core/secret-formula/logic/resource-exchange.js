@@ -7,7 +7,7 @@ export const resourceExchange = {
     symbol: "Ω",
     currency: () => Currency.antimatter,
     value: value => value.pow(0.05).times(value.add(1).log10()).times(0.1).add(1),
-    min: DC.D1
+    min: DC.E1
   },
   "infinityPoints": {
     id: 1,

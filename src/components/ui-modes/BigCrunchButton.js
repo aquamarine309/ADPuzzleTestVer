@@ -5,14 +5,16 @@ export default {
       isModern: false,
       smallCrunch: false,
       shouldDisplay: false,
-      totalAmount: 4
+      totalAmount: 0
     };
   },
   computed: {
     correctIndex() {
+      if (this.totalAmount === 1) return 0;
       return Math.floor(Math.random() * this.totalAmount);
     },
     buttonTexts() {
+      if (this.totalAmount === 1) return ["Big Crunch"];
       const correct = "Big Crunch";
       const incorrect = ["Infinity", "Big Lunch", "Big Cunch", "Big Infinity", "Eternity", "Bit Infinity", "Bit Crunch"];
       const result = [];
@@ -36,6 +38,9 @@ export default {
       if (!this.shouldDisplay) return;
       this.isModern = player.options.newUI;
       this.smallCrunch = Time.bestInfinityRealTime.totalMinutes <= 1;
+      if (this.totalAmount === 0) {
+        this.totalAmount = this.smallCrunch ? 1 : 4;
+      }
     },
     handleClick(index) {
       if (index === this.correctIndex) {

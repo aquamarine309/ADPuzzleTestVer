@@ -49,7 +49,9 @@ window.player = {
       })),
       unlocked: 0
     },
-    spentPoints: DC.D0
+    spentPoints: DC.D0,
+    upgradeBits: 0,
+    upgReqs: 0
   },
   sacrificed: DC.D0,
   achievementBits: Array.repeat(0, 17),
@@ -849,6 +851,7 @@ window.player = {
       studies: true,
       glyphEffectDots: true,
       realityUpgrades: true,
+      logicUpgrades: true,
       perks: true,
       alchemy: true,
       glyphInfoType: GlyphInfo.types.NONE,

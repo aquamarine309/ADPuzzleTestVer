@@ -2,6 +2,7 @@ import ResourceExchangeLayout from "./ResourceExchangeLayout.js";
 import ResourceInfo from "./ResourceInfo.js";
 import ExchangeButton from "./ExchangeButton.js";
 import LevelUpButton from "./LevelUpButton.js"
+import LogicUpgradeButton from "./LogicUpgradeButton.js";
 
 export default {
   name: "ResourceExchangeTab",
@@ -9,7 +10,8 @@ export default {
     ResourceExchangeLayout,
     ResourceInfo,
     ExchangeButton,
-    LevelUpButton
+    LevelUpButton,
+    LogicUpgradeButton
   },
   data() {
     return {
@@ -21,7 +23,8 @@ export default {
   computed: {
     currentResource() {
       return ResourceExchange.all[this.resourceId];
-    }
+    },
+    upgrades: () => LogicUpgrades.all,
   },
   methods: {
     update() {
@@ -32,12 +35,14 @@ export default {
       if (this.resourceId === index) return;
       this.resourceId = index;
       GameUI.update();
+    },
+    id(row, column) {
+      return (row - 1) * 5 + column - 1;
     }
   },
   template: `
   <div>
     <ResourceInfo :resource="currentResource" />
-    <br>
     <div class="c-resource-exchange-layout-container">
       <ResourceExchangeLayout @toggle="handleToggle" />
       <div class="c-resource-exchange-right-container">
@@ -52,6 +57,18 @@ export default {
           <LevelUpButton />
         </div>
       </div>
+    </div>
+    <br>
+    <div
+      v-for="row in 1"
+      :key="row"
+      class="l-logic-upgrade-grid__row"
+    >
+      <LogicUpgradeButton
+        v-for="column in 5"
+        :key="id(row, column)"
+        :upgrade="upgrades[id(row, column)]"
+      />
     </div>
   </div>
   `

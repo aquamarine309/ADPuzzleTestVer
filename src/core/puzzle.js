@@ -4,7 +4,7 @@ export const Puzzle = {
   },
   get maxTier() {
     if (!PlayerProgress.infinityUnlocked() && player.hasDLC) return 8;
-    return 1;
+    return GameCache.maxTier.value;
   },
   get randomDimOrder() {
     return DimBoost.purchasedBoosts === 4 && player.galaxies === 0 && !PlayerProgress.infinityUnlocked();

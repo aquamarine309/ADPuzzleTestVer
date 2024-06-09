@@ -2186,12 +2186,14 @@ br {
   top: -1.95rem;
 }
 
-.l-hint-text--reality-upgrade {
+.l-hint-text--reality-upgrade,
+.l-hint-text--logic-upgrade {
   top: -1.7rem;
   font-size: 1.25rem;
 }
 
-.c-hint-text--reality-upgrade {
+.c-hint-text--reality-upgrade,
+.c-hint-text--logic-upgrade {
   font-weight: bold;
   color: var(--color-text);
   text-shadow: none;
@@ -9444,4 +9446,157 @@ input.o-automator-block-input {
 
 .c-lp-text-row {
   font-size: 1.4rem;
+}
+
+.l-logic-upgrade-grid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  margin-top: 1.2rem;
+}
+
+.l-logic-upgrade-grid__row {
+  display: flex;
+  flex-direction: row;
+}
+
+.l-logic-upgrade-btn {
+  display: flex;
+  flex-direction: column;
+  width: 18rem;
+  height: 10rem;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+.c-logic-upgrade-btn {
+  text-align: center;
+  font-family: Typewriter, serif;
+  font-size: 1rem;
+  color: #5C8E20;
+  background-color: var(--color-background);
+  border: var(--var-border-width, 0.2rem) solid #5C8E20;
+  border-radius: var(--var-border-radius, 0.5rem);
+  transition-duration: 0.15s;
+  cursor: pointer;
+}
+
+.s-base--dark .c-logic-upgrade-btn {
+  color: #ffffff;
+}
+
+.c-logic-upgrade-btn__requirement {
+  font-weight: bold;
+}
+
+.c-logic-upgrade-btn:hover {
+  color: black;
+  background-color: #ffffff;
+}
+
+.c-logic-upgrade-btn--unavailable {
+  color: #ffffff;
+  background-color: var(--color-glyph-undo-disabled);
+  cursor: default;
+}
+
+.c-logic-upgrade-btn--unavailable:hover {
+  color: #ffffff;
+  background-color: var(--color-glyph-undo-disabled);
+}
+
+.c-logic-upgrade-btn--bought {
+  color: #ffffff;
+  background-color: var(--color-logic);
+  border-color: #094e0b;
+  cursor: default;
+}
+
+.c-logic-upgrade-btn--bought:hover {
+  color: #ffffff;
+  background-color: var(--color-logic);
+}
+
+.c-logic-upgrade-btn--possible {
+  /* Text color gets inherited from other pseudo-classes; so we use !important here in order to ensure good contrast
+    specifically on logic and imaginary upgrades, the only upgrades which use this and the related --locked below */
+  color: black !important;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      #A2A229,
+      #A2A229 3rem,
+      #919122 3rem,
+      #919122 6rem
+    );
+  cursor: default;
+}
+
+.c-logic-upgrade-btn--possible:hover {
+  /* This is actually a solid color, but it flickers on hover if we don't make it a linear-gradient */
+  background: linear-gradient(0deg, #919122, #919122);
+}
+
+.c-logic-upgrade-btn--locked {
+  color: white !important;
+  background: #952020;
+  background-image:
+    linear-gradient(45deg, #802222 25%, transparent 25%),
+    linear-gradient(135deg, #802222 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #802222 75%),
+    linear-gradient(135deg, transparent 75%, #802222 75%);
+  background-position: 0 0, 2rem 0, 2rem -2rem, 0 2rem;
+  background-size: 4rem 4rem;
+  cursor: default;
+}
+
+.c-logic-upgrade-btn--locked:hover {
+  background-color: #802222;
+}
+
+.o-requirement-lock {
+  position: absolute;
+  font-size: 5rem;
+  padding: 0.5rem 1.8rem;
+  color: black;
+  opacity: 0.4;
+  user-select: none;
+  pointer-events: none;
+}
+
+.c-logic-upgrade-btn--black-hole-unlock {
+  text-shadow: -0.1rem 0.1rem 0.3rem #ffffff;
+  margin: auto;
+}
+
+.t-dark .c-logic-upgrade-btn--unavailable {
+  color: #ffffff;
+  background-color: #37474f;
+}
+
+.t-s6.c-logic-upgrade-btn:hover,
+.t-s10.c-logic-upgrade-btn:hover {
+  background-color: #ffffff;
+}
+
+.t-s6.c-logic-upgrade-btn--unavailable:hover,
+.t-s10.c-logic-upgrade-btn--unavailable:hover {
+  color: #ffffff;
+  background-color: #656565;
+}
+
+.t-s6.c-logic-upgrade-btn--bought,
+.t-s10.c-logic-upgrade-btn--bought {
+  background-color: var(--color-logic);
+  border-color: #094e0b;
+}
+
+.t-s6.c-logic-upgrade-btn--bought:hover,
+.t-s10.c-logic-upgrade-btn--bought:hover {
+  color: #ffffff;
+  background-color: var(--color-logic);
 }
