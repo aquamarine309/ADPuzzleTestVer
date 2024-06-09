@@ -477,3 +477,14 @@ Currency.galaxyGeneratorGalaxies = new class extends NumberCurrency {
     player.celestials.pelle.galaxyGenerator.spentGalaxies += spent;
   }
 }();
+
+Currency.logicPoints = new class extends DecimalCurrency {
+  get value() {
+    return GameCache.logicPoints.value.minus(player.logic.spentPoints);
+  }
+  
+  set value(value) {
+    const spent = GameCache.logicPoints.value.minus(value);
+    player.logic.spentPoints = player.logic.spentPoints.add(spent);
+  }
+}

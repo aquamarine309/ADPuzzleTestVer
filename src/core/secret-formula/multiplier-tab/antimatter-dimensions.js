@@ -357,7 +357,7 @@ export const AD = {
   iap: {
     name: "Shop Tab Purchases",
     multValue: dim => {
-      const mult = ShopPurchase.dimPurchases.currentMult * ShopPurchase.allDimPurchases.currentMult;
+      const mult = ShopPurchase.dimPurchases.currentMult;
       return Decimal.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
     },
     isActive: () => ShopPurchaseData.totalSTD > 0 && !EternityChallenge(11).isRunning,

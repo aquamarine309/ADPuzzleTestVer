@@ -140,6 +140,9 @@ export function bigCrunchResetValues(enteringAntimatterChallenge) {
   // I don't think this Math.clampMax is technically needed, but if we add another source
   // of keeping Replicanti Galaxies then it might be.
   player.replicanti.galaxies = Math.clampMax(remainingGalaxies, currentReplicantiGalaxies);
+  
+  player.showCrunchFormat.this = player.showCrunchFormat.next;
+  player.showCrunchFormat.next = false;
 }
 
 function bigCrunchCheckUnlocks() {

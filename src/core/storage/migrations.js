@@ -422,6 +422,11 @@ export const migrations = {
     },
     50: player => {
       player.options.hiddenSubtabBits[10] = 1;
+    },
+    51: player => {
+      //Add "Logic" Tab
+      player.options.hiddenSubtabBits.push(0);
+      player.options.lastOpenSubtab.push(0);
     }
   },
 

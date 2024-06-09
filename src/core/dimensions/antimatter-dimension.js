@@ -41,7 +41,8 @@ export function antimatterDimensionCommonMultiplier() {
     InfinityChallenge(8),
     EternityChallenge(10),
     AlchemyResource.dimensionality,
-    PelleUpgrade.antimatterDimensionMult
+    PelleUpgrade.antimatterDimensionMult,
+    ResourceExchangeUpgrade
   );
 
   multiplier = multiplier.dividedByEffectOf(InfinityChallenge(6));
@@ -205,7 +206,7 @@ export function buyOneDimension(tier) {
 
   const cost = dimension.cost;
   
-  if (!Puzzle.hasDLC && tier > 1) return false;
+  if (!Puzzle.hasDLC(tier)) return false;
   if (tier === 8 && Enslaved.isRunning && AntimatterDimension(8).bought >= 1) return false;
 
   dimension.currencyAmount = dimension.currencyAmount.minus(cost);
@@ -230,7 +231,7 @@ export function buyManyDimension(tier) {
   const dimension = AntimatterDimension(tier);
   if (Laitela.continuumActive || !dimension.isAvailableForPurchase || !dimension.isAffordableUntil10) return false;
   const cost = dimension.costUntil10;
-  if (!Puzzle.hasDLC && tier > 1) return false;
+  if (!Puzzle.hasDLC(tier)) return false;
   if (tier === 8 && Enslaved.isRunning) return buyOneDimension(8);
 
   dimension.currencyAmount = dimension.currencyAmount.minus(cost);
@@ -249,7 +250,7 @@ export function buyAsManyAsYouCanBuy(tier) {
   const howMany = dimension.howManyCanBuy;
   const cost = dimension.cost.times(howMany);
 
-  if (!Puzzle.hasDLC && tier > 1) return false;
+  if (!Puzzle.hasDLC(tier)) return false;
   if (tier === 8 && Enslaved.isRunning) return buyOneDimension(8);
 
   dimension.currencyAmount = dimension.currencyAmount.minus(cost);
@@ -294,7 +295,7 @@ export function buyMaxDimension(tier, bulk = Infinity) {
   const goal = Player.infinityGoal;
   if (dimension.cost.gt(goal) && Player.isInAntimatterChallenge) return;
   
-  if (!Puzzle.hasDLC && tier > 1) return false;
+  if (!Puzzle.hasDLC(tier)) return false;
   if (tier === 8 && Enslaved.isRunning) {
     buyOneDimension(8);
     return;
@@ -478,7 +479,7 @@ class AntimatterDimensionState extends DimensionState {
     if (!this.isAvailableForPurchase) return 0;
     // Nameless limits dim 8 purchases to 1 only
     // Continuum should be no different
-    if (!Puzzle.hasDLC && tier > 1) return false;
+    if (!this.hasDLC) return 0;
     if (this.tier === 8 && Enslaved.isRunning) return 1;
     // It's safe to use dimension.currencyAmount because this is
     // a dimension-only method (so don't just copy it over to tickspeed).
@@ -522,7 +523,7 @@ class AntimatterDimensionState extends DimensionState {
   }
   
   get hasDLC() {
-    return Puzzle.hasDLC || this.tier === 1;
+    return Puzzle.hasDLC(this.tier);
   }
 
   /**

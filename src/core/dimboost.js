@@ -46,7 +46,7 @@ export class DimBoost {
   }
 
   static get maxDimensionsUnlockable() {
-    return NormalChallenge(10).isRunning ? 6 : 8;
+    return Math.min(NormalChallenge(10).isRunning ? 6 : 8, Puzzle.maxTier);
   }
 
   static get canUnlockNewDimension() {
@@ -108,6 +108,8 @@ export class DimBoost {
       amount += Math.round((targetResets - 3) * (20 - discount));
     } else if (tier === 8) {
       amount += Math.round((targetResets - 5) * (15 - discount));
+    } else if (tier === Puzzle.maxTier) {
+      amount += Math.round((targetResets - tier) * (15 - discount));
     }
     if (EternityChallenge(5).isRunning) {
       amount += Math.pow(targetResets - 1, 3) + targetResets - 1;

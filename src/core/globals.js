@@ -110,3 +110,4 @@ export * from "./speedrun.js";
 export * from "./automator/script-templates.js";
 
 export * from "./puzzle.js";
+export * from "./resource-exchange.js";

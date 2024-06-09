@@ -1533,6 +1533,16 @@ export const devMigrations = {
     player => {
       player.options.lightGlyphs = !player.options.forceDarkGlyphs;
       delete player.options.forceDarkGlyphs;
+    },
+    player => {
+      player.logic.resourceExchange.unlocked = player.logic.resourceExchange.unlock;
+      delete player.logic.resourceExchange.unlock;
+    },
+    player => {
+      player.logic.resourceExchange.all.push(...Array.range(0, 3).map(() => ({
+        value: new Decimal(0),
+        exchangeRate: 1
+      })));
     }
   ],
 

@@ -61,7 +61,6 @@ export const GameIntervals = (function() {
     // restarting the interval every save operation, and is how it's structured on Android as well
     checkEverySecond: interval(() => {
       if (Math.random() < 0.00001) SecretAchievement(18).unlock();
-      GameStorage.tryOnlineBackups();
     }, 1000)
   };
 }());

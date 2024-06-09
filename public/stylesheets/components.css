@@ -1754,6 +1754,10 @@ AutobuyerBox components will always render in page order regardless of internal 
   background-color: var(--color-celestials);
 }
 
+.o-tab-btn--logic[data-v-modern-tab-button]::before {
+  background-color: var(--color-logic);
+}
+
 .o-subtab-btn--active[data-v-modern-tab-button] {
   border-bottom-width: 0.5rem;
 }

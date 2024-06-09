@@ -98,7 +98,7 @@ export const normalAchievements = [
   {
     id: 26,
     name: "You got past The Big Wall",
-    description: "Buy an Antimatter Galaxy.",
+    description: "Buy an AG.",
     checkRequirement: () => true,
     checkEvent: GAME_EVENT.GALAXY_RESET_BEFORE,
     get reward() {

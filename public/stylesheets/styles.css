@@ -104,6 +104,8 @@ html {
 
   --color-pelle--base: crimson;
   --color-pelle--secondary: #00bcd4;
+  
+  --color-logic: #4fe0ac;
 }
 
 :root .t-metro,
@@ -752,6 +754,16 @@ button:focus {
 
 .o-tab-btn--celestial:hover {
   background: var(--color-celestials);
+}
+
+.o-tab-btn--logic {
+  color: var(--color-logic);
+  background-color: var(--color-prestige--accent);
+  border-color: var(--color-logic);
+}
+
+.o-tab-btn--logic:hover {
+  background: var(--color-logic);
 }
 
 /* #endregion tab buttons */
@@ -9298,6 +9310,136 @@ input.o-automator-block-input {
   padding: 0.2rem;
   margin: 0.1rem;
   color: var(--color-accent);
-  border-radius: 0.5rem;
+  border-radius: var(--var-border-radius, 0.5rem);
   font-family: Typewriter, sans-serif;
+}
+
+.l-big-crunch-containter {
+  margin: 2rem;
+}
+
+.o-resource-circle-node {
+  width: 4rem;
+  height: 4rem;
+  position: absolute;
+  z-index: 1;
+  font-size: 2rem;
+  line-height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  background-color: var(--color-base);
+  border: 0.1rem solid var(--color-logic);
+  border-radius: 50%;
+  margin-top: -2rem;
+  margin-left: -2rem;
+  transition: all 0.2s, z-index 0s;
+  -webkit-user-select: none;
+  user-select: none;
+  color: var(--color-logic);
+}
+
+.o-resource-circle-node--locked {
+  color: #999999;
+  border-color: #999999;
+}
+
+.l-resource-exchange-layout {
+  width: 40rem;
+  height: 40rem;
+  position: relative;
+}
+
+.c-resource-exchange-svg-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.c-resource-exchange-line {
+  stroke: #999999;
+  stroke-width: 1;
+  fill: none
+}
+
+.c-resource-exchange-line--unlocked {
+  stroke: var(--color-logic);
+}
+
+.l-resource-exchange-orbit-canvas {
+  overflow: visible;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+}
+
+.c-resource-info {
+  color: var(--color-logic);
+  height: 6rem;
+}
+
+.c-resource-info--disabled {
+  color: #999999;
+}
+
+.c-resource-info-title {
+  font-size: 1.8rem;
+}
+
+.c-resource-info-values span {
+  margin: 1rem;
+}
+
+.c-resource-exchange-layout-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  height: 40rem;
+}
+
+.c-resource-exchange-right-container {
+  height: 40rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  max-width: 40rem;
+}
+
+.c-resource-exchange-buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.c-exchange-btn {
+  width: 18rem;
+  height: 12rem;
+  margin: 4rem 1rem;
+  border: 0.1rem solid var(--color-logic);
+  border-radius: var(--var-border-radius, 1rem);
+  background-color: var(--color-base);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.4rem;
+  flex-direction: column;
+}
+
+.c-exchange-btn--disabled {
+  border-color: var(--color-bad);
+}
+
+.c-lp-amount {
+  color: var(--color-logic);
+  font-size: 1.8rem;
+}
+
+.c-lp-text-row {
+  font-size: 1.4rem;
 }

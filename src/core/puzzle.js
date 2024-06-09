@@ -1,6 +1,10 @@
 export const Puzzle = {
-  get hasDLC() {
-    return player.hasDLC;
+  hasDLC(tier) {
+    return tier <= this.maxTier;
+  },
+  get maxTier() {
+    if (!PlayerProgress.infinityUnlocked() && player.hasDLC) return 8;
+    return 1;
   },
   get randomDimOrder() {
     return DimBoost.purchasedBoosts === 4 && player.galaxies === 0 && !PlayerProgress.infinityUnlocked();
@@ -16,16 +20,26 @@ export const Puzzle = {
       } else {
         return {
           id: 26,
-          text: "Just an Ornament",
-          clickFn: () => {}
+          text: "What is AG?",
+          clickFn: () => GameUI.notify.info("Maybe you need some help.")
         }
       }
     }
     return null;
   },
   tryBuyingFirstGalaxy() {
-    if (Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked() && player.galaxies === 0) {
-      manualRequestGalaxyReset(1, false);
+    if (Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked()) {
+      if (player.galaxies === 0) {
+        manualRequestGalaxyReset(1, false);
+      } else {
+        GameUI.notify.error(`"Buy ${formatInt(2)} galaxies" is not here.`)
+      }
     }
+  },
+  get showCrunch() {
+    return player.showCrunchFormat.this && Math.random() > 0.5;
+  },
+  get stableTime() {
+    return false;
   }
 }

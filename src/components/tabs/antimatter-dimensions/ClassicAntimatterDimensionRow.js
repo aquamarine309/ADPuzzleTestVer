@@ -99,7 +99,7 @@ export default {
       const dimension = AntimatterDimension(tier);
       this.isUnlocked = dimension.isAvailableForPurchase;
       this.isCapped = tier === 8 && Enslaved.isRunning && dimension.bought >= 1;
-      this.hasDLC = Puzzle.hasDLC || this.tier == 1;
+      this.hasDLC = Puzzle.hasDLC(tier);
       this.multiplier.copyFrom(dimension.multiplier);
       this.amount.copyFrom(dimension.totalAmount);
       this.totalAmount = dimension.totalAmount;

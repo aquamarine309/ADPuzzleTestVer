@@ -876,6 +876,11 @@ export function getTTPerSecond() {
   return finalTT;
 }
 
+export function unstableTimeMultiplier() {
+  if (Puzzle.stableTime) return 1;
+  return 0.8 + (Math.floor(Date.now() / 60) % 10) * 0.04;
+}
+
 // eslint-disable-next-line no-unused-vars
 function recursiveTimeOut(fn, iterations, endFn) {
   fn(iterations);

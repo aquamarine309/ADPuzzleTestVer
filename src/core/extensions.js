@@ -181,6 +181,14 @@ Array.prototype.sum = function() {
 /**
  * @returns {number}
  */
+Array.prototype.prod = function() {
+  if (this.length === 0) return 1;
+  return this.reduce(Number.prodReducer);
+};
+
+/**
+ * @returns {number}
+ */
 Array.prototype.max = function() {
   if (this.length === 0) return 0;
   return this.reduce((a, b) => Math.max(a, b));

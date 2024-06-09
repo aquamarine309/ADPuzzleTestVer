@@ -82,7 +82,7 @@ export default {
       this.isUnlocked = dimension.isAvailableForPurchase;
       const buyUntil10 = player.buyUntil10;
       this.isCapped = tier === 8 && Enslaved.isRunning && dimension.bought >= 1;
-      this.hasDLC = tier === 1 || Puzzle.hasDLC;
+      this.hasDLC = Puzzle.hasDLC(tier);
       this.multiplier.copyFrom(AntimatterDimension(tier).multiplier);
       this.amount.copyFrom(dimension.totalAmount);
       this.bought = dimension.bought;

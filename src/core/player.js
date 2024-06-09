@@ -31,9 +31,25 @@ window.player = {
   },
   buyUntil10: true,
   hasDLC: false,
+  stableTime: false,
+  showCrunchFormat: {
+    this: false,
+    next: false
+  },
   shop: {
     totalSTD: 0,
     spentSTD: 0
+  },
+  logic: {
+    resourceExchange: {
+      all: Array.range(0, 6).map(() => ({
+        //some resource is based on Decimal, we should use Decimal even if some is based on Number.
+        value: DC.D0,
+        exchangeRate: 1
+      })),
+      unlocked: 0
+    },
+    spentPoints: DC.D0
   },
   sacrificed: DC.D0,
   achievementBits: Array.repeat(0, 17),
@@ -364,7 +380,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: 0,
-  version: 50,
+  version: 51,
   infinityPower: DC.D1,
   postC4Tier: 0,
   eternityPoints: DC.D0,
@@ -944,7 +960,6 @@ export const Player = {
   },
 
   get canCrunch() {
-    return false;
     if (Enslaved.isRunning && Enslaved.BROKEN_CHALLENGES.includes(NormalChallenge.current?.id)) return false;
     const challenge = NormalChallenge.current || InfinityChallenge.current;
     const goal = challenge === undefined ? Decimal.NUMBER_MAX_VALUE : challenge.goal;

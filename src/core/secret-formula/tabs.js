@@ -495,5 +495,24 @@ export const tabs = [
         hidable: true
       }
     ]
+  },
+  {
+    key: "logic",
+    name: "Logic",
+    UIClass: "o-tab-btn--logic",
+    condition: () => PlayerProgress.infinityUnlocked(),
+    hideAt: 1.8,
+    id: 11,
+    hidable: true,
+    subtabs: [
+      {
+        key: "exchange",
+        name: "Resource Exchange",
+        symbol: "<i class='fas fa-exchange'></i>",
+        component: "ResourceExchangeTab",
+        id: 0,
+        hidable: true
+      }
+    ]
   }
 ];
