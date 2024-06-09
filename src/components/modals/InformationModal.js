@@ -9,7 +9,7 @@ export default {
   },
   methods: {
     clickFn() {
-      if (ShopPurchaseData.totalSTD > 0 || Puzzle.hasDLC) return;
+      if (ShopPurchaseData.totalSTD > 0 || Puzzle.hasDLC(8)) return;
       ++ShopPurchaseData.totalSTD;
     }
   },
