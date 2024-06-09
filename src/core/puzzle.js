@@ -1,9 +1,10 @@
 export const Puzzle = {
   hasDLC(tier) {
+    if (!PlayerProgress.infinityUnlocked()) return tier === 1 || player.hasDLC;
     return tier <= this.maxTier;
   },
   get maxTier() {
-    if (!PlayerProgress.infinityUnlocked() && player.hasDLC) return 8;
+    if (!PlayerProgress.infinityUnlocked()) return 8;
     return GameCache.maxTier.value;
   },
   get randomDimOrder() {
