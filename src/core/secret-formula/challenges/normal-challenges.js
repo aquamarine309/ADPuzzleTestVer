@@ -35,7 +35,7 @@ export const normalChallenges = [
     legacyId: 3,
     isQuickResettable: false,
     description:
-      `the 1st Antimatter Dimension is heavily weakened, but gets an uncapped exponentially increasing multiplier.
+      `the 1st Antimatter Dimension is heavily weakened, but gets an exponentially increasing multiplier based on Dimension Boosts.
         This multiplier resets after Dimension Boosts and Antimatter Galaxies.`,
     name: "3rd Antimatter Dimension",
     reward: "Upgradeable 3rd Antimatter Dimension Autobuyer",
