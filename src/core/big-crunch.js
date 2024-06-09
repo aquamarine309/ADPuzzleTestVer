@@ -143,6 +143,8 @@ export function bigCrunchResetValues(enteringAntimatterChallenge) {
   
   player.showCrunchFormat.this = player.showCrunchFormat.next;
   player.showCrunchFormat.next = false;
+  
+  resetAllResourceExchange();
 }
 
 function bigCrunchCheckUnlocks() {

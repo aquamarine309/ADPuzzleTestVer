@@ -9338,6 +9338,7 @@ input.o-automator-block-input {
   -webkit-user-select: none;
   user-select: none;
   color: var(--color-logic);
+  cursor: pointer;
 }
 
 .o-resource-circle-node--locked {
@@ -9433,6 +9434,7 @@ input.o-automator-block-input {
 
 .c-exchange-btn--disabled {
   border-color: var(--color-bad);
+  cursor: none;
 }
 
 .c-lp-amount {

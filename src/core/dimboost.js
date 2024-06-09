@@ -227,7 +227,7 @@ export function requestDimensionBoost(bulk) {
   if (Currency.antimatter.gt(Player.infinityLimit) || !DimBoost.requirement.isSatisfied) return;
   if (!DimBoost.canBeBought) return;
   Tutorial.turnOffEffect(TUTORIAL_STATE.DIMBOOST);
-  if (BreakInfinityUpgrade.autobuyMaxDimboosts.isBought && bulk) maxBuyDimBoosts();
+  if ((BreakInfinityUpgrade.autobuyMaxDimboosts.isBought && bulk) || NormalChallenge(3).isRunning) maxBuyDimBoosts();
   else softReset(1);
 }
 

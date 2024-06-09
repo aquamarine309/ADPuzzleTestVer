@@ -70,6 +70,10 @@ class ResourceExchangeState extends GameMechanicState {
   get name() {
     return this.config.name;
   }
+  
+  reset() {
+    this.data.value = DC.D0;
+  }
 }
 
 export const ResourceExchange = mapGameDataToObject(
@@ -123,7 +127,7 @@ class ResourceExchangeUpgradeState extends GameMechanicState {
   }
   
   get effectValue() {
-    return DC.E5.pow(Math.pow(this.boughtAmount + 1, Math.log10(Currency.logicPoints.value.add(1).log10() + 1) + 1));
+    return DC.E5.pow(Math.pow(this.boughtAmount + 1, Math.log10(GameCache.logicPoints.value.add(1).log10() + 1) + 1));
   }
   
   get isEffectActive() {
@@ -132,3 +136,8 @@ class ResourceExchangeUpgradeState extends GameMechanicState {
 }
 
 export const ResourceExchangeUpgrade = new ResourceExchangeUpgradeState();
+
+export function resetAllResourceExchange() {
+  ResourceExchange.all.forEach(r => r.reset());
+  GameCache.logicPoints.invalidate();
+}

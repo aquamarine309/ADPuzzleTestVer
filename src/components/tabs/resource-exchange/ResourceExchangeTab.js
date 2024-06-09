@@ -45,7 +45,7 @@ export default {
           You have <span class="c-lp-amount">{{ format(logicPoints, 2, 2) }}</span> Logic Points.
         </div>
         <div class="c-lp-text-row">
-          Logic Points and Exchange Levels provide a <span class="c-lp-amount">{{ formatX(multiplier, 2, 2) }}</span> to your Antimatter Dimensions.
+          Total Logic Points and Exchange Levels provide a <span class="c-lp-amount">{{ formatX(multiplier, 2, 2) }}</span> multiplier to your Antimatter Dimensions.
         </div>
         <div class="c-resource-exchange-buttons-container">
           <ExchangeButton :resource="currentResource" />

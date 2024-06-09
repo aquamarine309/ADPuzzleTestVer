@@ -32,7 +32,7 @@ export const Puzzle = {
       if (player.galaxies === 0) {
         manualRequestGalaxyReset(1, false);
       } else {
-        GameUI.notify.error(`"Buy ${formatInt(2)} galaxies" is not here.`)
+        GameUI.notify.error(`"Buy ${formatInt(2)} galaxies" is not here.`);
       }
     }
   },
