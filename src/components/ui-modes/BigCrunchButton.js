@@ -14,7 +14,7 @@ export default {
     },
     buttonTexts() {
       const correct = "Big Crunch";
-      const incorrect = ["Infinity", "Big Lunch", "Big Cunch", "Big Infinity", "Eternity", "Small Infinity", "Small Crunch"];
+      const incorrect = ["Infinity", "Big Lunch", "Big Cunch", "Big Infinity", "Eternity", "Bit Infinity", "Bit Crunch"];
       const result = [];
       for (let i = 0; i < this.totalAmount; i++) {
         if (i === this.correctIndex) {
