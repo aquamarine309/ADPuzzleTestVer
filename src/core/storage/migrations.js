@@ -432,7 +432,7 @@ export const migrations = {
     52: player => {
       //Remove "skipResetGalaxy"
       if (player.infinityUpgrades.has("skipResetGalaxy")) {
-        player.infinityUpgrades.remove("skipResetGalaxy");
+        player.infinityUpgrades.delete("skipResetGalaxy");
       }
     },
     53: player => {
