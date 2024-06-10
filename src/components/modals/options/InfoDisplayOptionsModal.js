@@ -13,7 +13,6 @@ export default {
       eternityUnlocked: false,
       realityUnlocked: false,
       alchemyUnlocked: false,
-
       showPercentage: false,
       achievements: false,
       achievementUnlockStates: false,
@@ -21,8 +20,10 @@ export default {
       studies: false,
       glyphEffectDots: false,
       realityUpgrades: false,
+      logicUpgrades: false,
       perks: false,
       alchemy: false,
+      exchange: false
     };
   },
   computed: {
@@ -52,12 +53,18 @@ export default {
     realityUpgrades(newValue) {
       player.options.showHintText.realityUpgrades = newValue;
     },
+    logicUpgrades(newValue) {
+      player.options.showHintText.logicUpgrades = newValue;
+    },
     perks(newValue) {
       player.options.showHintText.perks = newValue;
     },
     alchemy(newValue) {
       player.options.showHintText.alchemy = newValue;
     },
+    exchange(newValue) {
+      player.options.showHintText.resourceExchange = newValue;
+    }
   },
   methods: {
     update() {
@@ -75,8 +82,10 @@ export default {
       this.studies = options.studies;
       this.glyphEffectDots = options.glyphEffectDots;
       this.realityUpgrades = options.realityUpgrades;
+      this.logicUpgrades = options.logicUpgrades;
       this.perks = options.perks;
       this.alchemy = options.alchemy;
+      this.exchange = options.resourceExchange;
     }
   },
   template: `
@@ -96,6 +105,16 @@ export default {
       <ModalOptionsToggleButton
         v-model="achievementUnlockStates"
         text="Achievement unlock state indicators:"
+      />
+      <ModalOptionsToggleButton
+        v-if="infinityUnlocked"
+        v-model="logicUpgrades"
+        text="Logic Upgrade names"
+      />
+      <ModalOptionsToggleButton
+        v-if="infinityUnlocked"
+        v-model="exchange"
+        text="Exchange Resources:"
       />
       <ModalOptionsToggleButton
         v-if="infinityUnlocked"

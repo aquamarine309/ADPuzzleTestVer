@@ -1,5 +1,10 @@
+import HintText from "../../HintText.js";
+
 export default {
   name: "ResourceCircleNode",
+  components: {
+    HintText
+  },
   props: {
     resource: {
       type: Object,
@@ -20,6 +25,9 @@ export default {
         "o-resource-circle-node--open": this.isOpen,
         "o-resource-circle-node--locked-open": !this.isUnlocked && this.isOpen
       }
+    },
+    displayName() {
+      return this.resource.shortName ?? this.resource.name;
     }
   },
   methods: {
@@ -30,6 +38,13 @@ export default {
   },
   template: `
   <div :class="classObject">
+    <HintText
+      v-if="isUnlocked"
+      type="resourceExchange"
+      class="o-hint-text--resource-exchange l-hint-text--resource-exchange"
+    >
+      {{ displayName }}
+    </HintText>
     {{ resource.symbol }}
   </div>
   `

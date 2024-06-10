@@ -2204,7 +2204,8 @@ br {
   z-index: 1;
 }
 
-.o-hint-text--alchemy-node {
+.o-hint-text--alchemy-node,
+.o-hint-text--resource-exchange {
   font-size: 1.2rem;
   color: var(--color-text);
   text-shadow: none;
@@ -2219,7 +2220,8 @@ br {
   opacity: 0;
 }
 
-.l-hint-text--alchemy-node {
+.l-hint-text--alchemy-node,
+.l-hint-text--resource-exchange {
   top: 2.6rem;
   left: 50%;
   transform: translate(-50%);
@@ -9418,6 +9420,7 @@ input.o-automator-block-input {
   align-items: center;
   flex-direction: row;
   height: 40rem;
+  margin: 2rem 0
 }
 
 .c-resource-exchange-right-container {
@@ -9487,6 +9490,8 @@ input.o-automator-block-input {
 .l-logic-upgrade-grid__row {
   display: flex;
   flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
 }
 
 .l-logic-upgrade-btn {

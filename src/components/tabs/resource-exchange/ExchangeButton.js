@@ -10,10 +10,13 @@ export default {
     return {
       canExchange: false,
       isTooSmall: false,
-      isUnlocked: false
+      isUnlocked: false,
     }
   },
   computed: {
+    min() {
+      return this.resource.min;
+    },
     name() {
       return this.resource.name;
     },
@@ -36,7 +39,6 @@ export default {
       this.isUnlocked = resource.isUnlocked;
       this.isTooSmall = resource.isTooSmall;
       this.canExchange = resource.canExchange;
-      this.min = resource.min;
     }
   },
   template: `

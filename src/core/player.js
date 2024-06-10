@@ -849,6 +849,7 @@ window.player = {
       glyphEffectDots: true,
       realityUpgrades: true,
       logicUpgrades: true,
+      resourceExchange: true,
       perks: true,
       alchemy: true,
       glyphInfoType: GlyphInfo.types.NONE,

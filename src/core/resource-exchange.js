@@ -75,6 +75,10 @@ class ResourceExchangeState extends GameMechanicState {
     return this.config.name;
   }
   
+  get shortName() {
+    return this.config.shortName;
+  }
+  
   reset() {
     this.data.value = DC.D0;
   }
