@@ -421,12 +421,19 @@ export const migrations = {
       if (player.celestials.pelle.doomed) player.dilation.rebuyables[3] = 0;
     },
     50: player => {
+      // Hide "Shop" Tab
       player.options.hiddenSubtabBits[10] = 1;
     },
     51: player => {
-      //Add "Logic" Tab
+      // Add "Logic" Tab
       player.options.hiddenSubtabBits.push(0);
       player.options.lastOpenSubtab.push(0);
+    },
+    52: player => {
+      //Remove "skipResetGalaxy"
+      if (player.infinityUpgrades.has("skipResetGalaxy")) {
+        player.infinityUpgrades.remove("skipResetGalaxy");
+      }
     }
   },
 

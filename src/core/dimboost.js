@@ -228,12 +228,12 @@ export function requestDimensionBoost(bulk) {
   if (!DimBoost.canBeBought) return;
   Tutorial.turnOffEffect(TUTORIAL_STATE.DIMBOOST);
   if ((BreakInfinityUpgrade.autobuyMaxDimboosts.isBought && bulk) || NormalChallenge(3).isRunning) maxBuyDimBoosts();
-  else softReset(1);
+  else maxBuyDimBoosts(LogicUpgrade(7).effectOrDefault(1));
 }
 
-function maxBuyDimBoosts() {
+function maxBuyDimBoosts(bulk = Infinity) {
   // Boosts that unlock new dims are bought one at a time, unlocking the next dimension
-  if (DimBoost.canUnlockNewDimension) {
+  if (DimBoost.canUnlockNewDimension || bulk === 1) {
     if (DimBoost.requirement.isSatisfied) softReset(1);
     return;
   }
@@ -248,7 +248,7 @@ function maxBuyDimBoosts() {
   // so a = req2 - req1, b = req1 - a = 2 req1 - req2, num = (dims - b) / a
   const increase = req2.amount - req1.amount;
   const dim = AntimatterDimension(req1.tier);
-  let maxBoosts = Math.min(Number.MAX_VALUE,
+  let maxBoosts = Math.min(bulk,
     1 + Math.floor((dim.totalAmount.toNumber() - req1.amount) / increase));
   if (DimBoost.bulkRequirement(maxBoosts).isSatisfied) {
     softReset(maxBoosts);
@@ -256,10 +256,10 @@ function maxBuyDimBoosts() {
   }
   // But in case of EC5 it's not, so do binary search for appropriate boost amount
   let minBoosts = 2;
-  while (maxBoosts !== minBoosts + 1) {
+  while (maxBoosts !== minBoosts + 1 && minBoosts <= bulk) {
     const middle = Math.floor((maxBoosts + minBoosts) / 2);
     if (DimBoost.bulkRequirement(middle).isSatisfied) minBoosts = middle;
     else maxBoosts = middle;
   }
-  softReset(minBoosts);
+  softReset(Math.min(minBoosts, bulk));
 }

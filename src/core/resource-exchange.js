@@ -108,6 +108,10 @@ class ResourceExchangeUpgradeState extends GameMechanicState {
     this.cachedCost.invalidate();
   }
   
+  get level() {
+    return this.boughtAmount + 1;
+  }
+  
   get currency() {
     return Currency.logicPoints;
   }

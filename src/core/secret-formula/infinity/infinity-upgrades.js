@@ -197,7 +197,7 @@ export const infinityUpgrades = {
   },
   skipResetGalaxy: {
     id: "skipResetGalaxy",
-    cost: 300,
+    cost: 3e3,
     checkRequirement: () => InfinityUpgrade.skipReset3.isBought,
     description: () =>
       `Start every reset with ${formatInt(4)} Dimension Boosts, automatically unlocking the 8th Antimatter Dimension;

@@ -60,7 +60,7 @@ export default {
     </div>
     <br>
     <div
-      v-for="row in 1"
+      v-for="row in 2"
       :key="row"
       class="l-logic-upgrade-grid__row"
     >

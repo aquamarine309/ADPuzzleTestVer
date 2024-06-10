@@ -22,7 +22,7 @@ export default {
   methods: {
     update() {
       this.isAffordable = this.upgrade.isAffordable;
-      this.level = this.upgrade.boughtAmount + 1;
+      this.level = this.upgrade.level;
       this.cost.copyFrom(this.upgrade.cost);
     }
   },
