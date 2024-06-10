@@ -10,7 +10,7 @@ export function updateNormalAndInfinityChallenges(diff) {
         Math.clampMax(player.galaxies, 100) / 100;
       Currency.matter.multiply(Decimal.pow(cappedBase, diff / 20));
     }
-    if (Currency.matter.gt(Currency.antimatter.value) && NormalChallenge(11).isRunning && !Player.canCrunch) {
+    if (Currency.matter.gte(Currency.antimatter.value) && NormalChallenge(11).isRunning && !Player.canCrunch) {
       const values = [Currency.antimatter.value, Currency.matter.value];
       softReset(0, true, true);
       Modal.message.show(`Your ${format(values[0], 2, 2)} antimatter was annihilated
