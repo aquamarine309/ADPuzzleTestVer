@@ -1,4 +1,4 @@
-import { isLocalEnvironment } from "./core/devTools.js";
+import { isLocalEnvironment } from "./core/devtools.js";
 
 export const DEV = isLocalEnvironment();
 export const STEAM = false;
