@@ -99,10 +99,10 @@ export const logicUpgrades = [
     name: "Puzze Challenges",
     id: 9,
     description: "Unlock Logic Challenges [NYI].",
-    requirement: () => `Infinity in ${formatInt(400)} ms or less.`,
-    checkRequirement: () => Time.thisInfinityRealTime.totalMilliseconds <= 400,
+    requirement: () => `Infinity in ${formatInt(100)} ms or less.`,
+    checkRequirement: () => Time.thisInfinityRealTime.totalMilliseconds <= 100,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    hasFailed: () => Time.thisInfinityRealTime.totalMilliseconds > 400,
+    hasFailed: () => Time.thisInfinityRealTime.totalMilliseconds > 100,
     cost: 9e28
   }
 ]
