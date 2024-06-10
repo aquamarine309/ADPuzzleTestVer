@@ -9,6 +9,7 @@ export default {
   data() {
     return {
       canExchange: false,
+      isTooSmall: false,
       isUnlocked: false
     }
   },
@@ -18,21 +19,24 @@ export default {
     },
     btnText() {
       if (!this.isUnlocked) return "Locked";
+      if (this.isTooSmall) return `${this.name} is too little`
       if (this.canExchange) return `Exchange ${this.name}`;
       return `Requires more than ${format(this.min, 2, 1)} ${this.name} to exchange`
     },
     btnClass() {
       return {
         "c-exchange-btn": true,
-        "c-exchange-btn--disabled": !this.isUnlocked || !this.canExchange
+        "c-exchange-btn--disabled": !this.canExchange
       }
     }
   },
   methods: {
     update() {
-      this.isUnlocked = this.resource.isUnlocked;
-      this.canExchange = this.resource.canExchange;
-      this.min = this.resource.min;
+      const resource = this.resource;
+      this.isUnlocked = resource.isUnlocked;
+      this.isTooSmall = resource.isTooSmall;
+      this.canExchange = resource.canExchange;
+      this.min = resource.min;
     }
   },
   template: `

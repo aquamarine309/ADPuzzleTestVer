@@ -22,8 +22,12 @@ class ResourceExchangeState extends GameMechanicState {
     return this.config.min ?? DC.D0;
   }
   
+  get isTooSmall() {
+    return this.newExchanged.minus(this.exchangedAmount).lt(1e-3);
+  }
+  
   get canExchange() {
-    return this.currency.gt(this.min);
+    return this.isUnlocked && this.currency.gt(this.min) && !this.isTooSmall;
   }
   
   exchange() {

@@ -9342,11 +9342,27 @@ input.o-automator-block-input {
   user-select: none;
   color: var(--color-logic);
   cursor: pointer;
+
+  box-shadow: 0 0 0.2rem #ffffff;
 }
 
 .o-resource-circle-node--locked {
   color: #999999;
   border-color: #999999;
+}
+
+.o-resource-circle-node--open {
+  color: #ffffff;
+  background-color: var(--color-logic);
+  border-color: var(--color-base);
+  box-shadow: 0 0 1rem 0.3rem #2bab77 inset;
+}
+
+.o-resource-circle-node--locked-open {
+  color: #ffffff;
+  background-color: #999999;
+  border-color: var(--color-base);
+  box-shadow: 0 0 1rem 0.2rem #666666 inset;
 }
 
 .l-resource-exchange-layout {
@@ -9442,10 +9458,21 @@ input.o-automator-block-input {
 
 .c-lp-amount {
   color: var(--color-logic);
+  font-size: 2.5rem;
+  text-shadow: 0 0 0.2rem #ffffff;
+}
+
+.c-lp-amount--small {
+  color: var(--color-logic);
   font-size: 1.8rem;
+  text-shadow: 0 0 0.2rem #ffffff;
 }
 
 .c-lp-text-row {
+  font-size: 1.6rem;
+}
+
+.c-lp-text-row--small {
   font-size: 1.4rem;
 }
 

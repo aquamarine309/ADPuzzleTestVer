@@ -32,10 +32,6 @@ window.player = {
   buyUntil10: true,
   hasDLC: false,
   stableTime: false,
-  showCrunchFormat: {
-    this: false,
-    next: false
-  },
   shop: {
     totalSTD: 0,
     spentSTD: 0
@@ -47,7 +43,8 @@ window.player = {
         value: DC.D0,
         exchangeRate: 1
       })),
-      unlocked: 0
+      unlocked: 0,
+      lastOpenId: 0
     },
     spentPoints: DC.D0,
     upgradeBits: 0,
@@ -382,7 +379,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: 0,
-  version: 52,
+  version: 53,
   infinityPower: DC.D1,
   postC4Tier: 0,
   eternityPoints: DC.D0,

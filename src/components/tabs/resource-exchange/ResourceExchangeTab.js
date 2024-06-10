@@ -17,6 +17,7 @@ export default {
     return {
       resourceId: 0,
       logicPoints: new Decimal(0),
+      totalLogicPoints: new Decimal(0),
       multiplier: new Decimal(0)
     }
   },
@@ -26,9 +27,16 @@ export default {
     },
     upgrades: () => LogicUpgrades.all,
   },
+  watch: {
+    resourceId(value) {
+      player.logic.resourceExchange.lastOpenId = value;
+    }
+  },
   methods: {
     update() {
+      this.resourceId = player.logic.resourceExchange.lastOpenId;
       this.logicPoints = Currency.logicPoints.value;
+      this.totalLogicPoints = GameCache.logicPoints.value;
       this.multiplier = ResourceExchangeUpgrade.effectValue;
     },
     handleToggle(index) {
@@ -49,8 +57,10 @@ export default {
         <div class="c-lp-text-row">
           You have <span class="c-lp-amount">{{ format(logicPoints, 2, 2) }}</span> Logic Points.
         </div>
-        <div class="c-lp-text-row">
-          Total Logic Points and Exchange Levels provide a <span class="c-lp-amount">{{ formatX(multiplier, 2, 2) }}</span> multiplier to your Antimatter Dimensions.
+        <div>({{ format(totalLogicPoints, 2, 2) }} LP in total)</div>
+        <br>
+        <div class="c-lp-text-row--small">
+          Total Logic Points and Exchange Levels provide a <span class="c-lp-amount--small">{{ formatX(multiplier, 2, 2) }}</span> multiplier to your Antimatter Dimensions.
         </div>
         <div class="c-resource-exchange-buttons-container">
           <ExchangeButton :resource="currentResource" />

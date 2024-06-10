@@ -43,12 +43,11 @@ export default {
       }
     },
     handleClick(index) {
-      if (index === this.correctIndex) {
+      if (this.totalAmount === 1 || index === this.correctIndex) {
         this.bigCrunch();
         return;
       }
       if (this.totalAmount >= 7) {
-        player.showCrunchFormat.next = true;
         GameUI.notify.error("You have got a punishment. Good luck.");
         this.totalAmount = 1;
         return;

@@ -21,7 +21,7 @@ export const resourceExchange = {
     name: "Matter",
     symbol: "π",
     currency: () => Currency.matter,
-    value: value => value.pow(0.05).times(0.1).add(1)
+    value: value => value.pow(0.04).times(0.1).add(1)
   },
   "infinityPower": {
     id: 3,

@@ -37,9 +37,6 @@ export const Puzzle = {
       }
     }
   },
-  get showCrunch() {
-    return player.showCrunchFormat.this && Math.random() > 0.5;
-  },
   get stableTime() {
     return false;
   }

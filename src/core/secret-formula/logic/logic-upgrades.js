@@ -14,10 +14,14 @@ export const logicUpgrades = [
     name: "Half life Three",
     id: 1,
     description: "Unlock new Antimatter Dimension.",
-    requirement: () => `In 5 hours`,
-    checkRequirement: () => false,
-    checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    hasFailed: () => true,
+    requirement: () => `Buy ${formatInt(12)} Infinity Upgrades.`,
+    checkRequirement: () => player.infinityUpgrades.size >= 12,
+    checkEvent: [
+      GAME_EVENT.INFINITY_UPGRADE_BOUGHT,
+      GAME_EVENT.REALITY_RESET_AFTER,
+      GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT
+    ],
+    cost: 1e27,
     effect: 1
   },
   {
@@ -78,7 +82,7 @@ export const logicUpgrades = [
     checkRequirement: () => DimBoost.purchasedBoosts < 18,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
     hasFailed: () => DimBoost.purchasedBoosts >= 18,
-    cost: 2e25,
+    cost: 1e21,
     effect: 5
   },
   {
@@ -89,8 +93,7 @@ export const logicUpgrades = [
     checkRequirement: () => Time.thisInfinityRealTime.totalSeconds <= 27,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
     hasFailed: () => Time.thisInfinityRealTime.totalSeconds > 27,
-    hasFailed: () => true,
-    cost: 2.5e26
+    cost: 6e21
   },
   {
     name: "Puzze Challenges",

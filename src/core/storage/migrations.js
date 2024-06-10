@@ -434,6 +434,21 @@ export const migrations = {
       if (player.infinityUpgrades.has("skipResetGalaxy")) {
         player.infinityUpgrades.remove("skipResetGalaxy");
       }
+    },
+    53: player => {
+      // Rebalance "matter"
+      if ((player.logic.upgradeBits & (1 << 7)) !== 0) {
+        player.logic.spentPoints = player.logic.spentPoints.minus(2e25 - 1e21);
+      }
+      if ((player.logic.upgradeBits & (1 << 8)) !== 0) {
+        player.logic.spentPoints = player.logic.spentPoints.minus(2.5e26 - 6e21);
+      }
+      if (player.logic.resourceExchange.all[2].value.gt(Decimal.NUMBER_MAX_VALUE)) {
+        player.logic.resourceExchange.all[2].value = new Decimal(1e300);
+      }
+      if ((player.challenge.normal.completedBits & (1 << 11)) !== 0) {
+        player.challenge.normal.completedBits &= ~(1 << 11);
+      }
     }
   },
 
