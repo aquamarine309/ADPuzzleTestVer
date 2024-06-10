@@ -89,10 +89,10 @@ export const logicUpgrades = [
     name: "Equivalent Exchange",
     id: 8,
     description: "Infinity no longer reset Exchange Resource.",
-    requirement: () => `Infinity in ${formatInt(27)} seconds or less.`,
-    checkRequirement: () => Time.thisInfinityRealTime.totalSeconds <= 27,
+    requirement: () => `Infinity in ${formatInt(18)} seconds or less.`,
+    checkRequirement: () => Time.thisInfinityRealTime.totalSeconds <= 18,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    hasFailed: () => Time.thisInfinityRealTime.totalSeconds > 27,
+    hasFailed: () => Time.thisInfinityRealTime.totalSeconds > 18,
     cost: 6e21
   },
   {
