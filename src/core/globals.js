@@ -112,3 +112,4 @@ export * from "./automator/script-templates.js";
 export * from "./puzzle.js";
 export * from "./resource-exchange.js";
 export * from "./logic-upgrades.js";
+export * from "./logic-challenges.js";

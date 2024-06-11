@@ -115,6 +115,8 @@ export const GameCache = {
 
   infinityChallengeTimeSum: new Lazy(() => player.challenge.infinity.bestTimes.sum()),
   
+  logicChallengeTimeSum: new Lazy(() => player.challenge.logic.bestTimes.sum()),
+  
   logicPoints: new Lazy(() => getLogicPoints()),
   
   maxTier: new Lazy(() => 1 + Effects.sum(...Array.range(0, 7).map(id => LogicUpgrade(id))))

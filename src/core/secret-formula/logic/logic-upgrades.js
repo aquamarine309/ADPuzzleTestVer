@@ -78,10 +78,10 @@ export const logicUpgrades = [
     name: "Bulk Boosts",
     id: 7,
     description: "You can buy five times as many Dimension Boosts at once.",
-    requirement: () => `Infinity with less than ${formatInt(18)} Dimension Boosts.`,
-    checkRequirement: () => DimBoost.purchasedBoosts < 18,
+    requirement: () => `Infinity with less than ${formatInt(18)} Dimension Boosts with 2+ Dimensions unlocked.`,
+    checkRequirement: () => DimBoost.purchasedBoosts < 18 && Puzzle.maxTier >= 2,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    hasFailed: () => DimBoost.purchasedBoosts >= 18,
+    hasFailed: () => DimBoost.purchasedBoosts >= 18 || Puzzle.maxTier < 2,
     cost: 1e21,
     effect: 5
   },
@@ -99,10 +99,16 @@ export const logicUpgrades = [
     name: "Puzze Challenges",
     id: 9,
     description: "Unlock Logic Challenges [NYI].",
-    requirement: () => `Infinity in ${formatInt(100)} ms or less.`,
-    checkRequirement: () => Time.thisInfinityRealTime.totalMilliseconds <= 100,
-    checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    hasFailed: () => Time.thisInfinityRealTime.totalMilliseconds > 100,
+    requirement: () => `Max the intervals for 3rd Antimatter Dimension Autobuyer.`,
+    checkRequirement: () => {
+      const autobuyer = Autobuyer.antimatterDimension(3);
+      return autobuyer.isUnlocked && autobuyer.a.hasMaxedInterval;
+    },
+    checkEvent: [GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
+    hasFailed: () => () => {
+      const autobuyer = Autobuyer.antimatterDimension(3);
+      return !autobuyer.isUnlocked || !autobuyer.a.hasMaxedInterval;
+    },
     cost: 9e28
   }
 ]

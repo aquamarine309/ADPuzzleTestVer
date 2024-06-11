@@ -19,6 +19,7 @@ import InfinityChallengesTab from "./infinity-challenges/InfinityChallengesTab.j
 import InfinityDimensionsTab from "./infinity-dimensions/InfinityDimensionsTab.js";
 import InfinityUpgradesTab from "./infinity-upgrades/InfinityUpgradesTab.js";
 import LaitelaTab from "./celestial-laitela/LaitelaTab.js";
+import LogicChallengesTab from "./logic-challenges/LogicChallengesTab.js";
 import ResourceExchangeTab from "./resource-exchange/ResourceExchangeTab.js";
 import MultiplierBreakdownTab from "./statistics/MultiplierBreakdownTab.js";
 import NormalAchievementsTab from "./normal-achievements/NormalAchievementsTab.js";
@@ -68,8 +69,9 @@ const TabComponents = {
   AutobuyersTab,
   AutomatorTab,
   NormalChallengesTab,
-   InfinityChallengesTab,
+  InfinityChallengesTab,
   EternityChallengesTab,
+  LogicChallengesTab,
   InfinityUpgradesTab,
   BreakInfinityTab,
   ReplicantiTab,

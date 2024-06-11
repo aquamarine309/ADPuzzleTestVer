@@ -3418,7 +3418,7 @@ br {
 /* #region c-challenge-box */
 
 .c-challenge-box {
-  width: 40rem;
+  width: 35rem;
   height: 13rem;
   font-size: 1rem;
   font-weight: bold;
@@ -3433,6 +3433,15 @@ br {
   font-size: 1.05rem;
   color: var(--color-text);
   background-color: var(--color-base);
+  height: 16rem;
+}
+
+
+.c-challenge-box--logic {
+  height: 18rem;
+  color: var(--color-text);
+  background-color: var(--color-prestige--accent);
+  border-color: var(--color-logic);
 }
 
 .c-challenge-box--infinity {

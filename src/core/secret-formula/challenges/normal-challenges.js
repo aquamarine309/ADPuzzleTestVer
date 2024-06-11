@@ -77,7 +77,7 @@ export const normalChallenges = [
     isQuickResettable: false,
     description: () =>
       `the multiplier from buying ${formatInt(10)} Antimatter Dimensions is reduced to ${formatX(1)}. This increases by
-        ${formatX(0.3, 1, 1)} per Dimension Boost, to a maximum of ${formatX(8)}, and is unaffected by any upgrades.`,
+        ${formatX(0.3, 1, 1)} per Dimension Boost, to a maximum of ${formatX(7)}, and is unaffected by any upgrades.`,
     name: "7th Antimatter Dimension Autobuyer",
     reward: "Upgradeable 7th Antimatter Dimension Autobuyer",
     lockedAt: DC.D0,

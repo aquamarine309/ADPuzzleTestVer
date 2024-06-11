@@ -237,6 +237,15 @@ export const tabs = [
           EternityChallenges.all.some(ec => ec.completions > 0),
         id: 2,
         hidable: true
+      },
+      {
+        key: "logic",
+        name: "Logic Challenges",
+        symbol: "<i class='fas fa-puzzle-piece'></i>",
+        component: "LogicChallengesTab",
+        condition: () => false,
+        id: 3,
+        hidable: true
       }
     ],
   },

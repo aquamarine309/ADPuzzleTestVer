@@ -280,6 +280,10 @@ export const normalAchievements = [
     get description() { return `Complete ${formatInt(3)} Normal Challenges.`; },
     checkRequirement: () => NormalChallenges.all.countWhere(c => c.isCompleted) >= 3,
     checkEvent: [GAME_EVENT.BIG_CRUNCH_AFTER, GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
+    get reward() {
+      return `Multiply Infinity Points from all sources by ${formatX(10)}`
+    },
+    effect: 10
   },
   {
     id: 48,

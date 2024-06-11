@@ -155,7 +155,7 @@ export const infinityUpgrades = {
   },
   ipGen: {
     id: "passiveGen",
-    cost: 10,
+    cost: 100,
     checkRequirement: () => InfinityUpgrade.dimboostMult.isBought,
     description: () => `Passively generate Infinity Points ${formatInt(10)} times slower than your fastest Infinity`,
     // Cutting corners: this is not actual effect, but it is totalIPMult that is displyed on upgrade
@@ -177,27 +177,27 @@ export const infinityUpgrades = {
   },
   skipReset1: {
     id: "skipReset1",
-    cost: 20,
+    cost: 200,
     description: () =>
       `Start every reset with ${formatInt(1)} Dimension Boost, automatically unlocking the 5th Antimatter Dimension`,
   },
   skipReset2: {
     id: "skipReset2",
-    cost: 40,
+    cost: 400,
     checkRequirement: () => InfinityUpgrade.skipReset1.isBought,
     description: () =>
       `Start every reset with ${formatInt(2)} Dimension Boosts, automatically unlocking the 6th Antimatter Dimension`,
   },
   skipReset3: {
     id: "skipReset3",
-    cost: 80,
+    cost: 800,
     checkRequirement: () => InfinityUpgrade.skipReset2.isBought,
     description: () =>
       `Start every reset with ${formatInt(3)} Dimension Boosts, automatically unlocking the 7th Antimatter Dimension`,
   },
   skipResetGalaxy: {
     id: "skipResetGalaxy",
-    cost: 300,
+    cost: 3000,
     checkRequirement: () => InfinityUpgrade.skipReset3.isBought,
     description: () =>
       `Start every reset with ${formatInt(4)} Dimension Boosts, automatically unlocking the 8th Antimatter Dimension;
@@ -205,7 +205,7 @@ export const infinityUpgrades = {
   },
   ipOffline: {
     id: "ipOffline",
-    cost: 1000,
+    cost: 10000,
     checkRequirement: () => Achievement(41).isUnlocked,
     description: () => (player.options.offlineProgress
       ? `Only while offline, gain ${formatPercents(0.5)} of your best IP/min without using Max All`
