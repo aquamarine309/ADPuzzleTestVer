@@ -461,8 +461,18 @@ export const migrations = {
         player.logic.upgReqs |= (1 << 10);
       }
       player.options.hiddenSubtabBits.push(0);
-      if (player.infinityUpgrades.has("galaxyBoost")) {
-        player.infinityUpgrades.delete("galaxyBoost");
+      if (player.infinityUpgrades.has("postGalaxy")) {
+        player.infinityUpgrades.delete("postGalaxy");
+        player.infinityPoints = player.infinityPoints.add(5e11);
+      }
+    },
+    57: player => {
+      if (!player.infinityUpgrades.has("galaxyBoost") && player.infinityPoints.gte(5e11)) {
+        player.infinityPoints = player.infinityPoints.minus(5e11).clampMin(0);
+        player.infinityPoints.add("galaxyBoost");
+      }
+      if (player.infinityUpgrades.has("postGalaxy")) {
+        player.infinityUpgrades.delete("postGalaxy");
         player.infinityPoints = player.infinityPoints.add(5e11);
       }
     }
