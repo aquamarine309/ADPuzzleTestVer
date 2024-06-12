@@ -30,23 +30,23 @@ export default {
   template: `
   <div
     class="l-eternity-upgrades-grid"
-    data-eternity-upgrades-tab
+    data-v-eternity-upgrades-tab
   >
     <div
       v-for="(row, i) in grid"
       :key="i"
       class="l-eternity-upgrades-grid__row"
-      data-eternity-upgrades-tab
+      data-v-eternity-upgrades-tab
     >
       <EternityUpgradeButton
         v-for="upgrade in row"
         :key="upgrade.id"
         :upgrade="upgrade"
         class="l-eternity-upgrades-grid__cell"
-        data-eternity-upgrades-tab
+        data-v-eternity-upgrades-tab
       />
     </div>
-    <EPMultiplierButton data-eternity-upgrades-tab />
+    <EPMultiplierButton data-v-eternity-upgrades-tab />
     <div>
       The cost for the {{ formatX(5) }} multiplier jumps at {{ format(costIncreases[0]) }},
       {{ formatPostBreak(costIncreases[1], 2) }}, and {{ formatPostBreak(costIncreases[2]) }} Eternity Points.

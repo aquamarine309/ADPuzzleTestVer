@@ -240,7 +240,7 @@ export default {
               v-for="line in runDescription"
               :key="line"
               class="c-enslaved-run-description-line"
-              data-enslaved-tab
+              data-v-enslaved-tab
             >
               {{ line }}
             </div>
@@ -294,7 +294,7 @@ export default {
               :class="[storeRealTimeClass,
                        {'l-fixed-setting': hasReachedCurrentCap}]"
               @click="toggleStoreReal"
-              data-enslaved-tab
+              data-v-enslaved-tab
             >
               <div class="o-enslaved-stored-time">
                 {{ timeDisplayShort(storedReal) }}
@@ -309,7 +309,7 @@ export default {
                         'l-fixed-setting': !canChangeStoreRealTime || !offlineEnabled},
                        doomedDisabledClass]"
               @click="toggleAutoStoreReal"
-              data-enslaved-tab
+              data-v-enslaved-tab
             >
               {{ realTimeButtonText }}
             </button>

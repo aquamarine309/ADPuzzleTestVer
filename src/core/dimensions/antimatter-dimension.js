@@ -654,7 +654,7 @@ export const AntimatterDimensions = {
     
     if (LogicChallenge(1).isRunning) {
       return LogicChallenge(1).effects.
-            buyingTenMultiplier.effectValue;
+            buyTenMultiplier.effectValue;
     }
 
     let mult = DC.D2.plusEffectsOf(

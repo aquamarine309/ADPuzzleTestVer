@@ -9120,6 +9120,15 @@ input.o-automator-block-input {
   background: var(--color-celestials);
 }
 
+.c-hide-modal-tab-button--logic {
+  color: var(--color-logic);
+  border-color: var(--color-logic);
+}
+
+.c-hide-modal-tab-button--logic:hover {
+  background: var(--color-logic);
+}
+
 /* Prevent any themes overriding font awesome */
 .fa,
 .far,

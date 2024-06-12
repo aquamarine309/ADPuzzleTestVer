@@ -4474,19 +4474,19 @@ p[data-v-pelle-effects-modal] {
   margin-top: 0.55rem;
 }
 
-.l-eternity-upgrades-grid[data-eternity-upgrades-tab] {
+.l-eternity-upgrades-grid[data-v-eternity-upgrades-tab] {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 1rem;
 }
 
-.l-eternity-upgrades-grid__row[data-eternity-upgrades-tab] {
+.l-eternity-upgrades-grid__row[data-v-eternity-upgrades-tab] {
   display: flex;
   flex-direction: row;
 }
 
-.l-eternity-upgrades-grid__cell[data-eternity-upgrades-tab] {
+.l-eternity-upgrades-grid__cell[data-v-eternity-upgrades-tab] {
   margin: 0.5rem 0.8rem;
 }
 
@@ -5431,11 +5431,11 @@ AutobuyerBox components will always render in page order regardless of internal 
   width: 46rem;
 }
 
-.c-enslaved-run-description-line[data-enslaved-tab] {
+.c-enslaved-run-description-line[data-v-enslaved-tab] {
   margin-bottom: 1rem;
 }
 
-.l-fixed-setting[data-enslaved-tab] {
+.l-fixed-setting[data-v-enslaved-tab] {
   cursor: pointer;
   pointer-events: none;
   filter: brightness(70%);
