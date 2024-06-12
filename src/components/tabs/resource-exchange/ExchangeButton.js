@@ -22,7 +22,7 @@ export default {
     },
     btnText() {
       if (!this.isUnlocked) return "Locked";
-      if (this.isTooSmall) return `${this.name} is too little`
+      if (this.isTooSmall) return `Not Enough ${this.name}`
       if (this.canExchange) return `Exchange ${this.name}`;
       return `Requires more than ${format(this.min, 2, 1)} ${this.name} to exchange`
     },

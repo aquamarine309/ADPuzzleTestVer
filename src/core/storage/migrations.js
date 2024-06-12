@@ -454,6 +454,11 @@ export const migrations = {
       // Id was zero-indexed, but now it is one-indexed
       player.logic.upgradeBits <<= 1;
       player.logic.upgReqs <<= 1;
+    },
+    55: player => {
+      if (player.auto.antimatterDims.all[2].interval <= 100) {
+        player.logic.upgradeReqs |= (1 << 10);
+      }
     }
   },
 

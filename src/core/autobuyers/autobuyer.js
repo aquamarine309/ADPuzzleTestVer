@@ -147,6 +147,7 @@ export class UpgradeableAutobuyerState extends IntervaledAutobuyerState {
     this.data.interval = Math.clampMin(this.data.interval * 0.6, 100);
     Achievement(52).tryUnlock();
     Achievement(53).tryUnlock();
+    LogicUpgrade(10).tryUnlock();
     GameUI.update();
   }
 
