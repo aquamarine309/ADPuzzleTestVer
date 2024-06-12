@@ -217,4 +217,8 @@ export const MultiplierTabIcons = {
     symbol: `<i class="fas fa-coins" />`,
     color: "var(--color-accent)",
   },
+  EXCHANGE: {
+    symbol: `<i class="fas fa-exchange" />`,
+    color: "var(--color-logic)",
+  },
 };

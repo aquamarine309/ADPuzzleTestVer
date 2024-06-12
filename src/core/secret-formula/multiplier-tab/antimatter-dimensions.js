@@ -88,13 +88,23 @@ export const AD = {
     isActive: () => AntimatterDimension(1).isProducing,
     icon: MultiplierTabIcons.DIMENSION("AD"),
   },
-
+  DLC: {
+    name: () => `DLC boost`,
+    multValue: dim => {
+      const mult = ShopPurchase.unlockDLC.currentMult;
+      return Decimal.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
+    },
+    isActive: () => ShopPurchase.unlockDLC.purchases > 0 && !EternityChallenge(11).isRunning,
+    icon: MultiplierTabIcons.IAP,
+  },
   dimboost: {
     name: dim => (dim ? `Dimboosts on AD ${dim}` : "Dimboosts"),
     multValue: dim => (dim
-      ? DimBoost.multiplierToNDTier(dim)
+      ? (AntimatterDimension(dim).isProducing
+        ? DimBoost.multiplierToNDTier(dim)
+        : DC.D1)
       : AntimatterDimensions.all
-        .filter(ad => ad.isProducing)
+        .filter((ad,i) => ad.isProducing && i < MultiplierTabHelper.activeDimCount("AD"))
         .map(ad => DimBoost.multiplierToNDTier(ad.tier))
         .reduce((x, y) => x.times(y), DC.D1)),
     isActive: true,
@@ -116,6 +126,7 @@ export const AD = {
     name: "Achievement Rewards",
     multValue: dim => {
       const allMult = DC.D1.timesEffectsOf(
+        Achievement(26),
         Achievement(48),
         Achievement(56),
         Achievement(65),
@@ -158,6 +169,15 @@ export const AD = {
     powValue: () => Achievement(183).effectOrDefault(1),
     isActive: () => !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.ACHIEVEMENT,
+  },
+  exchangeMult: {
+    name: "Exchange Multiplier",
+    multValue: dim => {
+      const mult = ResourceExchangeUpgrade.effectOrDefault(1);
+      return Decimal.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"))
+    },
+    isActive: () => !EternityChallenge(11).isRunning,
+    icon: MultiplierTabIcons.EXCHANGE,
   },
   infinityUpgrade: {
     name: dim => (dim ? `Infinity Upgrades (AD ${dim})` : "Infinity Upgrades"),
