@@ -1723,6 +1723,10 @@ AutobuyerBox components will always render in page order regardless of internal 
   color: var(--color-pelle--base);
 }
 
+.o-sidebar-currency--logic[data-v-modern-sidebar-currency] {
+  color: var(--color-logic);
+}
+
 .o-tab-btn[data-v-modern-tab-button]::before {
   content: "";
   width: 0;
