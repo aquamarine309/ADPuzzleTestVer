@@ -139,7 +139,9 @@ class ResourceExchangeUpgradeState extends GameMechanicState {
   }
   
   get effectValue() {
-    return DC.E5.pow(Math.pow(this.boughtAmount + 1, Math.log10(GameCache.logicPoints.value.add(1).log10() + 1) + 1));
+    let effectivePoints = GameCache.logicPoints.value;
+    if (effectivePoints.gte(DC.E50)) effectivePoints = DC.E45.times(effectivePoints.pow(0.1));
+    return DC.E5.pow(Math.pow(this.boughtAmount + 1, Math.log10(effectivePoints.add(1).log10() + 1) + 1));
   }
   
   get isEffectActive() {

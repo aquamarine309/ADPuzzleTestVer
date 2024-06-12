@@ -47,6 +47,11 @@ export default {
           activityToken: () => player.challenge.eternity.current
         },
         {
+          name: token => `Logic Challenge ${token}`,
+          isActive: token => token > 0,
+          activityToken: () => player.challenge.logic.current
+        },
+        {
           name: token => `Infinity Challenge ${token}`,
           isActive: token => token > 0,
           activityToken: () => player.challenge.infinity.current

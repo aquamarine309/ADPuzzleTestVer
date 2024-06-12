@@ -18,7 +18,7 @@ class LogicChallengeState extends GameMechanicState {
   }
 
   get isUnlocked() {
-    return LogicUpgrade(9).isBought;
+    return LogicUpgrade(10).isBought;
   }
 
   get isRunning() {
@@ -69,10 +69,10 @@ class LogicChallengeState extends GameMechanicState {
 
   updateChallengeTime() {
     const bestTimes = player.challenge.logic.bestTimes;
-    if (bestTimes[this.id - 1] <= player.records.thisLogic.time) {
+    if (bestTimes[this.id - 1] <= player.records.thisInfinity.time) {
       return;
     }
-    player.challenge.logic.bestTimes[this.id - 1] = player.records.thisLogic.time;
+    player.challenge.logic.bestTimes[this.id - 1] = player.records.thisInfinity.time;
     GameCache.logicChallengeTimeSum.invalidate();
   }
 

@@ -384,7 +384,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: 0,
-  version: 53,
+  version: 54,
   infinityPower: DC.D1,
   postC4Tier: 0,
   eternityPoints: DC.D0,
@@ -958,11 +958,11 @@ export const Player = {
   },
 
   get isInAnyChallenge() {
-    return this.isInAntimatterChallenge || EternityChallenge.isRunning;
+    return this.isInAntimatterChallenge || EternityChallenge.isRunning || LogicChallenge.isRunning;
   },
 
   get anyChallenge() {
-    return this.antimatterChallenge || EternityChallenge.current;
+    return this.antimatterChallenge || EternityChallenge.current || LogicChallenge.current;
   },
 
   get canCrunch() {
@@ -998,8 +998,11 @@ export const Player = {
   },
 
   get infinityLimit() {
-    const challenge = NormalChallenge.current || InfinityChallenge.current;
-    return challenge === undefined ? Decimal.MAX_VALUE : challenge.goal;
+    const antimatterChallenge = NormalChallenge.current || InfinityChallenge.current;
+    const antimatterChallengeGoal = antimatterChallenge ? antimatterChallenge.goal : Decimal.MAX_VALUE;
+    const logicChallenge = LogicChallenge.current;
+    const logicGoal = (!logicChallenge || logicChallenge.isCompleted) ? Decimal.MAX_VALUE : logicChallenge.goal;
+    return Decimal.max(logicGoal, antimatterChallengeGoal);
   },
 
   get eternityGoal() {

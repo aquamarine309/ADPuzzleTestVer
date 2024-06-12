@@ -228,7 +228,7 @@ export function requestDimensionBoost(bulk) {
   if (!DimBoost.canBeBought) return;
   Tutorial.turnOffEffect(TUTORIAL_STATE.DIMBOOST);
   if ((BreakInfinityUpgrade.autobuyMaxDimboosts.isBought && bulk) || NormalChallenge(3).isRunning) maxBuyDimBoosts();
-  else maxBuyDimBoosts(LogicUpgrade(7).effectOrDefault(1));
+  else maxBuyDimBoosts(LogicUpgrade(8).effectOrDefault(1));
 }
 
 function maxBuyDimBoosts(bulk = Infinity) {

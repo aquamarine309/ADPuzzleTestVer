@@ -449,6 +449,11 @@ export const migrations = {
       if ((player.challenge.normal.completedBits & (1 << 11)) !== 0) {
         player.challenge.normal.completedBits &= ~(1 << 11);
       }
+    },
+    54: player => {
+      // Id was zero-indexed, but now it is one-indexed
+      player.logic.upgradeBits <<= 1;
+      player.logic.upgReqs <<= 1;
     }
   },
 

@@ -67,7 +67,11 @@ export class Galaxy {
   }
 
   static get costMult() {
-    return Effects.min(NormalChallenge(10).isRunning ? 90 : 60, TimeStudy(42));
+    const base = Effects.min(NormalChallenge(10).isRunning ? 90 : 60, TimeStudy(42));
+    if (Puzzle.maxTier !== 8) {
+      return Math.floor(base * 2.5);
+    }
+    return base;
   }
 
   static get baseCost() {
@@ -75,7 +79,9 @@ export class Galaxy {
   }
 
   static get requiredTier() {
-    return NormalChallenge(10).isRunning ? 6 : 8;
+    const base = NormalChallenge(10).isRunning ? 6 : 8;
+    if (LogicChallenge(1).isCompleted) return Math.min(base, Puzzle.maxTier);
+    return base;
   }
 
   static get canBeBought() {

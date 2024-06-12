@@ -18,9 +18,24 @@ function handleChallengeCompletion() {
 
   challenge.complete();
   challenge.updateChallengeTime();
+  
   if (!player.options.retryChallenge) {
     player.challenge.normal.current = 0;
     player.challenge.infinity.current = 0;
+  }
+  
+  
+  const inLC = LogicChallenge.isRunning;
+  
+  if (inLC) {
+    const currentLC = LogicChallenge.current;
+    if (!currentLC.isCompleted) {
+      currentLC.complete();
+    }
+    currentLC.updateChallengeTime();
+    if (!player.options.retryChallenge) {
+      player.challenge.logic.current = 0;
+    }
   }
 }
 
@@ -140,7 +155,7 @@ export function bigCrunchResetValues(enteringAntimatterChallenge) {
   // I don't think this Math.clampMax is technically needed, but if we add another source
   // of keeping Replicanti Galaxies then it might be.
   player.replicanti.galaxies = Math.clampMax(remainingGalaxies, currentReplicantiGalaxies);
-  if (!LogicUpgrade(8).isBought) {
+  if (!LogicUpgrade(9).isBought) {
     resetAllResourceExchange();
   }
 }

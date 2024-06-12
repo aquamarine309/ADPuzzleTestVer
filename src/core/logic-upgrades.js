@@ -48,7 +48,7 @@ class LogicUpgradeState extends BitPurchasableMechanicState {
   
   onPurchased() {
     const id = this.id;
-    if (id < 7) {
+    if (id <= 7) {
       GameCache.maxTier.invalidate();
     }
   }

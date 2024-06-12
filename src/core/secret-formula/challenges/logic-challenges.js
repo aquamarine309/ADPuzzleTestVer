@@ -11,7 +11,7 @@ export const logicChallenges = [
       buyingTenMultiplier: DC.D0_2
     },
     reward: {
-      description: () => `Infinity Points`
+      description: `Galaxies can automatically adjust the required dimensions.`
     },
   }
 ]

@@ -1,7 +1,9 @@
+import { DC } from "../../constants.js";
+
 export const logicUpgrades = [
   {
     name: "Acceleration Infinity",
-    id: 0,
+    id: 1,
     description: "Unlock new Antimatter Dimension.",
     requirement: () => `Infinity in ${formatInt(1)} minute or less.`,
     checkRequirement: () => Time.thisInfinityRealTime.totalMinutes <= 1,
@@ -12,7 +14,7 @@ export const logicUpgrades = [
   },
   {
     name: "Half life Three",
-    id: 1,
+    id: 2,
     description: "Unlock new Antimatter Dimension.",
     requirement: () => `Buy ${formatInt(12)} Infinity Upgrades.`,
     checkRequirement: () => player.infinityUpgrades.size >= 12,
@@ -26,26 +28,18 @@ export const logicUpgrades = [
   },
   {
     name: "Four a minute",
-    id: 2,
+    id: 3,
     description: "Unlock new Antimatter Dimension.",
-    requirement: () => `TBD`,
-    checkRequirement: () => false,
-    checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    hasFailed: () => true,
+    requirement: () => `Reach ${format(DC.E404)} antimatter in any challenge.`,
+    checkRequirement: () => Player.isInAnyChallenge && Currency.antimatter.gte(DC.E404),
+    checkEvent: GAME_EVENT.GAME_TICK_AFTER,
+    hasFailed: () => !Player.isInAnyChallenge,
+    cost: 6.9e69,
+    formatCost: value => format(value, 1),
     effect: 1
   },
   {
     name: "Pentagonal Dimension",
-    id: 3,
-    description: "Unlock new Antimatter Dimension.",
-    requirement: () => `TBD`,
-    checkRequirement: () => false,
-    checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    hasFailed: () => true,
-    effect: 1
-  },
-  {
-    name: "Could Afford Six",
     id: 4,
     description: "Unlock new Antimatter Dimension.",
     requirement: () => `TBD`,
@@ -55,7 +49,7 @@ export const logicUpgrades = [
     effect: 1
   },
   {
-    name: "Lucky Upgrade",
+    name: "Could Afford Six",
     id: 5,
     description: "Unlock new Antimatter Dimension.",
     requirement: () => `TBD`,
@@ -65,7 +59,7 @@ export const logicUpgrades = [
     effect: 1
   },
   {
-    name: "Not Over Yet",
+    name: "Lucky Upgrade",
     id: 6,
     description: "Unlock new Antimatter Dimension.",
     requirement: () => `TBD`,
@@ -75,8 +69,18 @@ export const logicUpgrades = [
     effect: 1
   },
   {
-    name: "Bulk Boosts",
+    name: "Not Over Yet",
     id: 7,
+    description: "Unlock new Antimatter Dimension.",
+    requirement: () => `TBD`,
+    checkRequirement: () => false,
+    checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
+    hasFailed: () => true,
+    effect: 1
+  },
+  {
+    name: "Bulk Boosts",
+    id: 8,
     description: "You can buy five times as many Dimension Boosts at once.",
     requirement: () => `Infinity with less than ${formatInt(18)} Dimension Boosts with 2+ Dimensions unlocked.`,
     checkRequirement: () => DimBoost.purchasedBoosts < 18 && Puzzle.maxTier >= 2,
@@ -87,7 +91,7 @@ export const logicUpgrades = [
   },
   {
     name: "Equivalent Exchange",
-    id: 8,
+    id: 9,
     description: "Infinity no longer reset Exchange Resource.",
     requirement: () => `Infinity in ${formatInt(18)} seconds or less.`,
     checkRequirement: () => Time.thisInfinityRealTime.totalSeconds <= 18,
@@ -97,7 +101,7 @@ export const logicUpgrades = [
   },
   {
     name: "Puzze Challenges",
-    id: 9,
+    id: 10,
     description: "Unlock Logic Challenges [NYI].",
     requirement: () => `Max the intervals for 3rd Antimatter Dimension Autobuyer.`,
     checkRequirement: () => {
@@ -107,7 +111,7 @@ export const logicUpgrades = [
     checkEvent: [GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
     hasFailed: () => () => {
       const autobuyer = Autobuyer.antimatterDimension(3);
-      return !autobuyer.isUnlocked || !autobuyer.a.hasMaxedInterval;
+      return !autobuyer.isUnlocked || Currency.infinityPoints.lt(autobuyer.cost);
     },
     cost: 9e28
   }
