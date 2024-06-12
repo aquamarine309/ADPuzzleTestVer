@@ -384,7 +384,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: 0,
-  version: 55,
+  version: 56,
   infinityPower: DC.D1,
   postC4Tier: 0,
   eternityPoints: DC.D0,
@@ -919,7 +919,7 @@ window.player = {
       realityShards: true
     },
     hiddenTabBits: 0,
-    hiddenSubtabBits: [...Array.repeat(0, 10), 1],
+    hiddenSubtabBits: [...Array.repeat(0, 10), 1, 0],
     lastOpenTab: 0,
     lastOpenSubtab: Array.repeat(0, 11),
     perkLayout: 0,

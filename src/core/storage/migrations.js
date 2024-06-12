@@ -455,10 +455,12 @@ export const migrations = {
       player.logic.upgradeBits <<= 1;
       player.logic.upgReqs <<= 1;
     },
-    55: player => {
+    56: player => {
+      // Version 55 has some bugs
       if (player.auto.antimatterDims.all[2].interval <= 100) {
-        player.logic.upgradeReqs |= (1 << 10);
+        player.logic.upgReqs |= (1 << 10);
       }
+      player.options.hiddenSubtabBits.push(0);
     }
   },
 
