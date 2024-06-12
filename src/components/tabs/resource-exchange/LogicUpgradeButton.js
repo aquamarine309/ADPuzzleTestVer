@@ -4,7 +4,7 @@ import EffectDisplay from "../../EffectDisplay.js";
 import HintText from "../../HintText.js";
 
 export default {
-  name: "RealityUpgradeButton",
+  name: "LogicUpgradeButton",
   components: {
     DescriptionDisplay,
     EffectDisplay,
