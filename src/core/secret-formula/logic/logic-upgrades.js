@@ -100,7 +100,7 @@ export const logicUpgrades = [
     cost: 6e21
   },
   {
-    name: "Puzze Challenges",
+    name: "Logic Challenges",
     id: 10,
     description: "Unlock Logic Challenges.",
     requirement: () => `Max the intervals for 3rd Antimatter Dimension Autobuyer.`,
