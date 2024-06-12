@@ -100,7 +100,7 @@ export const AD = {
   dimboost: {
     name: dim => (dim ? `Dimboosts on AD ${dim}` : "Dimboosts"),
     multValue: dim => (dim
-      ? (AntimatterDimension(dim).isProducing
+      ? (dim <= MultiplierTabHelper.activeDimCount("AD")
         ? DimBoost.multiplierToNDTier(dim)
         : DC.D1)
       : AntimatterDimensions.all
