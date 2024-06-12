@@ -111,7 +111,7 @@ export const logicUpgrades = [
     checkEvent: [GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
     hasFailed: () => {
       const autobuyer = Autobuyer.antimatterDimension(3);
-      return !autobuyer.isUnlocked || (Currency.infinityPoints.lt(autobuyer.cost) && !autobuyer.a.hasMaxedInterval);
+      return !autobuyer.isUnlocked || (Currency.infinityPoints.lt(autobuyer.cost) && !autobuyer.hasMaxedInterval);
     },
     cost: 9e28
   }
