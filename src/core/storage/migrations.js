@@ -461,6 +461,10 @@ export const migrations = {
         player.logic.upgReqs |= (1 << 10);
       }
       player.options.hiddenSubtabBits.push(0);
+      if (player.infinityUpgrades.has("galaxyBoost")) {
+        player.infinityUpgrades.delete("galaxyBoost");
+        player.infinityPoints = player.infinityPoints.add(5e11);
+      }
     }
   },
 
