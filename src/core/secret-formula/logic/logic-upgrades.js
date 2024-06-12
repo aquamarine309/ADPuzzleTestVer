@@ -106,7 +106,7 @@ export const logicUpgrades = [
     requirement: () => `Max the intervals for 3rd Antimatter Dimension Autobuyer.`,
     checkRequirement: () => {
       const autobuyer = Autobuyer.antimatterDimension(3);
-      return autobuyer.isUnlocked && autobuyer.a.hasMaxedInterval;
+      return autobuyer.isUnlocked && autobuyer.hasMaxedInterval;
     },
     checkEvent: [GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
     hasFailed: () => {
