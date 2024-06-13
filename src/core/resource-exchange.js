@@ -27,7 +27,7 @@ class ResourceExchangeState extends GameMechanicState {
   }
   
   get canExchange() {
-    return this.isUnlocked && this.currency.gt(this.min) && !this.isTooSmall;
+    return this.isUnlocked && this.currency.gt(this.min) && !this.isTooSmall; && PlayerProgress.infinityUnlocked()
   }
   
   exchange() {
