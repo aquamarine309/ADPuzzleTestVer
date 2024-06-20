@@ -51,9 +51,9 @@ class InfinityDimensionState extends DimensionState {
     ];
     this._unlockRequirement = UNLOCK_REQUIREMENTS[tier];
     const COST_MULTS = [null, 1e3, 1e6, 1e8, 1e10, 1e15, 1e20, 1e25, 1e30];
-    this._costMultiplier = COST_MULTS[tier];
+    this._costMultiplier = new BE(COST_MULTS[tier]);
     const POWER_MULTS = [null, 50, 30, 10, 5, 5, 5, 5, 5];
-    this._powerMultiplier = POWER_MULTS[tier];
+    this._powerMultiplier = new BE(POWER_MULTS[tier]);
     const BASE_COSTS = [null, 1e8, 1e9, 1e10, 1e20, 1e140, 1e200, 1e250, 1e280];
     this._baseCost = new BE(BASE_COSTS[tier]);
     this.ipRequirement = BASE_COSTS[1];
@@ -267,7 +267,7 @@ class InfinityDimensionState extends DimensionState {
     this.cost = BE.round(this.cost.times(this.costMultiplier));
     // Because each ID purchase gives 10 IDs
     this.amount = this.amount.plus(10);
-    this.baseAmount += 10;
+    this.baseAmount = this.baseAmount.plus(10);
 
     if (EternityChallenge(8).isRunning) {
       player.eterc8ids -= 1;
@@ -286,9 +286,9 @@ class InfinityDimensionState extends DimensionState {
       return false;
     }
 
-    let purchasesUntilHardcap = this.purchaseCap - this.purchases;
+    let purchasesUntilHardcap = this.purchaseCap.minus(this.purchases);
     if (EternityChallenge(8).isRunning) {
-      purchasesUntilHardcap = Math.clampMax(purchasesUntilHardcap, player.eterc8ids);
+      purchasesUntilHardcap = BE.clampMax(purchasesUntilHardcap, player.eterc8ids);
     }
 
     const costScaling = new LinearCostScaling(
@@ -401,7 +401,7 @@ export const InfinityDimensions = {
 
     // Try to buy single from the highest affordable new dimensions
     unlockedDimensions.slice().reverse().forEach(dimension => {
-      if (dimension.purchases === 0) dimension.buySingle();
+      if (dimension.purchases.eq(0)) dimension.buySingle();
     });
 
     // Try to buy max from the lowest dimension (since lower dimensions have bigger multiplier per purchase)
