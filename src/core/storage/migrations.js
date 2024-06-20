@@ -477,6 +477,15 @@ export const migrations = {
     },
     58: player => {
       player.challenge.logic.completedBits &= ~(1 << 2);
+    },
+    59: player => {
+      delete player.lc3Rebuyables.ADMult;
+      // Copy from @WXYkk
+      for(let i = 0 ; i < 8 ; i++) {
+        player.dimensions.infinity[i].cost = new BE(InfinityDimension(i + 1)._baseCost);
+        player.dimensions.infinity[i].baseAmount = new BE(0);
+        player.dimensions.infinity[i].amount = new BE(0);
+      }
     }
   },
 

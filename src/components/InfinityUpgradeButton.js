@@ -93,7 +93,7 @@ export default {
       this.showWorstChallenge = upgrade.effectValue !== upgrade.cap &&
         player.challenge.normal.bestTimes.reduce(BE.sumReducer).lt(BE.MAX_VALUE);
       const worstChallengeTime = GameCache.worstChallengeTime.value;
-      const worstChallengeIndex = 2 + player.challenge.normal.bestTimes.indexOf(worstChallengeTime);
+      const worstChallengeIndex = 2 + player.challenge.normal.bestTimes.findIndex(time => time.eq(worstChallengeTime));
       this.worstChallengeString = `(Challenge ${worstChallengeIndex}: ${timeDisplayShort(worstChallengeTime)})`;
     }
   },

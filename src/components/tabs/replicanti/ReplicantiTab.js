@@ -19,16 +19,16 @@ export default {
       isUnlockAffordable: false,
       isInEC8: false,
       ec8Purchases: 0,
-      amount: new Decimal(),
-      mult: new Decimal(),
+      amount: new BE(),
+      mult: new BE(),
       hasTDMult: false,
-      multTD: new Decimal(),
+      multTD: new BE(),
       hasDTMult: false,
-      multDT: new Decimal(),
+      multDT: new BE(),
       hasIPMult: false,
-      multIP: new Decimal(),
+      multIP: new BE(),
       hasRaisedCap: false,
-      replicantiCap: new Decimal(),
+      replicantiCap: new BE(),
       capMultText: "",
       distantRG: 0,
       remoteRG: 0,
@@ -36,9 +36,9 @@ export default {
       isUncapped: false,
       nextEffarigRGThreshold: 0,
       canSeeGalaxyButton: false,
-      unlockCost: new Decimal(),
+      unlockCost: new BE(),
       scrambledText: "",
-      maxReplicanti: new Decimal(),
+      maxReplicanti: new BE(),
       estimateToMax: 0,
     };
   },
@@ -126,7 +126,7 @@ export default {
   methods: {
     update() {
       this.isUnlocked = Replicanti.areUnlocked;
-      this.unlockCost = new Decimal(1e140).dividedByEffectOf(PelleRifts.vacuum.milestones[1]);
+      this.unlockCost = new BE(1e140).dividedByEffectOf(PelleRifts.vacuum.milestones[1]);
       if (this.isDoomed) this.scrambledText = this.vacuumText();
       if (!this.isUnlocked) {
         this.isUnlockAffordable = Currency.infinityPoints.gte(this.unlockCost);
@@ -142,7 +142,7 @@ export default {
       this.multTD.copyFrom(DilationUpgrade.tdMultReplicanti.effectValue);
       this.hasDTMult = getAdjustedGlyphEffect("replicationdtgain") !== 0 && !Pelle.isDoomed;
       this.multDT = Math.clampMin(
-        Decimal.log10(Replicanti.amount) *
+        BE.log10(Replicanti.amount) *
           getAdjustedGlyphEffect("replicationdtgain"),
         1
       );
@@ -152,7 +152,7 @@ export default {
       this.hasRaisedCap = EffarigUnlock.infinity.isUnlocked && !this.isUncapped;
       this.replicantiCap.copyFrom(replicantiCap());
       if (this.hasRaisedCap) {
-        const mult = this.replicantiCap.div(Decimal.NUMBER_MAX_VALUE);
+        const mult = this.replicantiCap.div(BE.NUMBER_MAX_VALUE);
         this.capMultText = TimeStudy(31).canBeApplied
           ? `Base: ${formatX(mult.pow(1 / TimeStudy(31).effectValue), 2)}; after TS31: ${formatX(mult, 2)}`
           : formatX(mult, 2);
@@ -160,7 +160,7 @@ export default {
       this.distantRG = ReplicantiUpgrade.galaxies.distantRGStart;
       this.remoteRG = ReplicantiUpgrade.galaxies.remoteRGStart;
       this.effarigInfinityBonusRG = Effarig.bonusRG;
-      this.nextEffarigRGThreshold = Decimal.NUMBER_MAX_VALUE.pow(
+      this.nextEffarigRGThreshold = BE.NUMBER_MAX_VALUE.pow(
         Effarig.bonusRG + 2
       );
       this.canSeeGalaxyButton =
@@ -174,11 +174,11 @@ export default {
     // This is copied out of a short segment of ReplicantiGainText with comments and unneeded variables stripped
     calculateEstimate() {
       const updateRateMs = player.options.updateRate;
-      const logGainFactorPerTick = Decimal.divide(getGameSpeedupForDisplay() * updateRateMs *
+      const logGainFactorPerTick = BE.divide(getGameSpeedupForDisplay() * updateRateMs *
         (Math.log(player.replicanti.chance + 1)), getReplicantiInterval());
       const postScale = Math.log10(ReplicantiGrowth.scaleFactor) / ReplicantiGrowth.scaleLog10;
       const nextMilestone = this.maxReplicanti;
-      const coeff = Decimal.divide(updateRateMs / 1000, logGainFactorPerTick.times(postScale));
+      const coeff = BE.divide(updateRateMs / 1000, logGainFactorPerTick.times(postScale));
       return coeff.times(nextMilestone.divide(this.amount).pow(postScale).minus(1));
     }
   },
@@ -193,7 +193,7 @@ export default {
     >
       Unlock Replicanti
       <br>
-      Cost: {{ format(unlockCost) }} IP
+      Cost: ??? IP
     </PrimaryButton>
     <template v-else>
       <div

@@ -3,7 +3,7 @@ const rebuyable = config => {
   return {
     id,
     description,
-    cost: () => cost(player.lc3.rebuyables[id]),
+    cost: () => cost(player.lc3Rebuyables[id]),
     formatCost,
     effect: (x = player.celestials.pelle.rebuyables[id]) => effect(x),
     formatEffect,
@@ -13,7 +13,8 @@ const rebuyable = config => {
 };
 
 export const lc3Upgrades = {
-  amMult: {
-  
+  adMult: {
+    id: "adMult",
+    description: () => `还是源码大神`
   }
 }

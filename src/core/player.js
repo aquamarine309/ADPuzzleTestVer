@@ -31,7 +31,7 @@ window.player = {
   },
   challengePower: BEC.D0,
   lc3Rebuyables: {
-    ADMult: 0
+    adMult: 0
   },
   buyUntil10: true,
   hasDLC: false,
@@ -388,7 +388,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: BEC.D0,
-  version: 58,
+  version: 59,
   infinityPower: BEC.D1,
   postC4Tier: 0,
   eternityPoints: BEC.D0,
