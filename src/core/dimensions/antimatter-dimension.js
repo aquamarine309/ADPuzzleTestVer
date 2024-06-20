@@ -654,7 +654,7 @@ export const AntimatterDimensions = {
   },
 
   get buyTenMultiplier() {
-    if (NormalChallenge(7).isRunning) return BEC.D7.min(1 + DimBoost.totalBoosts * 0.3);
+    if (NormalChallenge(7).isRunning) return BEC.D7.min(DimBoost.totalBoosts.times(0.3).plus(1));
     
     if (LogicChallenge(1).isRunning) {
       return LogicChallenge(1).effects.

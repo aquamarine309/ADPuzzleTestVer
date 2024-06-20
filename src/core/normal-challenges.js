@@ -23,7 +23,7 @@ export function updateNormalAndInfinityChallenges(diff) {
   }
 
   if (NormalChallenge(2).isRunning) {
-    player.chall2Pow = Math.min(player.chall2Pow + diff.div(100 * 1800), 1);
+    player.chall2Pow = Math.min(player.chall2Pow + diff.div(100 * 1800).toNumberMax(1), 1);
   }
 
   if (InfinityChallenge(2).isRunning) {
