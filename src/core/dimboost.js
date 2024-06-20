@@ -203,7 +203,7 @@ export function softReset(tempBulk, forcedADReset = false, forcedAMReset = false
 }
 
 export function skipResetsIfPossible(enteringAntimatterChallenge) {
-  if (enteringAntimatterChallenge || Player.isInAntimatterChallenge) return;
+  if (enteringAntimatterChallenge || Player.isInAntimatterChallenge || LogicChallenge.isRunning) return;
   if (InfinityUpgrade.skipResetGalaxy.isBought && player.dimensionBoosts.lt(4)) {
     player.dimensionBoosts = BEC.D4;
     if (player.galaxies.eq(0)) player.galaxies = BEC.D1;

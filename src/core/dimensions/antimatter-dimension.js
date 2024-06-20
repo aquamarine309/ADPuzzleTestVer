@@ -453,7 +453,8 @@ class AntimatterDimensionState extends DimensionState {
     const tier = this.tier;
     if ((EternityChallenge(3).isRunning && tier > 4) ||
       (NormalChallenge(10).isRunning && tier > 6) ||
-      (Laitela.isRunning && tier > Laitela.maxAllowedDimension)) {
+      (Laitela.isRunning && tier > Laitela.maxAllowedDimension) ||
+      Currency.antimatter.gt(Player.infinityLimit)) {
       return false;
     }
     return this.totalAmount.gt(0);
@@ -681,6 +682,7 @@ export const AntimatterDimensions = {
     // Stop producing antimatter at Big Crunch goal because all the game elements
     // are hidden when pre-break Big Crunch button is on screen.
     const hasBigCrunchGoal = !player.break || Player.isInAntimatterChallenge;
+    if (Currency.antimatter.gt(Player.infinityLimit)) return;
     if (hasBigCrunchGoal && Currency.antimatter.gte(Player.infinityGoal)) return;
 
     let maxTierProduced = EternityChallenge(3).isRunning ? 3 : 7;
@@ -700,6 +702,7 @@ export const AntimatterDimensions = {
       AntimatterDimension(2).produceCurrency(Currency.antimatter, diff);
     }
     // Production may overshoot the goal on the final tick of the challenge
+    if (Currency.antimatter.gt(Player.infinityLimit)) Currency.antimatter.dropTo(Player.infinityLimit);
     if (hasBigCrunchGoal) Currency.antimatter.dropTo(Player.infinityGoal);
   }
 };

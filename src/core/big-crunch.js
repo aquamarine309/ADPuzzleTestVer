@@ -66,7 +66,7 @@ export function bigCrunchResetRequest(disableAnimation = false) {
 
 export function bigCrunchReset(
   forced = false,
-  enteringAntimatterChallenge = Player.isInAntimatterChallenge && player.options.retryChallenge
+  enteringAntimatterChallenge = (Player.isInAntimatterChallenge && player.options.retryChallenge) || (LogicChallenge.isRunning && !LogicChallenge.current.canComplete && Player.canCrunch)
 ) {
   if (!forced && !Player.canCrunch) return;
 

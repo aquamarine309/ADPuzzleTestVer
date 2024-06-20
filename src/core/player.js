@@ -388,7 +388,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: BEC.D0,
-  version: 57,
+  version: 58,
   infinityPower: BEC.D1,
   postC4Tier: 0,
   eternityPoints: BEC.D0,

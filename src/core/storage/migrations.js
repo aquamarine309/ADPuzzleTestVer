@@ -474,6 +474,9 @@ export const migrations = {
         player.infinityUpgrades.delete("postGalaxy");
         player.infinityPoints = player.infinityPoints.add(5e11);
       }
+    },
+    58: player => {
+      player.challenge.logic.completedBits &= ~(1 << 2);
     }
   },
 
