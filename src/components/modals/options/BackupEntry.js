@@ -41,7 +41,7 @@ export default {
         "Antimatter"];
 
       for (let index = 0; index < resources.length; index++) {
-        const val = new Decimal(resources[index]);
+        const val = new BE(resources[index]);
         if (val.gt(0)) return `${names[index]}: ${formatPostBreak(val, 2)}`;
       }
 

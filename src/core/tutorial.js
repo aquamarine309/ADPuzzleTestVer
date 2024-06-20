@@ -22,7 +22,7 @@ const tutorialStates = [
   },
   {
     id: TUTORIAL_STATE.TICKSPEED,
-    condition: () => AntimatterDimension(2).bought > 0
+    condition: () => AntimatterDimension(2).bought.gt(0)
   },
   {
     id: TUTORIAL_STATE.DIMBOOST,
@@ -48,7 +48,7 @@ export const Tutorial = {
   // only visually updates whenever the UI elements need changing, we need to explicitly check boost count or else
   // this will remain visible until a galaxy can be purchased
   emphasizeH2P() {
-    const hasFirstBoost = player.tutorialState > TUTORIAL_STATE.DIMBOOST || player.dimensionBoosts > 0;
+    const hasFirstBoost = player.tutorialState > TUTORIAL_STATE.DIMBOOST || player.dimensionBoosts.gt(0);
     return player.records.fullGameCompletions === 0 && !hasFirstBoost;
   },
 

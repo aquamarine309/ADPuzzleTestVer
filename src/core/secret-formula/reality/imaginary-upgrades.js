@@ -1,9 +1,9 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 const rebuyable = props => {
   props.cost = () => props.initialCost * Math.pow(props.costMult, player.reality.imaginaryRebuyables[props.id]);
   const { effect } = props;
-  if (props.isDecimal) props.effect = () => Decimal.pow(effect, player.reality.imaginaryRebuyables[props.id]);
+  if (props.isBE) props.effect = () => BE.pow(effect, player.reality.imaginaryRebuyables[props.id]);
   else props.effect = () => effect * player.reality.imaginaryRebuyables[props.id];
   if (!props.formatEffect) props.formatEffect = value => `+${format(value, 2, 2)}`;
   props.formatCost = value => format(value, 2, 0);
@@ -59,7 +59,7 @@ export const imaginaryUpgrades = [
     description: () => `Increase the Reality Machine cap by ${formatX(1e100)}`,
     effect: 1e100,
     formatEffect: value => `${formatX(value)}`,
-    isDecimal: true
+    isBE: true
   }),
   rebuyable({
     name: "Runic Assurance",
@@ -76,9 +76,9 @@ export const imaginaryUpgrades = [
     initialCost: 1e7,
     costMult: 800,
     description: () => `Multiply Infinity Dimensions by ${format("1e100000")}`,
-    effect: DC.E100000,
+    effect: BEC.E100000,
     formatEffect: value => `${formatX(value)}`,
-    isDecimal: true
+    isBE: true
   }),
   rebuyable({
     name: "Cosmic Filament",
@@ -123,7 +123,7 @@ export const imaginaryUpgrades = [
       gainedGlyphLevel().actualLevel >= 9000,
     checkEvent: GAME_EVENT.REALITY_RESET_BEFORE,
     description: "Gain free Dimboosts based on Imaginary rebuyable count",
-    effect: () => 2e4 * ImaginaryUpgrades.totalRebuyables,
+    effect: () => BE.times(ImaginaryUpgrades.totalRebuyables, 2e4),
     formatEffect: value => `${format(value, 1)}`,
     isDisabledInDoomed: true
   },
@@ -204,8 +204,8 @@ export const imaginaryUpgrades = [
     formatCost: x => format(x, 1),
     requirement: () => `Have ${formatInt(80000)} total Galaxies`,
     hasFailed: () => false,
-    checkRequirement: () => Replicanti.galaxies.total + player.galaxies +
-      player.dilation.totalTachyonGalaxies >= 80000,
+    checkRequirement: () => Replicanti.galaxies.total.plus(player.galaxies).plus
+      (player.dilation.totalTachyonGalaxies).gte(80000),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     description: "Unlock the 4th Dark Matter Dimension",
   },
@@ -218,7 +218,7 @@ export const imaginaryUpgrades = [
       ${formatInt(8)} Time Studies in this Reality`,
     hasFailed: () => player.requirementChecks.reality.maxStudies > 8,
     checkRequirement: () => player.requirementChecks.reality.maxStudies <= 8 &&
-      Tickspeed.continuumValue >= 3.85e6,
+      Tickspeed.continuumValue.gte(3.85e6),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     canLock: true,
     lockEvent: () => `purchase more than ${formatInt(8)} Time Studies`,
@@ -244,7 +244,7 @@ export const imaginaryUpgrades = [
     requirement: () => `Reach ${format("1e7400000000000")} antimatter with Continuum disabled for the entire Reality`,
     hasFailed: () => !player.requirementChecks.reality.noContinuum,
     checkRequirement: () => player.requirementChecks.reality.noContinuum &&
-      Currency.antimatter.value.log10() >= 7.4e12,
+      Currency.antimatter.value.log10().gte(7.4e12),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     canLock: true,
     lockEvent: "enable Continuum",
@@ -263,7 +263,7 @@ export const imaginaryUpgrades = [
     // Note: 4 cursed glyphs is -12 glyph count, but equipping a positive glyph in the last slot is allowed
     hasFailed: () => !Effarig.isRunning || player.requirementChecks.reality.maxGlyphs > -10,
     checkRequirement: () => Effarig.isRunning && player.requirementChecks.reality.maxGlyphs < -10 &&
-      Currency.antimatter.value.exponent >= 1.5e11,
+      Currency.antimatter.value.log10().gte(1.5e11),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     description: () => `All Glyph Sacrifice totals are increased to ${format(1e100)}`,
     effect: 1e100,
@@ -280,7 +280,7 @@ export const imaginaryUpgrades = [
       gainedGlyphLevel().actualLevel >= 20000,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     description: "Increase free Dimboost count based on Tesseract count",
-    effect: () => Math.floor(0.25 * Math.pow(Tesseracts.effectiveCount, 2)),
+    effect: () => BE.floor(BE.pow(Tesseracts.effectiveCount, 2).times(0.25)),
     formatEffect: value => `${formatX(value)}`,
     isDisabledInDoomed: true
   },
@@ -300,7 +300,7 @@ export const imaginaryUpgrades = [
     canLock: true,
     // Three locking events: uninvert, discharge, and entering (but not auto-completing) EC12
     description: "Increase free Dimboost strength based on Singularity count",
-    effect: () => Decimal.pow(player.celestials.laitela.singularities, 300),
+    effect: () => BE.pow(player.celestials.laitela.singularities, 300),
     formatEffect: value => `${formatX(value, 2, 1)}`,
     isDisabledInDoomed: true
   },

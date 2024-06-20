@@ -1,4 +1,4 @@
-import { DC } from "./constants.js";
+import { BEC } from "./constants.js";
 
 export class Sacrifice {
   // This is tied to the "buying an 8th dimension" achievement in order to hide it from new players before they reach
@@ -8,7 +8,7 @@ export class Sacrifice {
   }
 
   static get canSacrifice() {
-    return DimBoost.purchasedBoosts > 4 && !EternityChallenge(3).isRunning && this.nextBoost.gt(1) &&
+    return DimBoost.purchasedBoosts.gt(4) && !EternityChallenge(3).isRunning && this.nextBoost.gt(1) &&
       AntimatterDimension(8).totalAmount.gt(0) && Currency.antimatter.lt(Player.infinityLimit) &&
       !Enslaved.isRunning;
   }
@@ -16,7 +16,7 @@ export class Sacrifice {
   static get disabledCondition() {
     if (NormalChallenge(10).isRunning) return "8th Dimensions are disabled";
     if (EternityChallenge(3).isRunning) return "Eternity Challenge 3";
-    if (DimBoost.purchasedBoosts < 5) return `Requires ${formatInt(5)} Dimension Boosts`;
+    if (DimBoost.purchasedBoosts.lt(5)) return `Requires ${formatInt(5)} Dimension Boosts`;
     if (AntimatterDimension(8).totalAmount.eq(0)) return "No 8th Antimatter Dimensions";
     if (this.nextBoost.lte(1)) return `${formatX(1)} multiplier`;
     if (Player.isInAntimatterChallenge) return "Challenge goal reached";
@@ -71,7 +71,7 @@ export class Sacrifice {
 
   static get nextBoost() {
     const nd1Amount = AntimatterDimension(1).amount;
-    if (nd1Amount.eq(0)) return DC.D1;
+    if (nd1Amount.eq(0)) return BEC.D1;
     const sacrificed = player.sacrificed.clampMin(1);
     let prePowerSacrificeMult;
     // Pre-reality update C8 works really weirdly - every sacrifice, the current sacrifice multiplier gets applied to
@@ -84,14 +84,14 @@ export class Sacrifice {
     } else if (InfinityChallenge(2).isCompleted) {
       prePowerSacrificeMult = nd1Amount.dividedBy(sacrificed);
     } else {
-      prePowerSacrificeMult = new Decimal((nd1Amount.log10() / 10) / Math.max(sacrificed.log10() / 10, 1));
+      prePowerSacrificeMult = nd1Amount.log10().div(10).div(BE.max(sacrificed.log10().div(10), 1));
     }
 
     return prePowerSacrificeMult.clampMin(1).pow(this.sacrificeExponent);
   }
 
   static get totalBoost() {
-    if (player.sacrificed.eq(0)) return DC.D1;
+    if (player.sacrificed.eq(0)) return BEC.D1;
     // C8 uses a variable that keeps track of a sacrifice boost that persists across sacrifice-resets and isn't
     // used anywhere else, which also naturally takes account of the exponent from achievements and time studies.
     if (NormalChallenge(8).isRunning) {
@@ -103,7 +103,7 @@ export class Sacrifice {
     if (InfinityChallenge(2).isCompleted) {
       prePowerBoost = player.sacrificed;
     } else {
-      prePowerBoost = new Decimal(player.sacrificed.log10() / 10);
+      prePowerBoost = new BE(player.sacrificed.log10() / 10);
     }
 
     return prePowerBoost.clampMin(1).pow(this.sacrificeExponent);
@@ -113,10 +113,10 @@ export class Sacrifice {
 export function sacrificeReset() {
   if (!Sacrifice.canSacrifice) return false;
   if ((!player.break || (!InfinityChallenge.isRunning && NormalChallenge.isRunning)) &&
-    Currency.antimatter.gt(Decimal.NUMBER_MAX_VALUE)) return false;
+    Currency.antimatter.gt(BE.NUMBER_MAX_VALUE)) return false;
   if (
     NormalChallenge(8).isRunning &&
-    (Sacrifice.totalBoost.gte(Decimal.NUMBER_MAX_VALUE))
+    (Sacrifice.totalBoost.gte(BE.NUMBER_MAX_VALUE))
   ) {
     return false;
   }

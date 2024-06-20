@@ -2,7 +2,7 @@ export default {
   name: "InfinityPointsHeader",
   data() {
     return {
-      infinityPoints: new Decimal(),
+      infinityPoints: new BE(),
       isVisible: false
     };
   },

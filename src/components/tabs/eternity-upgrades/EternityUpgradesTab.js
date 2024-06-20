@@ -22,7 +22,7 @@ export default {
         ]
       ];
     },
-    costIncreases: () => EternityUpgrade.epMult.costIncreaseThresholds.map(x => new Decimal(x))
+    costIncreases: () => EternityUpgrade.epMult.costIncreaseThresholds.map(x => new BE(x))
   },
   methods: {
     formatPostBreak

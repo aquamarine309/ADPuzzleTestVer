@@ -124,7 +124,6 @@ from device hibernation)</li>
 trigger a prestige when on "time" or "X highest" mode</li>
 <li>Eternity Challenges now stay visible on the EC tab as long as you have unlocked them at some point on that Reality,
 even if you unlock a different one afterwards without completing it first</li>
-<li>Resource catchup modal is now slightly more detailed during the first few Realities</li>
 <li>Upgrades affected by the EU2 perk now show more accurate cost text</li>
 <li>You can no longer accidentally Reality without selecting a Glyph; the confirm option will not appear unless one
 is selected. (Disabling the selection modal after unlocking sacrifice still lets the game choose randomly)</li>

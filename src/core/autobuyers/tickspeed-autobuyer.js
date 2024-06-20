@@ -1,4 +1,4 @@
-import { DC } from "../constants.js";
+import { BEC } from "../constants.js";
 
 import { UpgradeableAutobuyerState } from "./autobuyer.js";
 
@@ -29,7 +29,7 @@ export class TickspeedAutobuyerState extends UpgradeableAutobuyerState {
   }
 
   get antimatterCost() {
-    return DC.E140;
+    return BEC.E140;
   }
 
   get canBeBought() {

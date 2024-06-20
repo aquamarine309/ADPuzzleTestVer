@@ -5,8 +5,8 @@ export class Effect {
     }
     const isFunction = v => typeof v === "function";
     const isNumber = v => typeof v === "number";
-    const isDecimal = v => v instanceof Decimal;
-    const isConstant = v => isNumber(v) || isDecimal(v);
+    const isBE = v => v instanceof BE;
+    const isConstant = v => isNumber(v) || isBE(v);
     if (!isFunction(effect) && !isConstant(effect)) {
       throw new Error("Unknown effect value type.");
     }
@@ -44,8 +44,8 @@ export class Effect {
     if (isConstant(cap)) {
       if (isNumber(effect)) {
         effectValueProperty.get = () => Math.min(effect, this.cap);
-      } else if (isDecimal(effect)) {
-        effectValueProperty.get = () => Decimal.min(effect, this.cap);
+      } else if (isBE(effect)) {
+        effectValueProperty.get = () => BE.min(effect, this.cap);
       } else if (isFunction(effect)) {
         // Postpone effectValue specialization until the first call
         effectValueProperty.configurable = true;
@@ -54,8 +54,8 @@ export class Effect {
           const specializedProperty = createProperty();
           if (isNumber(effectValue)) {
             specializedProperty.get = () => Math.min(effect(), this.cap);
-          } else if (isDecimal(effectValue)) {
-            specializedProperty.get = () => Decimal.min(effect(), this.cap);
+          } else if (isBE(effectValue)) {
+            specializedProperty.get = () => BE.min(effect(), this.cap);
           } else {
             throw new Error("Unknown effect value type.");
           }
@@ -69,10 +69,10 @@ export class Effect {
           const capValue = this.cap;
           return capValue === undefined ? effect : Math.min(effect, capValue);
         };
-      } else if (isDecimal(effect)) {
+      } else if (isBE(effect)) {
         effectValueProperty.get = () => {
           const capValue = this.cap;
-          return capValue === undefined ? effect : Decimal.min(effect, capValue);
+          return capValue === undefined ? effect : BE.min(effect, capValue);
         };
       } else if (isFunction(effect)) {
         // Postpone effectValue specialization until the first call
@@ -85,10 +85,10 @@ export class Effect {
               const capValue = this.cap;
               return capValue === undefined ? effect() : Math.min(effect(), capValue);
             };
-          } else if (isDecimal(effectValue)) {
+          } else if (isBE(effectValue)) {
             specializedProperty.get = () => {
               const capValue = this.cap;
-              return capValue === undefined ? effect() : Decimal.min(effect(), capValue);
+              return capValue === undefined ? effect() : BE.min(effect(), capValue);
             };
           } else {
             throw new Error("Unknown effect value type.");
@@ -102,21 +102,21 @@ export class Effect {
   }
 
   /**
-   * @returns {number|Decimal}
+   * @returns {number|BE}
    */
   get effectValue() {
     throw new Error("Effect is undefined.");
   }
 
   /**
-   * @returns {number|Decimal}
+   * @returns {number|BE}
    */
   get uncappedEffectValue() {
     throw new Error("Effect is undefined.");
   }
 
   /**
-   * @returns {number|Decimal|undefined}
+   * @returns {number|BE|undefined}
    */
   get cap() {
     throw new Error("Cap is undefined.");
@@ -135,8 +135,8 @@ export class Effect {
   }
 
   /**
-   * @param {number|Decimal} defaultValue
-   * @returns {number|Decimal}
+   * @param {number|BE} defaultValue
+   * @returns {number|BE}
    */
   effectOrDefault(defaultValue) {
     return this.canBeApplied ? this.effectValue : defaultValue;

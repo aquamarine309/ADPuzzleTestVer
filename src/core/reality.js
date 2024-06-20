@@ -1,4 +1,4 @@
-import { DC } from "./constants.js";
+import { BEC } from "./constants.js";
 
 /**
  * Object that manages the selection of glyphs offered to the player
@@ -301,7 +301,7 @@ function updateRealityRecords(realityProps) {
 function giveRealityRewards(realityProps) {
   const multiplier = realityProps.simulatedRealities + 1;
   const realityAndPPMultiplier = multiplier + binomialDistribution(multiplier, Achievement(154).effectOrDefault(0));
-  const gainedRM = Currency.realityMachines.gte(MachineHandler.hardcapRM) ? DC.D0 : realityProps.gainedRM;
+  const gainedRM = Currency.realityMachines.gte(MachineHandler.hardcapRM) ? BEC.D0 : realityProps.gainedRM;
   Currency.realityMachines.add(gainedRM.times(multiplier));
   updateRealityRecords(realityProps);
   addRealityTime(
@@ -341,7 +341,7 @@ function giveRealityRewards(realityProps) {
       // Encode iM values into the RM variable as e10000 * iM in order to only require one prop
       let machineRecord;
       if (Currency.imaginaryMachines.value === 0) machineRecord = player.reality.maxRM;
-      else machineRecord = DC.E10000.times(Currency.imaginaryMachines.value);
+      else machineRecord = BEC.E10000.times(Currency.imaginaryMachines.value);
       player.celestials.teresa.lastRepeatedMachines = player.celestials.teresa.lastRepeatedMachines
         .clampMin(machineRecord);
     }
@@ -586,7 +586,7 @@ export function beginProcessReality(realityProps) {
 export function finishProcessReality(realityProps) {
   const finalEP = Currency.eternityPoints.value.plus(gainedEternityPoints());
   if (player.records.bestReality.bestEP.lt(finalEP)) {
-    player.records.bestReality.bestEP = new Decimal(finalEP);
+    player.records.bestReality.bestEP = new BE(finalEP);
     player.records.bestReality.bestEPSet = Glyphs.copyForRecords(Glyphs.active.filter(g => g !== null));
   }
 
@@ -611,7 +611,7 @@ export function finishProcessReality(realityProps) {
   recalculateAllGlyphs();
   Glyphs.updateMaxGlyphCount(true);
 
-  player.sacrificed = DC.D0;
+  player.sacrificed = BEC.D0;
 
   lockAchievementsOnReality();
 
@@ -627,8 +627,8 @@ export function finishProcessReality(realityProps) {
   player.records.thisInfinity.time = 0;
   player.records.thisInfinity.lastBuyTime = 0;
   player.records.thisInfinity.realTime = 0;
-  player.dimensionBoosts = 0;
-  player.galaxies = 0;
+  player.dimensionBoosts = BEC.D0;
+  player.galaxies = BEC.D0;
   player.partInfinityPoint = 0;
   player.partInfinitied = 0;
   player.break = false;
@@ -647,7 +647,7 @@ export function finishProcessReality(realityProps) {
   player.records.bestEternity.time = 999999999999;
   player.records.bestEternity.realTime = 999999999999;
   if (!PelleUpgrade.keepEternityUpgrades.canBeApplied) player.eternityUpgrades.clear();
-  player.totalTickGained = 0;
+  player.totalTickGained = BEC.D0;
   if (!PelleUpgrade.keepEternityChallenges.canBeApplied) player.eternityChalls = {};
   player.reality.unlockedEC = 0;
   player.reality.lastAutoEC = 0;
@@ -665,7 +665,7 @@ export function finishProcessReality(realityProps) {
   }
   player.records.thisReality.time = 0;
   player.records.thisReality.realTime = 0;
-  player.records.thisReality.maxReplicanti = DC.D0;
+  player.records.thisReality.maxReplicanti = BEC.D0;
   if (!PelleUpgrade.timeStudiesNoReset.canBeApplied) Currency.timeTheorems.reset();
   player.celestials.v.STSpent = 0;
   if (!PelleUpgrade.timeStudiesNoReset.canBeApplied) {
@@ -686,14 +686,14 @@ export function finishProcessReality(realityProps) {
   if (!PelleUpgrade.tachyonParticlesNoReset.canBeApplied) {
     Currency.tachyonParticles.reset();
   }
-  player.dilation.nextThreshold = DC.E3;
-  player.dilation.baseTachyonGalaxies = 0;
-  player.dilation.totalTachyonGalaxies = 0;
+  player.dilation.nextThreshold = BEC.E3;
+  player.dilation.baseTachyonGalaxies = BEC.D0;
+  player.dilation.totalTachyonGalaxies = BEC.D0;
   Currency.dilatedTime.reset();
-  player.records.thisInfinity.maxAM = DC.D0;
-  player.records.thisEternity.maxAM = DC.D0;
-  player.records.thisReality.maxDT = DC.D0;
-  player.dilation.lastEP = DC.DM1;
+  player.records.thisInfinity.maxAM = BEC.D0;
+  player.records.thisEternity.maxAM = BEC.D0;
+  player.records.thisReality.maxDT = BEC.D0;
+  player.dilation.lastEP = BEC.DM1;
   Currency.antimatter.reset();
   Enslaved.autoReleaseTick = 0;
   player.celestials.enslaved.hasSecretStudy = false;
@@ -710,13 +710,13 @@ export function finishProcessReality(realityProps) {
   player.celestials.ra.peakGamespeed = 1;
 
   InfinityDimensions.resetAmount();
-  player.records.thisInfinity.bestIPmin = DC.D0;
-  player.records.bestInfinity.bestIPminEternity = DC.D0;
-  player.records.thisEternity.bestEPmin = DC.D0;
-  player.records.thisEternity.bestInfinitiesPerMs = DC.D0;
-  player.records.thisEternity.bestIPMsWithoutMaxAll = DC.D0;
-  player.records.bestEternity.bestEPminReality = DC.D0;
-  player.records.thisReality.bestEternitiesPerMs = DC.D0;
+  player.records.thisInfinity.bestIPmin = BEC.D0;
+  player.records.bestInfinity.bestIPminEternity = BEC.D0;
+  player.records.thisEternity.bestEPmin = BEC.D0;
+  player.records.thisEternity.bestInfinitiesPerMs = BEC.D0;
+  player.records.thisEternity.bestIPMsWithoutMaxAll = BEC.D0;
+  player.records.bestEternity.bestEPminReality = BEC.D0;
+  player.records.thisReality.bestEternitiesPerMs = BEC.D0;
   player.records.thisReality.bestRSmin = 0;
   player.records.thisReality.bestRSminVal = 0;
   resetTimeDimensions();
@@ -792,8 +792,8 @@ export function applyRUPG10() {
     if (autobuyer.data.interval !== undefined) autobuyer.data.interval = 100;
   }
 
-  player.dimensionBoosts = Math.max(4, player.dimensionBoosts);
-  player.galaxies = Math.max(1, player.galaxies);
+  player.dimensionBoosts = BE.max(4, player.dimensionBoosts);
+  player.galaxies = BE.max(1, player.galaxies);
   player.break = true;
   Currency.eternities.bumpTo(100);
   Replicanti.amount = Replicanti.amount.clampMin(1);

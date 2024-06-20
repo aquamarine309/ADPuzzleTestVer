@@ -1,6 +1,6 @@
 import { sha512_256 } from "../../modules/sha512.js";
 
-import { DC } from "./constants.js";
+import { BEC } from "./constants.js";
 import FullScreenAnimationHandler from "./full-screen-animation-handler.js";
 
 /* eslint-disable no-console */
@@ -108,8 +108,8 @@ dev.refundDilStudies = function() {
 };
 
 dev.resetDilation = function() {
-  player.dilation.dilatedTime = DC.D0;
-  player.dilation.tachyonParticles = DC.D0;
+  player.dilation.dilatedTime = BEC.D0;
+  player.dilation.tachyonParticles = BEC.D0;
   player.dilation.rebuyables[1] = 0;
   player.dilation.rebuyables[2] = 0;
   player.dilation.rebuyables[3] = 0;
@@ -236,17 +236,17 @@ dev.printResourceTotals = function() {
   console.log(`Galaxies: ${aGalaxy}+${rGalaxy}+${dGalaxy} (${aGalaxy + rGalaxy + dGalaxy})`);
   console.log(`Tick reduction: e${-Math.round(getTickSpeedMultiplier().log10())}`);
 
-  let ADmults = DC.D1;
+  let ADmults = BEC.D1;
   for (let i = 1; i <= 8; i++) {
     ADmults = ADmults.times(AntimatterDimension(i).multiplier);
   }
   console.log(`AD mults: e${ADmults.log10().toPrecision(3)}`);
-  let IDmults = DC.D1;
+  let IDmults = BEC.D1;
   for (let i = 1; i <= 8; i++) {
     IDmults = IDmults.times(InfinityDimension(i).multiplier);
   }
   console.log(`ID mults: e${IDmults.log10().toPrecision(3)}`);
-  let TDmults = DC.D1;
+  let TDmults = BEC.D1;
   for (let i = 1; i <= 8; i++) {
     TDmults = TDmults.times(TimeDimension(i).multiplier);
   }
@@ -275,7 +275,7 @@ dev.testReplicantiCode = function(singleId, useDebugger = false) {
   const situationLists = [
     [
       function() {
-        player.infinities = DC.E12;
+        player.infinities = BEC.E12;
         player.celestials.effarig.unlockBits = 64;
       }
     ],
@@ -379,8 +379,8 @@ dev.testReplicantiCode = function(singleId, useDebugger = false) {
   const runSituation = function(id) {
     Replicanti.galaxies.isPlayerHoldingR = false;
     GameStorage.loadPlayerObject(Player.defaultStart);
-    player.infinities = DC.D1;
-    player.infinityPoints = DC.E150;
+    player.infinities = BEC.D1;
+    player.infinityPoints = BEC.E150;
     Replicanti.unlock();
     player.replicanti.chance = 1;
     for (let i = 0; i < situationLists.length; i++) {
@@ -398,8 +398,8 @@ dev.testReplicantiCode = function(singleId, useDebugger = false) {
       }
     }
     doReplicantiTicks();
-    player.antimatter = DC.E309;
-    player.records.thisInfinity.maxAM = DC.E309;
+    player.antimatter = BEC.E309;
+    player.records.thisInfinity.maxAM = BEC.E309;
     bigCrunchReset();
     doReplicantiTicks();
   };

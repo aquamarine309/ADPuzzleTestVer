@@ -12,8 +12,8 @@ export default {
       isAutobuyerActive: false,
       isAutoUnlocked: false,
       isAffordable: false,
-      multiplier: new Decimal(),
-      cost: new Decimal()
+      multiplier: new BE(),
+      cost: new BE()
     };
   },
   computed: {

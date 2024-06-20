@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 import { MultiplierTabIcons } from "./icons.js";
 
@@ -15,7 +15,7 @@ export const infinities = {
   },
   achievement: {
     name: "Achievements",
-    multValue: () => DC.D1.timesEffectsOf(
+    multValue: () => BEC.D1.timesEffectsOf(
       Achievement(87),
       Achievement(131).effects.infinitiesGain,
       Achievement(164)
@@ -31,13 +31,13 @@ export const infinities = {
   },
   amplifierInf: {
     name: "Reality Upgrade - Boundless Amplifier",
-    multValue: () => DC.D1.timesEffectsOf(RealityUpgrade(5)),
+    multValue: () => BEC.D1.timesEffectsOf(RealityUpgrade(5)),
     isActive: () => PlayerProgress.realityUnlocked() && !Pelle.isDoomed,
     icon: MultiplierTabIcons.UPGRADE("reality"),
   },
   realityUpgrades: {
     name: "Reality Upgrade - Innumerably Construct",
-    multValue: () => DC.D1.timesEffectsOf(RealityUpgrade(7)),
+    multValue: () => BEC.D1.timesEffectsOf(RealityUpgrade(7)),
     isActive: () => PlayerProgress.realityUnlocked(),
     icon: MultiplierTabIcons.UPGRADE("reality"),
   },

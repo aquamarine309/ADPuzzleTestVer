@@ -1,6 +1,6 @@
 import Vue from "../../../../modules/vue.js";
 
-import { DC } from "../../../core/constants.js";
+import { BEC } from "../../../core/constants.js";
 
 export class BreakdownEntryInfo {
   constructor(key) {
@@ -22,7 +22,7 @@ export class BreakdownEntryInfo {
     this._isBase = createGetter(dbEntry.isBase, args);
     this._ignoresNerfPowers = createGetter(dbEntry.ignoresNerfPowers, args);
     this.data = Vue.observable({
-      mult: new Decimal(0),
+      mult: new BE(0),
       pow: 0,
       isVisible: false,
       lastVisibleAt: 0
@@ -31,7 +31,7 @@ export class BreakdownEntryInfo {
 
   update() {
     const isVisible = this.isVisible;
-    this.data.mult.fromDecimal(isVisible ? this.mult : DC.D1);
+    this.data.mult.fromBE(isVisible ? this.mult : BEC.D1);
     this.data.pow = isVisible ? this.pow : 1;
     this.data.isVisible = isVisible;
     if (isVisible) {
@@ -44,7 +44,7 @@ export class BreakdownEntryInfo {
   }
 
   get mult() {
-    return new Decimal(this._multValue() ?? 1);
+    return new BE(this._multValue() ?? 1);
   }
 
   get pow() {

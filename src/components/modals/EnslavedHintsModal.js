@@ -9,8 +9,8 @@ export default {
   },
   data() {
     return {
-      currentStored: 0,
-      nextHintCost: 0,
+      currentStored: new BE(0),
+      nextHintCost: new BE(0),
       canGetHint: false,
       shownEntries: [],
       realityHintsLeft: 0,
@@ -32,33 +32,33 @@ export default {
     // of cost bumps and I'm not entirely sure why. There's probably a numerical issue I can't quite figure out, but
     // considering that much cost raising can't happen in practice I think I'm just going to leave it be.
     timeEstimate() {
-      if (this.currentStored >= this.nextHintCost) return "";
+      if (this.currentStored.gte(this.nextHintCost)) return "";
 
       // Relevant values are stored as milliseconds, so multiply the rate by 1000 to get to seconds
-      const storeRate = 1000 * (Enslaved.isStoringGameTime
+      const storeRate = (Enslaved.isStoringGameTime
         ? Enslaved.currentBlackHoleStoreAmountPerMs
-        : getGameSpeedupFactor());
-      const alreadyWaited = this.currentStored / storeRate;
-      const decaylessTime = this.nextHintCost / storeRate;
+        : getGameSpeedupFactor()).times(1000);
+      const alreadyWaited = this.currentStored.div(storeRate);
+      const decaylessTime = this.nextHintCost.div(storeRate);
 
       // Check if decay is irrelevant and don't do the hard calculations if so
-      const minCostEstimate = (TimeSpan.fromYears(1e40).totalMilliseconds - this.currentStored) / storeRate;
-      if (TimeSpan.fromSeconds(minCostEstimate).totalDays > this.hints) {
+      const minCostEstimate = TimeSpan.fromYears(1e40).totalMilliseconds.minus(this.currentStored).div(storeRate);
+      if (TimeSpan.fromSeconds(minCostEstimate).totalDays.gt(this.hints)) {
         return `${TimeSpan.fromSeconds(minCostEstimate).toStringShort(true)}`;
       }
 
       // Decay is 3x per day, but the math needs decay per second
       const K = Math.pow(3, 1 / 86400);
-      const x = decaylessTime * Math.log(K) * Math.pow(K, alreadyWaited);
-      const timeToGoal = productLog(x) / Math.log(K) - alreadyWaited;
+      const x = BE.pow(K, alreadyWaited).times(Math.log(K)).times(decaylessTime);
+      const timeToGoal = productLog(x).div(Math.log(K)).minus(alreadyWaited);
       return `${TimeSpan.fromSeconds(timeToGoal).toStringShort(true)}`;
     }
   },
   methods: {
     update() {
-      this.currentStored = player.celestials.enslaved.stored;
+      this.currentStored.copyFrom(player.celestials.enslaved.stored);
       this.nextHintCost = Enslaved.nextHintCost;
-      this.canGetHint = this.currentStored >= this.nextHintCost;
+      this.canGetHint = this.currentStored.gte(this.nextHintCost);
       this.shownEntries = [];
 
       this.realityHintsLeft = EnslavedProgress.all.length;

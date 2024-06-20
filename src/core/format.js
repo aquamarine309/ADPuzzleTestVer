@@ -38,22 +38,22 @@ window.formatPostBreak = function formatPostBreak(value, places, placesUnder1000
     return notation.infinite;
   }
 
-  const decimal = Decimal.fromValue_noAlloc(value);
+  const decimal = BE.fromValue_noAlloc(value);
 
-  if (decimal.exponent < -300) {
-    return decimal.sign() < 0
+  if (decimal.abs().lt(1e-300)) {
+    return decimal.sign < 0
       ? notation.formatVerySmallNegativeDecimal(decimal.abs(), placesUnder1000)
       : notation.formatVerySmallDecimal(decimal, placesUnder1000);
   }
 
-  if (decimal.exponent < 3) {
+  if (decimal.abs().lt(3)) {
     const number = decimal.toNumber();
     return number < 0
       ? notation.formatNegativeUnder1000(Math.abs(number), placesUnder1000)
       : notation.formatUnder1000(number, placesUnder1000);
   }
 
-  return decimal.sign() < 0
+  return decimal.sign < 0
     ? notation.formatNegativeDecimal(decimal.abs(), places)
     : notation.formatDecimal(decimal, places);
 };
@@ -67,7 +67,7 @@ window.formatPow = function formatPow(value, places, placesUnder1000) {
 };
 
 window.formatPercents = function formatPercents(value, places) {
-  return `${format(value * 100, 2, places)}%`;
+  return `${format(BE.times(value, 100), 2, places)}%`;
 };
 
 window.formatRarity = function formatRarity(value) {
@@ -115,7 +115,7 @@ window.formatWithCommas = function formatWithCommas(value) {
  */
 window.isSingular = function isSingular(amount) {
   if (typeof amount === "number") return amount === 1;
-  if (amount instanceof Decimal) return amount.eq(1);
+  if ((amount instanceof Decimal) || (amount instanceof BE)) return amount.eq(1);
   throw `Amount must be either a number or Decimal. Instead, amount was ${amount}`;
 };
 

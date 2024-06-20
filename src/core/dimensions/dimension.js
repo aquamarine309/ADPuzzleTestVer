@@ -18,7 +18,9 @@ export class DimensionState {
   /** @returns {Decimal} */
   get amount() { return this.data.amount; }
   /** @param {Decimal} value */
-  set amount(value) { this.data.amount = value; }
+  set amount(value) {
+    this.data.amount = value;
+  }
 
   /** @returns {number} */
   get bought() { return this.data.bought; }
@@ -33,7 +35,7 @@ export class DimensionState {
   }
 
   productionForDiff(diff) {
-    return this.productionPerSecond.times(diff / 1000);
+    return this.productionPerSecond.times(diff.div(1000));
   }
 
   produceCurrency(currency, diff) {
@@ -41,7 +43,12 @@ export class DimensionState {
   }
 
   produceDimensions(dimension, diff) {
-    dimension.amount = dimension.amount.plus(this.productionForDiff(diff));
+    const amount = dimension.amount.plus(this.productionForDiff(diff));
+    if (amount.isNan()) {
+      console.log(dimension, diff);
+      throw "[Dimension Error] Unexpected NaN production";
+    }
+    dimension.amount = amount;
   }
 
   static get dimensionCount() { return 8; }

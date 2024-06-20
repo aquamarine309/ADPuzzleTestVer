@@ -19,7 +19,7 @@ export default {
     hasAutoRelease: false,
     isRunning: false,
     completed: false,
-    storedBlackHole: 0,
+    storedBlackHole: new BE(0),
     storedReal: 0,
     storedRealEffiency: 0,
     storedRealCap: 0,
@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     update() {
-      this.isStoringBlackHole = Enslaved.isStoringGameTime;
+      this.isStoringBlackHole.copyFrom(Enslaved.isStoringGameTime);
       this.storedBlackHole = player.celestials.enslaved.stored;
       this.isStoringReal = Enslaved.isStoringRealTime;
       this.autoStoreReal = player.celestials.enslaved.autoStoreReal;

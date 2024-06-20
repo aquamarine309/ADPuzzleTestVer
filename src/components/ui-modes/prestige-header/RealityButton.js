@@ -5,17 +5,17 @@ export default {
       canReality: false,
       showSpecialEffect: false,
       hasRealityStudy: false,
-      machinesGained: new Decimal(),
-      projectedRM: new Decimal(),
-      newIMCap: 0,
-      realityTime: 0,
+      machinesGained: new BE(),
+      projectedRM: new BE(),
+      newIMCap: new BE(0),
+      realityTime: new BE(0),
       glyphLevel: 0,
       nextGlyphPercent: 0,
-      nextMachineEP: 0,
-      shardsGained: 0,
-      currentShardsRate: 0,
-      bestShardRate: 0,
-      bestShardRateVal: 0,
+      nextMachineEP: new BE(0),
+      shardsGained: new BE(0),
+      currentShardsRate: new BE(0),
+      bestShardRate: new BE(0),
+      bestShardRateVal: new BE(0),
       ppGained: 0,
       celestialRunText: ["", "", "", "", ""]
     };
@@ -74,14 +74,14 @@ export default {
       this.canReality = isRealityAvailable();
       this.showSpecialEffect = this.hasSpecialReward();
       if (!this.canReality) {
-        this.shardsGained = 0;
+        this.shardsGained = new BE(0);
         return;
       }
       function EPforRM(rm) {
-        const adjusted = Decimal.divide(rm, MachineHandler.realityMachineMultiplier);
-        if (adjusted.lte(1)) return Decimal.pow10(4000);
-        if (adjusted.lte(10)) return Decimal.pow10(4000 / 27 * (adjusted.toNumber() + 26));
-        let result = Decimal.pow10(4000 * (adjusted.log10() / 3 + 1));
+        const adjusted = BE.divide(rm, MachineHandler.realityMachineMultiplier);
+        if (adjusted.lte(1)) return BE.pow10(4000);
+        if (adjusted.lte(10)) return BE.pow10(4000 / 27 * (adjusted.toNumber() + 26));
+        let result = BE.pow10(adjusted.log10().div(3).plus(1).times(4000));
         if (!PlayerProgress.realityUnlocked() && result.gte("1e6000")) {
           result = result.div("1e6000").pow(4).times("1e6000");
         }
@@ -98,10 +98,10 @@ export default {
       this.nextGlyphPercent = this.percentToNextGlyphLevelText();
       this.nextMachineEP = EPforRM(this.machinesGained.plus(1));
       this.ppGained = multiplier;
-      this.shardsGained = Effarig.shardsGained * multiplier;
-      this.currentShardsRate = (this.shardsGained / Time.thisRealityRealTime.totalMinutes);
-      this.bestShardRate = player.records.thisReality.bestRSmin * multiplier;
-      this.bestShardRateVal = player.records.thisReality.bestRSminVal * multiplier;
+      this.shardsGained = Effarig.shardsGained.times(multiplier);
+      this.currentShardsRate = BE.div(this.shardsGained, Time.thisRealityRealTime.totalMinutes);
+      this.bestShardRate = player.records.thisReality.bestRSmin.times(multiplier);
+      this.bestShardRateVal = player.records.thisReality.bestRSminVal.times(multiplier);
 
       const teresaReward = this.formatScalingMultiplierText(
         "Glyph Sacrifice",
@@ -162,7 +162,7 @@ export default {
         >
           <div>Other resources gained:</div>
           <div>{{ quantifyInt("Perk Point", ppGained) }}</div>
-          <div v-if="shardsGained !== 0">
+          <div v-if="shardsGained.neq(0)">
             {{ shardsGainedText }} ({{ format(currentShardsRate, 2) }}/min)
             <br>
             Peak: {{ format(bestShardRate, 2) }}/min at {{ format(bestShardRateVal, 2) }} RS

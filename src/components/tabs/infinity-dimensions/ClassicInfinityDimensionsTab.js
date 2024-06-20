@@ -9,9 +9,9 @@ export default {
   },
   data() {
     return {
-      infinityPower: new Decimal(0),
-      dimMultiplier: new Decimal(0),
-      powerPerSecond: new Decimal(0),
+      infinityPower: new BE(0),
+      dimMultiplier: new BE(0),
+      powerPerSecond: new BE(0),
       incomeType: "",
       isEC8Running: false,
       EC8PurchasesLeft: 0,
@@ -19,9 +19,9 @@ export default {
       isEnslavedRunning: false,
       isAnyAutobuyerUnlocked: false,
       conversionRate: 0,
-      nextDimCapIncrease: 0,
-      tesseractCost: new Decimal(0),
-      totalDimCap: 0,
+      nextDimCapIncrease: new BE(0),
+      tesseractCost: new BE(0),
+      totalDimCap: new BE(0),
       canBuyTesseract: false,
       enslavedCompleted: false,
       boughtTesseracts: 0,
@@ -43,7 +43,7 @@ export default {
       this.infinityPower.copyFrom(Currency.infinityPower);
       this.conversionRate = InfinityDimensions.powerConversionRate;
       if (this.isEC9Running) {
-        this.dimMultiplier.copyFrom(Decimal.pow(Math.max(this.infinityPower.log2(), 1), 4).max(1));
+        this.dimMultiplier.copyFrom(BE.pow(BE.max(this.infinityPower.log2(), 1), 4).max(1));
       } else {
         this.dimMultiplier.copyFrom(this.infinityPower.pow(this.conversionRate).max(1));
       }
@@ -55,9 +55,9 @@ export default {
       }
       this.isEnslavedRunning = Enslaved.isRunning;
       this.isAnyAutobuyerUnlocked = Autobuyer.infinityDimension(1).isUnlocked;
-      this.nextDimCapIncrease = Tesseracts.nextTesseractIncrease;
+      this.nextDimCapIncrease.copyFrom(Tesseracts.nextTesseractIncrease);
       this.tesseractCost.copyFrom(Tesseracts.nextCost);
-      this.totalDimCap = InfinityDimensions.totalDimCap;
+      this.totalDimCap.copyFrom(InfinityDimensions.totalDimCap);
       this.canBuyTesseract = Tesseracts.canBuyTesseract;
       this.enslavedCompleted = Enslaved.isCompleted;
       this.boughtTesseracts = Tesseracts.bought;

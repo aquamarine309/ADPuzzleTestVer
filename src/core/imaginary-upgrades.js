@@ -1,5 +1,5 @@
 import { BitPurchasableMechanicState, RebuyableMechanicState } from "./game-mechanics/index.js";
-import { DC } from "./constants.js";
+import { BEC } from "./constants.js";
 
 class ImaginaryUpgradeState extends BitPurchasableMechanicState {
   constructor(config) {
@@ -90,7 +90,7 @@ class ImaginaryUpgradeState extends BitPurchasableMechanicState {
   onPurchased() {
     EventHub.dispatch(GAME_EVENT.REALITY_UPGRADE_BOUGHT);
     if (this.id >= 15 && this.id <= 18) {
-      DarkMatterDimension(this.id - 14).amount = DC.D1;
+      DarkMatterDimension(this.id - 14).amount = BEC.D1;
       if (this.id === 17) Laitela.quotes.thirdDMD.show();
     }
     if (this.id >= 15 && this.id <= 19) {

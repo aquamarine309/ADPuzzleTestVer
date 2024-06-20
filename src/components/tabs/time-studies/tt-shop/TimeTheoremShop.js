@@ -11,22 +11,22 @@ export default {
   },
   data() {
     return {
-      theoremAmount: new Decimal(0),
-      theoremGeneration: new Decimal(0),
-      totalTimeTheorems: new Decimal(0),
+      theoremAmount: new BE(0),
+      theoremGeneration: new BE(0),
+      totalTimeTheorems: new BE(0),
       shopMinimized: false,
       minimizeAvailable: false,
       hasTTAutobuyer: false,
       isAutobuyerOn: false,
       budget: {
-        am: new Decimal(0),
-        ip: new Decimal(0),
-        ep: new Decimal(0)
+        am: new BE(0),
+        ip: new BE(0),
+        ep: new BE(0)
       },
       costs: {
-        am: new Decimal(0),
-        ip: new Decimal(0),
-        ep: new Decimal(0)
+        am: new BE(0),
+        ip: new BE(0),
+        ep: new BE(0)
       },
       showST: false,
       STamount: 0,

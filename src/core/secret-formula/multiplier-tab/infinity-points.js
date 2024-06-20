@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 import { PlayerProgress } from "../../player-progress.js";
 
 import { MultiplierTabIcons } from "./icons.js";
@@ -20,10 +20,10 @@ export const IP = {
   base: {
     name: "Base Infinity Points",
     isBase: true,
-    fakeValue: DC.D5,
+    fakeValue: BEC.D5,
     multValue: () => {
       const div = Effects.min(308, Achievement(103), TimeStudy(111));
-      return Decimal.pow10(player.records.thisInfinity.maxAM.log10() / div - 0.75);
+      return BE.pow10(player.records.thisInfinity.maxAM.log10().div(div).minus(0.75));
     },
     isActive: () => player.break,
     icon: MultiplierTabIcons.CONVERT_FROM("AM"),
@@ -32,7 +32,7 @@ export const IP = {
     name: "Infinity Points from Antimatter",
     displayOverride: () => `${format(player.records.thisInfinity.maxAM, 2, 2)} AM`,
     // Just needs to match the value in base and be larger than 1
-    multValue: DC.D5,
+    multValue: BEC.D5,
     isActive: () => player.break,
     icon: MultiplierTabIcons.ANTIMATTER,
   },
@@ -54,7 +54,7 @@ export const IP = {
   },
   achievement: {
     name: "Achievements",
-    multValue: () => DC.D1.timesEffectsOf(
+    multValue: () => BEC.D1.timesEffectsOf(
       Achievement(47),
       Achievement(85),
       Achievement(93),
@@ -67,7 +67,7 @@ export const IP = {
   },
   timeStudy: {
     name: "Time Studies",
-    multValue: () => DC.D1.timesEffectsOf(
+    multValue: () => BEC.D1.timesEffectsOf(
       TimeStudy(41),
       TimeStudy(51),
       TimeStudy(141),
@@ -98,7 +98,7 @@ export const IP = {
   },
   pelle: {
     name: "Pelle Strike - Vacuum Rift",
-    multValue: () => DC.D1.timesEffectsOf(PelleRifts.vacuum),
+    multValue: () => BEC.D1.timesEffectsOf(PelleRifts.vacuum),
     isActive: () => Pelle.isDoomed,
     icon: MultiplierTabIcons.PELLE,
   },

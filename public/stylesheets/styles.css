@@ -9323,7 +9323,7 @@ input.o-automator-block-input {
 }
 
 .c-dim-boost-text {
-  text-shadow: 0 0 0.1rem var(--color-text);
+  text-shadow: 0 0 0.2rem var(--color-text);
 }
 
 .c-achievement-button {
@@ -9528,9 +9528,9 @@ input.o-automator-block-input {
   text-align: center;
   font-family: Typewriter, serif;
   font-size: 1rem;
-  color: #5C8E20;
+  color: #5c8e20;
   background-color: var(--color-background);
-  border: var(--var-border-width, 0.2rem) solid #5C8E20;
+  border: var(--var-border-width, 0.2rem) solid #5c8e20;
   border-radius: var(--var-border-radius, 0.5rem);
   transition-duration: 0.15s;
   cursor: pointer;
@@ -9650,4 +9650,52 @@ input.o-automator-block-input {
 .t-s10.c-logic-upgrade-btn--bought:hover {
   color: #ffffff;
   background-color: var(--color-logic);
+}
+
+.c-exchange-rate-conatiner {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  margin: 1rem 0;
+}
+
+.c-exchange-rate-conatiner > *  {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.l-exchange__slider {
+  display: flex;
+  align-items: center;
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.c-exchange__slider-process {
+  background-color: var(--color-logic);
+}
+
+.c-exchange__slider-bg {
+  background-color: #3FAF6D;
+}
+
+.c-exchange__slider-handle {
+  color: var(--color-logic);
+  background-color: var(--color-background);
+  border-radius: var(--var-border-radius, 0.8rem);
+  box-shadow: 0 0 0 0.1rem #25eb98;
+  transition-duration: 0.2s;
+}
+
+.c-exchange__slider-handle:hover {
+  color: black;
+  background-color: #25eb98;
+  border-color: #25eb98;
+}
+
+.c-exchange-mode-toggle-button {
+  margin: 0 1rem;
 }

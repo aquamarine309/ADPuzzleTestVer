@@ -12,8 +12,8 @@ function averageRun(allRuns) {
       continue;
     }
     const isNumber = typeof runs[0][index] === "number";
-    const total = runs.map(run => run[index]).reduce(isNumber ? Number.sumReducer : Decimal.sumReducer);
-    avgAttr.push(isNumber ? total / runs.length : Decimal.div(total, runs.length));
+    const total = runs.map(run => run[index]).reduce(isNumber ? Number.sumReducer : BE.sumReducer);
+    avgAttr.push(isNumber ? total / runs.length : BE.div(total, runs.length));
   }
   return avgAttr;
 }
@@ -69,14 +69,14 @@ export default {
   methods: {
     update() {
       this.runs = this.clone(this.getRuns());
-      this.hasEmptyRecord = this.runs[0][0] === Number.MAX_VALUE;
+      this.hasEmptyRecord = this.runs[0][0] === BE.NUMBER_MAX_VALUE;
       this.runs.push(this.averageRun);
       this.isRealityUnlocked = PlayerProgress.current.isRealityUnlocked;
       this.shown = player.shownRuns[this.singular];
       this.resourceType = player.options.statTabResources;
       this.showRate = this.resourceType === RECENT_PRESTIGE_RESOURCE.RATE;
       this.hasChallenges = this.runs.map(r => this.challengeText(r)).some(t => t);
-      this.hasIM = MachineHandler.currentIMCap > 0;
+      this.hasIM = MachineHandler.currentIMCap.gt(0);
 
       // We have 4 different "useful" stat pairings we could display, but this ends up being pretty boilerplatey
       const names = [this.points, `${this.points} Rate`, this.plural, `${this.singular} Rate`];
@@ -104,7 +104,7 @@ export default {
         while (val > 0) {
           const curr = arr[val - 1];
           if (typeof curr === "string" && curr !== "") return val;
-          if (typeof curr !== "string" && Decimal.neq(curr, 0)) return val;
+          if (typeof curr !== "string" && BE.neq(curr, 0)) return val;
           val--;
         }
         return 0;
@@ -114,7 +114,7 @@ export default {
     clone(runs) {
       return runs.map(run =>
         run.map(item =>
-          (item instanceof Decimal ? Decimal.fromDecimal(item) : item)
+          (item instanceof BE ? BE.fromBE(item) : item)
         )
       );
     },
@@ -180,8 +180,8 @@ export default {
     rateText(run, amount) {
       const time = run[1];
       const rpm = ratePerMinute(amount, time);
-      return Decimal.lt(rpm, 1)
-        ? `${format(Decimal.mul(rpm, 60), 2, 2)} per hour`
+      return BE.lt(rpm, 1)
+        ? `${format(BE.mul(rpm, 60), 2, 2)} per hour`
         : `${format(rpm, 2, 2)} per min`;
     },
     challengeText(run) {

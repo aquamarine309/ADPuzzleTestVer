@@ -18,17 +18,17 @@ export default {
       end: false,
       isUnlocked: false,
       isCapped: false,
-      multiplier: new Decimal(0),
-      amount: new Decimal(0),
-      bought: 0,
-      boughtBefore10: 0,
-      rateOfChange: new Decimal(0),
-      singleCost: new Decimal(0),
-      until10Cost: new Decimal(0),
+      multiplier: new BE(0),
+      amount: new BE(0),
+      bought: new BE(0),
+      boughtBefore10: new BE(0),
+      rateOfChange: new BE(0),
+      singleCost: new BE(0),
+      until10Cost: new BE(0),
       isAffordable: false,
       isAffordableUntil10: false,
       isContinuumActive: false,
-      continuumValue: 0,
+      continuumValue: new BE(0),
       isShown: false,
       isCostsAD: false,
       formattedAmount: null,
@@ -43,7 +43,7 @@ export default {
     },
     amountText() {
       if (this.formattedAmount) return this.formattedAmount;
-      const amount = this.tier < 8 ? format(this.amount, 2) : formatInt(this.amount);
+      const amount = (this.tier < 8 || this.amount.gte(1e9)) ? format(this.amount, 2) : formatInt(this.amount.toNumber());
       return `${amount} (${formatInt(this.boughtBefore10)})`;
     },
     singleText() {
@@ -98,13 +98,13 @@ export default {
       if (tier > DimBoost.maxDimensionsUnlockable) return;
       const dimension = AntimatterDimension(tier);
       this.isUnlocked = dimension.isAvailableForPurchase;
-      this.isCapped = tier === 8 && Enslaved.isRunning && dimension.bought >= 1;
+      this.isCapped = tier === 8 && Enslaved.isRunning && dimension.bought.gte(1);
       this.hasDLC = Puzzle.hasDLC(tier);
       this.multiplier.copyFrom(dimension.multiplier);
       this.amount.copyFrom(dimension.totalAmount);
       this.totalAmount = dimension.totalAmount;
-      this.bought = dimension.bought;
-      this.boughtBefore10 = dimension.boughtBefore10;
+      this.bought.copyFrom(dimension.bought);
+      this.boughtBefore10.copyFrom(dimension.boughtBefore10);
       this.singleCost.copyFrom(dimension.cost);
       this.until10Cost.copyFrom(dimension.costUntil10);
       if (tier < 8) {
@@ -113,9 +113,9 @@ export default {
       this.isAffordable = dimension.isAffordable;
       this.isAffordableUntil10 = dimension.isAffordableUntil10;
       this.isContinuumActive = Laitela.continuumActive;
-      if (this.isContinuumActive) this.continuumValue = dimension.continuumValue;
+      if (this.isContinuumActive) this.continuumValue.copyFrom(dimension.continuumValue);
       this.isShown =
-        (DimBoost.totalBoosts > 0 && DimBoost.totalBoosts + 3 >= tier) || PlayerProgress.infinityUnlocked();
+        (DimBoost.totalBoosts.gt(0) && DimBoost.totalBoosts.plus(3).gte(tier)) || PlayerProgress.infinityUnlocked();
       this.isCostsAD = NormalChallenge(6).isRunning && tier > 2 && !this.isContinuumActive;
       this.hasTutorial = ((tier === 1 && Tutorial.isActive(TUTORIAL_STATE.DIM1)) ||
         (tier === 2 && Tutorial.isActive(TUTORIAL_STATE.DIM2))) && this.hasDLC;

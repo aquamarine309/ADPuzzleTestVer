@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 import { PlayerProgress } from "../../player-progress.js";
 
 import { MultiplierTabIcons } from "./icons.js";
@@ -20,8 +20,8 @@ export const EP = {
   base: {
     name: "Base Eternity Points",
     isBase: true,
-    fakeValue: DC.D5,
-    multValue: () => DC.D5.pow(player.records.thisEternity.maxIP.plus(
+    fakeValue: BEC.D5,
+    multValue: () => BEC.D5.pow(player.records.thisEternity.maxIP.plus(
       gainedInfinityPoints()).log10() / (308 - PelleRifts.recursion.effectValue.toNumber()) - 0.7),
     isActive: () => PlayerProgress.eternityUnlocked(),
     icon: MultiplierTabIcons.CONVERT_FROM("IP"),
@@ -30,7 +30,7 @@ export const EP = {
     name: "Eternity Points from Infinity Points",
     displayOverride: () => `${format(player.records.thisEternity.maxIP.plus(gainedInfinityPoints()), 2, 2)} IP`,
     // Just needs to match the value in base and be larger than 1
-    multValue: DC.D5,
+    multValue: BEC.D5,
     isActive: () => PlayerProgress.eternityUnlocked(),
     icon: MultiplierTabIcons.SPECIFIC_GLYPH("infinity"),
   },
@@ -52,7 +52,7 @@ export const EP = {
   },
   timeStudy: {
     name: "Time Studies",
-    multValue: () => DC.D1.timesEffectsOf(
+    multValue: () => BEC.D1.timesEffectsOf(
       TimeStudy(61),
       TimeStudy(121),
       TimeStudy(122),
@@ -63,7 +63,7 @@ export const EP = {
   },
   glyph: {
     name: "Equipped Glyphs",
-    multValue: () => DC.D1
+    multValue: () => BEC.D1
       .timesEffectsOf(Pelle.isDoomed ? null : GlyphEffect.epMult)
       .times(Pelle.specialGlyphEffect.time),
     powValue: () => (GlyphAlteration.isAdded("time") ? getSecondaryGlyphEffect("timeEP") : 1),

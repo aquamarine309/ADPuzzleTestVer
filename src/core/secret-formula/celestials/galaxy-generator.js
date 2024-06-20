@@ -1,3 +1,5 @@
+import { BEC } from "../../constants.js";
+
 const formatCost = c => format(c, 2);
 
 const rebuyable = config => {
@@ -28,7 +30,7 @@ export const pelleGalaxyGeneratorUpgrades = {
     id: "galaxyGeneratorMultiplicative",
     description: "Multiply Galaxy generation",
     cost: x => Math.pow(10, x),
-    effect: x => Decimal.pow(2.5, x),
+    effect: x => BE.pow(2.5, x),
     formatEffect: x => formatX(x, 2, 1),
     currency: () => Currency.galaxyGeneratorGalaxies,
     currencyLabel: "Galaxy"
@@ -36,8 +38,8 @@ export const pelleGalaxyGeneratorUpgrades = {
   antimatterMult: rebuyable({
     id: "galaxyGeneratorAntimatterMult",
     description: "Multiply Galaxy generation",
-    cost: x => Decimal.pow("1e100000000", 10 ** x),
-    effect: x => Decimal.pow(2, x),
+    cost: x => BE.pow(BEC.E1E8, 10 ** x),
+    effect: x => BE.pow(2, x),
     formatEffect: x => formatX(x, 2),
     currency: () => Currency.antimatter,
     currencyLabel: "Antimatter"
@@ -45,8 +47,8 @@ export const pelleGalaxyGeneratorUpgrades = {
   IPMult: rebuyable({
     id: "galaxyGeneratorIPMult",
     description: "Multiply Galaxy generation",
-    cost: x => Decimal.pow("1e2000000", 100 ** x),
-    effect: x => Decimal.pow(2, x),
+    cost: x => BE.pow(BEC.E2E6, 100 ** x),
+    effect: x => BE.pow(2, x),
     formatEffect: x => formatX(x, 2),
     currency: () => Currency.infinityPoints,
     currencyLabel: "Infinity Point"
@@ -54,8 +56,8 @@ export const pelleGalaxyGeneratorUpgrades = {
   EPMult: rebuyable({
     id: "galaxyGeneratorEPMult",
     description: "Multiply Galaxy generation",
-    cost: x => Decimal.pow("1e10000", 1000 ** x),
-    effect: x => Decimal.pow(2, x),
+    cost: x => BE.pow(BEC.E10000, 1000 ** x),
+    effect: x => BE.pow(2, x),
     formatEffect: x => formatX(x, 2),
     currency: () => Currency.eternityPoints,
     currencyLabel: "Eternity Point"

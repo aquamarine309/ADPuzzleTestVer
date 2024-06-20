@@ -12,7 +12,7 @@ export const galaxies = {
       const mult = MultiplierTabHelper.globalGalaxyMult();
       return `${formatInt(num)}, ${formatX(mult, 2, 2)} strength`;
     },
-    multValue: () => Decimal.pow10(player.galaxies + GalaxyGenerator.galaxies),
+    multValue: () => BE.pow10(player.galaxies + GalaxyGenerator.galaxies),
     isActive: true,
     icon: MultiplierTabIcons.ANTIMATTER,
   },
@@ -34,7 +34,7 @@ export const galaxies = {
       rg += Replicanti.galaxies.extra;
       rg += Math.min(Replicanti.galaxies.bought, ReplicantiUpgrade.galaxies.value) *
           Effects.sum(EternityChallenge(8).reward);
-      return Decimal.pow10(rg);
+      return BE.pow10(rg);
     },
     isActive: () => Replicanti.areUnlocked,
     icon: MultiplierTabIcons.SPECIFIC_GLYPH("replication"),
@@ -49,10 +49,10 @@ export const galaxies = {
     },
     multValue: () => {
       const num = player.dilation.totalTachyonGalaxies;
-      const mult = 1 + Math.max(0, Replicanti.amount.log10() / 1e6) * AlchemyResource.alternation.effectValue;
-      return Decimal.pow10(num * mult);
+      const mult = Replicanti.amount.log10().div(1e6).max(0).times(AlchemyResource.alternation.effectValue).plus(1);
+      return BE.pow10(num.times(mult));
     },
-    isActive: () => player.dilation.totalTachyonGalaxies > 0,
+    isActive: () => player.dilation.totalTachyonGalaxies.gt(0),
     icon: MultiplierTabIcons.SPECIFIC_GLYPH("dilation"),
   },
   nerfPelle: {

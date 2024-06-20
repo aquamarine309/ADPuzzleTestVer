@@ -139,8 +139,10 @@ export default (function () { 'use strict';
         this.fromDecimal(value);
       } else if (typeof value === "number") {
         this.fromNumber(value);
-      } else {
+      } else if (typeof value === "string") {
         this.fromString(value);
+      } else {
+        throw new Error(`[Decimal Error] Cannot convert BE to Decimal.`);
       }
     }
 

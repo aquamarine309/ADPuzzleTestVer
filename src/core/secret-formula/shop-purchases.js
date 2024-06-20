@@ -7,14 +7,14 @@ export const shopPurchases = {
     cost: 30,
     description: "Double all your Antimatter Dimension multipliers. Forever.",
     multiplier: purchases => Math.pow(2, purchases),
-    formatEffect: x => `×${x > 1000 ? Notation.scientific.formatDecimal(new Decimal(x), 2) : x.toFixed(0)}`,
+    formatEffect: x => `×${x > 1000 ? Notation.scientific.formatDecimal(new BE(x), 2) : x.toFixed(0)}`,
   },
   unlockDLC: {
     key: "unlockDLC",
     cost: 1,
     description: "Unlock DLC and multiply all your Antimatter Dimension multipliers.",
     multiplier: purchases => Math.pow(10, purchases),
-    formatEffect: x => `×${x > 1000 ? Notation.scientific.formatDecimal(new Decimal(x), 2) : x.toFixed(0)}`,
+    formatEffect: x => `×${x > 1000 ? Notation.scientific.formatDecimal(new BE(x), 2) : x.toFixed(0)}`,
   },
   IPPurchases: {
     key: "IPPurchases",

@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 export const PERK_FAMILY = {
   ANTIMATTER: "ANTIMATTER",
@@ -137,7 +137,7 @@ export const perks = {
     family: PERK_FAMILY.ETERNITY,
     get description() {
       return `Improve Time Study 122 to ${formatX(50)} Eternity Points and
-        Time Study 142 to ${formatX(DC.E50)} Infinity Points.
+        Time Study 142 to ${formatX(BEC.E50)} Infinity Points.
         ${Pelle.isDoomed ? "" : `In addition, Time Study 132 also makes Replicanti ${format(3)} times faster.`}`;
     },
     layoutPosList: [67054, 79400, 80999, 80202, 78594, 52589],
@@ -196,7 +196,7 @@ export const perks = {
     label: "REAL",
     family: PERK_FAMILY.REALITY,
     get description() {
-      return `Auto-unlocks Reality once you have ${format(DC.E4000)} Eternity Points
+      return `Auto-unlocks Reality once you have ${format(BEC.E4000)} Eternity Points
         and have unlocked Time Dimension 8.`;
     },
     automatorPoints: 10,

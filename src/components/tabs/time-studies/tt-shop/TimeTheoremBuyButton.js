@@ -1,7 +1,7 @@
 export default {
   props: {
-    budget: Decimal,
-    cost: Decimal,
+    budget: BE,
+    cost: BE,
     formatCost: {
       type: Function,
       required: true,

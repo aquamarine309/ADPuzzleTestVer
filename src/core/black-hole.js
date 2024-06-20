@@ -1,4 +1,4 @@
-import { DC } from "./constants.js";
+import { BEC } from "./constants.js";
 import { SpeedrunMilestones } from "./speedrun.js";
 
 class BlackHoleUpgradeState {
@@ -11,7 +11,7 @@ class BlackHoleUpgradeState {
       initialCost,
       costMult,
       0.2,
-      DC.E310,
+      BEC.E310,
       1e5,
       10));
     this.id = config.id;
@@ -85,7 +85,7 @@ class BlackHoleState {
       id: this.id,
       getAmount: () => this._data.powerUpgrades,
       setAmount: amount => this._data.powerUpgrades = amount,
-      calculateValue: amount => (180 / Math.pow(2, id)) * Math.pow(1.35, amount),
+      calculateValue: amount => BE.pow(1.35, amount).times((180 / Math.pow(2, id))),
       initialCost: 20 * blackHoleCostMultipliers[id],
       costMult: 2,
       hasAutobuyer: true
@@ -95,7 +95,7 @@ class BlackHoleState {
       id: this.id,
       getAmount: () => this._data.durationUpgrades,
       setAmount: amount => this._data.durationUpgrades = amount,
-      calculateValue: amount => (10 - (id) * 3) * Math.pow(1.3, amount),
+      calculateValue: amount => (10 - id * 3) * Math.pow(1.3, amount),
       initialCost: 10 * blackHoleCostMultipliers[id],
       costMult: 4,
       hasAutobuyer: false
@@ -127,7 +127,7 @@ class BlackHoleState {
    * Multiplier to time the black hole gives when active.
    */
   get power() {
-    return this.powerUpgrade.value * Achievement(158).effectOrDefault(1);
+    return this.powerUpgrade.value.times(Achievement(158).effectOrDefault(1));
   }
 
   /**

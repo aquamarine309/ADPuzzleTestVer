@@ -13,7 +13,7 @@ export default {
   },
   data() {
     return {
-      newGalaxies: 0,
+      newGalaxies: new BE(0),
       keepAntimatter: false,
       perkANRBought: false,
       keepDimBoost: false
@@ -63,7 +63,7 @@ export default {
           cumulative: false,
         }, player.galaxies);
         if (bulk) {
-          this.newGalaxies = Galaxy.buyableGalaxies(Math.round(dim.totalAmount.toNumber())) - player.galaxies;
+          this.newGalaxies = Galaxy.buyableGalaxies(BE.round(dim.totalAmount)).minus(player.galaxies);
         }
       }
       this.keepAntimatter = Achievement(111).isUnlocked;

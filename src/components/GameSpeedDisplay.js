@@ -4,8 +4,8 @@ export default {
   },
   data() {
     return {
-      baseSpeed: 0,
-      pulsedSpeed: 0,
+      baseSpeed: new BE(0),
+      pulsedSpeed: new BE(0),
       hasSeenAlteredSpeed: false,
       isStopped: false,
       isEC12: false,
@@ -40,14 +40,14 @@ export default {
       this.hasSeenAlteredSpeed = PlayerProgress.seenAlteredSpeed();
       this.isStopped = Enslaved.isStoringRealTime;
       this.isEC12 = EternityChallenge(12).isRunning;
-      this.isPulsing = (this.baseSpeed !== this.pulsedSpeed) && Enslaved.canRelease(true);
+      this.isPulsing = this.baseSpeed.neq(this.pulsedSpeed) && Enslaved.canRelease(true);
     },
     formatNumber(num) {
-      if (num >= 0.001 && num < 10000 && num !== 1) {
+      if (num.gte(0.001) && num.lt(1e4) && num.neq(1)) {
         return format(num, 3, 3);
       }
-      if (num < 0.001) {
-        return `${formatInt(1)} / ${format(1 / num, 2)}`;
+      if (num.lt(0.001)) {
+        return `${formatInt(1)} / ${format(num.recip(), 2)}`;
       }
       return `${format(num, 2)}`;
     }

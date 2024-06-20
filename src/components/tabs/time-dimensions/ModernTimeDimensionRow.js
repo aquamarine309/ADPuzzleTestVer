@@ -23,19 +23,19 @@ export default {
     return {
       isUnlocked: false,
       isCapped: false,
-      multiplier: new Decimal(0),
-      amount: new Decimal(0),
-      bought: 0,
-      rateOfChange: new Decimal(0),
-      cost: new Decimal(0),
+      multiplier: new BE(0),
+      amount: new BE(0),
+      bought: new BE(0),
+      rateOfChange: new BE(0),
+      cost: new BE(0),
       isAvailableForPurchase: false,
       isAutobuyerOn: false,
       requirementReached: false,
       realityUnlocked: false,
       showTTCost: false,
       ttCost: 0,
-      ttGen: new Decimal(),
-      currTT: new Decimal(),
+      ttGen: new BE(),
+      currTT: new BE(),
     };
   },
   computed: {
@@ -73,7 +73,7 @@ export default {
     },
     timeEstimate() {
       if (!this.showTTCost || this.ttGen.eq(0)) return "";
-      const time = Decimal.sub(this.ttCost, this.currTT).dividedBy(this.ttGen);
+      const time = BE.sub(this.ttCost, this.currTT).dividedBy(this.ttGen);
       return time.gt(0) ? `Enough TT in ${TimeSpan.fromSeconds(time.toNumber()).toStringShort()}` : "";
     }
   },
@@ -86,11 +86,11 @@ export default {
     update() {
       const tier = this.tier;
       const dimension = TimeDimension(tier);
-      this.isCapped = Enslaved.isRunning && dimension.bought > 0;
+      this.isCapped = Enslaved.isRunning && dimension.bought.gt(0);
       this.isUnlocked = dimension.isUnlocked;
       this.multiplier.copyFrom(dimension.multiplier);
       this.amount.copyFrom(dimension.amount);
-      this.bought = dimension.bought;
+      this.bought.copyFrom(dimension.bought);
       if (tier < 8) {
         this.rateOfChange.copyFrom(dimension.rateOfChange);
       }

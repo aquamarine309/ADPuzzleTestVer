@@ -1,5 +1,5 @@
 import * as tslib from "./tslib.js";
-import Decimal from "./break_infinity.js"
+import Decimal from "./break_eternity.js"
 
 export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
 
@@ -9,7 +9,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
 
   var Settings = {
     isInfinite: function isInfinite(decimal) {
-      return decimal.gte(Decimal__default["default"].MAX_VALUE);
+      return !decimal.isFinite();
     },
     exponentCommas: {
       show: true,
@@ -37,6 +37,26 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     var decimalPointSplit = value.toString().split(".");
     decimalPointSplit[0] = decimalPointSplit[0].replace(/\w+$/g, addCommas);
     return decimalPointSplit.join(".");
+  }
+  function getSmallDecimal(value) {
+    var n = Decimal__default["default"].fromValue_noAlloc(value);
+    var newDecimal = new Decimal__default["default"](0);
+    newDecimal.mag = n.mag;
+    newDecimal.layer = n.layer;
+    newDecimal.sign = n.sign;
+    var separatorCount = 0;
+    if ((newDecimal.layer === 0 || newDecimal.layer >= 5) && newDecimal.mag > LOG10_MAX_VALUE) {
+      ++newDecimal.layer;
+      newDecimal.mag = Math.log10(newDecimal.mag);
+    }
+    if (newDecimal.layer > 1) {
+      separatorCount = newDecimal.layer - 1;
+      newDecimal.layer = 1;
+    }
+    return {
+      decimal: newDecimal,
+      separatorCount
+    }
   }
   function toEngineering(value) {
     var exponentOffset = value.exponent % 3;
@@ -93,16 +113,17 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     if (forcePositiveExponent === void 0) {
       forcePositiveExponent = false;
     }
-
+    
     return function (n, precision, precisionExponent) {
       var realBase = Math.pow(base, steps);
-      var exponent = Math.floor(n.log(realBase)) * steps;
-
+      var newDecimal = getSmallDecimal(n);
+      
+      var exponent = Math.floor(newDecimal.decimal.log(realBase).toNumber()) * steps;
+      
       if (forcePositiveExponent) {
         exponent = Math.max(exponent, 0);
       }
-
-      var mantissa = n.div(Decimal__default["default"].pow(base, exponent)).toNumber();
+      var mantissa = newDecimal.decimal.div(Decimal__default["default"].pow(base, exponent)).toNumber();
 
       if (!(1 <= mantissa && mantissa < realBase)) {
         var adjust = Math.floor(Math.log(mantissa) / Math.log(realBase));
@@ -127,7 +148,8 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
         m = "";
       }
 
-      return "".concat(m).concat(separator).concat(e);
+      const result = "".concat(formatSeparator(separator, newDecimal.separatorCount)).concat(m).concat(separator).concat(e);
+      return result;
     };
   }
   function formatMantissaBaseTen(n, precision) {
@@ -153,6 +175,12 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
       return result;
     };
   }
+  
+  function formatSeparator(separator, count) {
+    if (separator.trim() === "") separator = "e";
+    if (count <= 6) return separator.repeat(count);
+    return "(".concat(separator).concat("^").concat(count).concat(")");
+  }
 
   var Notation = function () {
     function Notation() {}
@@ -175,21 +203,21 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
       }
 
       var decimal = Decimal__default["default"].fromValue_noAlloc(value);
-
-      if (decimal.exponent < -300) {
-        return decimal.sign() < 0 ? this.formatVerySmallNegativeDecimal(decimal.abs(), placesUnder1000) : this.formatVerySmallDecimal(decimal, placesUnder1000);
+      
+      if (Settings.isInfinite(decimal.abs()) || !decimal.isFinite()) {
+        return decimal.sign < 0 ? this.negativeInfinite : this.infinite;
+      }
+      
+      if (decimal.lt(1e-300)) {
+        return decimal.sign < 0 ? this.formatVerySmallNegativeDecimal(decimal.abs(), placesUnder1000) : this.formatVerySmallDecimal(decimal, placesUnder1000);
       }
 
-      if (decimal.exponent < 3) {
+      if (decimal.lt(1000)) {
         var number = decimal.toNumber();
         return number < 0 ? this.formatNegativeUnder1000(Math.abs(number), placesUnder1000) : this.formatUnder1000(number, placesUnder1000);
       }
 
-      if (Settings.isInfinite(decimal.abs())) {
-        return decimal.sign() < 0 ? this.negativeInfinite : this.infinite;
-      }
-
-      return decimal.sign() < 0 ? this.formatNegativeDecimal(decimal.abs(), places, placesExponent) : this.formatDecimal(decimal, places, placesExponent);
+      return decimal.sign < 0 ? this.formatNegativeDecimal(decimal.abs(), places, placesExponent) : this.formatDecimal(decimal, places, placesExponent);
     };
 
     Object.defineProperty(Notation.prototype, "negativeInfinite", {
@@ -333,10 +361,11 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
       configurable: true
     });
 
-    CustomNotation.prototype.formatDecimal = function (value, places) {
-      var engineering = toEngineering(value);
+    CustomNotation.prototype.formatDecimal = function (n, places) {
+      var value = getSmallDecimal(n);
+      var engineering = toEngineering(value.decimal);
       var mantissa = engineering.mantissa.toFixed(places);
-      return mantissa + this.mantissaExponentSeparator + this.transcribe(engineering.exponent).join(this.separator);
+      return formatSeparator("e", value.separatorCount) + mantissa + this.mantissaExponentSeparator + this.transcribe(engineering.exponent).join(this.separator);
     };
 
     CustomNotation.prototype.transcribe = function (exponent) {
@@ -440,7 +469,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     });
 
     MixedScientificNotation.prototype.formatDecimal = function (value, places, placesExponent) {
-      if (value.exponent < 33) {
+      if (value.lt(1e33)) {
         return standard$1.formatDecimal(value, places, placesExponent);
       }
 
@@ -575,7 +604,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     return InfinityNotation;
   }(Notation);
 
-  var ROMAN_NUMBERS = [[1000000, "M̄"], [900000, "C̄M̄"], [500000, "D̄"], [400000, "C̄D̄"], [100000, "C̄"], [90000, "X̄C̄"], [50000, "L̄"], [40000, "X̄L̄"], [10000, "X̄"], [9000, "ⅯX̄"], [5000, "V̄"], [4000, "ⅯV̄"], [1000, "Ⅿ"], [900, "ⅭⅯ"], [500, "Ⅾ"], [400, "ⅭⅮ"], [100, "Ⅽ"], [90, "ⅩⅭ"], [50, "Ⅼ"], [40, "ⅩⅬ"], [10, "Ⅹ"], [9, "ⅠⅩ"], [5, "Ⅴ"], [4, "ⅠⅤ"], [1, "Ⅰ"]];
+  var ROMAN_NUMDecimalRS = [[1000000, "M̄"], [900000, "C̄M̄"], [500000, "D̄"], [400000, "C̄D̄"], [100000, "C̄"], [90000, "X̄C̄"], [50000, "L̄"], [40000, "X̄L̄"], [10000, "X̄"], [9000, "ⅯX̄"], [5000, "V̄"], [4000, "ⅯV̄"], [1000, "Ⅿ"], [900, "ⅭⅯ"], [500, "Ⅾ"], [400, "ⅭⅮ"], [100, "Ⅽ"], [90, "ⅩⅭ"], [50, "Ⅼ"], [40, "ⅩⅬ"], [10, "Ⅹ"], [9, "ⅠⅩ"], [5, "Ⅴ"], [4, "ⅠⅤ"], [1, "Ⅰ"]];
   var ROMAN_FRACTIONS = ["", "·", ":", "∴", "∷", "⁙"];
   var MAXIMUM = 4000000;
   var MAX_LOG_10 = Math.log10(MAXIMUM);
@@ -620,8 +649,8 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     RomanNotation.prototype.romanize = function (value) {
       var romanized = "";
 
-      for (var _i = 0, ROMAN_NUMBERS_1 = ROMAN_NUMBERS; _i < ROMAN_NUMBERS_1.length; _i++) {
-        var numberPair = ROMAN_NUMBERS_1[_i];
+      for (var _i = 0, ROMAN_NUMDecimalRS_1 = ROMAN_NUMDecimalRS; _i < ROMAN_NUMDecimalRS_1.length; _i++) {
+        var numberPair = ROMAN_NUMDecimalRS_1[_i];
         var decimal = numberPair[0];
         var roman = numberPair[1];
 
@@ -1460,7 +1489,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     });
     Object.defineProperty(ShiNotation.prototype, "infinite", {
       get: function get() {
-        return this.shi(Decimal__default["default"].NUMBER_MAX_VALUE);
+        return this.shi(Decimal__default["default"].NUMDecimalR_MAX_VALUE);
       },
       enumerable: false,
       configurable: true

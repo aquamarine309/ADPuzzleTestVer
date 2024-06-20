@@ -1,5 +1,3 @@
-import { ProgressChecker } from "./storage/progress-checker.js";
-
 import EternityChallengeStartModal from "../components/modals/challenges/EternityChallengeStartModal.js";
 import InfinityChallengeStartModal from "../components/modals/challenges/InfinityChallengeStartModal.js";
 import MessageModal from "../components/modals/MessageModal.js";
@@ -45,7 +43,6 @@ import AutobuyerEditModal from "../components/modals/AutobuyerEditModal.js";
 import AutomatorScriptTemplate from "../components/modals/AutomatorScriptTemplate.js";
 import AwayProgressModal from "../components/modals/AwayProgressModal.js";
 import BreakInfinityModal from "../components/modals/BreakInfinityModal.js";
-import CatchupModal from "../components/modals/catchup/CatchupModal.js";
 import ChangelogModal from "../components/modals/ChangelogModal.js";
 import ChangeNameModal from "../components/modals/ChangeNameModal.js";
 import ClearConstantsModal from "../components/modals/ClearConstantsModal.js";
@@ -195,8 +192,6 @@ Modal.startEternityChallenge = new ChallengeConfirmationModal(EternityChallengeS
 Modal.startInfinityChallenge = new ChallengeConfirmationModal(InfinityChallengeStartModal);
 Modal.startNormalChallenge = new ChallengeConfirmationModal(NormalChallengeStartModal);
 
-Modal.catchup = new TimeModal(CatchupModal, -1);
-
 Modal.dimensionBoost = new Modal(DimensionBoostModal, 1, GAME_EVENT.DIMBOOST_AFTER);
 
 Modal.antimatterGalaxy = new Modal(AntimatterGalaxyModal, 1, GAME_EVENT.GALAXY_RESET_AFTER);
@@ -269,53 +264,6 @@ Modal.breakInfinity = new Modal(BreakInfinityModal, 1, GAME_EVENT.ETERNITY_RESET
 Modal.respecIAP = new Modal(RespecIAPModal);
 
 Modal.s12Games = new Modal(S12GamesModal);
-
-function getSaveInfo(save) {
-  const resources = {
-    realTimePlayed: 0,
-    totalAntimatter: new Decimal(0),
-    infinities: new Decimal(0),
-    eternities: new Decimal(0),
-    realities: 0,
-    infinityPoints: new Decimal(0),
-    eternityPoints: new Decimal(0),
-    realityMachines: new Decimal(0),
-    imaginaryMachines: 0,
-    dilatedTime: new Decimal(0),
-    bestLevel: 0,
-    pelleAM: new Decimal(0),
-    remnants: 0,
-    realityShards: new Decimal(0),
-    // This is a slight workaround to hide DT/level once Doomed
-    pelleLore: 0,
-    saveName: "",
-    compositeProgress: 0,
-  };
-  // This code ends up getting run on raw save data before any migrations are applied, so we need to default to props
-  // which only exist on the pre-reality version when applicable. Note that new Decimal(undefined) gives zero.
-  resources.realTimePlayed = save.records?.realTimePlayed ?? 100 * save.totalTimePlayed;
-  resources.totalAntimatter.copyFrom(new Decimal(save.records?.totalAntimatter));
-  resources.infinities.copyFrom(new Decimal(save.infinities));
-  resources.eternities.copyFrom(new Decimal(save.eternities));
-  resources.realities = save.realities ?? 0;
-  resources.infinityPoints.copyFrom(new Decimal(save.infinityPoints));
-  resources.eternityPoints.copyFrom(new Decimal(save.eternityPoints));
-  resources.realityMachines.copyFrom(new Decimal(save.reality?.realityMachines));
-  resources.imaginaryMachines = save.reality?.iMCap ?? 0;
-  // Use max DT instead of current DT because spending it can cause it to drop and trigger the conflict modal
-  // unnecessarily. We only use current DT as a fallback (eg. loading a save from pre-reality versions)
-  resources.dilatedTime.copyFrom(new Decimal(save.records?.thisReality.maxDT ?? (save.dilation?.dilatedTime ?? 0)));
-  resources.bestLevel = save.records?.bestReality.glyphLevel ?? 0;
-  resources.pelleAM.copyFrom(new Decimal(save.celestials?.pelle.records.totalAntimatter));
-  resources.remnants = save.celestials?.pelle.remnants ?? 0;
-  resources.realityShards.copyFrom(new Decimal(save.celestials?.pelle.realityShards));
-  resources.pelleLore = save.celestials?.pelle.quoteBits ?? 0;
-  resources.saveName = save.options?.saveFileName ?? "";
-  resources.compositeProgress = ProgressChecker.getCompositeProgress(save);
-
-  return resources;
-}
-
 Modal.message = new class extends Modal {
   show(text, props = {}, messagePriority = 0) {
     if (!GameUI.initialized) return;

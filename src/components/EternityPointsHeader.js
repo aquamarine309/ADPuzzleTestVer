@@ -2,7 +2,7 @@ export default {
   name: "EternityPointsHeader",
   data() {
     return {
-      eternityPoints: new Decimal()
+      eternityPoints: new BE()
     };
   },
   methods: {

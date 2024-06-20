@@ -1,4 +1,4 @@
-import { DC } from "./constants.js";
+import { BEC } from "./constants.js";
 import { deepmergeAll } from "../utility/deepmerge.js";
 import { GameMechanicState } from "./game-mechanics/index.js";
 
@@ -13,12 +13,12 @@ export function startEternityChallenge() {
   player.replicanti.galaxies = 0;
   Currency.infinityPoints.reset();
   InfinityDimensions.resetAmount();
-  player.records.bestInfinity.bestIPminEternity = DC.D0;
-  player.records.thisEternity.bestEPmin = DC.D0;
+  player.records.bestInfinity.bestIPminEternity = BEC.D0;
+  player.records.thisEternity.bestEPmin = BEC.D0;
   resetTimeDimensions();
   resetTickspeed();
-  player.records.thisInfinity.maxAM = DC.D0;
-  player.records.thisEternity.maxAM = DC.D0;
+  player.records.thisInfinity.maxAM = BEC.D0;
+  player.records.thisEternity.maxAM = BEC.D0;
   Currency.antimatter.reset();
   playerInfinityUpgradesOnReset();
   AchievementTimers.marathon2.reset();

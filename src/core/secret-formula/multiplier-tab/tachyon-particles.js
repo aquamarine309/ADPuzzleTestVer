@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 import { PlayerProgress } from "../../player-progress.js";
 
 import { MultiplierTabIcons } from "./icons.js";
@@ -8,7 +8,7 @@ export const TP = {
   total: {
     name: "Total Tachyon Particles",
     displayOverride: () => {
-      const baseTPStr = format(new Decimal(Currency.tachyonParticles.value), 2, 2);
+      const baseTPStr = format(new BE(Currency.tachyonParticles.value), 2, 2);
       return PelleRifts.paradox.milestones[1].canBeApplied
         ? `${baseTPStr}${formatPow(PelleRifts.paradox.milestones[1].effectValue, 1, 1)}`
         : baseTPStr;
@@ -16,7 +16,7 @@ export const TP = {
     // This is treated as a multiplier and not a prestige currency, with an overridden display;
     // therefore we need to return 1 "by default"
     multValue: () => {
-      const baseTP = new Decimal(Currency.tachyonParticles.value)
+      const baseTP = new BE(Currency.tachyonParticles.value)
         .pow(PelleRifts.paradox.milestones[1].effectOrDefault(1));
       return TimeStudy.dilation.isBought ? baseTP : 1;
     },
@@ -26,8 +26,8 @@ export const TP = {
   base: {
     name: "Base Tachyon Particle Count",
     isBase: true,
-    multValue: () => new Decimal(Currency.tachyonParticles.value).div(tachyonGainMultiplier()),
-    isActive: () => new Decimal(Currency.tachyonParticles.value).gt(0),
+    multValue: () => new BE(Currency.tachyonParticles.value).div(tachyonGainMultiplier()),
+    isActive: () => new BE(Currency.tachyonParticles.value).gt(0),
     icon: MultiplierTabIcons.TACHYON_PARTICLES,
   },
   achievementMult: {
@@ -50,13 +50,13 @@ export const TP = {
   },
   amplifierTP: {
     name: "Reality Upgrade - Superluminal Amplifier",
-    multValue: () => DC.D1.timesEffectsOf(RealityUpgrade(4)),
+    multValue: () => BEC.D1.timesEffectsOf(RealityUpgrade(4)),
     isActive: () => PlayerProgress.realityUnlocked() && !Pelle.isDoomed,
     icon: MultiplierTabIcons.UPGRADE("reality"),
   },
   realityUpgrade: {
     name: "Reality Upgrade - The Paradoxical Forever",
-    multValue: () => DC.D1.timesEffectsOf(RealityUpgrade(15)),
+    multValue: () => BEC.D1.timesEffectsOf(RealityUpgrade(15)),
     isActive: () => PlayerProgress.realityUnlocked() && !Pelle.isDoomed,
     icon: MultiplierTabIcons.UPGRADE("reality"),
   },

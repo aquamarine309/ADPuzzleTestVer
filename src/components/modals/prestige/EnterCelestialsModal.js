@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       laitelaFastest: 3600,
-      teresaBestAM: new Decimal(),
+      teresaBestAM: new BE(),
       teresaRunMult: 0,
       effarigDone: false,
       effarigLayer: "",

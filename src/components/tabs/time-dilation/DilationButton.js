@@ -5,10 +5,10 @@ export default {
       isUnlocked: false,
       isRunning: false,
       hasGain: false,
-      requiredForGain: new Decimal(),
+      requiredForGain: new BE(),
       canEternity: false,
-      eternityGoal: new Decimal(),
-      tachyonGain: new Decimal(),
+      eternityGoal: new BE(),
+      tachyonGain: new BE(),
       remnantRequirement: 0,
       showRequirement: false,
       creditsClosed: false

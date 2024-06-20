@@ -1,6 +1,8 @@
+import { BEC } from "./constants.js";
+
 export const DeltaTimeState = {
-  deltaTime: new TimeSpan(0),
-  unscaledDeltaTime: new TimeSpan(0),
+  deltaTime: new TimeSpan(BEC.D0),
+  unscaledDeltaTime: new TimeSpan(BEC.D0),
   update(deltaTime, gameDeltaTime) {
     this.unscaledDeltaTime = TimeSpan.fromMilliseconds(deltaTime);
     this.deltaTime = TimeSpan.fromMilliseconds(gameDeltaTime);
@@ -19,7 +21,7 @@ export const Time = {
    * @param {TimeSpan} timespan
    * @param {Function} setValue
    */
-  toMilliseconds(timespan, setValue) {
+  toMilliseconds(timespan, setValue, isRealTime = false) {
     Guard.isTimeSpan(timespan);
     setValue(timespan.totalMilliseconds);
   },
@@ -80,8 +82,8 @@ export const Time = {
    */
   get timeSinceBlackHole() {
     return this.fromMilliseconds(() => {
-      const diff = player.records.totalTimePlayed - player.records.timePlayedAtBHUnlock;
-      return Math.max(0, diff);
+      const diff = player.records.totalTimePlayed.minus(player.records.timePlayedAtBHUnlock);
+      return BE.max(0, diff);
     });
   },
 
@@ -95,7 +97,7 @@ export const Time = {
    * @param {TimeSpan} timespan
    */
   set realTimeDoomed(timespan) {
-    this.toMilliseconds(timespan, value => player.records.realTimeDoomed = value);
+    this.toMilliseconds(timespan, value => player.records.realTimeDoomed = value, true);
   },
 
   /**
@@ -108,7 +110,7 @@ export const Time = {
    * @param {TimeSpan} timespan
    */
   set realTimePlayed(timespan) {
-    this.toMilliseconds(timespan, value => player.records.realTimePlayed = value);
+    this.toMilliseconds(timespan, value => player.records.realTimePlayed = value, true);
   },
 
   /**
@@ -134,7 +136,7 @@ export const Time = {
    * @param {TimeSpan} timespan
    */
   set thisInfinityRealTime(timespan) {
-    this.toMilliseconds(timespan, value => player.records.thisInfinity.realTime = value);
+    this.toMilliseconds(timespan, value => player.records.thisInfinity.realTime = value, true);
   },
 
   /**
@@ -160,7 +162,7 @@ export const Time = {
    * @param {TimeSpan} timespan
    */
   set bestInfinityRealTime(timespan) {
-    this.toMilliseconds(timespan, value => player.records.bestInfinity.realTime = value);
+    this.toMilliseconds(timespan, value => player.records.bestInfinity.realTime = value, true);
   },
 
   /**
@@ -186,7 +188,7 @@ export const Time = {
    * @param {TimeSpan} timespan
    */
   set thisEternityRealTime(timespan) {
-    this.toMilliseconds(timespan, value => player.records.thisEternity.realTime = value);
+    this.toMilliseconds(timespan, value => player.records.thisEternity.realTime = value, true);
   },
 
   /**
@@ -212,7 +214,7 @@ export const Time = {
    * @param {TimeSpan} timespan
    */
   set bestEternityRealTime(timespan) {
-    this.toMilliseconds(timespan, value => player.records.bestEternity.realTime = value);
+    this.toMilliseconds(timespan, value => player.records.bestEternity.realTime = value, true);
   },
 
 
@@ -239,7 +241,7 @@ export const Time = {
    * @param {TimeSpan} timespan
    */
   set thisRealityRealTime(timespan) {
-    this.toMilliseconds(timespan, value => player.records.thisReality.realTime = value);
+    this.toMilliseconds(timespan, value => player.records.thisReality.realTime = value, true);
   },
 
   /**
@@ -265,7 +267,7 @@ export const Time = {
    * @param {TimeSpan} timespan
    */
   set bestRealityRealTime(timespan) {
-    this.toMilliseconds(timespan, value => player.records.bestReality.realTime = value);
+    this.toMilliseconds(timespan, value => player.records.bestReality.realTime = value, true);
   },
 
   /**

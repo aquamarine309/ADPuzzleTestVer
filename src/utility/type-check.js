@@ -13,3 +13,7 @@ export function isFunction(value) {
 export function isDecimal(value) {
   return value instanceof Decimal;
 }
+
+export function isBE(value) {
+  return value instanceof BE;
+}

@@ -7,8 +7,8 @@ export default {
   },
   data() {
     return {
-      currentMultiplier: new Decimal(),
-      nextMultiplier: new Decimal(),
+      currentMultiplier: new BE(),
+      nextMultiplier: new BE(),
     };
   },
   computed: {

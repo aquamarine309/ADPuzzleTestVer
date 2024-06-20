@@ -2,17 +2,17 @@ export default {
   name: "TickspeedRow",
   data() {
     return {
-      purchasedTickspeed: 0,
-      freeTickspeed: 0,
+      purchasedTickspeed: new BE(0),
+      freeTickspeed: new BE(0),
       isVisible: false,
-      mult: new Decimal(0),
-      cost: new Decimal(0),
+      mult: new BE(0),
+      cost: new BE(0),
       isAffordable: false,
-      tickspeed: new Decimal(0),
+      tickspeed: new BE(0),
       gameSpeedMult: 1,
-      galaxyCount: 0,
+      galaxyCount: new BE(0),
       isContinuumActive: false,
-      continuumValue: 0,
+      continuumValue: new BE(0),
       hasTutorial: false,
       hasRealityButton: false,
       isEC9: false,
@@ -47,8 +47,8 @@ export default {
   methods: {
     update() {
       this.hasRealityButton = PlayerProgress.realityUnlocked() || TimeStudy.reality.isBought;
-      this.purchasedTickspeed = player.totalTickBought;
-      this.freeTickspeed = FreeTickspeed.amount;
+      this.purchasedTickspeed.copyFrom(player.totalTickBought);
+      this.freeTickspeed.copyFrom(FreeTickspeed.amount);
       this.isEC9 = EternityChallenge(9).isRunning;
       this.isVisible = Tickspeed.isUnlocked || this.isEC9;
       if (!this.isVisible) return;
@@ -57,9 +57,9 @@ export default {
       this.isAffordable = Tickspeed.isAvailableForPurchase && Tickspeed.isAffordable;
       this.tickspeed.copyFrom(Tickspeed.perSecond);
       this.gameSpeedMult = getGameSpeedupForDisplay();
-      this.galaxyCount = player.galaxies;
+      this.galaxyCount.copyFrom(player.galaxies);
       this.isContinuumActive = Laitela.continuumActive;
-      if (this.isContinuumActive) this.continuumValue = Tickspeed.continuumValue;
+      if (this.isContinuumActive) this.continuumValue.copyFrom(Tickspeed.continuumValue);
       this.hasTutorial = Tutorial.isActive(TUTORIAL_STATE.TICKSPEED);
     },
     buttonClass() {

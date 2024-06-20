@@ -18,7 +18,8 @@ class LogicChallengeState extends GameMechanicState {
   }
 
   get isUnlocked() {
-    return LogicUpgrade(10).isBought;
+    if (this.id === 1) return LogicUpgrade(10).isBought;
+    return LogicChallenge(this.id - 1).isCompleted;
   }
 
   get isRunning() {
@@ -51,6 +52,10 @@ class LogicChallengeState extends GameMechanicState {
   get isEffectActive() {
     return this.isRunning;
   }
+  
+  get canComplete() {
+    return Currency.antimatter.gte(this.goal);
+  }
 
   /**
    * @return {LogicChallengeRewardState}
@@ -64,12 +69,12 @@ class LogicChallengeState extends GameMechanicState {
   }
 
   get goal() {
-    return Decimal.NUMBER_MAX_VALUE;;
+    return this.config.goal;
   }
 
   updateChallengeTime() {
     const bestTimes = player.challenge.logic.bestTimes;
-    if (bestTimes[this.id - 1] <= player.records.thisInfinity.time) {
+    if (bestTimes[this.id - 1].lte(player.records.thisInfinity.time)) {
       return;
     }
     player.challenge.logic.bestTimes[this.id - 1] = player.records.thisInfinity.time;

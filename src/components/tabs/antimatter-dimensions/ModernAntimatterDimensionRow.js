@@ -15,18 +15,18 @@ export default {
     return {
       isUnlocked: false,
       isCapped: false,
-      multiplier: new Decimal(0),
-      amount: new Decimal(0),
-      bought: 0,
-      boughtBefore10: 0,
-      rateOfChange: new Decimal(0),
-      singleCost: new Decimal(0),
-      until10Cost: new Decimal(0),
+      multiplier: new BE(0),
+      amount: new BE(0),
+      bought: new BE(0),
+      boughtBefore10: new BE(0),
+      rateOfChange: new BE(0),
+      singleCost: new BE(0),
+      until10Cost: new BE(0),
       isAffordable: false,
       buyUntil10: true,
-      howManyCanBuy: 0,
+      howManyCanBuy: new BE(0),
       isContinuumActive: false,
-      continuumValue: 0,
+      continuumValue: new BE(0),
       isShown: false,
       isCostsAD: false,
       amountDisplay: "",
@@ -81,32 +81,32 @@ export default {
       const dimension = AntimatterDimension(tier);
       this.isUnlocked = dimension.isAvailableForPurchase;
       const buyUntil10 = player.buyUntil10;
-      this.isCapped = tier === 8 && Enslaved.isRunning && dimension.bought >= 1;
+      this.isCapped = tier === 8 && Enslaved.isRunning && dimension.bought.gte(1);
       this.hasDLC = Puzzle.hasDLC(tier);
       this.multiplier.copyFrom(AntimatterDimension(tier).multiplier);
       this.amount.copyFrom(dimension.totalAmount);
-      this.bought = dimension.bought;
-      this.boughtBefore10 = dimension.boughtBefore10;
-      this.howManyCanBuy = buyUntil10 ? dimension.howManyCanBuy : Math.min(dimension.howManyCanBuy, 1);
+      this.bought.copyFrom(dimension.bought);
+      this.boughtBefore10.copyFrom(dimension.boughtBefore10);
+      this.howManyCanBuy = buyUntil10 ? dimension.howManyCanBuy : BE.min(dimension.howManyCanBuy, 1);
       this.singleCost.copyFrom(dimension.cost);
-      this.until10Cost.copyFrom(dimension.cost.times(Math.max(dimension.howManyCanBuy, 1)));
+      this.until10Cost.copyFrom(dimension.cost.times(BE.max(dimension.howManyCanBuy, 1)));
       if (tier < 8) {
         this.rateOfChange.copyFrom(dimension.rateOfChange);
       }
       this.isAffordable = dimension.isAffordable;
       this.buyUntil10 = buyUntil10;
       this.isContinuumActive = Laitela.continuumActive;
-      if (this.isContinuumActive) this.continuumValue = dimension.continuumValue;
+      if (this.isContinuumActive) this.continuumValue.copyFrom(dimension.continuumValue);
       this.isShown =
-        (DimBoost.totalBoosts > 0 && DimBoost.totalBoosts + 3 >= tier) || PlayerProgress.infinityUnlocked();
+        (DimBoost.totalBoosts.gt(0) && DimBoost.totalBoosts.plus(3).gte(tier)) || PlayerProgress.infinityUnlocked();
       this.isCostsAD = NormalChallenge(6).isRunning && tier > 2 && !this.isContinuumActive;
-      this.amountDisplay = this.tier < 8 ? format(this.amount, 2) : formatInt(this.amount);
+      this.amountDisplay = (this.tier < 8 || this.amount.gte(1e9)) ? format(this.amount, 2) : formatInt(this.amount);
       this.hasTutorial = ((tier === 1 && Tutorial.isActive(TUTORIAL_STATE.DIM1)) ||
         (tier === 2 && Tutorial.isActive(TUTORIAL_STATE.DIM2))) && this.hasDLC;
     },
     buy() {
       if (this.isContinuumActive) return;
-      if (this.howManyCanBuy === 1) {
+      if (this.howManyCanBuy.eq(1)) {
         buyOneDimension(this.tier);
       } else {
         buyAsManyAsYouCanBuy(this.tier);
@@ -183,12 +183,12 @@ export default {
         >
           <div
             class="fill-purchased"
-            :style="{ 'width': boughtBefore10*10 + '%' }"
+            :style="{ 'width': boughtBefore10.toNumber()*10 + '%' }"
             data-v-modern-antimatter-dimension-row
           />
           <div
             class="fill-possible"
-            :style="{ 'width': howManyCanBuy*10 + '%' }"
+            :style="{ 'width': howManyCanBuy.toNumber()*10 + '%' }"
             data-v-modern-antimatter-dimension-row
           />
         </div>

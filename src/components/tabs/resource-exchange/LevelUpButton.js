@@ -3,7 +3,7 @@ export default {
   data() {
     return {
       isAffordable: false,
-      cost: new Decimal(0),
+      cost: new BE(0),
       level: 0
     }
   },

@@ -3,7 +3,7 @@ export default {
   data() {
     return {
       isDoomed: false,
-      currencyValue: new Decimal(),
+      currencyValue: new BE(),
       currencyName: "",
     };
   },

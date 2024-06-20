@@ -1,5 +1,5 @@
 import { GameMechanicState } from "./game-mechanics/index.js";
-import { DC } from "./constants.js";
+import { BEC } from "./constants.js";
 
 class ResourceExchangeState extends GameMechanicState {
   get currency() {
@@ -11,7 +11,30 @@ class ResourceExchangeState extends GameMechanicState {
   }
   
   get exchangeRate() {
-    return 1;
+    return this.data.exchangeRate;
+  }
+  
+  set exchangeRate(value) {
+    this.data.exchangeRate = value;
+  }
+  
+  get rateType() {
+    return this.data.rateType;
+  }
+  
+  set rateType(value) {
+    this.data.rateType = value;
+  }
+  
+  toggleRateType() {
+    switch (this.rateType) {
+      case PERCENTS_TYPE.NORMAL:
+        this.rateType = PERCENTS_TYPE.LOG;
+        break;
+      case PERCENTS_TYPE.LOG:
+        this.rateType = PERCENTS_TYPE.NORMAL;
+        break;
+    }
   }
   
   get valueFn() {
@@ -19,7 +42,7 @@ class ResourceExchangeState extends GameMechanicState {
   }
   
   get min() {
-    return this.config.min ?? DC.D0;
+    return this.config.min ?? BEC.D0;
   }
   
   get isTooSmall() {
@@ -40,7 +63,14 @@ class ResourceExchangeState extends GameMechanicState {
   }
   
   get willLeave() {
-    return this.currency.value.times(1 - this.exchangeRate).clampMin(this.min);
+    let result = this.currency.value;
+    if (this.rateType === PERCENTS_TYPE.NORMAL) {
+      result = result.times(1 - this.exchangeRate);
+    }
+    if (this.rateType === PERCENTS_TYPE.LOG) {
+      result = result.minus(result.pow(this.exchangeRate));
+    }
+    return result.clampMin(this.min);
   }
   
   get newExchanged() {
@@ -80,7 +110,7 @@ class ResourceExchangeState extends GameMechanicState {
   }
   
   reset() {
-    this.data.value = DC.D0;
+    this.data.value = BEC.D0;
   }
 }
 
@@ -90,7 +120,7 @@ export const ResourceExchange = mapGameDataToObject(
 );
 
 export function getLogicPoints() {
-  return ResourceExchange.all.map(r => r.value).reduce(Decimal.prodReducer);
+  return ResourceExchange.all.map(r => r.value).reduce(BE.prodReducer);
 }
 
 class ResourceExchangeUpgradeState extends GameMechanicState {
@@ -129,7 +159,7 @@ class ResourceExchangeUpgradeState extends GameMechanicState {
   }
   
   costAfterCount(count) {
-    return Decimal.pow10(1 + 10 * count + (Math.pow(20, count)) / 15).div(2);
+    return BE.pow10(1 + 10 * count + Math.pow(20, count) / 15).div(2);
   }
   
   purchase() {
@@ -140,8 +170,8 @@ class ResourceExchangeUpgradeState extends GameMechanicState {
   
   get effectValue() {
     let effectivePoints = GameCache.logicPoints.value;
-    if (effectivePoints.gte(DC.E50)) effectivePoints = DC.E45.times(effectivePoints.pow(0.1));
-    return DC.E5.pow(Math.pow(this.boughtAmount + 1, Math.log10(effectivePoints.add(1).log10() + 1) + 1));
+    if (effectivePoints.gte(BEC.E50)) effectivePoints = BEC.E45.times(effectivePoints.pow(0.1));
+    return BEC.E5.pow(BE.pow(this.boughtAmount + 1, effectivePoints.add(1).log10().plus(1).log10().plus(1)));
   }
   
   get isEffectActive() {

@@ -1,4 +1,4 @@
-import { isDecimal, isFunction, isNumber } from "../utility/index.js";
+import { isFunction, isNumber, isBE } from "../utility/index.js";
 
 /* eslint-disable no-empty-function */
 export default {
@@ -64,9 +64,9 @@ export default {
           this.effectValue = effect;
           return;
         }
-
-        if (isDecimal(effect)) {
-          this.effectValue = Decimal.fromDecimal(effect);
+        
+        if (isBE(effect)) {
+          this.effectValue = BE.fromBE(effect);
           return;
         }
 
@@ -80,8 +80,8 @@ export default {
         if (isNumber(value)) {
           this.effectValue = value;
           this.updateEffect = () => this.effectValue = effect();
-        } else if (isDecimal(value)) {
-          this.effectValue = Decimal.fromDecimal(value);
+        } else if (isBE(value)) {
+          this.effectValue = BE.fromBE(value);
           this.updateEffect = () => this.effectValue.copyFrom(effect());
         } else {
           throw new Error(`EffectDisplay config.effect is a function which returns` +
@@ -108,9 +108,9 @@ export default {
             this.hasCap = true;
             return;
           }
-
-          if (isDecimal(cap)) {
-            this.cap = Decimal.fromDecimal(cap);
+          
+          if (isBE(cap)) {
+            this.cap = BE.fromBE(cap);
             this.hasCap = true;
             return;
           }

@@ -266,7 +266,7 @@ export const singularityMilestones = {
     repeat: 0,
     limit: 1,
     description: "Dilated Time boosts Dark Matter production",
-    effect: () => Math.pow(1.6, Decimal.log10(Currency.dilatedTime.value.plus(1)) / 1000),
+    effect: () => BE.pow(1.6, Currency.dilatedTime.value.plus(1).log10().div(1000)),
     effectFormat: x => formatX(x, 2, 2),
     upgradeDirection: LAITELA_UPGRADE_DIRECTION.BOOSTS_LAITELA,
   },

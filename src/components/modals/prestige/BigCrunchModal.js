@@ -7,8 +7,8 @@ export default {
   },
   data() {
     return {
-      gainedInfinities: new Decimal(),
-      gainedInfinityPoints: new Decimal(),
+      gainedInfinities: new BE(),
+      gainedInfinityPoints: new BE(),
       startingBoosts: 0,
       startingAM: 10,
       willStartWithGalaxy: false

@@ -8,21 +8,21 @@ export const Puzzle = {
     return GameCache.maxTier.value;
   },
   get randomDimOrder() {
-    return DimBoost.purchasedBoosts === 4 && player.galaxies === 0 && !PlayerProgress.infinityUnlocked();
+    return DimBoost.purchasedBoosts.eq(4) && player.galaxies.eq(0) && !PlayerProgress.infinityUnlocked();
   },
   get buttonAch() {
     if (Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked()) {
-      if (player.galaxies >= 1) {
+      if (player.galaxies.gte(1)) {
         return {
           id: 27,
-          text: "There is no galaxy",
+          text: "The literal meaning",
           clickFn: () => manualRequestGalaxyReset(1, false)
         }
       } else {
         return {
           id: 26,
           text: "What is AG?",
-          clickFn: () => GameUI.notify.info("Maybe you need some help.")
+          clickFn: () => GameUI.notify.info("Maybe you need some HELP.")
         }
       }
     }
@@ -30,10 +30,10 @@ export const Puzzle = {
   },
   tryBuyingFirstGalaxy() {
     if (Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked()) {
-      if (player.galaxies === 0) {
+      if (player.galaxies.eq(0)) {
         manualRequestGalaxyReset(1, false);
       } else {
-        GameUI.notify.error(`"Buy ${formatInt(2)} galaxies" is not here.`);
+        GameUI.notify.error(`Tips: Achievement.`);
       }
     }
   },

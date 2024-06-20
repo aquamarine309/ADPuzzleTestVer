@@ -1099,54 +1099,6 @@ AutobuyerBox components will always render in page order regardless of internal 
   border: none;
 }
 
-.c-resource-name[data-v-catchup-entry] {
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.c-underline[data-v-catchup-entry] {
-  text-decoration: underline;
-}
-
-.c-modal-catchup-entry[data-v-catchup-entry] {
-  border-top: 0.1rem solid var(--color-text);
-  padding: 0.5rem 0 0.5rem 1.5rem;
-  cursor: default;
-}
-
-.c-modal-catchup-entry[data-v-catchup-entry]:nth-child(1) {
-  border-top: none;
-}
-
-.o-catchup-group-title[data-v-catchup-group] {
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.l-left[data-v-catchup-group] {
-  text-align: left;
-}
-
-.l-catchup-group-container[data-v-catchup-modal] {
-  overflow-y: scroll;
-  width: 100%;
-  text-align: left;
-  border: 0.1rem solid var(--color-text);
-  border-radius: var(--var-border-radius, 0.4rem);
-  margin: 1rem 0;
-  padding: 1.5rem;
-}
-
-.l-confirm-padding[data-v-catchup-modal] {
-  margin: 1rem;
-}
-
-.c-suggestion-text[data-v-catchup-modal] {
-  font-size: 1.6rem;
-  font-weight: bold;
-}
-
 .l-changelog-modal[data-v-changelog-modal] {
   display: flex;
   flex-direction: column;

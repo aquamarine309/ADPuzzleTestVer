@@ -1,7 +1,7 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 function rebuyableCost(initialCost, increment, id) {
-  return Decimal.multiply(initialCost, Decimal.pow(increment, player.dilation.rebuyables[id]));
+  return BE.multiply(initialCost, BE.pow(increment, player.dilation.rebuyables[id]));
 }
 function rebuyable(config) {
   return {
@@ -37,7 +37,7 @@ export const dilationUpgrades = {
         SingularityMilestone.dilatedTimeFromSingularities,
         Achievement(187)
       );
-      return Decimal.pow(base, bought);
+      return BE.pow(base, bought);
     },
     formatEffect: value => {
       const nonInteger = SingularityMilestone.dilatedTimeFromSingularities.canBeApplied ||
@@ -77,8 +77,8 @@ export const dilationUpgrades = {
       return "Triple the amount of Tachyon Particles gained";
     },
     effect: bought => {
-      if (Pelle.isDoomed) return DC.D1.pow(bought);
-      return DC.D3.pow(bought);
+      if (Pelle.isDoomed) return BEC.D1.pow(bought);
+      return BEC.D3.pow(bought);
     },
     formatEffect: value => formatX(value, 2),
     formatCost: value => format(value, 2),
@@ -103,12 +103,12 @@ export const dilationUpgrades = {
         }
       }
       return `Time Dimensions are affected by Replicanti multiplier ${formatPow(multiplier, 1, 3)}, reduced
-        effect above ${formatX(DC.E9000)}`;
+        effect above ${formatX(BEC.E9000)}`;
     },
     effect: () => {
-      let rep10 = replicantiMult().pLog10() * 0.1;
-      rep10 = rep10 > 9000 ? 9000 + 0.5 * (rep10 - 9000) : rep10;
-      return Decimal.pow10(rep10);
+      let rep10 = replicantiMult().pLog10().times(0.1);
+      rep10 = rep10.gt(9000) ? (rep10.minus(9000)).times(0.5).plus(9000) : rep10;
+      return BE.pow10(rep10);
     },
     formatEffect: value => formatX(value, 2, 1)
   },
@@ -151,7 +151,7 @@ export const dilationUpgrades = {
     increment: 100,
     pelleOnly: true,
     description: () => `${formatX(5)} Dilated Time gain`,
-    effect: bought => Decimal.pow(5, bought),
+    effect: bought => BE.pow(5, bought),
     formatEffect: value => formatX(value, 2),
     formatCost: value => format(value, 2),
     purchaseCap: Number.MAX_VALUE

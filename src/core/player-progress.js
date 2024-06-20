@@ -8,16 +8,16 @@ export class PlayerProgress {
     // or after the reality update, but this also gets checked in the import modal before any migration code is run.
     // Thus, it needs to manually support "before" and "after" states by converting both to Decimal.
     const infinityData = this._player.infinitied ? this._player.infinitied : this._player.infinities;
-    return new Decimal(infinityData).gt(0) || this.isEternityUnlocked;
+    return new BE(infinityData).gt(0) || this.isEternityUnlocked;
   }
 
   get isEternityUnlocked() {
     // Similarly to above, player.eternities is a number pre-reality update and a Decimal post-reality update
-    return new Decimal(this._player.eternities).gt(0) || this.isRealityUnlocked;
+    return new BE(this._player.eternities).gt(0) || this.isRealityUnlocked;
   }
 
   get isRealityUnlocked() {
-    return this._player.realities > 0;
+    return new BE(this._player.realities).gt(0);
   }
 
   get hasFullCompletion() {
@@ -37,7 +37,7 @@ export class PlayerProgress {
   }
 
   static hasBroken() {
-    return player.break || this.isEternityUnlocked || this.isRealityUnlocked;
+    return player.break || this.current.isEternityUnlocked || this.current.isRealityUnlocked;
   }
 
   static replicantiUnlocked() {

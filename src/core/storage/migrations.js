@@ -49,7 +49,7 @@ export const migrations = {
     10: player => {
       if (player.timestudy.studies.includes(72)) {
         for (let i = 4; i < 8; i++) {
-          player[`infinityDimension${i}`].amount = Decimal.div(player[`infinityDimension${i}`].amount,
+          player[`infinityDimension${i}`].amount = BE.div(player[`infinityDimension${i}`].amount,
             Sacrifice.totalBoost.pow(0.02));
         }
       }
@@ -60,8 +60,8 @@ export const migrations = {
       // Updates TD costs to harsher scaling
       if (player.timeDimension1) {
         for (let i = 1; i < 5; i++) {
-          if (new Decimal("1e300").lt(player[`timeDimension${i}`].cost)) {
-            player[`timeDimension${i}`].cost = Decimal.pow(
+          if (new BE("1e300").lt(player[`timeDimension${i}`].cost)) {
+            player[`timeDimension${i}`].cost = BE.pow(
               timeDimCostMults[i] * 2.2,
               player[`timeDimension${i}`].bought
             ).times(timeDimStartCosts[i]);
@@ -124,7 +124,7 @@ export const migrations = {
       migrations.removePostC3Reward(player);
       migrations.renameMoney(player);
       migrations.moveAutobuyers(player);
-      migrations.convertEternityCountToDecimal(player);
+      migrations.convertEternityCountToBE(player);
       migrations.renameDimboosts(player);
       migrations.migrateConfirmations(player);
       migrations.removeOtherTickspeedProps(player);
@@ -176,8 +176,8 @@ export const migrations = {
           player.records.recentInfinities[i] = [
             infRec[0] ?? Number.MAX_VALUE,
             Number(infRec[3] ?? Number.MAX_VALUE),
-            new Decimal(infRec[1] ?? 1),
-            new Decimal(infRec[2] ?? 1),
+            new BE(infRec[1] ?? 1),
+            new BE(infRec[2] ?? 1),
             ""
           ];
         }
@@ -187,10 +187,10 @@ export const migrations = {
           player.records.recentEternities[i] = [
             eterRec[0] ?? Number.MAX_VALUE,
             Number(eterRec[3] ?? Number.MAX_VALUE),
-            new Decimal(eterRec[1] ?? 1),
-            new Decimal(eterRec[2] ?? 1),
+            new BE(eterRec[1] ?? 1),
+            new BE(eterRec[2] ?? 1),
             "",
-            new Decimal(0)
+            new BE(0)
           ];
         }
 
@@ -199,7 +199,7 @@ export const migrations = {
           player.records.recentRealities[i] = [
             realRec[0] ?? Number.MAX_VALUE,
             Number(realRec[3] ?? Number.MAX_VALUE),
-            new Decimal(realRec[1] ?? 1),
+            new BE(realRec[1] ?? 1),
             realRec[2] ?? 1,
             "",
             0,
@@ -359,7 +359,7 @@ export const migrations = {
       }
 
       // Added max RM tracking for cel1 records - also for data consistency (though not 100% accurate)
-      player.reality.maxRM = new Decimal(player.reality.realityMachines);
+      player.reality.maxRM = new BE(player.reality.realityMachines);
     },
     22: player => {
       // Added 3 new perk layouts, inserted before blob
@@ -443,8 +443,8 @@ export const migrations = {
       if ((player.logic.upgradeBits & (1 << 8)) !== 0) {
         player.logic.spentPoints = player.logic.spentPoints.minus(2.5e26 - 6e21);
       }
-      if (player.logic.resourceExchange.all[2].value.gt(Decimal.NUMBER_MAX_VALUE)) {
-        player.logic.resourceExchange.all[2].value = new Decimal(1e300);
+      if (player.logic.resourceExchange.all[2].value.gt(BE.NUMBER_MAX_VALUE)) {
+        player.logic.resourceExchange.all[2].value = new BE(1e300);
       }
       if ((player.challenge.normal.completedBits & (1 << 11)) !== 0) {
         player.challenge.normal.completedBits &= ~(1 << 11);
@@ -460,7 +460,6 @@ export const migrations = {
       if (player.auto.antimatterDims.all[2].interval <= 100) {
         player.logic.upgReqs |= (1 << 10);
       }
-      player.options.hiddenSubtabBits.push(0);
       if (player.infinityUpgrades.has("postGalaxy")) {
         player.infinityUpgrades.delete("postGalaxy");
         player.infinityPoints = player.infinityPoints.add(5e11);
@@ -602,7 +601,7 @@ export const migrations = {
 
   convertEPMult(player) {
     if (player.epmult === undefined) return;
-    const mult = new Decimal(player.epmult);
+    const mult = new BE(player.epmult);
     delete player.epmultCost;
     delete player.epmult;
     // The multiplier should never be less than 1, but we don't want to break anyone's save
@@ -744,7 +743,7 @@ export const migrations = {
       player.autobuyers[11].priority !== null &&
       player.autobuyers[11].priority !== "undefined"
     ) {
-      player.autobuyers[11].priority = new Decimal(player.autobuyers[11].priority);
+      player.autobuyers[11].priority = new BE(player.autobuyers[11].priority);
     }
   },
 
@@ -759,8 +758,8 @@ export const migrations = {
 
   removeTickspeed(player) {
     delete player.tickspeed;
-    player.tickSpeedCost = new Decimal(1000);
-    player.tickspeedMultiplier = new Decimal(10);
+    player.tickSpeedCost = new BE(1000);
+    player.tickspeedMultiplier = new BE(10);
   },
 
   removeOtherTickspeedProps(player) {
@@ -792,8 +791,8 @@ export const migrations = {
   },
 
   renameMoney(player) {
-    player.antimatter = new Decimal(player.money);
-    player.totalAntimatter = new Decimal(player.totalmoney);
+    player.antimatter = new BE(player.money);
+    player.totalAntimatter = new BE(player.totalmoney);
     delete player.money;
     delete player.totalmoney;
   },
@@ -808,11 +807,11 @@ export const migrations = {
         pow: `${name}Pow`
       };
       const dimension = player.dimensions.antimatter[tier - 1];
-      dimension.cost = new Decimal(player[oldProps.cost]);
-      dimension.amount = new Decimal(player[oldProps.amount]);
+      dimension.cost = new BE(player[oldProps.cost]);
+      dimension.amount = new BE(player[oldProps.amount]);
       dimension.bought = player[oldProps.bought];
       if (player.costmultipliers) {
-        dimension.costMultiplier = new Decimal(player.costMultipliers[tier - 1]);
+        dimension.costMultiplier = new BE(player.costMultipliers[tier - 1]);
       }
       delete player[oldProps.cost];
       delete player[oldProps.amount];
@@ -826,8 +825,8 @@ export const migrations = {
         const dimension = player.dimensions.infinity[tier - 1];
         const oldName = `infinityDimension${tier}`;
         const old = player[oldName];
-        dimension.cost = new Decimal(old.cost);
-        dimension.amount = new Decimal(old.amount);
+        dimension.cost = new BE(old.cost);
+        dimension.amount = new BE(old.amount);
         dimension.bought = old.bought;
         dimension.baseAmount = old.baseAmount;
         dimension.isUnlocked = player.infDimensionsUnlocked[tier - 1];
@@ -842,8 +841,8 @@ export const migrations = {
         const oldName = `timeDimension${tier}`;
         const old = player[oldName];
         if (old !== undefined) {
-          dimension.cost = new Decimal(old.cost);
-          dimension.amount = new Decimal(old.amount);
+          dimension.cost = new BE(old.cost);
+          dimension.amount = new BE(old.amount);
           dimension.bought = old.bought;
           delete player[oldName];
         }
@@ -858,7 +857,7 @@ export const migrations = {
       player.autobuyers[11].priority !== null &&
       player.autobuyers[11].priority !== "undefined"
     ) {
-      player.autobuyers[11].priority = new Decimal(player.autobuyers[11].priority);
+      player.autobuyers[11].priority = new BE(player.autobuyers[11].priority);
     }
 
     for (let i = 0; i < 8; i++) {
@@ -918,13 +917,13 @@ export const migrations = {
       autobuyer.cost = old.cost;
       autobuyer.interval = old.interval;
       autobuyer.mode = ["amount", "time", "relative"].indexOf(player.autoCrunchMode);
-      const condition = new Decimal(old.priority);
+      const condition = new BE(old.priority);
       switch (player.autoCrunchMode) {
         case "amount":
           autobuyer.amount = condition;
           break;
         case "time":
-          autobuyer.time = condition.lt(Decimal.NUMBER_MAX_VALUE) ? condition.toNumber() : autobuyer.time;
+          autobuyer.time = condition.lt(BE.NUMBER_MAX_VALUE) ? condition.toNumber() : autobuyer.time;
           break;
         case "relative":
           autobuyer.xHighest = condition;
@@ -940,7 +939,7 @@ export const migrations = {
     if (player.autoSacrifice && player.autoSacrifice % 1 !== 0) {
       const old = player.autoSacrifice;
       const autobuyer = player.auto.sacrifice;
-      autobuyer.multiplier = new Decimal(old.priority);
+      autobuyer.multiplier = new BE(old.priority);
       autobuyer.isActive = old.isOn;
     }
 
@@ -993,9 +992,9 @@ export const migrations = {
     delete player.newsArray;
   },
 
-  convertEternityCountToDecimal(player) {
-    player.eternities = new Decimal(player.eternities);
-    player.reality.partEternitied = new Decimal(player.reality.partEternitied);
+  convertEternityCountToBE(player) {
+    player.eternities = new BE(player.eternities);
+    player.reality.partEternitied = new BE(player.reality.partEternitied);
   },
 
   renameDimboosts(player) {
@@ -1014,7 +1013,7 @@ export const migrations = {
   },
 
   changeC8Handling(player) {
-    player.chall8TotalSacrifice = Decimal.pow(player.chall11Pow, 2);
+    player.chall8TotalSacrifice = BE.pow(player.chall11Pow, 2);
     delete player.chall11Pow;
   },
 
@@ -1069,14 +1068,14 @@ export const migrations = {
   },
 
   migrateLastTenRuns(player) {
-    // Move infinities before time in infinity, and make them Decimal.
-    // I know new Decimal(x).toNumber() can't actually be the best way of converting a value
-    // that might be either Decimal or number to number, but it's the best way I know.
+    // Move infinities before time in infinity, and make them BE.
+    // I know new BE(x).toNumber() can't actually be the best way of converting a value
+    // that might be either BE or number to number, but it's the best way I know.
     player.lastTenRuns = player.lastTenRuns.map(
-      x => [x[0], x[1], new Decimal(x[3]), new Decimal(x[2]).toNumber()]);
+      x => [x[0], x[1], new BE(x[3]), new BE(x[2]).toNumber()]);
     // Put in a default value of 1 for eternities.
     player.lastTenEternities = player.lastTenEternities.map(
-      x => [x[0], x[1], new Decimal(1), new Decimal(x[2]).toNumber()]);
+      x => [x[0], x[1], new BE(1), new BE(x[2]).toNumber()]);
   },
 
   migrateIPGen(player) {
@@ -1114,12 +1113,12 @@ export const migrations = {
     player.records.gameCreatedTime = player.gameCreatedTime;
     player.records.totalTimePlayed = player.totalTimePlayed;
     player.records.realTimePlayed = player.realTimePlayed;
-    player.records.totalAntimatter = new Decimal(player.totalAntimatter);
+    player.records.totalAntimatter = new BE(player.totalAntimatter);
     player.records.lastTenInfinities = player.lastTenRuns;
     player.records.lastTenEternities = player.lastTenEternities;
     for (let i = 0; i < 10; i++) {
-      player.records.lastTenInfinities[i][1] = new Decimal(player.lastTenRuns[i][1]);
-      player.records.lastTenEternities[i][1] = new Decimal(player.lastTenEternities[i][1]);
+      player.records.lastTenInfinities[i][1] = new BE(player.lastTenRuns[i][1]);
+      player.records.lastTenEternities[i][1] = new BE(player.lastTenEternities[i][1]);
     }
     player.records.thisInfinity.time = player.thisInfinityTime;
     player.records.thisInfinity.realTime = player.thisInfinityTime;
@@ -1179,9 +1178,9 @@ export const migrations = {
   },
 
   convertTimeTheoremPurchases(player) {
-    player.timestudy.amBought = new Decimal(player.timestudy.amcost).exponent / 20000 - 1;
-    player.timestudy.ipBought = new Decimal(player.timestudy.ipcost).exponent / 100;
-    player.timestudy.epBought = Math.round(new Decimal(player.timestudy.epcost).log2());
+    player.timestudy.amBought = new BE(player.timestudy.amcost).exponent / 20000 - 1;
+    player.timestudy.ipBought = new BE(player.timestudy.ipcost).exponent / 100;
+    player.timestudy.epBought = Math.round(new BE(player.timestudy.epcost).log2());
 
     delete player.timestudy.amcost;
     delete player.timestudy.ipcost;
@@ -1189,8 +1188,8 @@ export const migrations = {
   },
 
   infinitiedConversion(player) {
-    player.infinities = new Decimal(player.infinitied);
-    player.infinitiesBanked = new Decimal(player.infinitiedBank);
+    player.infinities = new BE(player.infinitied);
+    player.infinitiesBanked = new BE(player.infinitiedBank);
 
     delete player.infinitied;
     delete player.infinitiedBank;
@@ -1216,8 +1215,8 @@ export const migrations = {
   },
 
   refactorDoubleIPRebuyable(player) {
-    // A bit of a hack, but needs to be done this way to not trigger the non-Decimal assignment crash check code
-    const purchases = new Decimal(player.infMult).log2();
+    // A bit of a hack, but needs to be done this way to not trigger the non-BE assignment crash check code
+    const purchases = new BE(player.infMult).log2();
     delete player.infMult;
     player.infMult = Math.round(purchases);
     delete player.infMultCost;
@@ -1240,7 +1239,7 @@ export const migrations = {
   moveTS33(player) {
     if (player.timestudy.studies.includes(33) && !player.timestudy.studies.includes(22)) {
       player.timestudy.studies.splice(player.timestudy.studies.indexOf(33), 1);
-      player.timestudy.theorem = new Decimal(player.timestudy.theorem).plus(2);
+      player.timestudy.theorem = new BE(player.timestudy.theorem).plus(2);
     }
   },
 

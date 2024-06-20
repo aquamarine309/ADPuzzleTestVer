@@ -21,9 +21,9 @@ export default {
       buyUntil10: true,
       isSacrificeUnlocked: false,
       isSacrificeAffordable: false,
-      buy10Mult: new Decimal(0),
-      currentSacrifice: new Decimal(0),
-      sacrificeBoost: new Decimal(0),
+      buy10Mult: new BE(0),
+      currentSacrifice: new BE(0),
+      sacrificeBoost: new BE(0),
       disabledCondition: "",
       isQuickResetAvailable: false,
       hasContinuum: false,
@@ -74,7 +74,7 @@ export default {
       return this.buyUntil10 ? "Until 10" : "Buy 1";
     },
     update() {
-      this.hasDimensionBoosts = player.dimensionBoosts > 0;
+      this.hasDimensionBoosts = player.dimensionBoosts.gt(0);
       this.buyUntil10 = player.buyUntil10;
       this.hasContinuum = Laitela.continuumUnlocked;
       this.isContinuumActive = Laitela.continuumActive;

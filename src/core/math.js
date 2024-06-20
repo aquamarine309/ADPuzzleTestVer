@@ -1,11 +1,12 @@
 import { log as lngamma } from "../../modules/gamma.js";
 
-import { DC } from "./constants.js";
+import { BEC } from "./constants.js";
 
 /* eslint-disable no-use-before-define */
 /* eslint-disable max-params */
 
 window.LOG10_MAX_VALUE = Math.log10(Number.MAX_VALUE);
+window.DLOG10_MAXNUM = BE.log10(Number.MAX_VALUE);
 window.LN_SQRT_2_PI = 0.5 * Math.log(2 * Math.PI);
 window.LOG10_2 = Math.log10(2);
 window.LOG10_E = Math.log10(Math.E);
@@ -17,10 +18,62 @@ Math.PI_2 = Math.PI * 2;
  */
 
 /**
+ * @param {BE|Number} a Variable before x^2 in ax^2 + bx + c = 0
+ * @param {BE|Number} a Variable before x in ax^2 + bx + c = 0
+ * @param {BE|Number} c Variable after x in ax^2 + bx + c = 0
+ * @param {Boolean} n Should the root be subtracted to -b?
+ * @returns {BE}
+*/
+window.decimalQuadraticSolution = function decimalQuadraticSolution(a, b, c, n = false) {
+  const divsr = a.times(2);
+  const nb = b.neg();
+  const lroot = b.pow(2);
+  const rroot = a.times(c).times(4);
+  const froot = lroot.sub(rroot).sqrt();
+  const top = n ? nb.sub(froot) : nb.add(froot);
+  return top.div(divsr);
+};
+
+/**
+ * @param {BE|Number} a Variable before x^3 in ax^3 + bx^2 + cx + d = 0
+ * @param {BE|Number} b Variable before x^2 in ax^3 + bx^2 + cx + d = 0
+ * @param {BE|Number} c Variable before x in ax^3 +  bx^2 + cx + d = 0
+ * @param {BE|Number} d Variable after x in ax^3 +  bx^2 + cx + d = 0
+ * @param {Boolean} n Should the square root subtract?
+ * @returns {BE}
+*/
+window.decimalCubicSolution = function decimalCubicSolution(a, b, c, d, n = false) {
+  const delta0 = b.pow(2).sub(a.times(3).times(c));
+  const delta1 = b.pow(2).times(2).sub(a.times(b).times(c).times(9)).add(a.pow(2).times(d).times(27));
+  const ne = n ? BE.sqrt(delta1.pow(2).sub(delta0.pow(3).times(4)), 2).neg()
+    : BE.root(delta1.pow(2).sub(delta0.pow(3).times(4)));
+  const C = BE.cbrt(delta1.add(ne).div(2));
+  const x = BEC.D1.div(a.times(3)).neg().times(b.add(C).add(delta0.div(C)));
+  return x;
+};
+
+/**
+ * @param {BE|Number} b Variable before x in ax^3 + bx + c = 0
+ * @param {BE|Number} c Variable after x in ax^3 + bx + c = 0
+ * @returns {BE}
+*/
+window.decimalDepressedCubicSolution = function decimalDepressedCubicSolution(b, c) {
+  const u1 = BE.cbrt(c.neg().div(2).add(BE.sqrt(c.pow(2).div(4).add(b.pow(3).div(27)))));
+  const u2 = BE.cbrt(c.neg().div(2).sub(BE.sqrt(c.pow(2).div(4).add(b.pow(3).div(27)))));
+  return u1.add(u2);
+};
+
+/**
  * @typedef {Object} bulkBuyBinarySearch_result
  * @property {number} quantity amount purchased (relative)
- * @property {Decimal} purchasePrice amount that needs to be paid to get that
+ * @property {BE} purchasePrice amount that needs to be paid to get that
  */
+
+
+// Please, for the love of god, do not use this for ANY equation that is decimal.
+// BBBS is far too weak and its worth just writing inverses (or picking an equation that has inverses)
+// This is simply because you would need to run cost equations 30+ times which is wasteful
+// Again, avoid if possible.
 
 /**
  * bulkBuyBinarySearch is a helper for bulk buyers of non-linear prices. If the price of
@@ -33,17 +86,19 @@ Math.PI_2 = Math.PI * 2;
  * if you can afford purchase N, you can afford the combined cost of everything before N
  * (it does check and make sure you can afford all of that put together. See below in code
  * for details)
- * @param {Decimal} money Amount of currency available
+ * @param {BE} money Amount of currency available
  * @param {Object} costInfo cost parameters:
- * @param {function(number): Decimal} costInfo.costFunction price of the n'th purchase (starting from 0)
- * @param {Decimal} [costInfo.firstCost] Cost of the next purchase; this is usually available/cached. Will
+ * @param {function(number): BE} costInfo.costFunction price of the n'th purchase (starting from 0)
+ * @param {BE} [costInfo.firstCost] Cost of the next purchase; this is usually available/cached. Will
  *   be calculated from costFunction if not provided.
  * @param {boolean} [costInfo.cumulative] (Defaults to true) specifies whether one must pay a cumulative
  *   cost or just the highest cost.
  * @param {number} alreadyBought amount already purchased
  * @returns {bulkBuyBinarySearch_result | null}
  */
-window.bulkBuyBinarySearch = function bulkBuyBinarySearch(money, costInfo, alreadyBought) {
+window.bulkBuyBinarySearch = function bulkBuyBinarySearch(money, costInfo, alreadyBought, ignoreWarning = false) {
+  // eslint-disable-next-line no-console
+  if (!ignoreWarning) console.log("Bulk Buy Binary Search was used");
   const costFunction = costInfo.costFunction;
   const firstCost = costInfo.firstCost === undefined ? costFunction(alreadyBought) : costInfo.firstCost;
   const isCumulative = costInfo.cumulative === undefined ? true : costInfo.cumulative;
@@ -76,7 +131,7 @@ window.bulkBuyBinarySearch = function bulkBuyBinarySearch(money, costInfo, alrea
   if (!isCumulative) {
     return { quantity: canBuy, purchasePrice: baseCost };
   }
-  let otherCost = DC.D0;
+  let otherCost = BEC.D0;
   // Account for costs leading up to that purchase; we are basically adding things
   // up until they are insignificant
   let count = 0;
@@ -95,6 +150,97 @@ window.bulkBuyBinarySearch = function bulkBuyBinarySearch(money, costInfo, alrea
     // assume we can afford A+B+C because A+B+C < D)
     totalCost = otherCost;
   }
+  return { quantity: canBuy, purchasePrice: totalCost };
+};
+
+/**
+ * @typedef {Object} dBBBS_result
+ * @property {BE} quantity amount purchased (relative)
+ * @property {BE} purchasePrice amount that needs to be paid to get that
+ */
+
+/**
+ * dBBBS is the decimal version of bulkBuyBinarySearch
+ * Ironically I think this code might be better then bbbs for values that increment slowly due to the last bit of code,
+ * but this is also decimal so I highly advise against that. This code also doesnt work properly, but the whole code
+ * no longer uses bbbs (moved to inverses). See BBBS note - dont use this if possible (especially dont use this one).
+ * @param {BE} money Amount of currency available
+ * @param {Object} costInfo cost parameters:
+ * @param {function(BE): BE} costInfo.costFunction price of the n'th purchase (starting from 0)
+ * @param {BE} [costInfo.firstCost] Cost of the next purchase; this is usually available/cached. Will
+ *   be calculated from costFunction if not provided.
+ * @param {boolean} [costInfo.cumulative] (Defaults to true) specifies whether one must pay a cumulative
+ *   cost or just the highest cost.
+ * @param {BE} alreadyBought amount already purchased
+ * @returns {dBBBS_result | null}
+ */
+window.dBBBS = function dBBBS(money, costInfo, alreadyBought) {
+  const costFunction = costInfo.costFunction;
+  const firstCost = costInfo.firstCost === undefined ? costFunction(alreadyBought) : costInfo.firstCost;
+  const isCumulative = costInfo.cumulative === undefined ? true : costInfo.cumulative;
+  if (money.lt(firstCost)) return null;
+  // Attempt to find the max we can purchase. We know we can buy 1, so we try 2, 4, 8, etc
+  // to figure out the upper limit
+  let canBuy = new BE(15.95424252);
+  // Have a mag at 15.95424252 - Meaning mags wont drop for next func, never internally used
+  let totalCost = new BE(0);
+  let cantBuy = BE.tetrate(10, 9e15).times(9e15 - 1);
+  let val = new BE(15.95424252);
+  val.layer = Math.floor((cantBuy.layer + canBuy.layer) / 2);
+  while (val.layer !== cantBuy.layer) {
+
+    const v = (costFunction(val).gt(money));
+    val.layer = Math.ceil((cantBuy.layer + canBuy.layer) / 2);
+    // Stupid hack, i know, but if we dont do this the entire bit of code loops forever
+    const va = (costFunction(val).gt(money));
+    val.layer = Math.floor((cantBuy.layer + canBuy.layer) / 2);
+
+    if (v || va) {
+      cantBuy.layer = Math.floor((cantBuy.layer + canBuy.layer) / 2);
+    }
+
+    if (!(v || va)) {
+      canBuy.layer = Math.floor((cantBuy.layer + canBuy.layer) / 2);
+    }
+
+    val.layer = Math.floor((cantBuy.layer + canBuy.layer) / 2);
+  }
+
+  canBuy = new BE(0);
+  // We want to see mag to 0, and since the code doesnt actually care about the code
+  cantBuy = new BE(9e15 - 1);
+  val.mag = ((cantBuy.mag + canBuy.mag) / 2);
+  // No need to round till the end
+  while (cantBuy.mag !== val.mag) {
+
+    const v = (costInfo.costFunction(val).gt(money));
+
+    if (v) {
+      cantBuy.mag = (cantBuy.layer + canBuy.layer) / 2;
+    }
+
+    if (!v) {
+      canBuy.mag = (cantBuy.layer + canBuy.layer) / 2;
+    }
+
+    val.mag = ((cantBuy.mag + canBuy.mag) / 2);
+    // No need to round till the end
+  }
+
+  val = canBuy.floor();
+  if (isCumulative) {
+    // If the layer > 0 this is far too insignificant to give a fuck about
+    if (canBuy.layer === 0) {
+      // Go 100 purchases back or to 0. Anything lower shouldnt be significant
+      val = BE.max(canBuy.sub(100), 0);
+      while (val.neq(canBuy) && totalCost.add(costInfo.costFunction(val)).gt(money)) {
+        totalCost = totalCost.add(costInfo.costFunction(val));
+        val = val.add(1);
+      }
+    }
+  }
+  val.sub(alreadyBought);
+  if (val.eq(canBuy)) totalCost = costInfo.costFunction(canBuy);
   return { quantity: canBuy, purchasePrice: totalCost };
 };
 
@@ -217,6 +363,7 @@ window.LinearMultiplierScaling = class LinearMultiplierScaling {
   }
 };
 
+// This function is used once. I get why its seperated, but why make it a window function not a local one?????
 window.getCostWithLinearCostScaling = function getCostWithLinearCostScaling(
   amountOfPurchases, costScalingStart, initialCost, costMult, costMultGrowth
 ) {
@@ -267,27 +414,26 @@ window.findFirstInfiniteCostPurchase = function findFirstInfiniteCostPurchase(
  */
 window.LinearCostScaling = class LinearCostScaling {
   /**
-   * @param {Decimal} resourcesAvailable amount of available resources
-   * @param {Decimal} initialCost current cost
+   * @param {BE} resourcesAvailable amount of available resources
+   * @param {BE} initialCost current cost
    * @param {Number} costMultiplier current cost multiplier
    * @param {Number} maxPurchases max amount of purchases
    * @param {Boolean} free signifies if the purchase is free -> if we only need to consider the last cost
    */
-  constructor(resourcesAvailable, initialCost, costMultiplier, maxPurchases = Number.MAX_SAFE_INTEGER, free = false) {
+  constructor(resourcesAvailable, initialCost, costMultiplier, maxPurchases = BEC.BEMAX, free = false) {
     if (free) {
-      this._purchases = Math.clampMax(Math.floor(
-        resourcesAvailable.div(initialCost).log10() /
-        Math.log10(costMultiplier) + 1), maxPurchases);
+      this._purchases = BE.min(Math.floor(
+        resourcesAvailable.div(initialCost).log10().div(Math.log10(costMultiplier).add(1))), maxPurchases);
     } else {
-      this._purchases = Math.clampMax(Math.floor(
-        resourcesAvailable.mul(costMultiplier - 1).div(initialCost).add(1).log10() /
-        Math.log10(costMultiplier)), maxPurchases);
+      this._purchases = BE.min(BE.floor(
+        resourcesAvailable.mul(costMultiplier.sub(1)).div(initialCost).add(1).log10()
+          .div(BE.log10(costMultiplier))), maxPurchases);
     }
-    this._totalCostMultiplier = Decimal.pow(costMultiplier, this._purchases);
+    this._totalCostMultiplier = BE.pow(costMultiplier, this._purchases);
     if (free) {
-      this._totalCost = initialCost.mul(Decimal.pow(costMultiplier, this._purchases - 1));
+      this._totalCost = initialCost.mul(BE.pow(costMultiplier, this._purchases.sub(1)));
     } else {
-      this._totalCost = initialCost.mul(Decimal.sub(1, this._totalCostMultiplier)).div(1 - costMultiplier);
+      this._totalCost = initialCost.mul(BE.sub(1, this._totalCostMultiplier)).div(BEC.D1.sub(costMultiplier));
     }
   }
 
@@ -319,149 +465,129 @@ window.LinearCostScaling = class LinearCostScaling {
  */
 window.ExponentialCostScaling = class ExponentialCostScaling {
   /**
-   * @param {Object} param configuration object with the following fields
-   * @param {number|Decimal} param.baseCost the cost of the first purchase
-   * @param {number} param.baseIncrease the baseline increase in price
-   * @param {number} param.costScale the amount by which the cost scaling increases;
-   *  e.g. if it is 10, then the ratio between successive prices goes up by 10
-   * @param {number} [param.purchasesBeforeScaling] the number of purchases that can
-   *  be made before scaling begins. If baseCost is B, baseIncrease is C, and costScale is S,
-   *  and purchasesBeforeScaling is 0, the prices will go: B, B C, B C^2 S, B C^3 S^3, etc.
-   * @param {number|Decimal} [param.scalingCostThreshold] an alternative way of specifying
-   *  when scaling begins; once the cost is >= this threshold, scaling applies. Using the same
-   *  notation: B BC BC^2 .... BC^n <threshold> BC^(n+1) BC^(n+2)S BC^(n+3)S^3 etc. So, the first
-   *  price past the threshold has no costScale in it, but everything past that does.
-   */
+  * @param {Object} param configuration object with the following fields
+  * @param {number|BE} param.baseCost the cost of the first purchase
+  * @param {number} param.baseIncrease the baseline increase in price
+  * @param {number} param.costScale the amount by which the cost scaling increases;
+  *  e.g. if it is 10, then the ratio between successive prices goes up by 10
+  * @param {number} [param.purchasesBeforeScaling] the number of purchases that can
+  *  be made before scaling begins. If baseCost is B, baseIncrease is C, and costScale is S,
+  *  and purchasesBeforeScaling is 0, the prices will go: B, B C, B C^2 S, B C^3 S^3, B C^4 S^6, etc.
+  * @param {number|BE} [param.scalingCostThreshold] an alternative way of specifying
+  *  when scaling begins; once the cost is >= this threshold, scaling applies. Using the same
+  *  notation: B BC BC^2 .... BC^n <threshold> BC^(n+1) BC^(n+2)S BC^(n+3)S^3 etc. So, the first
+  *  price past the threshold has no costScale in it, but everything past that does.
+  */
+
   constructor(param) {
-    this._baseCost = new Decimal(param.baseCost);
+    this._baseCost = param.baseCost;
     this._baseIncrease = param.baseIncrease;
-    if (typeof this._baseIncrease !== "number") throw new Error("baseIncrease must be a number");
     this._costScale = param.costScale;
-    if (typeof this._costScale !== "number") throw new Error("costScale must be a number");
-    this._logBaseCost = ExponentialCostScaling.log10(param.baseCost);
-    this._logBaseIncrease = ExponentialCostScaling.log10(param.baseIncrease);
-    this._logCostScale = ExponentialCostScaling.log10(param.costScale);
-    if (param.purchasesBeforeScaling !== undefined) {
-      this._purchasesBeforeScaling = param.purchasesBeforeScaling;
-    // eslint-disable-next-line no-negated-condition
-    } else if (param.scalingCostThreshold !== undefined) {
-      this._purchasesBeforeScaling = Math.ceil(
-        (ExponentialCostScaling.log10(param.scalingCostThreshold) - this._logBaseCost) / this._logBaseIncrease);
-    } else throw new Error("Must specify either scalingCostThreshold or purchasesBeforeScaling");
-    this.updateCostScale();
+    if (param.purchasesBeforeScaling === undefined && param.scalingCostThreshold === undefined) {
+      throw new Error("purchasesBeforeScaling or scalingCostThreshold must be defined");
+    }
+    if (!(param.purchasesBeforeScaling instanceof BE || param.scalingCostThreshold instanceof BE)) {
+      throw new Error("purchasesBeforeScaling or scalingCostThreshold must be BE");
+    }
+    if (param.purchasesBeforeScaling instanceof BE) this._purchasesBeforeScaling = param.purchasesBeforeScaling;
+    if (param.scalingCostThreshold instanceof BE) this._purchasesBeforeScaling =
+      (param.scalingCostThreshold.log10().sub(this._baseCost.log10()).div(this._baseIncrease.log10())).ceil();
+    this.log = {
+      _baseCost: param.baseCost.log10(),
+      _baseIncrease: param.baseIncrease.log10(),
+      _costScale: param.costScale.log10(),
+    };
   }
 
   get costScale() {
     return this._costScale;
   }
 
-  /**
-   * @param {number} value
-   */
   set costScale(value) {
-    this._logCostScale = ExponentialCostScaling.log10(value);
+    if (!(value instanceof BE)) return;
     this._costScale = value;
-    this.updateCostScale();
+    this.log._costScale = value.log10();
   }
 
-  updateCostScale() {
-    this._precalcDiscriminant = Math.pow((2 * this._logBaseIncrease + this._logCostScale), 2) -
-      8 * this._logCostScale * (this._purchasesBeforeScaling * this._logBaseIncrease + this._logBaseCost);
-    this._precalcCenter = -this._logBaseIncrease / this._logCostScale + this._purchasesBeforeScaling + 0.5;
-  }
-
-  /**
-   * Calculates the cost of the next purchase
-   * @param {number} currentPurchases
-   */
   calculateCost(currentPurchases) {
-    const logMult = this._logBaseIncrease;
-    const logBase = this._logBaseCost;
-    const excess = currentPurchases - this._purchasesBeforeScaling;
-    const logCost = excess > 0
-      ? currentPurchases * logMult + logBase + 0.5 * excess * (excess + 1) * this._logCostScale
-      : currentPurchases * logMult + logBase;
-    return DC.E1.pow(logCost);
+    // Define these here just cause theyre easier to type
+    const base = this.log._baseCost;
+    const inc = this.log._baseIncrease;
+    const scale = this.log._costScale;
+    const purchases = this._purchasesBeforeScaling;
+
+    // If it never becomes exponential cost, just return linear and stop
+    if (currentPurchases.lte(purchases)) {
+      return BE.pow10(base.add(inc.times(currentPurchases)));
+    }
+
+    // Calculate linear cost
+    const costBeforeExpo = base.add(inc.times(currentPurchases));
+    // How many exponential purchases?
+    const expoPurchases = currentPurchases.sub(purchases);
+    // eslint-disable-next-line max-len
+    // Since we times by scale X times per purchase past max, we can find the triangular number of expoPurchases and just mult that by scale
+    const scaleCostFinal = expoPurchases.pow(2).add(expoPurchases).div(2).times(scale);
+    // Add and pow10
+    return BE.pow10(costBeforeExpo.add(scaleCostFinal));
   }
 
-  /**
-   * Figure out how much of this can be bought.
-   * This returns the maximum new number of this thing; If you have 51 and can
-   * afford to buy 10 more, this will return 61. NOTE! this assumes you only
-   * have to pay for the most expensive thing you get when you buy in bulk. This
-   * means it's not suitable for accurate caclulation of cumulative prices if the
-   * multiplier is small.
-   * @param {number} currentPurchases amount already possessed
-   * @param {Decimal} money
-   * @returns {QuantityAndPrice|null} maximum value of bought that money can buy up to
-   */
-  getMaxBought(currentPurchases, rawMoney, numberPerSet) {
-    // We need to divide money by the number of things we need to buy per set
-    // so that we don't, for example, buy all of a set of 10 dimensions
-    // when we can only afford 1.
-    const money = rawMoney.div(numberPerSet);
-    const logMoney = money.log10();
-    const logMult = this._logBaseIncrease;
-    const logBase = this._logBaseCost;
-    // The 1 + is because the multiplier isn't applied to the first purchase
-    let newPurchases = Math.floor(1 + (logMoney - logBase) / logMult);
-    // We can use the linear method up to one purchase past the threshold, because the first purchase
-    // past the threshold doesn't have cost scaling in it yet.
-    if (newPurchases > this._purchasesBeforeScaling) {
-      const discrim = this._precalcDiscriminant + 8 * this._logCostScale * logMoney;
-      if (discrim < 0) {
-        return null;
-      }
-      newPurchases = Math.floor(this._precalcCenter + Math.sqrt(discrim) / (2 * this._logCostScale));
+  getMaxBought(currentPurchases, currency, purchasesPerIncrease, roundDown = true) {
+    // Copypaste
+    const base = this.log._baseCost;
+    const inc = this.log._baseIncrease;
+    const scale = this.log._costScale;
+    const purchases = this._purchasesBeforeScaling;
+    const ppIlog = purchasesPerIncrease.log10();
+    let logMoney = currency.log10().sub(ppIlog);
+    // First, is the currency before the cost of Exponential? If so we solve it here and return
+    if (logMoney.lte(base.add(inc.times(purchases.floor())))) {
+      let purchaseAmount = logMoney.sub(base).div(inc);
+      // Round value DOWN
+      if (roundDown) purchaseAmount = purchaseAmount.floor();
+      // Return null if its less than the purchases we already have
+      if (purchaseAmount.lte(currentPurchases)) return null;
+      const cost = this.calculateCost(purchaseAmount).log10().add(ppIlog);
+      purchaseAmount = purchaseAmount.sub(currentPurchases).add(1);
+      purchaseAmount = purchaseAmount.times(purchasesPerIncrease);
+      return { quantity: purchaseAmount,
+        logPrice: cost };
+      // We invert the calc after the floor to find the highest cost
     }
-    if (newPurchases <= currentPurchases) return null;
-    // There's a narrow edge case where the linear method returns > this._purchasesBeforeScaling + 1
-    // but the quadratic method returns less than that. Having this be a separate check covers that
-    // case:
-    let logPrice;
-    if (newPurchases <= this._purchasesBeforeScaling + 1) {
-      logPrice = (newPurchases - 1) * logMult + logBase;
-    } else {
-      const pExcess = newPurchases - this._purchasesBeforeScaling;
-      logPrice = (newPurchases - 1) * logMult + logBase + 0.5 * pExcess * (pExcess - 1) * this._logCostScale;
-    }
-    return { quantity: newPurchases - currentPurchases, logPrice: logPrice + Math.log10(numberPerSet) };
+
+    // Deduct the cost up to the linear limit
+    let purchaseAmount = purchases;
+    logMoney = logMoney.sub(base.add(inc.times(purchases)));
+
+    // Where does this equation come from?
+    // Well it comes from the fact that if we subtract all preScaling costs, the cost is equal to:
+    // 0.5s(p^2 + p) + ip (i = log(inc), s = log(scale), p = purchases)
+    // Solving for p there gives us a quadratic with -0.5s as a, (-0.5s - i) as b and cost as c
+    // Put that into the quadratic (-b - sqrt(b^2 - 4ac))/2a and you get purchases
+
+    logMoney = logMoney.sub(ppIlog);
+    const a = new BE(0).sub(scale).div(2);
+    const b = a.sub(inc);
+    const c = logMoney;
+
+    purchaseAmount = purchaseAmount.add(decimalQuadraticSolution(a, b, c, true));
+
+    // Technically this only buys up to the nearest set, but post exponential thats a minor flaw at most (and correct?)
+    if (roundDown) purchaseAmount = purchaseAmount.floor();
+
+    if (purchaseAmount.lte(currentPurchases)) return null;
+
+    const purchaseCost = this.calculateCost(purchaseAmount).log10().add(ppIlog);
+    purchaseAmount = purchaseAmount.sub(currentPurchases);
+    if (roundDown) purchaseAmount = purchaseAmount.floor();
+
+    purchaseAmount = purchaseAmount.times(purchasesPerIncrease);
+    return { quantity: purchaseAmount, logPrice: purchaseCost };
   }
 
-  /**
-   * Determines the number of purchases that would be possible, if purchase count was continuous. Might
-   * have some odd behavior right at e308, but otherwise should work. It's mostly a copy-paste from
-   * getMaxBought() above but with unnecessary extra code removed.
-   * @param {Decimal} money
-   * @returns {number} maximum value of bought that money can buy up to
-   */
-  getContinuumValue(rawMoney, numberPerSet) {
-    // We need to divide money by the number of things we need to buy per set
-    // so that we don't, for example, buy all of a set of 10 dimensions
-    // when we can only afford 1. In the specific case of continuum this means,
-    // for example, that 10 AM buys 2/3 of a set of 10 first dimensions rather than
-    // buying the whole set of 10, which at least feels more correct.
-    const money = rawMoney.div(numberPerSet);
-    const logMoney = money.log10();
-    const logMult = this._logBaseIncrease;
-    const logBase = this._logBaseCost;
-    // The 1 + is because the multiplier isn't applied to the first purchase
-    let contValue = 1 + (logMoney - logBase) / logMult;
-    // We can use the linear method up to one purchase past the threshold, because the first purchase
-    // past the threshold doesn't have cost scaling in it yet.
-    if (contValue > this._purchasesBeforeScaling) {
-      const discrim = this._precalcDiscriminant + 8 * this._logCostScale * logMoney;
-      if (discrim < 0) {
-        return 0;
-      }
-      contValue = this._precalcCenter + Math.sqrt(discrim) / (2 * this._logCostScale);
-    }
-    return Math.clampMin(contValue, 0);
-  }
-
-  static log10(value) {
-    if (value instanceof Decimal) return value.log10();
-    return Math.log10(value);
+  getContinuumValue(money, perSet) {
+    const continuumBase = this.getMaxBought(0, money, perSet, false);
+    return continuumBase ? continuumBase.quantity : continuumBase;
   }
 };
 
@@ -499,6 +625,7 @@ window.permutationIndex = function permutationIndex(len, lexIndex) {
   return perm;
 };
 
+// This entire function is bullshit, there is 0 reason to notjust use exponentialCostScaling?
 // Calculate cost scaling for something that follows getCostWithLinearCostScaling() under Infinity and immediately
 // starts accelerated ExponentialCostScaling above Infinity.  Yes this is a fuckton of arguments, sorry.  It sort of
 // needs to inherit all arguments from both cost scaling functions.
@@ -506,18 +633,20 @@ window.getHybridCostScaling = function getHybridCostScaling(
   amountOfPurchases, linCostScalingStart, linInitialCost, linCostMult, linCostMultGrowth,
   expInitialCost, expCostMult, expCostMultGrowth
 ) {
-  const normalCost = getCostWithLinearCostScaling(amountOfPurchases, linCostScalingStart, linInitialCost,
-    linCostMult, linCostMultGrowth);
+  const normalCost = getCostWithLinearCostScaling(amountOfPurchases.toNumber(), linCostScalingStart.toNumber(),
+    linInitialCost.toNumber(), linCostMult.toNumber(), linCostMultGrowth.toNumber());
   if (Number.isFinite(normalCost)) {
-    return new Decimal(normalCost);
+    return new BE(normalCost);
   }
-  const postInfinityAmount = amountOfPurchases - findFirstInfiniteCostPurchase(linCostScalingStart, linInitialCost,
-    linCostMult, linCostMultGrowth);
+  // This code look like shite? Thats cause it is
+  // eslint-disable-next-line max-len
+  const postInfinityAmount = amountOfPurchases.sub(findFirstInfiniteCostPurchase(linCostScalingStart.toNumber(),
+    linInitialCost.toNumber(), linCostMult.toNumber(), linCostMultGrowth.toNumber()));
   const costScale = new ExponentialCostScaling({
     baseCost: expInitialCost,
     baseIncrease: expCostMult,
     costScale: expCostMultGrowth,
-    scalingCostThreshold: Number.MAX_VALUE
+    scalingCostThreshold: BE.NUMBER_MAX_VALUE
   });
   return costScale.calculateCost(postInfinityAmount);
 };
@@ -589,6 +718,7 @@ window.normalDistribution = (function() {
 
 // Helper function for BTRD
 window.binomialGeneratorFC = (function() {
+  // eslint-disable-next-line no-loss-of-precision
   const stirlingBase = x => -8.10614667953272582e-2 + (x + 0.5) * Math.log1p(x) - x;
   const TABLE = Array.range(0, 20).map(x => logFactorial(x) - stirlingBase(x));
   return x => {
@@ -624,14 +754,14 @@ window.binomialDistributionSmallExpected = function binomialDistributionSmallExp
 
 window.binomialDistribution = function binomialDistribution(numSamples, p) {
   if (p === 0) return 0;
-  if (numSamples instanceof Decimal) {
+  if (numSamples instanceof BE) {
     if (numSamples.e < 308) {
       const pNumber = typeof p === "number" ? p : p.toNumber();
-      return new Decimal(binomialDistribution(numSamples.toNumber(), pNumber));
+      return new BE(binomialDistribution(numSamples.toNumber(), pNumber));
     }
     const expected = numSamples.times(p);
     if (expected.e > 32) return expected;
-    return new Decimal(poissonDistribution(numSamples.times(p)));
+    return new BE(poissonDistribution(numSamples.times(p)));
   }
   const expected = numSamples * p;
   // BTRD is good past 10, but the inversion method we use is faster up to 15 and is exact
@@ -648,14 +778,14 @@ window.binomialDistribution = function binomialDistribution(numSamples, p) {
 
 /**
  * Chooses the method of generation based on the input
- * @param {number|Decimal} expected expected value of distribution
- * @returns {number|Decimal} number of poisson process events
+ * @param {number|BE} expected expected value of distribution
+ * @returns {number|BE} number of poisson process events
  */
 window.poissonDistribution = function poissonDistribution(expected) {
   if (expected === 0) return 0;
-  if (expected instanceof Decimal) {
-    if (expected.e > 32) return expected;
-    return new Decimal(poissonDistribution(expected.toNumber()));
+  if (expected instanceof BE) {
+    if (expected.log10().gt(32)) return expected;
+    return new BE(poissonDistribution(expected.toNumber()));
   }
   if (expected > 1e32) return expected;
   if (expected > 1e4) return poissonDistributionViaNormal(expected);
@@ -1453,26 +1583,26 @@ window.ExponentialMovingAverage = class ExponentialMovingAverage {
     this.highOutlierThreshold = highOutlierThreshold;
     this.lowOutlierThreshold = lowOutlierThreshold;
     this.outliers = 0;
-    this._average = undefined;
+    this._average = new BE(0);
   }
 
   get average() {
-    if (this._average === undefined) {
+    if (this._average.eq(0)) {
       return 0;
     }
     return this._average;
   }
 
   addValue(value) {
-    if (this._average === undefined) {
+    if (this._average.eq(0)) {
       this._average = value;
     } else {
-      this._average += this.alpha * (value - this._average);
+      this._average = this._average.add((value.sub(this._average)).mul(this.average));
 
-      const absValue = Math.abs(value);
-      const absAverage = Math.abs(this._average);
-      const highOutlier = absValue > absAverage * this.highOutlierThreshold;
-      const lowOutlier = absValue < absAverage * this.lowOutlierThreshold;
+      const absValue = BE.abs(value);
+      const absAverage = BE.abs(this._average);
+      const highOutlier = absValue.gt(absAverage.mul(this.highOutlierThreshold));
+      const lowOutlier = absValue.lt(absAverage.mul(this.lowOutlierThreshold));
       const outlier = highOutlier || lowOutlier;
 
       if (outlier) {

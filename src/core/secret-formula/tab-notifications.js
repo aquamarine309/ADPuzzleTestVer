@@ -1,4 +1,4 @@
-import { DC } from "../constants.js";
+import { BEC } from "../constants.js";
 
 export const tabNotifications = {
   firstInfinity: {
@@ -64,7 +64,7 @@ export const tabNotifications = {
       }
     ],
     condition: () => !PlayerProgress.realityUnlocked() &&
-      !PlayerProgress.eternityUnlocked() && Currency.infinityPoints.gte(DC.E140),
+      !PlayerProgress.eternityUnlocked() && Currency.infinityPoints.gte(BEC.E140),
     events: [GAME_EVENT.BIG_CRUNCH_AFTER]
   },
   firstEternity: {

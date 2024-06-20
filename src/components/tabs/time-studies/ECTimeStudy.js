@@ -17,8 +17,8 @@ export default {
     return {
       hasRequirement: false,
       requirement: {
-        current: new Decimal(),
-        total: new Decimal()
+        current: new BE(),
+        total: new BE()
       },
       completions: 0,
       showTotalCompletions: false,

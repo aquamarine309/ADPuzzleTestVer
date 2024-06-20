@@ -52,6 +52,14 @@ Decimal.prodReducer = function(accumulator, previous) {
   return Decimal.mul(accumulator, previous);
 };
 
+BE.sumReducer = function(accumulator, previous) {
+  return BE.add(accumulator, previous);
+};
+
+BE.prodReducer = function(accumulator, previous) {
+  return BE.mul(accumulator, previous);
+};
+
 Number.sumReducer = function(accumulator, previous) {
   return accumulator + previous;
 };
@@ -64,12 +72,27 @@ Decimal.maxReducer = function(a, b) {
   return Decimal.max(a, b);
 };
 
+BE.maxReducer = function(a, b) {
+  return BE.max(a, b);
+};
+
 Decimal.prototype.copyFrom = function(decimal) {
-  if (!(decimal instanceof Decimal) && !(decimal instanceof DecimalCurrency)) {
-    throw "Copy value is not Decimal or DecimalCurrency";
+  if (!(decimal instanceof Decimal)) {
+    console.log("[CopyFrom Error]", decimal);
+    throw "Copy value is not Decimal";
   }
   this.mantissa = decimal.mantissa;
   this.exponent = decimal.exponent;
+};
+
+BE.prototype.copyFrom = function(decimal) {
+  if (!(decimal instanceof BE) && !(decimal instanceof BECurrency)) {
+    console.log("[CopyFrom Error]", decimal);
+    throw "Copy value is not BE or BECurrency";
+  }
+  this.sign = decimal.sign;
+  this.mag = decimal.mag;
+  this.layer = decimal.layer;
 };
 
 window.copyToClipboard = (function() {
@@ -223,10 +246,25 @@ Decimal.prototype.clampMaxExponent = function(maxExp) {
 };
 
 /**
+ * @returns {BE}
+ */
+BE.prototype.clampMaxExponent = function(maxExp) {
+  return this.log10().gte(maxExp)
+    ? BE.pow10(maxExp) : this;
+};
+
+/**
  * @return {Decimal}
  */
 Number.prototype.toDecimal = function() {
   return new Decimal(this.valueOf());
+};
+
+/**
+ * @return {BE}
+ */
+Number.prototype.toBE = function() {
+  return new BE(this.valueOf());
 };
 
 Math.log4 = Math.log(4);
@@ -237,6 +275,10 @@ Array.prototype.randomElement = function() {
 
 Decimal.prototype.valueOf = () => {
   throw new Error("Implicit conversion from Decimal to number");
+};
+
+BE.prototype.valueOf = () => {
+  throw new Error("Implicit conversion from BE to number");
 };
 
 Set.prototype.countWhere = function(predicate) {

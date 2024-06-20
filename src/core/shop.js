@@ -37,7 +37,7 @@ export const ShopPurchaseData = {
   },
 
   get canRespec() {
-    return this.respecAvailable || this.timeUntilRespec.totalDays <= 0;
+    return this.respecAvailable || this.timeUntilRespec.totalDays.lte(0);
   },
 
   updateLocalSTD(newData) {

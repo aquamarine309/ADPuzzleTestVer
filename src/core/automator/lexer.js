@@ -3,7 +3,7 @@
 /* eslint-disable camelcase */
 import { createToken, Lexer } from "../../../modules/chevrotain.js";
 
-import { DC } from "../constants.js";
+import { BEC } from "../constants.js";
 
 const createCategory = name => createToken({ name, pattern: Lexer.NA, longer_alt: Identifier });
 
@@ -83,22 +83,22 @@ const TimeUnit = createCategory("TimeUnit");
 
 createInCategory(ComparisonOperator, "OpGTE", />=/, {
   $autocomplete: ">=",
-  $compare: (a, b) => Decimal.gte(a, b),
+  $compare: (a, b) => BE.gte(a, b),
 });
 createInCategory(ComparisonOperator, "OpLTE", /<=/, {
   $autocomplete: "<=",
-  $compare: (a, b) => Decimal.lte(a, b),
+  $compare: (a, b) => BE.lte(a, b),
 });
 createInCategory(ComparisonOperator, "OpGT", />/, {
   $autocomplete: ">",
-  $compare: (a, b) => Decimal.gt(a, b),
+  $compare: (a, b) => BE.gt(a, b),
 });
 createInCategory(ComparisonOperator, "OpLT", /</, {
   $autocomplete: "<",
-  $compare: (a, b) => Decimal.lt(a, b),
+  $compare: (a, b) => BE.lt(a, b),
 });
 const OpEQ = createInCategory(ComparisonOperator, "OpEQ", /==/, {
-  $compare: (a, b) => Decimal.eq(a, b),
+  $compare: (a, b) => BE.eq(a, b),
 });
 // EqualSign is a single = which is defined for both comparisons and define
 const EqualSign = createToken({
@@ -108,14 +108,14 @@ const EqualSign = createToken({
   label: "=",
   longer_alt: OpEQ,
 });
-EqualSign.$compare = (a, b) => Decimal.eq(a, b);
+EqualSign.$compare = (a, b) => BE.eq(a, b);
 
 createInCategory(AutomatorCurrency, "EP", /ep/i, { $getter: () => Currency.eternityPoints.value });
 createInCategory(AutomatorCurrency, "IP", /ip/i, { $getter: () => Currency.infinityPoints.value });
 createInCategory(AutomatorCurrency, "AM", /am/i, { $getter: () => Currency.antimatter.value });
 createInCategory(AutomatorCurrency, "DT", /dt/i, { $getter: () => Currency.dilatedTime.value });
 createInCategory(AutomatorCurrency, "TP", /tp/i, { $getter: () => Currency.tachyonParticles.value });
-createInCategory(AutomatorCurrency, "RG", /rg/i, { $getter: () => new Decimal(Replicanti.galaxies.total) });
+createInCategory(AutomatorCurrency, "RG", /rg/i, { $getter: () => new BE(Replicanti.galaxies.total) });
 createInCategory(AutomatorCurrency, "RM", /rm/i, { $getter: () => Currency.realityMachines.value });
 
 createInCategory(AutomatorCurrency, "infinities", /infinities/i, { $getter: () => Currency.infinities.value });
@@ -128,23 +128,23 @@ createInCategory(AutomatorCurrency, "realities", /realities/i, { $getter: () => 
 
 createInCategory(AutomatorCurrency, "PendingIP", /pending[ \t]+ip/i, {
   $autocomplete: "pending IP",
-  $getter: () => (Player.canCrunch ? gainedInfinityPoints() : DC.D0)
+  $getter: () => (Player.canCrunch ? gainedInfinityPoints() : BEC.D0)
 });
 createInCategory(AutomatorCurrency, "PendingEP", /pending[ \t]+ep/i, {
   $autocomplete: "pending EP",
-  $getter: () => (Player.canEternity ? gainedEternityPoints() : DC.D0)
+  $getter: () => (Player.canEternity ? gainedEternityPoints() : BEC.D0)
 });
 createInCategory(AutomatorCurrency, "PendingTP", /pending[ \t]+tp/i, {
   $autocomplete: "pending TP",
-  $getter: () => (player.dilation.active ? getTachyonGain() : DC.D0),
+  $getter: () => (player.dilation.active ? getTachyonGain() : BEC.D0),
 });
 createInCategory(AutomatorCurrency, "PendingRM", /pending[ \t]+rm/i, {
   $autocomplete: "pending RM",
-  $getter: () => (isRealityAvailable() ? MachineHandler.gainedRealityMachines : DC.D0)
+  $getter: () => (isRealityAvailable() ? MachineHandler.gainedRealityMachines : BEC.D0)
 });
 createInCategory(AutomatorCurrency, "PendingGlyphLevel", /pending[ \t]+glyph[ \t]+level/i, {
   $autocomplete: "pending Glyph level",
-  $getter: () => new Decimal(isRealityAvailable() ? gainedGlyphLevel().actualLevel : 0),
+  $getter: () => new BE(isRealityAvailable() ? gainedGlyphLevel().actualLevel : 0),
 });
 
 createInCategory(AutomatorCurrency, "Rep", /rep(licanti)?/i, {
@@ -170,7 +170,7 @@ createInCategory(AutomatorCurrency, "PendingCompletions", /pending[ \t]+completi
   $getter: () => {
     // If we are not in an EC, pretend like we have a ton of completions so any check for sufficient
     // completions returns true
-    if (!EternityChallenge.isRunning) return Decimal.NUMBER_MAX_VALUE;
+    if (!EternityChallenge.isRunning) return BE.NUMBER_MAX_VALUE;
     return EternityChallenge.current.gainedCompletionStatus.totalCompletions;
   }
 });
@@ -397,7 +397,7 @@ export const standardizeAutomatorValues = function(x) {
   try {
     if (automatorCurrencyNames.includes(x.toUpperCase())) return x.toUpperCase();
   } catch {
-    // This only happens if the input is a number or Decimal, in which case we don't attempt to change any formatting
+    // This only happens if the input is a number or BE, in which case we don't attempt to change any formatting
     // and simply return
     return x;
   }

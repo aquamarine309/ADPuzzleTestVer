@@ -1,7 +1,7 @@
 const formatCost = c => format(c, 2);
 // eslint-disable-next-line max-params
 const expWithIncreasedScale = (base1, base2, incScale, coeff, x) =>
-  Decimal.pow(base1, x).times(Decimal.pow(base2, x - incScale).max(1)).times(coeff);
+  BE.pow(base1, x).times(BE.pow(base2, x - incScale).max(1)).times(coeff);
 
 const rebuyable = config => {
   const { id, description, cost, effect, formatEffect, cap } = config;
@@ -30,7 +30,7 @@ export const pelleUpgrades = {
     id: "timeSpeedMult",
     description: "Gain a multiplier to game speed",
     cost: [20, 1e3, 30, 1e5],
-    effect: x => Decimal.pow(1.3, x),
+    effect: x => BE.pow(1.3, x),
     formatEffect: x => formatX(x, 2, 2),
     cap: 35
   }),

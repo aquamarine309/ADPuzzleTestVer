@@ -1,4 +1,4 @@
-import { DC } from "../constants.js";
+import { BEC } from "../constants.js";
 
 import { UpgradeableAutobuyerState } from "./autobuyer.js";
 
@@ -33,7 +33,7 @@ export class AntimatterDimensionAutobuyerState extends UpgradeableAutobuyerState
   }
 
   get antimatterCost() {
-    return DC.E10.pow(this.tier - 1).times(DC.E40);
+    return BEC.E10.pow(this.tier - 1).times(BEC.E40);
   }
 
   get canBeBought() {

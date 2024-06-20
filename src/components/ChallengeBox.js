@@ -23,7 +23,7 @@ export default {
       required: true
     },
     lockedAt: {
-      type: Decimal,
+      type: BE,
       required: false,
       default: undefined
     },
@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       inC1: Boolean,
-      infinities: new Decimal(0),
+      infinities: new BE(0),
     };
   },
   computed: {

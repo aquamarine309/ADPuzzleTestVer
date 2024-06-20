@@ -51,7 +51,7 @@ export default {
       const before = this.before;
       const after = this.after;
 
-      return after instanceof Decimal
+      return (after instanceof BE)
         ? after.gt(before)
         : after > before;
     },
@@ -73,7 +73,7 @@ export default {
     isVeryLarge() {
       return this.isBlackHole
         ? false
-        : Decimal.gt(this.before, Decimal.pow10(1e9));
+        : BE.gt(this.before, BE.pow10(1e9));
     }
   },
   methods: {
@@ -83,11 +83,11 @@ export default {
       // not any text is even shown at all and sometimes this gets checked on variables which don't have values yet
       if (number === undefined) return "";
       // Surrounding text is formatted differently to specify that this is log10
-      if (this.isVeryLarge) return formatInt(Math.floor(number.log10()));
-      if (Decimal.lt(number, 1e9)) {
+      if (this.isVeryLarge) return format(number.log10(), 5, 5);
+      if (BE.lt(number, 1e9)) {
         // Both numbers and decimals get passed in here so this is needed
         // Not a fan of this solution but whatever
-        const numberAsDecimal = new Decimal(number);
+        const numberAsDecimal = new BE(number);
         return formatInt(numberAsDecimal.floor());
       }
       return format(number, 2, 2);

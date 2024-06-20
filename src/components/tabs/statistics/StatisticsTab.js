@@ -10,7 +10,7 @@ export default {
     return {
       isDoomed: false,
       realTimeDoomed: TimeSpan.zero,
-      totalAntimatter: new Decimal(0),
+      totalAntimatter: new BE(0),
       realTimePlayed: TimeSpan.zero,
       timeSinceCreation: 0,
       uniqueNews: 0,
@@ -18,34 +18,34 @@ export default {
       secretAchievementCount: 0,
       infinity: {
         isUnlocked: false,
-        count: new Decimal(0),
-        banked: new Decimal(0),
-        projectedBanked: new Decimal(0),
-        bankRate: new Decimal(0),
+        count: new BE(0),
+        banked: new BE(0),
+        projectedBanked: new BE(0),
+        bankRate: new BE(0),
         hasBest: false,
         best: TimeSpan.zero,
         this: TimeSpan.zero,
         thisReal: TimeSpan.zero,
-        bestRate: new Decimal(0),
+        bestRate: new BE(0),
       },
       eternity: {
         isUnlocked: false,
-        count: new Decimal(0),
+        count: new BE(0),
         hasBest: false,
         best: TimeSpan.zero,
         this: TimeSpan.zero,
         thisReal: TimeSpan.zero,
-        bestRate: new Decimal(0),
+        bestRate: new BE(0),
       },
       reality: {
         isUnlocked: false,
-        count: 0,
+        count: new BE(0),
         best: TimeSpan.zero,
         bestReal: TimeSpan.zero,
         this: TimeSpan.zero,
         thisReal: TimeSpan.zero,
         totalTimePlayed: TimeSpan.zero,
-        bestRate: new Decimal(0),
+        bestRate: new BE(0),
         bestRarity: 0,
       },
       matterScale: [],
@@ -60,13 +60,13 @@ export default {
     infinityCountString() {
       const num = this.infinity.count;
       return num.gt(0)
-        ? `${this.formatDecimalAmount(num)} ${pluralize("Infinity", num.floor())}`
+        ? `${this.formatBEAmount(num)} ${pluralize("Infinity", num.floor())}`
         : "no Infinities";
     },
     eternityCountString() {
       const num = this.eternity.count;
       return num.gt(0)
-        ? `${this.formatDecimalAmount(num)} ${pluralize("Eternity", num.floor())}`
+        ? `${this.formatBEAmount(num)} ${pluralize("Eternity", num.floor())}`
         : "no Eternities";
     },
     fullGameCompletions() {
@@ -83,7 +83,7 @@ export default {
     update() {
       const records = player.records;
       this.totalAntimatter.copyFrom(records.totalAntimatter);
-      this.realTimePlayed.setFrom(records.realTimePlayed);
+      this.realTimePlayed.setFrom(records.realTimePlayed.toBE());
       this.fullTimePlayed = TimeSpan.fromMilliseconds(records.previousRunRealTime + records.realTimePlayed);
       this.uniqueNews = NewsHandler.uniqueTickersSeen;
       this.totalNews = player.news.totalSeen;
@@ -98,12 +98,12 @@ export default {
       if (isInfinityUnlocked) {
         infinity.count.copyFrom(Currency.infinities);
         infinity.banked.copyFrom(Currency.infinitiesBanked);
-        infinity.projectedBanked = new Decimal(0).plusEffectsOf(
+        infinity.projectedBanked = new BE(0).plusEffectsOf(
           Achievement(131).effects.bankedInfinitiesGain,
           TimeStudy(191)
         );
-        infinity.bankRate = infinity.projectedBanked.div(Math.clampMin(33, records.thisEternity.time)).times(60000);
-        infinity.hasBest = bestInfinity.time < 999999999999;
+        infinity.bankRate = infinity.projectedBanked.div(BE.clampMin(33, records.thisEternity.time)).times(60000);
+        infinity.hasBest = bestInfinity.time.lt(999999999999);
         infinity.best.setFrom(bestInfinity.time);
         infinity.this.setFrom(records.thisInfinity.time);
         infinity.bestRate.copyFrom(bestInfinity.bestIPminEternity);
@@ -115,7 +115,7 @@ export default {
       eternity.isUnlocked = isEternityUnlocked;
       if (isEternityUnlocked) {
         eternity.count.copyFrom(Currency.eternities);
-        eternity.hasBest = bestEternity.time < 999999999999;
+        eternity.hasBest = bestEternity.time.lt(999999999999);
         eternity.best.setFrom(bestEternity.time);
         eternity.this.setFrom(records.thisEternity.time);
         eternity.bestRate.copyFrom(bestEternity.bestEPminReality);
@@ -127,26 +127,26 @@ export default {
       reality.isUnlocked = isRealityUnlocked;
 
       if (isRealityUnlocked) {
-        reality.count = Math.floor(Currency.realities.value);
+        reality.count.copyFrom(Currency.realities);
         reality.best.setFrom(bestReality.time);
-        reality.bestReal.setFrom(bestReality.realTime);
+        reality.bestReal.setFrom(bestReality.realTime.toBE());
         reality.this.setFrom(records.thisReality.time);
         reality.totalTimePlayed.setFrom(records.totalTimePlayed);
         // Real time tracking is only a thing once reality is unlocked:
-        infinity.thisReal.setFrom(records.thisInfinity.realTime);
-        infinity.bankRate = infinity.projectedBanked.div(Math.clampMin(33, records.thisEternity.realTime)).times(60000);
-        eternity.thisReal.setFrom(records.thisEternity.realTime);
-        reality.thisReal.setFrom(records.thisReality.realTime);
+        infinity.thisReal.setFrom(records.thisInfinity.realTime.toBE());
+        infinity.bankRate = infinity.projectedBanked.div(BE.clampMin(33, records.thisEternity.realTime)).times(60000);
+        eternity.thisReal.setFrom(records.thisEternity.realTime.toBE());
+        reality.thisReal.setFrom(records.thisReality.realTime.toBE());
         reality.bestRate.copyFrom(bestReality.RMmin);
         reality.bestRarity = Math.max(strengthToRarity(bestReality.glyphStrength), 0);
       }
       this.updateMatterScale();
 
       this.isDoomed = Pelle.isDoomed;
-      this.realTimeDoomed.setFrom(player.records.realTimeDoomed);
+      this.realTimeDoomed.setFrom(player.records.realTimeDoomed.toBE());
       this.paperclips = player.news.specialTickerData.paperclips;
     },
-    formatDecimalAmount(value) {
+    formatBEAmount(value) {
       return value.gt(1e9) ? format(value, 3) : formatInt(Math.floor(value.toNumber()));
     },
     // Only updates once per second to reduce jitter
@@ -170,9 +170,6 @@ export default {
     data-v-statistics-tab
   >
     <div>
-      <PrimaryButton onclick="Modal.catchup.show(0)">
-        View Content Summary
-      </PrimaryButton>
       <div
         class="c-stats-tab-title c-stats-tab-general"
         data-v-statistics-tab
@@ -246,7 +243,7 @@ export default {
         You have {{ infinityCountString }}<span v-if="eternity.isUnlocked"> this Eternity</span>.
       </div>
       <div v-if="infinity.banked.gt(0)">
-        You have {{ formatDecimalAmount(infinity.banked.floor()) }}
+        You have {{ formatBEAmount(infinity.banked.floor()) }}
         {{ pluralize("Banked Infinity", infinity.banked.floor()) }}.
       </div>
       <div v-if="infinity.hasBest">
@@ -283,9 +280,9 @@ export default {
         You have {{ eternityCountString }}<span v-if="reality.isUnlocked"> this Reality</span>.
       </div>
       <div v-if="infinity.projectedBanked.gt(0)">
-        You will gain {{ formatDecimalAmount(infinity.projectedBanked.floor()) }}
+        You will gain {{ formatBEAmount(infinity.projectedBanked.floor()) }}
         {{ pluralize("Banked Infinity", infinity.projectedBanked.floor()) }} on Eternity
-        ({{ formatDecimalAmount(infinity.bankRate) }} per minute).
+        ({{ formatBEAmount(infinity.bankRate) }} per minute).
       </div>
       <div v-else-if="infinity.banked.gt(0)">
         You will gain no Banked Infinities on Eternity.

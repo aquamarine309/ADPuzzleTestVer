@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 // This is supposed to be in ./navigation.js but importing doesn't work for some stupid reason
 function emphasizeEnd(fraction) {
@@ -19,7 +19,7 @@ export const v = {
       resource: () => Currency.realities.value,
       requirement: 10000,
       format: x => formatInt(x),
-      progress: () => Currency.realities.value / 10000,
+      progress: () => Currency.realities.value.div(10000),
     },
     eternities: {
       id: 2,
@@ -27,7 +27,7 @@ export const v = {
       resource: () => Currency.eternities.value,
       requirement: 1e70,
       format: x => format(x, 2),
-      progress: () => emphasizeEnd(Currency.eternities.value.pLog10() / 70),
+      progress: () => emphasizeEnd(Currency.eternities.value.pLog10().div(70)),
     },
     infinities: {
       id: 3,
@@ -35,23 +35,23 @@ export const v = {
       resource: () => Currency.infinitiesTotal.value,
       requirement: 1e160,
       format: x => format(x, 2),
-      progress: () => emphasizeEnd(Currency.infinitiesTotal.value.pLog10() / 160),
+      progress: () => emphasizeEnd(Currency.infinitiesTotal.value.pLog10().div(160)),
     },
     dilatedTime: {
       id: 4,
       name: "Dilated Time",
       resource: () => player.records.thisReality.maxDT,
-      requirement: DC.E320,
+      requirement: BEC.E320,
       format: x => format(x, 2),
-      progress: () => emphasizeEnd(player.records.thisReality.maxDT.pLog10() / 320),
+      progress: () => emphasizeEnd(player.records.thisReality.maxDT.pLog10().div(320)),
     },
     replicanti: {
       id: 5,
       name: "Replicanti",
       resource: () => player.records.thisReality.maxReplicanti,
-      requirement: DC.E320000,
+      requirement: BEC.E320000,
       format: x => format(x, 2),
-      progress: () => emphasizeEnd(player.records.thisReality.maxReplicanti.pLog10() / 320000),
+      progress: () => emphasizeEnd(player.records.thisReality.maxReplicanti.pLog10().div(320000)),
     },
     realityMachines: {
       id: 6,
@@ -59,7 +59,7 @@ export const v = {
       resource: () => Currency.realityMachines.value,
       requirement: 1e60,
       format: x => format(x, 2),
-      progress: () => emphasizeEnd(Currency.realityMachines.value.pLog10() / 60),
+      progress: () => emphasizeEnd(Currency.realityMachines.value.pLog10().div(60)),
     },
   },
   runUnlocks: [
@@ -92,38 +92,38 @@ export const v = {
     {
       id: 2,
       name: "Se7en deadly matters",
-      description: value => `Get ${format(Decimal.pow10(value))} Infinity Points in Eternity Challenge 7.`,
+      description: value => `Get ${format(BE.pow10(value))} Infinity Points in Eternity Challenge 7.`,
       values: [6e5, 7.2e5, 8.4e5, 9.6e5, 1.08e6, 1.2e6],
       condition: () => V.isRunning && EternityChallenge(7).isRunning,
       currentValue: () => Currency.infinityPoints.value.log10(),
-      formatRecord: x => format(Decimal.pow10(x), 2),
+      formatRecord: x => format(BE.pow10(x), 2),
       shardReduction: tiers => 1.2e5 * tiers,
       maxShardReduction: goal => goal - 6e5,
-      perReductionStep: DC.E1200,
+      perReductionStep: BEC.E1200,
       mode: V_REDUCTION_MODE.DIVISION
     },
     {
       id: 3,
       name: "Young Boy",
-      description: value => `Get ${format(Decimal.pow10(value))} Antimatter in Eternity Challenge 12 without
+      description: value => `Get ${format(BE.pow10(value))} Antimatter in Eternity Challenge 12 without
         unlocking Time Dilation.`,
       values: [400e6, 450e6, 500e6, 600e6, 700e6, 800e6],
       condition: () => V.isRunning && EternityChallenge(12).isRunning && !PlayerProgress.dilationUnlocked(),
       currentValue: () => Currency.antimatter.value.log10(),
-      formatRecord: x => format(Decimal.pow10(x)),
+      formatRecord: x => format(BE.pow10(x)),
       shardReduction: tiers => 50e6 * tiers,
       maxShardReduction: goal => goal - 400e6,
-      perReductionStep: DC.E500000,
+      perReductionStep: BEC.E500000,
       mode: V_REDUCTION_MODE.DIVISION
     },
     {
       id: 4,
       name: "Eternal Sunshine",
-      description: value => `Get ${format(Decimal.pow10(value))} Eternity Points.`,
+      description: value => `Get ${format(BE.pow10(value))} Eternity Points.`,
       values: [7000, 7600, 8200, 8800, 9400, 10000],
       condition: () => V.isRunning,
       currentValue: () => Currency.eternityPoints.value.log10(),
-      formatRecord: x => format(Decimal.pow10(x), 2),
+      formatRecord: x => format(BE.pow10(x), 2),
       shardReduction: tiers => 600 * tiers,
       maxShardReduction: goal => goal - 7000,
       perReductionStep: 1e6,
@@ -160,7 +160,7 @@ export const v = {
     {
       id: 7,
       name: "Post-destination",
-      description: value => `Get ${formatInt(400000)} Time Theorems with a /${format(Decimal.pow10(value), 2, 2)}
+      description: value => `Get ${formatInt(400000)} Time Theorems with a /${format(BE.pow10(value), 2, 2)}
         Black Hole or slower, without discharging or entering EC12.`,
       values: [100, 150, 200, 250, 300],
       condition: () => V.isRunning,

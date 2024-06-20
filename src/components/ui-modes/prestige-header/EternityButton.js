@@ -4,21 +4,21 @@ export default {
     return {
       isVisible: false,
       type: EP_BUTTON_DISPLAY_TYPE.FIRST_TIME,
-      gainedEP: new Decimal(0),
-      currentEP: new Decimal(0),
-      currentEPRate: new Decimal(0),
-      peakEPRateVal: new Decimal(0),
-      peakEPRate: new Decimal(0),
-      currentTachyons: new Decimal(0),
-      gainedTachyons: new Decimal(0),
+      gainedEP: new BE(0),
+      currentEP: new BE(0),
+      currentEPRate: new BE(0),
+      peakEPRateVal: new BE(0),
+      peakEPRate: new BE(0),
+      currentTachyons: new BE(0),
+      gainedTachyons: new BE(0),
       challengeCompletions: 0,
       gainedCompletions: 0,
       fullyCompleted: false,
       failedRestriction: undefined,
       hasMoreCompletions: false,
-      nextGoalAt: new Decimal(0),
+      nextGoalAt: new BE(0),
       canEternity: false,
-      eternityGoal: new Decimal(0),
+      eternityGoal: new BE(0),
       hover: false,
       headerTextColored: true,
       creditsClosed: false,
@@ -59,7 +59,7 @@ export default {
         ],
         [0, 255, 0]
       ];
-      const ratio = this.gainedEP.log10() / this.currentEP.log10();
+      const ratio = this.gainedEP.log10().div(this.currentEP.log10()).clampMax(1.1).toNumber();
       const interFn = index => {
         if (ratio < 0.9) return stepRGB[0][index];
         if (ratio < 1) {
@@ -85,7 +85,7 @@ export default {
         "transition-duration": "0s"
       };
       // Note that Infinity and 0 can show up here. We have a special case for
-      // this.currentTachyons being 0 because dividing a Decimal by 0 returns 0.
+      // this.currentTachyons being 0 because dividing a BE by 0 returns 0.
       let ratio;
       if (this.currentTachyons.eq(0)) {
         // In this case, make it always red or green.
@@ -137,7 +137,7 @@ export default {
       this.currentEP.copyFrom(Currency.eternityPoints);
       this.gainedEP.copyFrom(gainedEP);
       const hasNewContent = !PlayerProgress.realityUnlocked() &&
-        Currency.eternityPoints.exponent >= 4000 &&
+        Currency.eternityPoints.value.log10().gte(4000) &&
         !TimeStudy.reality.isBought;
       if (this.isDilation) {
         this.type = hasNewContent

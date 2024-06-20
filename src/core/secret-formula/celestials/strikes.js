@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 import wordShift from "../../word-shift.js";
 
 export const pelleStrikes = {
@@ -20,7 +20,7 @@ export const pelleStrikes = {
   eternity: {
     id: 3,
     requirementDescription: "Reach Eternity",
-    penaltyDescription: () => `Replicanti speed slows down even more above ${format(DC.E2000)}`,
+    penaltyDescription: () => `Replicanti speed slows down even more above ${format(BEC.E2000)}`,
     rewardDescription: () => `Unlock ${wordShift.wordCycle(PelleRifts.chaos.name)}`,
     rift: () => PelleRifts.chaos
   },

@@ -8,9 +8,9 @@ export default {
   data() {
     return {
       exitingEC: false,
-      startingIP: new Decimal(),
-      gainedEternityPoints: new Decimal(),
-      gainedEternities: new Decimal()
+      startingIP: new BE(),
+      gainedEternityPoints: new BE(),
+      gainedEternities: new BE()
     };
   },
   computed: {

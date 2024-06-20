@@ -7,11 +7,11 @@ export default {
   },
   data() {
     return {
-      mult: new Decimal(0),
-      tickspeed: new Decimal(0),
-      galaxyCount: 0,
-      purchasedTickspeed: 0,
-      freeTickspeed: 0,
+      mult: new BE(0),
+      tickspeed: new BE(0),
+      galaxyCount: new BE(0),
+      purchasedTickspeed: new BE(0),
+      freeTickspeed: new BE(0),
     };
   },
   computed: {
@@ -28,9 +28,9 @@ export default {
     update() {
       this.mult.copyFrom(Tickspeed.multiplier);
       this.tickspeed.copyFrom(Tickspeed.perSecond);
-      this.galaxyCount = player.galaxies;
-      this.purchasedTickspeed = player.totalTickBought;
-      this.freeTickspeed = FreeTickspeed.amount;
+      this.galaxyCount.copyFrom(player.galaxies);
+      this.purchasedTickspeed.copyFrom(player.totalTickBought);
+      this.freeTickspeed.copyFrom(FreeTickspeed.amount);
     },
   },
   template: `

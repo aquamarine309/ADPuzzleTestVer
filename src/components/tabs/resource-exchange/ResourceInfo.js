@@ -9,10 +9,10 @@ export default {
   data() {
   return {
       isUnlocked: false,
-      exchanged: new Decimal(0),
-      newExchanged: new Decimal(0),
-      value: new Decimal(0),
-      newValue: new Decimal(0),
+      exchanged: new BE(0),
+      newExchanged: new BE(0),
+      value: new BE(0),
+      newValue: new BE(0),
       isAffordable: false
     }
   },

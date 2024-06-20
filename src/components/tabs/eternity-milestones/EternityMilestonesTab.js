@@ -7,7 +7,7 @@ export default {
   },
   data() {
     return {
-      eternityCount: new Decimal(),
+      eternityCount: new BE(),
     };
   },
   computed: {

@@ -1,9 +1,9 @@
-import { DC } from "../constants.js";
+import { BEC } from "../constants.js";
 
 import { DimensionState } from "./dimension.js";
 
 export function infinityDimensionCommonMultiplier() {
-  let mult = new Decimal(1)
+  let mult = new BE(1)
     .timesEffectsOf(
       Achievement(75),
       TimeStudy(82),
@@ -40,14 +40,14 @@ class InfinityDimensionState extends DimensionState {
     super(() => player.dimensions.infinity, tier);
     const UNLOCK_REQUIREMENTS = [
       undefined,
-      DC.E1100,
-      DC.E1900,
-      DC.E2400,
-      DC.E10500,
-      DC.E30000,
-      DC.E45000,
-      DC.E54000,
-      DC.E60000,
+      BEC.E1100,
+      BEC.E1900,
+      BEC.E2400,
+      BEC.E10500,
+      BEC.E30000,
+      BEC.E45000,
+      BEC.E54000,
+      BEC.E60000,
     ];
     this._unlockRequirement = UNLOCK_REQUIREMENTS[tier];
     const COST_MULTS = [null, 1e3, 1e6, 1e8, 1e10, 1e15, 1e20, 1e25, 1e30];
@@ -55,13 +55,13 @@ class InfinityDimensionState extends DimensionState {
     const POWER_MULTS = [null, 50, 30, 10, 5, 5, 5, 5, 5];
     this._powerMultiplier = POWER_MULTS[tier];
     const BASE_COSTS = [null, 1e8, 1e9, 1e10, 1e20, 1e140, 1e200, 1e250, 1e280];
-    this._baseCost = new Decimal(BASE_COSTS[tier]);
+    this._baseCost = new BE(BASE_COSTS[tier]);
     this.ipRequirement = BASE_COSTS[1];
   }
 
-  /** @returns {Decimal} */
+  /** @returns {BE} */
   get cost() { return this.data.cost; }
-  /** @param {Decimal} value */
+  /** @param {BE} value */
   set cost(value) { this.data.cost = value; }
 
   get baseAmount() {
@@ -111,7 +111,7 @@ class InfinityDimensionState extends DimensionState {
 
   get rateOfChange() {
     const tier = this.tier;
-    let toGain = DC.D0;
+    let toGain = BEC.D0;
     if (tier === 8) {
       // We need a extra 10x here (since ID8 production is per-second and
       // other ID production is per-10-seconds).
@@ -120,14 +120,14 @@ class InfinityDimensionState extends DimensionState {
     } else {
       toGain = InfinityDimension(tier + 1).productionPerSecond;
     }
-    const current = Decimal.max(this.amount, 1);
+    const current = BE.max(this.amount, 1);
     return toGain.times(10).dividedBy(current).times(getGameSpeedupForDisplay());
   }
 
   get productionPerSecond() {
     if (EternityChallenge(2).isRunning || EternityChallenge(10).isRunning ||
       (Laitela.isRunning && this.tier > Laitela.maxAllowedDimension)) {
-      return DC.D0;
+      return BEC.D0;
     }
     let production = this.amount;
     if (EternityChallenge(11).isRunning) {
@@ -141,14 +141,14 @@ class InfinityDimensionState extends DimensionState {
 
   get multiplier() {
     const tier = this.tier;
-    if (EternityChallenge(11).isRunning) return DC.D1;
+    if (EternityChallenge(11).isRunning) return BEC.D1;
     let mult = GameCache.infinityDimensionCommonMultiplier.value
       .timesEffectsOf(
         tier === 1 ? Achievement(94) : null,
         tier === 4 ? TimeStudy(72) : null,
         tier === 1 ? EternityChallenge(2).reward : null
       );
-    mult = mult.times(Decimal.pow(this.powerMultiplier, Math.floor(this.baseAmount / 10)));
+    mult = mult.times(BE.pow(this.powerMultiplier, BE.floor(this.baseAmount.div(10))));
 
 
     if (tier === 1) {
@@ -201,42 +201,42 @@ class InfinityDimensionState extends DimensionState {
   }
 
   get powerMultiplier() {
-    return new Decimal(this._powerMultiplier)
+    return new BE(this._powerMultiplier)
       .timesEffectsOf(this._tier === 8 ? GlyphSacrifice.infinity : null)
       .pow(ImaginaryUpgrade(14).effectOrDefault(1));
   }
 
   get purchases() {
     // Because each ID purchase gives 10 IDs
-    return this.data.baseAmount / 10;
+    return this.data.baseAmount.div(10);
   }
 
   get purchaseCap() {
     if (Enslaved.isRunning) {
-      return 1;
+      return BEC.D1;
     }
-    return InfinityDimensions.capIncrease + (this.tier === 8
+    return InfinityDimensions.capIncrease.plus(this.tier === 8
       ? Number.MAX_VALUE
       : InfinityDimensions.HARDCAP_PURCHASES);
   }
 
   get isCapped() {
-    return this.purchases >= this.purchaseCap;
+    return this.purchases.gte(this.purchaseCap);
   }
 
   get hardcapIPAmount() {
-    return this._baseCost.times(Decimal.pow(this.costMultiplier, this.purchaseCap));
+    return this._baseCost.times(BE.pow(this.costMultiplier, this.purchaseCap));
   }
 
   resetAmount() {
-    this.amount = new Decimal(this.baseAmount);
+    this.amount = new BE(this.baseAmount);
   }
 
   fullReset() {
-    this.cost = new Decimal(this.baseCost);
-    this.amount = DC.D0;
-    this.bought = 0;
-    this.baseAmount = 0;
+    this.cost = new BE(this.baseCost);
+    this.amount = BEC.D0;
+    this.bought = BEC.D0;
+    this.baseAmount = BEC.D0;
     this.isUnlocked = false;
   }
 
@@ -264,7 +264,7 @@ class InfinityDimensionState extends DimensionState {
     }
 
     Currency.infinityPoints.purchase(this.cost);
-    this.cost = Decimal.round(this.cost.times(this.costMultiplier));
+    this.cost = BE.round(this.cost.times(this.costMultiplier));
     // Because each ID purchase gives 10 IDs
     this.amount = this.amount.plus(10);
     this.baseAmount += 10;
@@ -298,13 +298,13 @@ class InfinityDimensionState extends DimensionState {
       purchasesUntilHardcap
     );
 
-    if (costScaling.purchases <= 0) return false;
+    if (costScaling.purchases.lte(0)) return false;
 
     Currency.infinityPoints.purchase(costScaling.totalCost);
     this.cost = this.cost.times(costScaling.totalCostMultiplier);
     // Because each ID purchase gives 10 IDs
-    this.amount = this.amount.plus(10 * costScaling.purchases);
-    this.baseAmount += 10 * costScaling.purchases;
+    this.amount = this.amount.plus(costScaling.purchases.times(10));
+    this.baseAmount = this.baseAmount.plus(costScaling.purchases.times(10));
 
     if (EternityChallenge(8).isRunning) {
       player.eterc8ids -= costScaling.purchases;
@@ -325,7 +325,7 @@ export const InfinityDimensions = {
    * @type {InfinityDimensionState[]}
    */
   all: InfinityDimension.index.compact(),
-  HARDCAP_PURCHASES: 2000000,
+  HARDCAP_PURCHASES: BEC.D2E6,
 
   unlockNext() {
     if (InfinityDimension(8).isUnlocked) return;
@@ -352,11 +352,11 @@ export const InfinityDimensions = {
   },
 
   get capIncrease() {
-    return Math.floor(Tesseracts.capIncrease());
+    return BE.floor(Tesseracts.capIncrease());
   },
 
   get totalDimCap() {
-    return this.HARDCAP_PURCHASES + this.capIncrease;
+    return this.HARDCAP_PURCHASES.plus(this.capIncrease);
   },
 
   canBuy() {
@@ -371,7 +371,7 @@ export const InfinityDimensions = {
 
   tick(diff) {
     for (let tier = 8; tier > 1; tier--) {
-      InfinityDimension(tier).produceDimensions(InfinityDimension(tier - 1), diff / 10);
+      InfinityDimension(tier).produceDimensions(InfinityDimension(tier - 1), diff.div(10));
     }
 
     if (EternityChallenge(7).isRunning) {

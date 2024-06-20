@@ -12,8 +12,8 @@ export default {
       showContainer: false,
       showEP: false,
       showNextEP: false,
-      eternityPoints: new Decimal(0),
-      nextEP: new Decimal(0),
+      eternityPoints: new BE(0),
+      nextEP: new BE(0),
     };
   },
   methods: {
@@ -23,7 +23,7 @@ export default {
       this.eternityPoints.copyFrom(Currency.eternityPoints.value.floor());
       this.showNextEP = Player.canEternity && player.records.thisReality.maxEP.lt(100) &&
         gainedEternityPoints().lt(100);
-      if (this.showNextEP) this.nextEP.copyFrom(requiredIPForEP(gainedEternityPoints().floor().toNumber() + 1));
+      if (this.showNextEP) this.nextEP = requiredIPForEP(gainedEternityPoints().floor().plus(1));
     },
   },
   template: `

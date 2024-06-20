@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 export const MultiplierTabHelper = {
   // Helper method for counting enabled dimensions
@@ -20,7 +20,7 @@ export const MultiplierTabHelper = {
 
   // Helper method for galaxy strength multipliers affecting all galaxy types (this is used a large number of times)
   globalGalaxyMult() {
-    return Effects.product(
+    return BEC.D1.timesEffectsOf(
       InfinityUpgrade.galaxyBoost,
       InfinityUpgrade.galaxyBoost.chargedEffect,
       BreakInfinityUpgrade.galaxyBoost,
@@ -31,7 +31,7 @@ export const MultiplierTabHelper = {
       InfinityChallenge(5).reward,
       PelleUpgrade.galaxyPower,
       PelleRifts.decay.milestones[1]
-    ) * Pelle.specialGlyphEffect.power;
+    ).times(Pelle.specialGlyphEffect.power);
   },
 
   // Helper method for galaxies and tickspeed, broken up as contributions of tickspeed*log(perGalaxy) and galaxyCount to
@@ -41,7 +41,7 @@ export const MultiplierTabHelper = {
     const effects = this.globalGalaxyMult();
 
     let galFrac, tickFrac;
-    if (effectiveCount < 3) {
+    if (effectiveCount.lt(3)) {
       let baseMult = 1.1245;
       if (player.galaxies === 1) baseMult = 1.11888888;
       if (player.galaxies === 2) baseMult = 1.11267177;
@@ -54,52 +54,52 @@ export const MultiplierTabHelper = {
       baseMult /= 0.965 ** 2;
       const logBase = Math.log10(baseMult);
 
-      const perGalaxy = 0.02 * effects;
-      effectiveCount *= Pelle.specialGlyphEffect.power;
+      const perGalaxy = effects.times(0.02);
+      effectiveCount = effectiveCount.times(Pelle.specialGlyphEffect.power);
 
-      tickFrac = Tickspeed.totalUpgrades * logBase;
-      galFrac = -Math.log10(Math.max(0.01, 1 / baseMult - (effectiveCount * perGalaxy))) / logBase;
+      tickFrac = Tickspeed.totalUpgrades.times(logBase);
+      galFrac = BE.max(0.01, BE.minus(1 / baseMult, effectiveCount.times(perGalaxy))).log10().times(-1).div(logBase);
     } else {
-      effectiveCount -= 2;
-      effectiveCount *= effects;
-      effectiveCount *= getAdjustedGlyphEffect("realitygalaxies") * (1 + ImaginaryUpgrade(9).effectOrDefault(0));
-      effectiveCount *= Pelle.specialGlyphEffect.power;
+      effectiveCount = effectiveCount.minus(2);
+      effectiveCount = effectiveCount.times(effects);
+      effectiveCount = effectiveCount.times(getAdjustedGlyphEffect("realitygalaxies") * (1 + ImaginaryUpgrade(9).effectOrDefault(0)));
+      effectiveCount = effectiveCount.times(Pelle.specialGlyphEffect.power);
 
       // These all need to be framed as INCREASING x/sec tick rate (ie. all multipliers > 1, all logs > 0)
       const baseMult = 0.965 ** 2 / (NormalChallenge(5).isRunning ? 0.83 : 0.8);
       const logBase = Math.log10(baseMult);
-      const logPerGalaxy = -DC.D0_965.log10();
+      const logPerGalaxy = BEC.D0_965.log10().times(-1);
 
-      tickFrac = Tickspeed.totalUpgrades * logBase;
-      galFrac = (1 + effectiveCount / logBase * logPerGalaxy);
+      tickFrac = Tickspeed.totalUpgrades.times(logBase);
+      galFrac = effectiveCount.div(logBase).times(logPerGalaxy).plus(1);
     }
 
     // Artificially inflate the galaxy portion in order to make the breakdown closer to 50/50 in common situations
-    galFrac *= 3;
+    galFrac = galFrac.times(3);
 
     // Calculate what proportion base tickspeed takes out of the entire tickspeed multiplier
-    const base = DC.D1.dividedByEffectsOf(
+    const base = BEC.D1.dividedByEffectsOf(
       Achievement(36),
       Achievement(45),
       Achievement(66),
       Achievement(83)
     );
-    let baseFrac = base.log10() / Tickspeed.perSecond.log10();
+    let baseFrac = base.log10().div(Tickspeed.perSecond.log10());
 
     // We want to make sure to zero out components in some edge cases
-    if (base.eq(1)) baseFrac = 0;
-    if (effectiveCount === 0) galFrac = 0;
+    if (base.eq(1)) baseFrac = BEC.D0;
+    if (effectiveCount.eq(0)) galFrac = BEC.D0;
 
     // Normalize the sum by splitting tickspeed and galaxies across what's leftover besides the base value. These three
     // values must be scaled so that they sum to 1 and none are negative
-    let factor = (1 - baseFrac) / (tickFrac + galFrac);
+    let factor = BE.minus(1, baseFrac).div(tickFrac.plus(galFrac));
     // The actual base tickspeed calculation multiplies things in a different order, which can lead to precision issues
     // when no tickspeed upgrades have been bought if we don't explicitly set this to zero
-    if (Tickspeed.totalUpgrades === 0) factor = 0;
+    if (Tickspeed.totalUpgrades.eq(0)) factor = BEC.D0;
     return {
       base: baseFrac,
-      tickspeed: tickFrac * factor,
-      galaxies: galFrac * factor,
+      tickspeed: tickFrac.times(factor),
+      galaxies: galFrac.times(factor),
     };
   },
 
@@ -212,7 +212,7 @@ export const MultiplierTabHelper = {
     return AntimatterDimensions.all
       .filter(ad => ad.isProducing && ad.tier % 2 === 0)
       .map(ad => ad.multiplier.times(ad.amount.pow(nc12Pow(ad.tier))))
-      .reduce((x, y) => x.times(y), DC.D1)
+      .reduce((x, y) => x.times(y), BEC.D1)
       .times(AntimatterDimension(maxTier).totalAmount);
   },
 
@@ -221,18 +221,18 @@ export const MultiplierTabHelper = {
     return AntimatterDimensions.all
       .filter(ad => ad.isProducing && ad.tier % 2 === 1)
       .map(ad => ad.multiplier)
-      .reduce((x, y) => x.times(y), DC.D1)
+      .reduce((x, y) => x.times(y), BEC.D1)
       .times(AntimatterDimension(maxTier).totalAmount);
   },
 
   actualNC12Production() {
-    return Decimal.max(this.evenDimNC12Production(), this.oddDimNC12Production());
+    return BE.max(this.evenDimNC12Production(), this.oddDimNC12Production());
   },
 
   multInNC12(dim) {
     const nc12Pow = tier => ([2, 4, 6].includes(tier) ? 0.1 * (8 - tier) : 0);
     const ad = AntimatterDimension(dim);
-    return ad.isProducing ? ad.multiplier.times(ad.totalAmount.pow(nc12Pow(dim))) : DC.D1;
+    return ad.isProducing ? ad.multiplier.times(ad.totalAmount.pow(nc12Pow(dim))) : BEC.D1;
   },
 
   isNC12ProducingEven() {

@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 import { PlayerProgress } from "../../player-progress.js";
 
 import { MultiplierTabIcons } from "./icons.js";
@@ -28,12 +28,12 @@ export const DT = {
   },
   dilation: {
     name: "Repeatable Dilation Upgrades",
-    multValue: () => DC.D1.timesEffectsOf(
+    multValue: () => BEC.D1.timesEffectsOf(
       DilationUpgrade.dtGain,
       DilationUpgrade.dtGainPelle,
       DilationUpgrade.flatDilationMult
     ),
-    isActive: () => DC.D1.timesEffectsOf(
+    isActive: () => BEC.D1.timesEffectsOf(
       DilationUpgrade.dtGain,
       DilationUpgrade.dtGainPelle,
       DilationUpgrade.flatDilationMult
@@ -51,8 +51,8 @@ export const DT = {
     multValue: () => {
       const dtMult = getAdjustedGlyphEffect("dilationDT").times(Pelle.specialGlyphEffect.dilation);
       const repliDT = Replicanti.areUnlocked
-        ? Math.clampMin(Decimal.log10(Replicanti.amount) * getAdjustedGlyphEffect("replicationdtgain"), 1)
-        : DC.D1;
+        ? Math.clampMin(BE.log10(Replicanti.amount) * getAdjustedGlyphEffect("replicationdtgain"), 1)
+        : BEC.D1;
       return dtMult.times(repliDT);
     },
     isActive: () => PlayerProgress.realityUnlocked() && getDilationGainPerSecond().neq(0),
@@ -60,13 +60,13 @@ export const DT = {
   },
   ra1: {
     name: "Ra Upgrade - Multiplier based on TT",
-    multValue: () => DC.D1.timesEffectsOf(Ra.unlocks.continuousTTBoost.effects.dilatedTime),
+    multValue: () => BEC.D1.timesEffectsOf(Ra.unlocks.continuousTTBoost.effects.dilatedTime),
     isActive: () => Ra.unlocks.autoTP.canBeApplied && getDilationGainPerSecond().neq(0),
     icon: MultiplierTabIcons.GENERIC_RA,
   },
   ra2: {
     name: "Ra Upgrade - Multiplier based on peak game speed",
-    multValue: () => DC.D1.timesEffectsOf(Ra.unlocks.peakGamespeedDT),
+    multValue: () => BEC.D1.timesEffectsOf(Ra.unlocks.peakGamespeedDT),
     isActive: () => Ra.unlocks.autoTP.canBeApplied && getDilationGainPerSecond().neq(0),
     icon: MultiplierTabIcons.GENERIC_RA,
   },
@@ -78,7 +78,7 @@ export const DT = {
   },
   iap: {
     name: "Shop Tab Purchases",
-    multValue: () => new Decimal(ShopPurchase.dilatedTimePurchases.currentMult ** (Pelle.isDoomed ? 0.5 : 1)),
+    multValue: () => new BE(ShopPurchase.dilatedTimePurchases.currentMult ** (Pelle.isDoomed ? 0.5 : 1)),
     isActive: () => ShopPurchaseData.totalSTD > 0 && getDilationGainPerSecond().neq(0),
     icon: MultiplierTabIcons.IAP,
   },

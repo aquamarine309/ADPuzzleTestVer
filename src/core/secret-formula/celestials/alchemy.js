@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 export const alchemyResources = {
   // T1 resources (Non-Effarig "base" resources)
@@ -43,7 +43,7 @@ export const alchemyResources = {
     name: "Replication",
     symbol: "Ξ",
     isBaseResource: true,
-    effect: amount => Decimal.pow10(amount / 1000),
+    effect: amount => BE.pow10(amount / 1000),
     tier: 1,
     uiOrder: 4,
     unlockedAt: 5,
@@ -55,7 +55,7 @@ export const alchemyResources = {
     name: "Dilation",
     symbol: "Ψ",
     isBaseResource: true,
-    effect: amount => Decimal.pow10(amount / 2000),
+    effect: amount => BE.pow10(amount / 2000),
     tier: 1,
     uiOrder: 5,
     unlockedAt: 6,
@@ -114,7 +114,7 @@ export const alchemyResources = {
     name: "Dimensionality",
     symbol: "ρ",
     isBaseResource: false,
-    effect: amount => Decimal.pow10(5 * amount),
+    effect: amount => BE.pow10(5 * amount),
     tier: 2,
     uiOrder: 1,
     unlockedAt: 10,
@@ -136,7 +136,7 @@ export const alchemyResources = {
     name: "Inflation",
     symbol: "λ",
     isBaseResource: false,
-    effect: amount => Decimal.pow10(6e9 - 3e5 * amount),
+    effect: amount => BE.pow10(6e9 - 3e5 * amount),
     tier: 2,
     uiOrder: 5,
     unlockedAt: 11,
@@ -165,7 +165,7 @@ export const alchemyResources = {
     unlockedAt: 12,
     description: "increases the strength of Tachyon Galaxies based on Replicanti",
     formatEffect: value => `Tachyon Galaxies are ${formatPercents(value, 2, 2)} stronger
-      per ${format(DC.E1E6)} Replicanti`,
+      per ${format(BEC.E1E6)} Replicanti`,
     reagents: [
       {
         resource: ALCHEMY_RESOURCE.REPLICATION,

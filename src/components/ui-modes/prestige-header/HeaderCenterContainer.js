@@ -22,8 +22,8 @@ export default {
       isModern: false,
       hasRealityButton: false,
       isDoomed: false,
-      antimatter: new Decimal(0),
-      antimatterPerSec: new Decimal(0),
+      antimatter: new BE(0),
+      antimatterPerSec: new BE(0),
     };
   },
   methods: {
@@ -33,7 +33,7 @@ export default {
 
       this.isModern = player.options.newUI;
       this.isDoomed = Pelle.isDoomed;
-      this.antimatter.copyFrom(Currency.antimatter);
+      this.antimatter.copyFrom(Currency.antimatter.value);
       this.hasRealityButton = PlayerProgress.realityUnlocked() || TimeStudy.reality.isBought;
       if (!this.hasRealityButton) this.antimatterPerSec.copyFrom(Currency.antimatter.productionPerSecond);
     },

@@ -1,9 +1,9 @@
 import { GameMechanicState, SetPurchasableMechanicState } from "./game-mechanics/index.js";
-import { DC } from "./constants.js";
+import { BEC } from "./constants.js";
 import FullScreenAnimationHandler from "./full-screen-animation-handler.js";
 
 function giveEternityRewards(auto) {
-  player.records.bestEternity.time = Math.min(player.records.thisEternity.time, player.records.bestEternity.time);
+  player.records.bestEternity.time = BE.min(player.records.thisEternity.time, player.records.bestEternity.time);
   Currency.eternityPoints.add(gainedEternityPoints());
 
   const newEternities = gainedEternities();
@@ -124,18 +124,18 @@ export function eternity(force, auto, specialConditions = {}) {
 
   Currency.infinityPoints.reset();
   InfinityDimensions.resetAmount();
-  player.records.thisInfinity.bestIPmin = DC.D0;
-  player.records.bestInfinity.bestIPminEternity = DC.D0;
-  player.records.thisEternity.bestEPmin = DC.D0;
-  player.records.thisEternity.bestInfinitiesPerMs = DC.D0;
-  player.records.thisEternity.bestIPMsWithoutMaxAll = DC.D0;
+  player.records.thisInfinity.bestIPmin = BEC.D0;
+  player.records.bestInfinity.bestIPminEternity = BEC.D0;
+  player.records.thisEternity.bestEPmin = BEC.D0;
+  player.records.thisEternity.bestInfinitiesPerMs = BEC.D0;
+  player.records.thisEternity.bestIPMsWithoutMaxAll = BEC.D0;
   resetTimeDimensions();
   resetTickspeed();
   playerInfinityUpgradesOnReset();
   AchievementTimers.marathon2.reset();
   applyEU1();
-  player.records.thisInfinity.maxAM = DC.D0;
-  player.records.thisEternity.maxAM = DC.D0;
+  player.records.thisInfinity.maxAM = BEC.D0;
+  player.records.thisEternity.maxAM = BEC.D0;
   Currency.antimatter.reset();
   ECTimeStudyState.invalidateCachedRequirements();
 
@@ -183,23 +183,23 @@ export function initializeChallengeCompletions(isReality) {
 }
 
 export function initializeResourcesAfterEternity() {
-  player.sacrificed = DC.D0;
+  player.sacrificed = BEC.D0;
   Currency.infinities.reset();
-  player.records.bestInfinity.time = 999999999999;
-  player.records.bestInfinity.realTime = 999999999999;
-  player.records.thisInfinity.time = 0;
-  player.records.thisInfinity.lastBuyTime = 0;
+  player.records.bestInfinity.time = BE.NUMBER_MAX_VALUE;
+  player.records.bestInfinity.realTime = Number.MAX_VALUE;
+  player.records.thisInfinity.time = BEC.D0;
+  player.records.thisInfinity.lastBuyTime = BEC.D0;
   player.records.thisInfinity.realTime = 0;
-  player.dimensionBoosts = (EternityMilestone.keepInfinityUpgrades.isReached) ? 4 : 0;
-  player.galaxies = (EternityMilestone.keepInfinityUpgrades.isReached) ? 1 : 0;
+  player.dimensionBoosts = (EternityMilestone.keepInfinityUpgrades.isReached) ? BEC.D4 : BEC.D0;
+  player.galaxies = (EternityMilestone.keepInfinityUpgrades.isReached) ? BEC.D1 : BEC.D0;
   player.partInfinityPoint = 0;
   player.partInfinitied = 0;
-  player.IPMultPurchases = 0;
+  player.IPMultPurchases = BEC.D0;
   Currency.infinityPower.reset();
   Currency.timeShards.reset();
-  player.records.thisEternity.time = 0;
+  player.records.thisEternity.time = BEC.D0;
   player.records.thisEternity.realTime = 0;
-  player.totalTickGained = 0;
+  player.totalTickGained = BEC.D0;
   player.eterc8ids = 50;
   player.eterc8repl = 40;
   Player.resetRequirements("eternity");
@@ -234,8 +234,8 @@ function askEternityConfirmation() {
 
 export function gainedEternities() {
   return Pelle.isDisabled("eternityMults")
-    ? new Decimal(1)
-    : new Decimal(getAdjustedGlyphEffect("timeetermult"))
+    ? new BE(1)
+    : new BE(getAdjustedGlyphEffect("timeetermult"))
       .timesEffectsOf(RealityUpgrade(3), Achievement(113))
       .pow(AlchemyResource.eternity.effectValue);
 }
@@ -273,7 +273,7 @@ class EPMultiplierState extends GameMechanicState {
   constructor() {
     super({});
     this.cachedCost = new Lazy(() => this.costAfterCount(player.epmultUpgrades));
-    this.cachedEffectValue = new Lazy(() => DC.D5.pow(player.epmultUpgrades));
+    this.cachedEffectValue = new Lazy(() => BEC.D5.pow(player.epmultUpgrades));
   }
 
   get isAffordable() {
@@ -291,11 +291,11 @@ class EPMultiplierState extends GameMechanicState {
   set boughtAmount(value) {
     // Reality resets will make this bump amount negative, causing it to visually appear as 0 even when it isn't.
     // A dev migration fixes bad autobuyer states and this change ensures it doesn't happen again
-    const diff = Math.clampMin(value - player.epmultUpgrades, 0);
+    const diff = BE.clampMin(value.minus(player.epmultUpgrades), 0);
     player.epmultUpgrades = value;
     this.cachedCost.invalidate();
     this.cachedEffectValue.invalidate();
-    Autobuyer.eternity.bumpAmount(DC.D5.pow(diff));
+    Autobuyer.eternity.bumpAmount(BEC.D5.pow(diff));
   }
 
   get isCustomEffect() {
@@ -309,7 +309,7 @@ class EPMultiplierState extends GameMechanicState {
   purchase() {
     if (!this.isAffordable) return false;
     Currency.eternityPoints.subtract(this.cost);
-    ++this.boughtAmount;
+    this.boughtAmount = this.boughtAmount.plus(1);
     return true;
   }
 
@@ -326,26 +326,26 @@ class EPMultiplierState extends GameMechanicState {
     }, this.boughtAmount);
     if (!bulk) return false;
     Currency.eternityPoints.subtract(bulk.purchasePrice);
-    this.boughtAmount += bulk.quantity;
+    this.boughtAmount = this.boughtAmount.plus(bulk.quantity);
     return true;
   }
 
   reset() {
-    this.boughtAmount = 0;
+    this.boughtAmount = BEC.D0;
   }
 
   get costIncreaseThresholds() {
-    return [DC.E100, Decimal.NUMBER_MAX_VALUE, DC.E1300, DC.E4000];
+    return [BEC.E100, BE.NUMBER_MAX_VALUE, BEC.E1300, BEC.E4000];
   }
 
   costAfterCount(count) {
     const costThresholds = EternityUpgrade.epMult.costIncreaseThresholds;
     const multPerUpgrade = [50, 100, 500, 1000];
     for (let i = 0; i < costThresholds.length; i++) {
-      const cost = Decimal.pow(multPerUpgrade[i], count).times(500);
+      const cost = BE.pow(multPerUpgrade[i], count).times(500);
       if (cost.lt(costThresholds[i])) return cost;
     }
-    return DC.E3.pow(count + Math.pow(Math.clampMin(count - 1334, 0), 1.2)).times(500);
+    return BEC.E3.pow(count.minus(1334).clampMin(0).pow(1.2).plus(count)).times(500);
   }
 }
 

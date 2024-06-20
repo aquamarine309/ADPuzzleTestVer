@@ -3,14 +3,14 @@ export default {
   data() {
     return {
       isVisible: false,
-      gainedIP: new Decimal(0),
-      currentIPRate: new Decimal(0),
-      peakIPRate: new Decimal(0),
-      peakIPRateVal: new Decimal(0),
-      currentIP: new Decimal(0),
+      gainedIP: new BE(0),
+      currentIPRate: new BE(0),
+      peakIPRate: new BE(0),
+      peakIPRateVal: new BE(0),
+      currentIP: new BE(0),
       tesseractAffordable: false,
       canCrunch: false,
-      infinityGoal: new Decimal(0),
+      infinityGoal: new BE(0),
       inAntimatterChallenge: false,
       hover: false,
       headerTextColored: true,
@@ -49,7 +49,7 @@ export default {
         ],
         [0, 255, 0]
       ];
-      const ratio = this.gainedIP.log10() / this.currentIP.log10();
+      const ratio = this.gainedIP.log10().div(this.currentIP.log10()).clampMax(1.1).toNumber();
       const interFn = index => {
         if (ratio < 0.9) return stepRGB[0][index];
         if (ratio < 1) {
@@ -83,7 +83,7 @@ export default {
       const gainedIP = gainedInfinityPoints();
       this.currentIP.copyFrom(Currency.infinityPoints);
       this.gainedIP.copyFrom(gainedIP);
-      this.currentIPRate.copyFrom(gainedIP.dividedBy(Math.clampMin(0.0005, Time.thisInfinityRealTime.totalMinutes)));
+      this.currentIPRate.copyFrom(gainedIP.dividedBy(BE.clampMin(0.0005, Time.thisInfinityRealTime.totalMinutes)));
       this.peakIPRate.copyFrom(player.records.thisInfinity.bestIPmin);
       this.peakIPRateVal.copyFrom(player.records.thisInfinity.bestIPminVal);
       this.showIPRate = this.peakIPRate.lte(this.rateThreshold);

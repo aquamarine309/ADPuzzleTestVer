@@ -1,4 +1,4 @@
-import { DC } from "./constants.js";
+import { BEC } from "./constants.js";
 
 /**
  * @abstract
@@ -14,7 +14,7 @@ export class TimeTheoremPurchaseType {
   */
   set amount(value) { throw new NotImplementedError(); }
 
-  add(amount) { this.amount += amount; }
+  add(amount) { this.amount = this.amount.plus(amount); }
 
   /**
   * @abstract
@@ -35,15 +35,15 @@ export class TimeTheoremPurchaseType {
 
   get bulkPossible() {
     if (Perk.ttFree.canBeApplied) {
-      return Math.floor(this.currency.value.divide(this.cost).log10() / this.costIncrement.log10() + 1);
+      return this.currency.value.divide(this.cost).log10().div(this.costIncrement.log10()).plus(1).floor();
     }
-    return Decimal.affordGeometricSeries(this.currency.value, this.cost, this.costIncrement, 0).toNumber();
+    return BE.affordGeometricSeries(this.currency.value, this.cost, this.costIncrement, 0);
   }
 
   // Note: This is actually just the cost of the largest term of the geometric series. If buying EP without the
   // perk that makes them free, this will be incorrect, but the EP object already overrides this anyway
   bulkCost(amount) {
-    return this.cost.times(this.costIncrement.pow(amount - 1));
+    return this.cost.times(this.costIncrement.pow(amount.minus(1)));
   }
 
   purchase(bulk) {
@@ -63,7 +63,7 @@ export class TimeTheoremPurchaseType {
       purchased = true;
     }
     if (purchased) player.requirementChecks.reality.noPurchasedTT = false;
-    if (TimeTheorems.totalPurchased() > 114) PelleStrikes.ECs.trigger();
+    if (TimeTheorems.totalPurchased().gt(114)) PelleStrikes.ECs.trigger();
     return purchased;
   }
 
@@ -72,7 +72,7 @@ export class TimeTheoremPurchaseType {
   }
 
   reset() {
-    this.amount = 0;
+    this.amount = BEC.D0;
   }
 }
 
@@ -81,8 +81,8 @@ TimeTheoremPurchaseType.am = new class extends TimeTheoremPurchaseType {
   set amount(value) { player.timestudy.amBought = value; }
 
   get currency() { return Currency.antimatter; }
-  get costBase() { return DC.E20000; }
-  get costIncrement() { return DC.E20000; }
+  get costBase() { return BEC.E20000; }
+  get costIncrement() { return BEC.E20000; }
 }();
 
 TimeTheoremPurchaseType.ip = new class extends TimeTheoremPurchaseType {
@@ -90,8 +90,8 @@ TimeTheoremPurchaseType.ip = new class extends TimeTheoremPurchaseType {
   set amount(value) { player.timestudy.ipBought = value; }
 
   get currency() { return Currency.infinityPoints; }
-  get costBase() { return DC.D1; }
-  get costIncrement() { return DC.E100; }
+  get costBase() { return BEC.D1; }
+  get costIncrement() { return BEC.E100; }
 }();
 
 TimeTheoremPurchaseType.ep = new class extends TimeTheoremPurchaseType {
@@ -99,12 +99,12 @@ TimeTheoremPurchaseType.ep = new class extends TimeTheoremPurchaseType {
   set amount(value) { player.timestudy.epBought = value; }
 
   get currency() { return Currency.eternityPoints; }
-  get costBase() { return DC.D1; }
-  get costIncrement() { return DC.D2; }
+  get costBase() { return BEC.D1; }
+  get costIncrement() { return BEC.D2; }
 
   bulkCost(amount) {
-    if (Perk.ttFree.canBeApplied) return this.cost.times(this.costIncrement.pow(amount - 1));
-    return this.costIncrement.pow(amount + this.amount).subtract(this.cost);
+    if (Perk.ttFree.canBeApplied) return this.cost.times(this.costIncrement.pow(amount.minus(1)));
+    return this.costIncrement.pow(amount.plus(this.amount)).subtract(this.cost);
   }
 }();
 
@@ -124,7 +124,7 @@ export const TimeTheorems = {
 
   // This is only called via automation and there's no manual use-case, so we assume auto is true and simplify a bit
   buyOneOfEach() {
-    if (!this.checkForBuying(true)) return 0;
+    if (!this.checkForBuying(true)) return 1;
     const ttAM = this.buyOne(true, "am");
     const ttIP = this.buyOne(true, "ip");
     const ttEP = this.buyOne(true, "ep");
@@ -132,7 +132,7 @@ export const TimeTheorems = {
   },
 
   buyMax(auto = false) {
-    if (!this.checkForBuying(auto)) return 0;
+    if (!this.checkForBuying(auto)) return BEC.D0;
     const ttAM = TimeTheoremPurchaseType.am.purchase(true);
     const ttIP = TimeTheoremPurchaseType.ip.purchase(true);
     const ttEP = TimeTheoremPurchaseType.ep.purchase(true);
@@ -140,9 +140,9 @@ export const TimeTheorems = {
   },
 
   totalPurchased() {
-    return TimeTheoremPurchaseType.am.amount +
-          TimeTheoremPurchaseType.ip.amount +
-          TimeTheoremPurchaseType.ep.amount;
+    return TimeTheoremPurchaseType.am.amount.plus
+          (TimeTheoremPurchaseType.ip.amount).plus
+          (TimeTheoremPurchaseType.ep.amount);
   },
 
   calculateTimeStudiesCost() {

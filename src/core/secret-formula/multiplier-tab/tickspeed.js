@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 import { MultiplierTabHelper } from "./helper-functions.js";
 import { MultiplierTabIcons } from "./icons.js";
@@ -16,11 +16,11 @@ export const tickspeed = {
     },
     // This is necessary to make multValue entries from the other props scale properly, which are also all pow10
     // due to the multiplier tab splitting up entries logarithmically
-    fakeValue: DC.E100,
+    fakeValue: BEC.E100,
     multValue: () => Tickspeed.perSecond.pow(MultiplierTabHelper.activeDimCount("AD")),
     // No point in showing this breakdown at all unless both components are nonzero; however they will always be nonzero
     // due to the way the calculation works, so we have to manually hide it here
-    isActive: () => Tickspeed.perSecond.gt(1) && effectiveBaseGalaxies() > 0,
+    isActive: () => Tickspeed.perSecond.gt(1) && effectiveBaseGalaxies().gt(0),
     dilationEffect: () => (Effarig.isRunning ? Effarig.tickDilation : 1),
     overlay: ["<i class='fa-solid fa-clock' />"],
     icon: MultiplierTabIcons.TICKSPEED,
@@ -28,7 +28,7 @@ export const tickspeed = {
   base: {
     name: "Base Tickspeed from Achievements",
     displayOverride: () => {
-      const val = DC.D1.dividedByEffectsOf(
+      const val = BEC.D1.dividedByEffectsOf(
         Achievement(36),
         Achievement(45),
         Achievement(66),
@@ -36,26 +36,26 @@ export const tickspeed = {
       );
       return `${format(val, 2, 2)}/sec`;
     },
-    multValue: () => new Decimal.pow10(100 * MultiplierTabHelper.decomposeTickspeed().base),
+    multValue: () => new BE.pow10(MultiplierTabHelper.decomposeTickspeed().base.times(100)),
     isActive: () => [36, 45, 66, 83].some(a => Achievement(a).canBeApplied),
     icon: MultiplierTabIcons.ACHIEVEMENT,
   },
   upgrades: {
     name: "Tickspeed Upgrades",
     displayOverride: () => `${formatInt(Tickspeed.totalUpgrades)} Total`,
-    multValue: () => new Decimal.pow10(100 * MultiplierTabHelper.decomposeTickspeed().tickspeed),
+    multValue: () => new BE.pow10(MultiplierTabHelper.decomposeTickspeed().tickspeed.times(100)),
     isActive: true,
     icon: MultiplierTabIcons.PURCHASE("AD"),
   },
   galaxies: {
     name: "Galaxies",
     displayOverride: () => {
-      const ag = player.galaxies + GalaxyGenerator.galaxies;
+      const ag = player.galaxies.plus(GalaxyGenerator.galaxies);
       const rg = Replicanti.galaxies.total;
       const tg = player.dilation.totalTachyonGalaxies;
-      return `${formatInt(ag + rg + tg)} Total`;
+      return `${formatInt(ag.add(rg).add(tg))} Total`;
     },
-    multValue: () => new Decimal.pow10(100 * MultiplierTabHelper.decomposeTickspeed().galaxies),
+    multValue: () => new BE.pow10(MultiplierTabHelper.decomposeTickspeed().galaxies.times(100)),
     isActive: true,
     icon: MultiplierTabIcons.GALAXY,
   },
@@ -73,14 +73,14 @@ export const tickspeedUpgrades = {
     displayOverride: () => (Laitela.continuumActive
       ? formatFloat(Tickspeed.continuumValue, 2, 2)
       : formatInt(player.totalTickBought)),
-    multValue: () => Decimal.pow10(Laitela.continuumActive ? Tickspeed.continuumValue : player.totalTickBought),
+    multValue: () => BE.pow10(Laitela.continuumActive ? Tickspeed.continuumValue : player.totalTickBought),
     isActive: () => true,
     icon: MultiplierTabIcons.PURCHASE("AD"),
   },
   free: {
     name: "Tickspeed Upgrades from TD",
     displayOverride: () => formatInt(player.totalTickGained),
-    multValue: () => Decimal.pow10(player.totalTickGained),
+    multValue: () => BE.pow10(player.totalTickGained),
     isActive: () => Currency.timeShards.gt(0),
     icon: MultiplierTabIcons.SPECIFIC_GLYPH("time"),
   }

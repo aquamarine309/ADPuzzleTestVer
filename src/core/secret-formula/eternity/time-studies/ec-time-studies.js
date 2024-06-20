@@ -1,4 +1,4 @@
-import { DC } from "../../../constants.js";
+import { BEC } from "../../../constants.js";
 
 export const ecTimeStudies = [
   {
@@ -9,7 +9,7 @@ export const ecTimeStudies = [
     secondary: {
       resource: "Eternities",
       current: () => Currency.eternities.value,
-      required: completions => new Decimal(20000 + Math.min(completions, Enslaved.isRunning ? 999 : 4) * 20000),
+      required: completions => new BE(20000 + Math.min(completions, Enslaved.isRunning ? 999 : 4) * 20000),
       formatValue: formatInt
     }
   },
@@ -21,7 +21,7 @@ export const ecTimeStudies = [
     secondary: {
       resource: "Tickspeed upgrades from Time Dimensions",
       current: () => player.totalTickGained,
-      required: completions => 1300 + Math.min(completions, 4) * 150,
+      required: completions => BE.min(completions, 4).times(150).plus(1300),
       formatValue: formatInt
     }
   },
@@ -33,7 +33,7 @@ export const ecTimeStudies = [
     secondary: {
       resource: "8th Antimatter Dimensions",
       current: () => AntimatterDimension(8).totalAmount,
-      required: completions => new Decimal(17300 + Math.min(completions, 4) * 1250),
+      required: completions => new BE(17300 + Math.min(completions, 4) * 1250),
       formatValue: value => formatInt(Math.floor(value.toNumber()))
     }
   },
@@ -45,7 +45,7 @@ export const ecTimeStudies = [
     secondary: {
       resource: "Infinities",
       current: () => Currency.infinitiesTotal.value,
-      required: completions => new Decimal(1e8 + Math.min(completions, 4) * 2.5e7),
+      required: completions => new BE(1e8 + Math.min(completions, 4) * 2.5e7),
       formatValue: value => formatInt(Math.floor(value.toNumber()))
     }
   },
@@ -57,7 +57,7 @@ export const ecTimeStudies = [
     secondary: {
       resource: "Antimatter Galaxies",
       current: () => player.galaxies,
-      required: completions => 160 + Math.min(completions, 4) * 14,
+      required: completions => BE.min(completions, 4).times(14).plus(160),
       formatValue: formatInt
     }
   },
@@ -69,7 +69,7 @@ export const ecTimeStudies = [
     secondary: {
       resource: "Replicanti Galaxies",
       current: () => player.replicanti.galaxies,
-      required: completions => 40 + Math.min(completions, 4) * 5,
+      required: completions => BE.min(completions, 4).times(5).plus(40),
       formatValue: formatInt
     }
   },
@@ -81,7 +81,7 @@ export const ecTimeStudies = [
     secondary: {
       resource: "antimatter",
       current: () => Currency.antimatter.value,
-      required: completions => DC.E300000.pow(Math.min(completions, 4)).times(DC.E500000),
+      required: completions => BEC.E300000.pow(Math.min(completions, 4)).times(BEC.E500000),
       formatValue: value => format(value)
     }
   },
@@ -93,7 +93,7 @@ export const ecTimeStudies = [
     secondary: {
       resource: "Infinity Points",
       current: () => Currency.infinityPoints.value,
-      required: completions => DC.E1000.pow(Math.min(completions, 4)).times(DC.E4000),
+      required: completions => BEC.E1000.pow(Math.min(completions, 4)).times(BEC.E4000),
       formatValue: value => format(value)
     }
   },
@@ -105,7 +105,7 @@ export const ecTimeStudies = [
     secondary: {
       resource: "Infinity Power",
       current: () => Currency.infinityPower.value,
-      required: completions => DC.E2000.pow(Math.min(completions, 4)).times(DC.E17500),
+      required: completions => BEC.E2000.pow(Math.min(completions, 4)).times(BEC.E17500),
       formatValue: value => format(value)
     }
   },
@@ -117,7 +117,7 @@ export const ecTimeStudies = [
     secondary: {
       resource: "Eternity Points",
       current: () => Currency.eternityPoints.value,
-      required: completions => DC.E20.pow(Math.min(completions, 4)).times(DC.E100),
+      required: completions => BEC.E20.pow(Math.min(completions, 4)).times(BEC.E100),
       formatValue: value => format(value)
     }
   },

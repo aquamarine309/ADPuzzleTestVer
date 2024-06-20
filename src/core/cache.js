@@ -45,27 +45,27 @@ class Lazy {
 window.Lazy = Lazy;
 
 export const GameCache = {
-  worstChallengeTime: new Lazy(() => player.challenge.normal.bestTimes.max()),
+  worstChallengeTime: new Lazy(() => player.challenge.normal.bestTimes.reduce(BE.maxReducer)),
 
   bestRunIPPM: new Lazy(() =>
     player.records.recentInfinities
       .map(run => ratePerMinute(run[2], run[0]))
-      .reduce(Decimal.maxReducer)
+      .reduce(BE.maxReducer)
   ),
 
   averageRealTimePerEternity: new Lazy(() => player.records.recentEternities
     .map(run => run[1])
-    .reduce(Number.sumReducer) / (1000 * player.records.recentEternities.length)),
+    .reduce(BE.sumReducer).div(1000 * player.records.recentEternities.length)),
 
-  tickSpeedMultDecrease: new Lazy(() => 10 - Effects.sum(
+  tickSpeedMultDecrease: new Lazy(() => new BE(10 - Effects.sum(
     BreakInfinityUpgrade.tickspeedCostMult,
     EternityChallenge(11).reward
-  )),
+  ))),
 
-  dimensionMultDecrease: new Lazy(() => 10 - Effects.sum(
+  dimensionMultDecrease: new Lazy(() => new BE(10 - Effects.sum(
     BreakInfinityUpgrade.dimCostMult,
     EternityChallenge(6).reward
-  )),
+  ))),
 
   timeStudies: new Lazy(() => NormalTimeStudyState.studies
     .map(s => player.timestudy.studies.includes(s.id))),
@@ -111,11 +111,11 @@ export const GameCache = {
 
   totalIPMult: new Lazy(() => totalIPMult()),
 
-  challengeTimeSum: new Lazy(() => player.challenge.normal.bestTimes.sum()),
+  challengeTimeSum: new Lazy(() => player.challenge.normal.bestTimes.reduce(BE.sumReducer)),
 
-  infinityChallengeTimeSum: new Lazy(() => player.challenge.infinity.bestTimes.sum()),
+  infinityChallengeTimeSum: new Lazy(() => player.challenge.infinity.bestTimes.reduce(BE.sumReducer)),
   
-  logicChallengeTimeSum: new Lazy(() => player.challenge.logic.bestTimes.sum()),
+  logicChallengeTimeSum: new Lazy(() => player.challenge.logic.bestTimes.reduce(BE.sumReducer)),
   
   logicPoints: new Lazy(() => getLogicPoints()),
   

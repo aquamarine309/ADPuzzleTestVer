@@ -87,7 +87,7 @@ export const devMigrations = {
       player.reality.upgReqs.push(false, false, false, false, false);
     },
     player => {
-      player.reality.realityMachines = new Decimal(player.reality.realityMachines);
+      player.reality.realityMachines = new BE(player.reality.realityMachines);
     },
     player => {
       player.reality.glyphs.sac = {
@@ -238,7 +238,7 @@ export const devMigrations = {
       });
       movePropIfPossible("teresa", "effarig", "relicShards", 0, Math.max);
       movePropIfPossible("effarig", "teresa", "quoteIdx", 0);
-      movePropIfPossible("effarig", "teresa", "bestRunAM", 0, Decimal.max);
+      movePropIfPossible("effarig", "teresa", "bestRunAM", 0, BE.max);
       movePropIfPossible("effarig", "teresa", "rmStore", 0, Math.max);
       movePropIfPossible("effarig", "teresa", "glyphLevelMult", 1, Math.max);
       movePropIfPossible("effarig", "teresa", "rmMult", 1, Math.max);
@@ -306,14 +306,14 @@ export const devMigrations = {
       for (let i = 0; i < player.reality.glyphs.active.length; i++) {
         const glyph = player.reality.glyphs.active[i];
         if (glyph.type === "power" && glyph.effects.mult !== undefined) {
-          glyph.effects.mult = new Decimal(glyph.effects.mult);
+          glyph.effects.mult = new BE(glyph.effects.mult);
         }
       }
 
       for (let i = 0; i < player.reality.glyphs.inventory.length; i++) {
         const glyph = player.reality.glyphs.inventory[i];
         if (glyph.type === "power" && glyph.effects.mult !== undefined) {
-          glyph.effects.mult = new Decimal(glyph.effects.mult);
+          glyph.effects.mult = new BE(glyph.effects.mult);
         }
       }
     },
@@ -416,13 +416,13 @@ export const devMigrations = {
 
       const eternityAutobuyer = player.auto.eternity;
       eternityAutobuyer.mode = ["amount", "time", "relative"].indexOf(player.autoEternityMode);
-      const condition = new Decimal(old.limit);
+      const condition = new BE(old.limit);
       switch (player.autoEternityMode) {
         case "amount":
           eternityAutobuyer.amount = condition;
           break;
         case "time":
-          eternityAutobuyer.time = condition.lt(Decimal.NUMBER_MAX_VALUE)
+          eternityAutobuyer.time = condition.lt(BE.NUMBER_MAX_VALUE)
             ? condition.toNumber()
             : eternityAutobuyer.time;
           break;
@@ -436,7 +436,7 @@ export const devMigrations = {
       delete player.autoEternityMode;
     },
     migrations.convertNews,
-    migrations.convertEternityCountToDecimal,
+    migrations.convertEternityCountToBE,
     migrations.renameDimboosts,
     player => {
       // Reset reality autobuyer mode, since AUTO_REALITY_MODE was incorrectly starting from 1 and not from 0.
@@ -482,7 +482,7 @@ export const devMigrations = {
       player.reality.seed = Math.floor(Math.abs(player.reality.seed)) % 0xFFFFFFFF;
     },
     player => {
-      player.auto.sacrifice.multiplier = new Decimal(player.auto.sacrifice.multiplier);
+      player.auto.sacrifice.multiplier = new BE(player.auto.sacrifice.multiplier);
     },
     migrations.changeC8Handling,
     player => {
@@ -634,7 +634,7 @@ export const devMigrations = {
         delete dim.powerUpgrades;
       }
       // Note that player.celestials.laitela.higgs is actually a string at this point
-      // (since conversion to Decimal hasn't happened yet).
+      // (since conversion to BE hasn't happened yet).
       player.celestials.laitela.darkMatterMult = Number(player.celestials.laitela.higgs) + 1;
       delete player.celestials.laitela.anomalies;
     },
@@ -666,7 +666,7 @@ export const devMigrations = {
       }
     },
     player => {
-      player.thisEternityMaxAM = new Decimal(0);
+      player.thisEternityMaxAM = new BE(0);
     },
     player => {
       migrations.migrateLastTenRuns(player);
@@ -732,7 +732,7 @@ export const devMigrations = {
           const dimension = player.dimensions.normal[i];
           player.dimensions.antimatter[i].bought = dimension.bought;
           player.dimensions.antimatter[i].costBumps = dimension.costBumps;
-          player.dimensions.antimatter[i].amount = new Decimal(dimension.amount);
+          player.dimensions.antimatter[i].amount = new BE(dimension.amount);
         }
         delete player.dimensions.normal;
       }
@@ -772,7 +772,7 @@ export const devMigrations = {
       player.records.gameCreatedTime = player.gameCreatedTime;
       player.records.totalTimePlayed = player.totalTimePlayed;
       player.records.realTimePlayed = player.realTimePlayed;
-      player.records.totalAntimatter = new Decimal(player.totalAntimatter);
+      player.records.totalAntimatter = new BE(player.totalAntimatter);
       for (let i = 0; i < 10; i++) {
         player.records.lastTenInfinities[i][0] = player.lastTenRuns[i][0];
         player.records.lastTenEternities[i][0] = player.lastTenEternities[i][0];
@@ -784,36 +784,36 @@ export const devMigrations = {
       player.records.thisInfinity.time = player.thisInfinityTime;
       player.records.thisInfinity.realTime = player.thisInfinityRealTime;
       player.records.thisInfinity.lastBuyTime = player.thisInfinityLastBuyTime;
-      player.records.thisInfinity.maxAM = new Decimal(player.thisInfinityMaxAM);
-      player.records.thisInfinity.bestIPmin = new Decimal(player.bestIPminThisInfinity);
+      player.records.thisInfinity.maxAM = new BE(player.thisInfinityMaxAM);
+      player.records.thisInfinity.bestIPmin = new BE(player.bestIPminThisInfinity);
 
       player.records.bestInfinity.time = player.bestInfinityTime;
       player.records.bestInfinity.realTime = player.bestInfinityRealTime;
-      player.records.bestInfinity.bestIPminEternity = new Decimal(player.bestIPminThisEternity);
-      player.records.bestInfinity.bestIPminReality = new Decimal(player.bestEPThisReality);
+      player.records.bestInfinity.bestIPminEternity = new BE(player.bestIPminThisEternity);
+      player.records.bestInfinity.bestIPminReality = new BE(player.bestEPThisReality);
 
       player.records.thisEternity.time = player.thisEternity;
       player.records.thisEternity.realTime = player.thisEternityRealTime;
-      player.records.thisEternity.maxAM = new Decimal(player.thisEternityMaxAM);
-      player.records.thisEternity.maxIP = new Decimal(player.thisEternityMaxIP);
-      player.records.thisEternity.bestIPMsWithoutMaxAll = new Decimal(player.bestIpPerMsWithoutMaxAll);
-      player.records.thisEternity.bestEPmin = new Decimal(player.bestEPminThisEternity);
-      player.records.thisEternity.bestInfinitiesPerMs = new Decimal(player.bestInfinitiesPerMs);
+      player.records.thisEternity.maxAM = new BE(player.thisEternityMaxAM);
+      player.records.thisEternity.maxIP = new BE(player.thisEternityMaxIP);
+      player.records.thisEternity.bestIPMsWithoutMaxAll = new BE(player.bestIpPerMsWithoutMaxAll);
+      player.records.thisEternity.bestEPmin = new BE(player.bestEPminThisEternity);
+      player.records.thisEternity.bestInfinitiesPerMs = new BE(player.bestInfinitiesPerMs);
 
       player.records.bestEternity.time = player.bestEternity;
       // I have no idea where real time best Eternity is, not sure if it exists?
-      player.records.bestEternity.bestEPminReality = new Decimal(player.bestEPminThisReality);
+      player.records.bestEternity.bestEPminReality = new BE(player.bestEPminThisReality);
 
       player.records.thisReality.time = player.thisReality;
       player.records.thisReality.realTime = player.thisRealityRealTime;
-      player.records.thisReality.bestEternitiesPerMs = new Decimal(player.bestEternitiesPerMs);
+      player.records.thisReality.bestEternitiesPerMs = new BE(player.bestEternitiesPerMs);
 
-      player.records.bestReality.RMmin = new Decimal(player.bestRMmin);
+      player.records.bestReality.RMmin = new BE(player.bestRMmin);
       player.records.bestReality.RMminSet = player.bestRMminSet;
       player.records.bestReality.glyphLevel = player.bestGlyphLevel;
       player.records.bestReality.glyphStrength = player.bestGlyphStrength;
       player.records.bestReality.glyphLevelSet = player.bestGlyphLevelSet;
-      player.records.bestReality.bestEP = new Decimal(player.bestEP);
+      player.records.bestReality.bestEP = new BE(player.bestEP);
       player.records.bestReality.bestEPSet = player.bestEPSet;
       player.records.bestReality.time = player.bestReality;
       player.records.bestReality.realTime = player.bestRealityRealTime;
@@ -869,8 +869,8 @@ export const devMigrations = {
       player.replicanti.boughtGalaxyCap = player.replicanti.gal;
       player.reality.perkPoints = player.reality.pp;
       player.celestials.teresa.pouredAmount = player.celestials.teresa.rmStore;
-      player.celestials.laitela.darkMatter = new Decimal(player.celestials.laitela.matter);
-      player.celestials.laitela.maxDarkMatter = new Decimal(player.celestials.laitela.maxMatter);
+      player.celestials.laitela.darkMatter = new BE(player.celestials.laitela.matter);
+      player.celestials.laitela.maxDarkMatter = new BE(player.celestials.laitela.maxMatter);
       player.celestials.ra.pets.teresa.memories = player.celestials.ra.pets.teresa.exp;
       player.celestials.ra.pets.effarig.memories = player.celestials.ra.pets.effarig.exp;
       player.celestials.ra.pets.enslaved.memories = player.celestials.ra.pets.enslaved.exp;
@@ -889,7 +889,7 @@ export const devMigrations = {
         noReplicantiGalaxies: player.noReplicantiGalaxies,
         // Not necessarily accurate, but these defaults prevent some people from effortlessly completing some
         // otherwise very difficult unlocks immediately upon migration
-        maxID1ThisReality: new Decimal(1),
+        maxID1ThisReality: new BE(1),
         continuumThisReality: true,
       };
       player.dilation.baseTachyonGalaxies = player.dilation.baseFreeGalaxies;
@@ -1020,7 +1020,7 @@ export const devMigrations = {
     },
     player => {
       player.achievementChecks.maxStudiesThisReality = player.timestudy.studies.length;
-      player.celestials.teresa.lastRepeatedMachines = new Decimal(player.celestials.teresa.lastRepeatedRM);
+      player.celestials.teresa.lastRepeatedMachines = new BE(player.celestials.teresa.lastRepeatedRM);
       delete player.celestials.teresa.lastRepeatedRM;
     },
     player => {
@@ -1053,7 +1053,7 @@ export const devMigrations = {
       }
     },
     player => {
-      player.records.thisEternity.maxIP = new Decimal(player.infinityPoints);
+      player.records.thisEternity.maxIP = new BE(player.infinityPoints);
       player.auto.bigCrunch.xHighest = player.auto.bigCrunch.xCurrent;
       player.auto.eternity.xHighest = player.auto.eternity.xCurrent;
       delete player.auto.bigCrunch.xCurrent;
@@ -1102,7 +1102,7 @@ export const devMigrations = {
           noInfinities: oldChecks.noInfinitiesThisReality,
           noEternities: oldChecks.noEternitiesThisReality,
           noContinuum: !oldChecks.continuumThisReality,
-          maxID1: new Decimal(oldChecks.maxID1ThisReality),
+          maxID1: new BE(oldChecks.maxID1ThisReality),
           maxStudies: oldChecks.maxStudiesThisReality,
           maxGlyphs: player.celestials.v.maxGlyphsThisRun,
           slowestBH: player.minNegativeBlackHoleThisReality,
@@ -1149,7 +1149,7 @@ export const devMigrations = {
     },
     player => {
       // #1764 fix - EM200 bug from eternity autobuyer appearing to be zero but not actually being zero
-      if (player.auto.eternity.amount.lt(0.01)) player.auto.eternity.amount = new Decimal(0);
+      if (player.auto.eternity.amount.lt(0.01)) player.auto.eternity.amount = new BE(0);
     },
     player => {
       player.options.hiddenSubtabBits = Array.repeat(0, 11);
@@ -1241,8 +1241,8 @@ export const devMigrations = {
     },
     player => {
       // For saves before cel7 existed, it will first add this prop (as a number) and then run this migration code. For
-      // saves which are already in cel7, this prop will already exist as a Decimal. This workaround handles both cases
-      player.celestials.pelle.rifts.chaos.fill = new Decimal(player.celestials.pelle.rifts.chaos.fill).toNumber();
+      // saves which are already in cel7, this prop will already exist as a BE. This workaround handles both cases
+      player.celestials.pelle.rifts.chaos.fill = new BE(player.celestials.pelle.rifts.chaos.fill).toNumber();
 
       delete player.celestials.pelle.compact;
       player.celestials.pelle.collapsed = {
@@ -1394,7 +1394,7 @@ export const devMigrations = {
       if (player.celestials.pelle.rifts.famine) {
         player.celestials.pelle.rifts.vacuum = {
           ...player.celestials.pelle.rifts.famine,
-          fill: new Decimal(player.celestials.pelle.rifts.famine.fill)
+          fill: new BE(player.celestials.pelle.rifts.famine.fill)
         };
         delete player.celestials.pelle.rifts.famine;
       }
@@ -1402,7 +1402,7 @@ export const devMigrations = {
       if (player.celestials.pelle.rifts.pestilence) {
         player.celestials.pelle.rifts.decay = {
           ...player.celestials.pelle.rifts.pestilence,
-          fill: new Decimal(player.celestials.pelle.rifts.pestilence.fill)
+          fill: new BE(player.celestials.pelle.rifts.pestilence.fill)
         };
         delete player.celestials.pelle.rifts.pestilence;
       }
@@ -1410,7 +1410,7 @@ export const devMigrations = {
       if (player.celestials.pelle.rifts.war) {
         player.celestials.pelle.rifts.recursion = {
           ...player.celestials.pelle.rifts.war,
-          fill: new Decimal(player.celestials.pelle.rifts.war.fill)
+          fill: new BE(player.celestials.pelle.rifts.war.fill)
         };
         delete player.celestials.pelle.rifts.war;
       }
@@ -1418,7 +1418,7 @@ export const devMigrations = {
       if (player.celestials.pelle.rifts.death) {
         player.celestials.pelle.rifts.paradox = {
           ...player.celestials.pelle.rifts.death,
-          fill: new Decimal(player.celestials.pelle.rifts.death.fill)
+          fill: new BE(player.celestials.pelle.rifts.death.fill)
         };
         delete player.celestials.pelle.rifts.death;
       }
@@ -1540,7 +1540,7 @@ export const devMigrations = {
     },
     player => {
       player.logic.resourceExchange.all.push(...Array.range(0, 3).map(() => ({
-        value: new Decimal(0),
+        value: new BE(0),
         exchangeRate: 1
       })));
     }

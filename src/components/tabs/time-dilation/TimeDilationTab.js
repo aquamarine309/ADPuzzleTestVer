@@ -9,16 +9,16 @@ export default {
   },
   data() {
     return {
-      tachyons: new Decimal(),
-      dilatedTime: new Decimal(),
-      dilatedTimeIncome: new Decimal(),
-      galaxyThreshold: new Decimal(),
-      baseGalaxies: 0,
-      totalGalaxies: 0,
-      tachyonGalaxyGain: 1,
+      tachyons: new BE(),
+      dilatedTime: new BE(),
+      dilatedTimeIncome: new BE(),
+      galaxyThreshold: new BE(),
+      baseGalaxies: new BE(),
+      totalGalaxies: new BE(),
+      tachyonGalaxyGain: 0,
       hasPelleDilationUpgrades: false,
       galaxyTimeEstimate: "",
-      maxDT: new Decimal(),
+      maxDT: new BE(),
       toMaxTooltip: "",
       isHovering: false,
     };
@@ -103,10 +103,10 @@ export default {
         this.dilatedTimeIncome = rawDTGain;
       }
       this.galaxyThreshold.copyFrom(player.dilation.nextThreshold);
-      this.baseGalaxies = player.dilation.baseTachyonGalaxies;
-      this.totalGalaxies = player.dilation.totalTachyonGalaxies;
+      this.baseGalaxies.copyFrom(player.dilation.baseTachyonGalaxies);
+      this.totalGalaxies.copyFrom(player.dilation.totalTachyonGalaxies);
       this.hasPelleDilationUpgrades = PelleRifts.paradox.milestones[0].canBeApplied;
-      if (this.baseGalaxies < 500 && DilationUpgrade.doubleGalaxies.isBought) {
+      if (this.baseGalaxies.lt(500) && DilationUpgrade.doubleGalaxies.isBought) {
         this.tachyonGalaxyGain = DilationUpgrade.doubleGalaxies.effectValue;
       } else {
         this.tachyonGalaxyGain = 1;

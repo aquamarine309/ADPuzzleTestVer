@@ -16,9 +16,9 @@ export default {
   data() {
     return {
       showRequirement: false,
-      maxTT: new Decimal(),
-      currTT: new Decimal(),
-      ttGen: new Decimal(),
+      maxTT: new BE(),
+      currTT: new BE(),
+      ttGen: new BE(),
     };
   },
   computed: {

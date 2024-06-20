@@ -1,7 +1,7 @@
 import { BitUpgradeState } from "../game-mechanics/index.js";
 import { GameDatabase } from "../secret-formula/game-database.js";
 
-import { DC } from "../constants.js";
+import { BEC } from "../constants.js";
 
 import { Quotes } from "./quotes.js";
 
@@ -48,7 +48,7 @@ export const Effarig = {
     }
   },
   get eternityCap() {
-    return this.isRunning && this.currentStage === EFFARIG_STAGES.ETERNITY ? DC.E50 : undefined;
+    return this.isRunning && this.currentStage === EFFARIG_STAGES.ETERNITY ? BEC.E50 : undefined;
   },
   get glyphLevelCap() {
     switch (this.currentStage) {
@@ -71,12 +71,12 @@ export const Effarig = {
     return countValuesFromBitmask(genEffectBitmask) + countValuesFromBitmask(nongenEffectBitmask);
   },
   get shardsGained() {
-    if (!TeresaUnlocks.effarig.canBeApplied) return 0;
-    return Math.floor(Math.pow(Currency.eternityPoints.exponent / 7500, this.glyphEffectAmount)) *
-      AlchemyResource.effarig.effectValue;
+    if (!TeresaUnlocks.effarig.canBeApplied) return BEC.D0;
+    return Currency.eternityPoints.value.log10().div(7500).pow(this.glyphEffectAmount).floor().times
+      (AlchemyResource.effarig.effectValue);
   },
   get maxRarityBoost() {
-    return 5 * Math.log10(Math.log10(Currency.relicShards.value + 10));
+    return Currency.relicShards.value.plus(10).log10().log10().times(5).clampMax(100).toNumber();
   },
   nerfFactor(power) {
     let c;
@@ -101,16 +101,16 @@ export const Effarig = {
     return 0.25 + 0.25 * this.nerfFactor(Currency.infinityPower.value);
   },
   get tickspeed() {
-    const base = 3 + Tickspeed.baseValue.reciprocal().log10();
-    return Decimal.pow10(Math.pow(base, this.tickDilation)).reciprocal();
+    const base = Tickspeed.baseValue.reciprocal().log10().plus(3);
+    return BE.pow10(base.pow(this.tickDilation)).reciprocal();
   },
   multiplier(mult) {
-    const base = new Decimal(mult).pLog10();
-    return Decimal.pow10(Math.pow(base, this.multDilation));
+    const base = new BE(mult).pLog10();
+    return BE.pow10(BE.pow(base, this.multDilation));
   },
   get bonusRG() {
     // Will return 0 if Effarig Infinity is uncompleted
-    return Math.floor(replicantiCap().pLog10() / LOG10_MAX_VALUE - 1);
+    return replicantiCap().pLog10().div(LOG10_MAX_VALUE).minus(1).floor();
   },
   quotes: Quotes.effarig,
   symbol: "Ϙ"

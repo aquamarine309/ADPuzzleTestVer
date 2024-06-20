@@ -28,7 +28,7 @@ class VRunUnlockState extends GameMechanicState {
 
   get canBeReduced() {
     return this.completions < this.config.values.length && this.completions !== 0 &&
-      new Decimal(this.reduction).neq(this.config.maxShardReduction(this.conditionBaseValue));
+      new BE(this.reduction).neq(this.config.maxShardReduction(this.conditionBaseValue));
   }
 
   get isReduced() {
@@ -73,13 +73,13 @@ class VRunUnlockState extends GameMechanicState {
   tryComplete() {
     const playerData = player.celestials.v;
     const value = this.config.currentValue();
-    if (this.config.condition() && Decimal.gte(value, playerData.runRecords[this.id])) {
+    if (this.config.condition() && BE.gte(value, playerData.runRecords[this.id])) {
       playerData.runRecords[this.id] = value;
       playerData.runGlyphs[this.id] = Glyphs.copyForRecords(Glyphs.active.filter(g => g !== null));
     }
 
     while (this.completions < this.config.values.length &&
-    Decimal.gte(playerData.runRecords[this.id], this.conditionValue)) {
+    BE.gte(playerData.runRecords[this.id], this.conditionValue)) {
       if (!V.isFlipped && this.config.isHard) continue;
       this.completions++;
       GameUI.notify.success(`You have unlocked V-Achievement

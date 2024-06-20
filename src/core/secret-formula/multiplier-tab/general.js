@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 import { MultiplierTabHelper } from "./helper-functions.js";
 import { MultiplierTabIcons } from "./icons.js";
@@ -19,7 +19,7 @@ export const general = {
       if (!dim) return Achievement(ach).canBeApplied ? Achievement(ach).effectOrDefault(1) : 1;
 
       if (dim?.length === 2) {
-        let totalEffect = DC.D1;
+        let totalEffect = BEC.D1;
         for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount(dim); tier++) {
           let singleEffect;
           if (ach === 43) singleEffect = Achievement(43).canBeApplied ? (1 + tier / 100) : 1;
@@ -60,17 +60,17 @@ export const general = {
 
       if (!dim) return TimeStudy(ts).canBeApplied ? TimeStudy(ts).effectOrDefault(1) : 1;
       if (dim?.length === 2) {
-        let totalEffect = DC.D1;
+        let totalEffect = BEC.D1;
         for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount(dim); tier++) {
           totalEffect = totalEffect.times((MultiplierTabHelper.timeStudyDimCheck(ts, `${dim}${tier}`) &&
               TimeStudy(ts).isBought) ? TimeStudy(ts).effectOrDefault(1) : 1);
         }
         return totalEffect;
       }
-      // The new Decimal() wrapper is necessary because, for some inexplicable reason, replicanti becomes
+      // The new BE() wrapper is necessary because, for some inexplicable reason, replicanti becomes
       // reactive through TS101 if that isn't there
       return (MultiplierTabHelper.timeStudyDimCheck(ts, dim) && TimeStudy(ts).isBought)
-        ? new Decimal(TimeStudy(ts).effectOrDefault(1)) : 1;
+        ? new BE(TimeStudy(ts).effectOrDefault(1)) : 1;
     },
     isActive: ts => TimeStudy(ts).isBought,
     icon: ts => {
@@ -90,12 +90,12 @@ export const general = {
       if (ic === 4) {
         const ic4Pow = InfinityChallenge(4).reward.effectValue;
         const mults = AntimatterDimensions.all.map(ad => ad.multiplier.pow((ic4Pow - 1) / ic4Pow));
-        if (dim?.length === 2) return mults.reduce((x, y) => x.times(y), DC.D1);
+        if (dim?.length === 2) return mults.reduce((x, y) => x.times(y), BEC.D1);
         return mults[Number(dim.charAt(2)) - 1];
       }
 
       if (dim?.length === 2) {
-        let totalEffect = DC.D1;
+        let totalEffect = BEC.D1;
         for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount(dim); tier++) {
           totalEffect = totalEffect.times((MultiplierTabHelper.ICDimCheck(ic, `${dim}${tier}`) &&
               InfinityChallenge(ic).isCompleted) ? InfinityChallenge(ic).reward.effectOrDefault(1) : 1);
@@ -103,7 +103,7 @@ export const general = {
         return totalEffect;
       }
       const num = Number(dim.charAt(2));
-      if (ic === 8) return (num > 1 && num < 8) ? InfinityChallenge(ic).reward.effectValue : DC.D1;
+      if (ic === 8) return (num > 1 && num < 8) ? InfinityChallenge(ic).reward.effectValue : BEC.D1;
       return InfinityChallenge(ic).reward.effectValue;
     },
     isActive: ic => InfinityChallenge(ic).isCompleted,
@@ -119,7 +119,7 @@ export const general = {
     name: ec => `Eternity Challenge ${ec}`,
     multValue: (ec, dim) => {
       if (dim?.length === 2) {
-        let totalEffect = DC.D1;
+        let totalEffect = BEC.D1;
         for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount(dim); tier++) {
           totalEffect = totalEffect.times(
             (MultiplierTabHelper.ECDimCheck(ec, `${dim}${tier}`) && EternityChallenge(ec).reward.canBeApplied)
@@ -128,7 +128,7 @@ export const general = {
         }
         return totalEffect;
       }
-      if (ec === 2) return dim === "ID1" ? EternityChallenge(ec).reward.effectValue : DC.D1;
+      if (ec === 2) return dim === "ID1" ? EternityChallenge(ec).reward.effectValue : BEC.D1;
       return EternityChallenge(ec).reward.effectOrDefault(1);
     },
     isActive: ec => EternityChallenge(ec).reward.canBeApplied,

@@ -202,7 +202,7 @@ class Validator extends BaseVisitor {
     let tree;
     switch (type) {
       case AUTOMATOR_VAR_TYPES.NUMBER:
-        varInfo.value = new Decimal(value);
+        varInfo.value = new BE(value);
         break;
       case AUTOMATOR_VAR_TYPES.STUDIES:
         tree = new TimeStudyTree(value);
@@ -264,7 +264,7 @@ class Validator extends BaseVisitor {
       this.addError(ctx, "Missing multiplier", "Provide a multiplier to set the autobuyer to");
       return undefined;
     }
-    ctx.$value = new Decimal(ctx.NumberLiteral[0].image);
+    ctx.$value = new BE(ctx.NumberLiteral[0].image);
     return ctx.$value;
   }
 
@@ -274,7 +274,7 @@ class Validator extends BaseVisitor {
       this.addError(ctx, "Missing amount", "Provide a threshold to set the autobuyer to");
       return undefined;
     }
-    ctx.$value = new Decimal(ctx.NumberLiteral[0].image);
+    ctx.$value = new BE(ctx.NumberLiteral[0].image);
     return ctx.$value;
   }
 
@@ -343,7 +343,7 @@ class Validator extends BaseVisitor {
 
   compareValue(ctx) {
     if (ctx.NumberLiteral) {
-      ctx.$value = new Decimal(ctx.NumberLiteral[0].image);
+      ctx.$value = new BE(ctx.NumberLiteral[0].image);
     } else if (ctx.Identifier) {
       if (!this.isValidVarFormat(ctx.Identifier[0], AUTOMATOR_VAR_TYPES.NUMBER)) {
         this.addError(ctx, `Constant ${ctx.Identifier[0].image} cannot be used for comparison`,

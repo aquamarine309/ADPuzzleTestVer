@@ -9,7 +9,7 @@ export default {
   },
   data() {
     return {
-      tachyonGain: new Decimal(0),
+      tachyonGain: new BE(0),
       isDoomed: false
     };
   },

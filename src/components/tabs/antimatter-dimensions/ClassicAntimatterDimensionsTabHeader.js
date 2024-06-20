@@ -9,8 +9,8 @@ export default {
     return {
       isSacrificeUnlocked: false,
       isSacrificeAffordable: false,
-      currentSacrifice: new Decimal(0),
-      sacrificeBoost: new Decimal(0),
+      currentSacrifice: new BE(0),
+      sacrificeBoost: new BE(0),
       disabledCondition: "",
     };
   },

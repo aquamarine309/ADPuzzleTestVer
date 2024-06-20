@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 export const logicUpgrades = [
   {
@@ -6,9 +6,9 @@ export const logicUpgrades = [
     id: 1,
     description: "Unlock a new Antimatter Dimension.",
     requirement: () => `Infinity in ${formatInt(1)} minute or less.`,
-    checkRequirement: () => Time.thisInfinityRealTime.totalMinutes <= 1,
+    checkRequirement: () => Time.thisInfinityRealTime.totalMinutes.lte(1),
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    hasFailed: () => Time.thisInfinityRealTime.totalMinutes > 1,
+    hasFailed: () => Time.thisInfinityRealTime.totalMinutes.gt(1),
     cost: 3e17,
     effect: 1
   },
@@ -30,12 +30,11 @@ export const logicUpgrades = [
     name: "Four a minute",
     id: 3,
     description: "Unlock a new Antimatter Dimension.",
-    requirement: () => `Reach ${format(DC.E404)} antimatter in any challenge.`,
-    checkRequirement: () => Player.isInAnyChallenge && Currency.antimatter.gte(DC.E404),
+    requirement: () => `Reach ${format(BEC.E1150)} antimatter in any challenge.`,
+    checkRequirement: () => Player.isInAnyChallenge && Currency.antimatter.gte(BEC.E1150),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     hasFailed: () => !Player.isInAnyChallenge,
-    cost: 6.9e69,
-    formatCost: value => format(value, 1),
+    cost: 1e105,
     effect: 1
   },
   {
@@ -83,9 +82,9 @@ export const logicUpgrades = [
     id: 8,
     description: "You can buy five times as many Dimension Boosts at once.",
     requirement: () => `Infinity with less than ${formatInt(18)} Dimension Boosts with 2+ Dimensions unlocked.`,
-    checkRequirement: () => DimBoost.purchasedBoosts < 18 && Puzzle.maxTier >= 2,
+    checkRequirement: () => DimBoost.purchasedBoosts.lt(18) && Puzzle.maxTier >= 2,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    hasFailed: () => DimBoost.purchasedBoosts >= 18 || Puzzle.maxTier < 2,
+    hasFailed: () => DimBoost.purchasedBoosts.gte(18) || Puzzle.maxTier < 2,
     cost: 1e21,
     effect: 5
   },
@@ -94,9 +93,9 @@ export const logicUpgrades = [
     id: 9,
     description: "Infinity no longer reset Exchange Resource.",
     requirement: () => `Infinity in ${formatInt(18)} seconds or less.`,
-    checkRequirement: () => Time.thisInfinityRealTime.totalSeconds <= 18,
+    checkRequirement: () => Time.thisInfinityRealTime.totalSeconds.lte(18),
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
-    hasFailed: () => Time.thisInfinityRealTime.totalSeconds > 18,
+    hasFailed: () => Time.thisInfinityRealTime.totalSeconds.gt(18),
     cost: 6e21
   },
   {

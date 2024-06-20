@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 import { PlayerProgress } from "../../player-progress.js";
 
 import { MultiplierTabHelper } from "./helper-functions.js";
@@ -27,7 +27,7 @@ export const AD = {
       return `${format(AntimatterDimensions.all
         .filter(ad => ad.isProducing)
         .map(ad => ad.multiplier)
-        .reduce((x, y) => x.times(y), DC.D1)
+        .reduce((x, y) => x.times(y), BEC.D1)
         .times(AntimatterDimension(maxTier).totalAmount), 2)}/sec`;
     },
     multValue: dim => {
@@ -36,14 +36,14 @@ export const AD = {
         if (!dim) return nc12Prod.eq(0) ? 1 : nc12Prod;
         return (MultiplierTabHelper.isNC12ProducingEven() ? dim % 2 === 0 : dim % 2 === 1)
           ? MultiplierTabHelper.multInNC12(dim)
-          : DC.D1;
+          : BEC.D1;
       }
       const mult = dim
         ? AntimatterDimension(dim).multiplier
         : AntimatterDimensions.all
           .filter(ad => ad.isProducing)
           .map(ad => ad.multiplier)
-          .reduce((x, y) => x.times(y), DC.D1);
+          .reduce((x, y) => x.times(y), BEC.D1);
       const highestDim = AntimatterDimension(
         EternityChallenge(7).isRunning ? 7 : MultiplierTabHelper.activeDimCount("AD")).totalAmount;
       return mult.times(highestDim).clampMin(1);
@@ -64,13 +64,13 @@ export const AD = {
     multValue: dim => {
       const getPurchases = ad => (Laitela.continuumActive
         ? AntimatterDimension(ad).continuumValue
-        : Math.floor(AntimatterDimension(ad).bought / 10)
+        : BE.floor(AntimatterDimension(ad).bought.div(10))
       );
-      if (dim) return Decimal.pow(AntimatterDimensions.buyTenMultiplier, getPurchases(dim));
+      if (dim) return BE.pow(AntimatterDimensions.buyTenMultiplier, getPurchases(dim));
       return AntimatterDimensions.all
         .filter(ad => ad.isProducing)
-        .map(ad => Decimal.pow(AntimatterDimensions.buyTenMultiplier, getPurchases(ad.tier)))
-        .reduce((x, y) => x.times(y), DC.D1);
+        .map(ad => BE.pow(AntimatterDimensions.buyTenMultiplier, getPurchases(ad.tier)))
+        .reduce((x, y) => x.times(y), BEC.D1);
     },
     isActive: () => !EternityChallenge(11).isRunning,
     icon: dim => MultiplierTabIcons.PURCHASE("AD", dim),
@@ -92,7 +92,7 @@ export const AD = {
     name: () => `DLC boost`,
     multValue: dim => {
       const mult = ShopPurchase.unlockDLC.currentMult;
-      return Decimal.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
+      return BE.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
     },
     isActive: () => ShopPurchase.unlockDLC.purchases > 0 && !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.IAP,
@@ -102,30 +102,30 @@ export const AD = {
     multValue: dim => (dim
       ? (dim <= MultiplierTabHelper.activeDimCount("AD")
         ? DimBoost.multiplierToNDTier(dim)
-        : DC.D1)
+        : BEC.D1)
       : AntimatterDimensions.all
         .filter(ad => ad.tier <= MultiplierTabHelper.activeDimCount("AD"))
         .map(ad => DimBoost.multiplierToNDTier(ad.tier))
-        .reduce((x, y) => x.times(y), DC.D1)),
+        .reduce((x, y) => x.times(y), BEC.D1)),
     isActive: true,
     icon: MultiplierTabIcons.DIMBOOST,
   },
   sacrifice: {
     name: "Sacrifice Multiplier",
-    multValue: dim => ((!dim || dim === 8) ? Sacrifice.totalBoost : DC.D1),
+    multValue: dim => ((!dim || dim === 8) ? Sacrifice.totalBoost : BEC.D1),
     isActive: dim => (!dim || dim === 8) && Sacrifice.totalBoost.gt(1) && !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.SACRIFICE("antimatter"),
   },
   achievementMult: {
     name: "Achievement Multiplier",
-    multValue: dim => Decimal.pow(Achievements.power, dim ? 1 : MultiplierTabHelper.activeDimCount("AD")),
+    multValue: dim => BE.pow(Achievements.power, dim ? 1 : MultiplierTabHelper.activeDimCount("AD")),
     isActive: () => !Pelle.isDoomed && !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.ACHIEVEMENT,
   },
   achievement: {
     name: "Achievement Rewards",
     multValue: dim => {
-      const allMult = DC.D1.timesEffectsOf(
+      const allMult = BEC.D1.timesEffectsOf(
         Achievement(26),
         Achievement(48),
         Achievement(56),
@@ -139,7 +139,7 @@ export const AD = {
         Achievement(92)
       );
 
-      const dimMults = Array.repeat(DC.D1, 9);
+      const dimMults = Array.repeat(BEC.D1, 9);
       for (let tier = 1; tier <= 8; tier++) {
         if (tier === 1) {
           dimMults[tier] = dimMults[tier].timesEffectsOf(
@@ -160,7 +160,7 @@ export const AD = {
       }
 
       if (dim) return allMult.times(dimMults[dim]);
-      let totalMult = DC.D1;
+      let totalMult = BEC.D1;
       for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount("AD"); tier++) {
         totalMult = totalMult.times(dimMults[tier]).times(allMult);
       }
@@ -174,7 +174,7 @@ export const AD = {
     name: "Exchange Multiplier",
     multValue: dim => {
       const mult = ResourceExchangeUpgrade.effectOrDefault(1);
-      return Decimal.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"))
+      return BE.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"))
     },
     isActive: () => !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.EXCHANGE,
@@ -182,12 +182,12 @@ export const AD = {
   infinityUpgrade: {
     name: dim => (dim ? `Infinity Upgrades (AD ${dim})` : "Infinity Upgrades"),
     multValue: dim => {
-      const allMult = DC.D1.timesEffectsOf(
+      const allMult = BEC.D1.timesEffectsOf(
         InfinityUpgrade.totalTimeMult,
         InfinityUpgrade.thisInfinityTimeMult,
       );
 
-      const dimMults = Array.repeat(DC.D1, 9);
+      const dimMults = Array.repeat(BEC.D1, 9);
       for (let tier = 1; tier <= 8; tier++) {
         if (tier === 1) {
           dimMults[tier] = dimMults[tier].timesEffectsOf(
@@ -201,7 +201,7 @@ export const AD = {
       }
 
       if (dim) return allMult.times(dimMults[dim]);
-      let totalMult = DC.D1;
+      let totalMult = BEC.D1;
       for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount("AD"); tier++) {
         totalMult = totalMult.times(dimMults[tier]).times(allMult);
       }
@@ -229,14 +229,14 @@ export const AD = {
   breakInfinityUpgrade: {
     name: "Break Infinity Upgrades",
     multValue: dim => {
-      const mult = DC.D1.timesEffectsOf(
+      const mult = BEC.D1.timesEffectsOf(
         BreakInfinityUpgrade.totalAMMult,
         BreakInfinityUpgrade.currentAMMult,
         BreakInfinityUpgrade.achievementMult,
         BreakInfinityUpgrade.slowestChallengeMult,
         BreakInfinityUpgrade.infinitiedMult
       );
-      return Decimal.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
+      return BE.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
     },
     isActive: () => player.break && !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.BREAK_INFINITY,
@@ -246,7 +246,7 @@ export const AD = {
     fakeValue: () => Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate),
     multValue: dim => {
       const mult = Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate).max(1);
-      return Decimal.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
+      return BE.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
     },
     isActive: () => Currency.infinityPower.value.gt(1) && !EternityChallenge(9).isRunning,
     icon: MultiplierTabIcons.INFINITY_POWER,
@@ -254,12 +254,12 @@ export const AD = {
   infinityChallenge: {
     name: dim => (dim ? `Infinity Challenges (AD ${dim})` : "Infinity Challenges"),
     multValue: dim => {
-      const allMult = DC.D1.timesEffectsOf(
+      const allMult = BEC.D1.timesEffectsOf(
         InfinityChallenge(3),
         InfinityChallenge(3).reward,
       );
 
-      const dimMults = Array.repeat(DC.D1, 9);
+      const dimMults = Array.repeat(BEC.D1, 9);
       for (let tier = 1; tier <= 8; tier++) {
         dimMults[tier] = dimMults[tier].timesEffectsOf(
           tier > 1 && tier < 8 ? InfinityChallenge(8).reward : null
@@ -267,7 +267,7 @@ export const AD = {
       }
 
       if (dim) return allMult.times(dimMults[dim]);
-      let totalMult = DC.D1;
+      let totalMult = BEC.D1;
       for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount("AD"); tier++) {
         totalMult = totalMult.times(dimMults[tier]).times(allMult);
       }
@@ -280,17 +280,17 @@ export const AD = {
   timeStudy: {
     name: dim => (dim ? `Time Studies (AD ${dim})` : "Time Studies"),
     multValue: dim => {
-      const allMult = DC.D1.timesEffectsOf(
+      const allMult = BEC.D1.timesEffectsOf(
         TimeStudy(91),
         TimeStudy(101),
         TimeStudy(161),
         TimeStudy(193),
       );
 
-      const dimMults = Array.repeat(DC.D1, 9);
+      const dimMults = Array.repeat(BEC.D1, 9);
       for (let tier = 1; tier <= 8; tier++) {
         // We don't want to double-count the base effect that TS31 boosts
-        const infinitiedMult = DC.D1.timesEffectsOf(
+        const infinitiedMult = BEC.D1.timesEffectsOf(
           AntimatterDimension(tier).infinityUpgrade,
           BreakInfinityUpgrade.infinitiedMult
         );
@@ -304,7 +304,7 @@ export const AD = {
       }
 
       if (dim) return allMult.times(dimMults[dim]);
-      let totalMult = DC.D1;
+      let totalMult = BEC.D1;
       for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount("AD"); tier++) {
         totalMult = totalMult.times(dimMults[tier]).times(allMult);
       }
@@ -315,7 +315,7 @@ export const AD = {
   },
   eternityChallenge: {
     name: "Eternity Challenges",
-    multValue: dim => Decimal.pow(EternityChallenge(10).effectValue,
+    multValue: dim => BE.pow(EternityChallenge(10).effectValue,
       dim ? 1 : MultiplierTabHelper.activeDimCount("AD")),
     isActive: () => EternityChallenge(10).isRunning,
     icon: MultiplierTabIcons.CHALLENGE("eternity"),
@@ -324,7 +324,7 @@ export const AD = {
     name: "Glyph Effects",
     multValue: dim => {
       const mult = getAdjustedGlyphEffect("powermult");
-      return Decimal.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
+      return BE.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
     },
     powValue: () => {
       const totalPow = getAdjustedGlyphEffect("powerpow") * getAdjustedGlyphEffect("effarigdimensions");
@@ -344,10 +344,10 @@ export const AD = {
     multValue: dim => {
       const mult = AlchemyResource.dimensionality.effectOrDefault(1)
         .times(Currency.realityMachines.value.powEffectOf(AlchemyResource.force));
-      return Decimal.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
+      return BE.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
     },
     powValue: dim => {
-      const basePow = AlchemyResource.power.effectOrDefault(1) * Ra.momentumValue;
+      const basePow = Ra.momentumValue.times(AlchemyResource.power.effectOrDefault(1));
       // Not entirely accurate, but returns the geometric mean of all producing dimensions (which should be close)
       // Set to default value of 1 in non-unlocked case (arguably some sort of effect-or-default would be better,
       // but I don't want to risk breaking things).
@@ -361,16 +361,16 @@ export const AD = {
           inflationPow = Math.pow(1.05, inflated / AntimatterDimensions.all.countWhere(ad => ad.isProducing));
         }
       }
-      return basePow * inflationPow;
+      return basePow.times(inflationPow);
     },
     isActive: () => Ra.unlocks.unlockGlyphAlchemy.canBeApplied && !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.ALCHEMY,
   },
   pelle: {
     name: "Pelle Upgrades",
-    multValue: dim => Decimal.pow(PelleUpgrade.antimatterDimensionMult.effectOrDefault(1),
+    multValue: dim => BE.pow(PelleUpgrade.antimatterDimensionMult.effectOrDefault(1),
       dim ? 1 : MultiplierTabHelper.activeDimCount("AD")),
-    powValue: () => PelleRifts.paradox.effectOrDefault(DC.D1).toNumber(),
+    powValue: () => PelleRifts.paradox.effectOrDefault(BEC.D1).toNumber(),
     isActive: () => Pelle.isDoomed && !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.PELLE,
   },
@@ -378,7 +378,7 @@ export const AD = {
     name: "Shop Tab Purchases",
     multValue: dim => {
       const mult = ShopPurchase.dimPurchases.currentMult;
-      return Decimal.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
+      return BE.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
     },
     isActive: () => ShopPurchaseData.totalSTD > 0 && !EternityChallenge(11).isRunning,
     icon: MultiplierTabIcons.IAP,
@@ -391,9 +391,9 @@ export const AD = {
     displayOverride: dim => {
       const formatFn = num => (num.gte(1) ? formatX(num, 2, 2) : `/${format(num.reciprocal(), 2, 2)}`);
 
-      let dimMults = Array.repeat(DC.D1, 9);
+      let dimMults = Array.repeat(BEC.D1, 9);
       if (NormalChallenge(2).isRunning) {
-        dimMults = Array.repeat(new Decimal(player.chall2Pow), 9);
+        dimMults = Array.repeat(new BE(player.chall2Pow), 9);
       }
       if (NormalChallenge(3).isRunning) {
         dimMults[1] = dimMults[1].times(player.chall3Pow);
@@ -406,7 +406,7 @@ export const AD = {
       }
 
       if (dim) return formatFn(dimMults[dim]);
-      let totalMult = DC.D1;
+      let totalMult = BEC.D1;
       for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount("AD"); tier++) {
         totalMult = totalMult.times(dimMults[tier]);
       }
@@ -414,10 +414,10 @@ export const AD = {
     },
     // This and displayOverride contain largely the same code
     multValue: dim => {
-      let dimMults = Array.repeat(DC.D1, 9);
+      let dimMults = Array.repeat(BEC.D1, 9);
       // Do not change this to an else-if, as NC2/NC3 need to be enterable simultaneously in IC1
       if (NormalChallenge(2).isRunning) {
-        dimMults = Array.repeat(new Decimal(player.chall2Pow), 9);
+        dimMults = Array.repeat(new BE(player.chall2Pow), 9);
       }
       if (NormalChallenge(3).isRunning) {
         dimMults[1] = dimMults[1].times(player.chall3Pow);
@@ -434,15 +434,15 @@ export const AD = {
         // We have to hide this when producing odd or when referencing a dimension which has no amount, but then we
         // also need to total up the multipliers when on the grouped layout. No amount evaluates to zero, so in all
         // those cases we use 1 instead in order to calculate properly
-        if (!MultiplierTabHelper.isNC12ProducingEven()) return DC.D1;
-        if (dim) return dimMults[dim].neq(0) ? dimMults[dim] : DC.D1;
-        let totalNC12 = DC.D1;
+        if (!MultiplierTabHelper.isNC12ProducingEven()) return BEC.D1;
+        if (dim) return dimMults[dim].neq(0) ? dimMults[dim] : BEC.D1;
+        let totalNC12 = BEC.D1;
         for (let d = 2; d <= 6; d += 2) totalNC12 = totalNC12.times(dimMults[d].clampMin(1));
         return totalNC12;
       }
 
       if (dim) return dimMults[dim];
-      let totalMult = DC.D1;
+      let totalMult = BEC.D1;
       for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount("AD"); tier++) {
         totalMult = totalMult.times(dimMults[tier]);
       }
@@ -454,7 +454,7 @@ export const AD = {
   nerfIC: {
     name: dim => (dim ? `Infinity Challenge Nerf (AD ${dim})` : "Infinity Challenge Nerf"),
     multValue: dim => {
-      let dimMults = Array.repeat(DC.D1, 9);
+      let dimMults = Array.repeat(BEC.D1, 9);
       if (InfinityChallenge(4).isRunning) {
         for (let tier = 1; tier <= 8; tier++) {
           if (player.postC4Tier !== tier) {
@@ -462,13 +462,13 @@ export const AD = {
           }
         }
       } else if (InfinityChallenge(6).isRunning) {
-        dimMults = Array.repeat(DC.D1.dividedByEffectOf(InfinityChallenge(6)), 9);
+        dimMults = Array.repeat(BEC.D1.dividedByEffectOf(InfinityChallenge(6)), 9);
       } else if (InfinityChallenge(8).isRunning) {
-        dimMults = Array.repeat(DC.D1.timesEffectsOf(InfinityChallenge(8)), 9);
+        dimMults = Array.repeat(BEC.D1.timesEffectsOf(InfinityChallenge(8)), 9);
       }
 
       if (dim) return dimMults[dim];
-      let totalMult = DC.D1;
+      let totalMult = BEC.D1;
       for (let tier = 1; tier <= MultiplierTabHelper.activeDimCount("AD"); tier++) {
         totalMult = totalMult.times(dimMults[tier]);
       }

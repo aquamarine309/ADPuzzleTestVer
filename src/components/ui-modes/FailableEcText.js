@@ -2,8 +2,8 @@ export default {
   name: "FailableEcText",
   data() {
     return {
-      currentResource: new Decimal(0),
-      maximumResource: new Decimal(0),
+      currentResource: new BE(0),
+      maximumResource: new BE(0),
       currentEternityChallengeId: 0
     };
   },
@@ -44,9 +44,9 @@ export default {
         if (this.currentEternityChallengeId === 4) {
           this.currentResource.copyFrom(Currency.infinities);
         } else {
-          this.currentResource = new Decimal(Time.thisEternity.totalSeconds);
+          this.currentResource = new BE(Time.thisEternity.totalSeconds);
         }
-        this.maximumResource = new Decimal(EternityChallenge.current.config.restriction(
+        this.maximumResource = new BE(EternityChallenge.current.config.restriction(
           EternityChallenge.current.completions));
       }
     },

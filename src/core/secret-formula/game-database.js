@@ -2,7 +2,6 @@ import { multiplierTabTree, multiplierTabValues } from "./multiplier-tab/index.j
 
 import { achievements } from "./achievements/index.js";
 import { awayProgressTypes } from "./away-progress-types.js";
-import { catchupResources } from "./catchup-resources.js";
 import { celestials } from "./celestials/index.js";
 import { challenges } from "./challenges/index.js";
 import { changelog } from "./changelog.js";
@@ -14,7 +13,6 @@ import { h2p } from "./h2p.js";
 import { infinity } from "./infinity/index.js";
 import { logic } from "./logic/index.js";
 import { news } from "./news.js";
-import { progressStages } from "./progress-checker.js";
 import { reality } from "./reality/index.js";
 import { shopPurchases } from "./shop-purchases.js";
 import { sidebarResources } from "./sidebar-resources.js";
@@ -25,7 +23,6 @@ import { tabs } from "./tabs.js";
 export const GameDatabase = {
   achievements,
   awayProgressTypes,
-  catchupResources,
   celestials,
   challenges,
   changelog,
@@ -39,7 +36,6 @@ export const GameDatabase = {
   multiplierTabTree,
   multiplierTabValues,
   news,
-  progressStages,
   reality,
   sidebarResources,
   shopPurchases,

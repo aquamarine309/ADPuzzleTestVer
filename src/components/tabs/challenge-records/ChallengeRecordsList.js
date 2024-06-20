@@ -16,16 +16,16 @@ export default {
   },
   computed: {
     timeSum() {
-      return this.times.sum();
+      return this.times.reduce(BE.sumReducer);
     },
     completedAllChallenges() {
-      return this.timeSum < Number.MAX_VALUE;
+      return this.timeSum.lt(BE.NUMBER_MAX_VALUE);
     }
   },
   methods: {
     timeDisplayShort,
     completionString(time) {
-      return time < Number.MAX_VALUE
+      return time.lt(BE.NUMBER_MAX_VALUE)
         ? `record time: ${timeDisplayShort(time)}`
         : "has not yet been completed";
     }

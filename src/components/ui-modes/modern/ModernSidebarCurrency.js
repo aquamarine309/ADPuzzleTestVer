@@ -4,7 +4,7 @@ export default {
     return {
       sidebarID: 0,
       resourceName: "",
-      resourceValue: new Decimal(0)
+      resourceValue: new BE(0)
     };
   },
   computed: {

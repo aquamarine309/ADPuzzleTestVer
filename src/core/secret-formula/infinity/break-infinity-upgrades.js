@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 function rebuyable(config) {
   const effectFunction = config.effect || (x => x);
@@ -38,7 +38,7 @@ export const breakInfinityUpgrades = {
     id: "currentMult",
     cost: 5e4,
     description: "Antimatter Dimensions gain a multiplier based on current antimatter",
-    effect: () => Math.pow(Currency.antimatter.exponent + 1, 0.5),
+    effect: () => Currency.antimatter.value.pLog10().plus(1).pow(0.5),
     formatEffect: value => formatX(value, 2, 2)
   },
   galaxyBoost: {
@@ -51,7 +51,7 @@ export const breakInfinityUpgrades = {
     id: "infinitiedMult",
     cost: 1e5,
     description: "Antimatter Dimensions gain a multiplier based on Infinities",
-    effect: () => 1 + Currency.infinitiesTotal.value.pLog10() * 10,
+    effect: () => Currency.infinitiesTotal.value.pLog10().times(10).plus(1),
     formatEffect: value => formatX(value, 2, 2)
   },
   achievementMult: {
@@ -65,10 +65,10 @@ export const breakInfinityUpgrades = {
     id: "challengeMult",
     cost: 1e7,
     description: "Antimatter Dimensions gain a multiplier based on slowest challenge run",
-    effect: () => Decimal.clampMin(50 / Time.worstChallenge.totalMinutes, 1),
+    effect: () => BE.clampMin(BE.div(50, Time.worstChallenge.totalMinutes), 1),
     formatEffect: value => formatX(value, 2, 2),
     hasCap: true,
-    cap: DC.D3E4
+    cap: BEC.E10
   },
   infinitiedGen: {
     id: "infinitiedGeneration",
@@ -77,16 +77,16 @@ export const breakInfinityUpgrades = {
     effect: () => player.records.bestInfinity.time,
     formatEffect: value => {
       if (value === Number.MAX_VALUE && !Pelle.isDoomed) return "No Infinity generation";
-      let infinities = DC.D1;
+      let infinities = BEC.D1;
       infinities = infinities.timesEffectsOf(
         RealityUpgrade(5),
         RealityUpgrade(7),
         Ra.unlocks.continuousTTBoost.effects.infinity
       );
       infinities = infinities.times(getAdjustedGlyphEffect("infinityinfmult"));
-      const timeStr = Time.bestInfinity.totalMilliseconds <= 50
+      const timeStr = Time.bestInfinity.totalMilliseconds.lte(50)
         ? `${TimeSpan.fromMilliseconds(100).toStringShort()} (capped)`
-        : `${Time.bestInfinity.times(2).toStringShort()}`;
+        : `${Time.bestInfinity.times(BEC.D2).toStringShort()}`;
       return `${quantify("Infinity", infinities)} every ${timeStr}`;
     }
   },

@@ -236,7 +236,7 @@ function getGlyphLevelSources() {
   let eternityPoints = Player.canEternity
     ? Currency.eternityPoints.value.plus(gainedEternityPoints())
     : Currency.eternityPoints.value;
-  eternityPoints = Decimal.max(player.records.thisReality.maxEP, eternityPoints);
+  eternityPoints = BE.max(player.records.thisReality.maxEP, eternityPoints);
   const epCoeff = 0.016;
   const epBase = Math.pow(Math.max(1, eternityPoints.pLog10()), 0.5) * epCoeff;
   const replPow = 0.4 + getAdjustedGlyphEffect("replicationglyphlevel");

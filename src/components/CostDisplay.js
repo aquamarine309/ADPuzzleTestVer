@@ -1,4 +1,4 @@
-import { isDecimal, isFunction, isNumber } from "../utility/index.js";
+import { isFunction, isNumber, isBE } from "../utility/index.js";
 
 /* eslint-disable no-empty-function */
 export default {
@@ -43,9 +43,9 @@ export default {
           this.cost = cost;
           return;
         }
-
-        if (isDecimal(cost)) {
-          this.cost = Decimal.fromDecimal(cost);
+        
+        if (isBE(cost)) {
+          this.cost = BE.fromBE(cost);
           return;
         }
 
@@ -60,9 +60,9 @@ export default {
           this.updateFunction = () => this.cost = cost();
           return;
         }
-
-        if (isDecimal(value)) {
-          this.cost = Decimal.fromDecimal(value);
+        
+        if (isBE(value)) {
+          this.cost = BE.fromBE(value);
           this.updateFunction = () => this.cost.copyFrom(cost());
           return;
         }

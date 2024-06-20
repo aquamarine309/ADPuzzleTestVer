@@ -1,5 +1,5 @@
 import { RebuyableMechanicState } from "../../game-mechanics/rebuyable.js";
-
+import { BEC } from "../../constants.js";
 import { PelleRifts } from "./rifts.js";
 
 export const GalaxyGenerator = {
@@ -22,17 +22,17 @@ export const GalaxyGenerator = {
   },
 
   get galaxies() {
-    return this.generatedGalaxies - this.spentGalaxies;
+    return this.generatedGalaxies.minus(this.spentGalaxies);
   },
 
   get gainPerSecond() {
-    if (!Pelle.hasGalaxyGenerator) return 0;
-    return new Decimal(GalaxyGeneratorUpgrades.additive.effectValue).timesEffectsOf(
+    if (!Pelle.hasGalaxyGenerator) return BEC.D0;
+    return new BE(GalaxyGeneratorUpgrades.additive.effectValue).timesEffectsOf(
       GalaxyGeneratorUpgrades.multiplicative,
       GalaxyGeneratorUpgrades.antimatterMult,
       GalaxyGeneratorUpgrades.IPMult,
       GalaxyGeneratorUpgrades.EPMult,
-    ).toNumber();
+    );
   },
 
   get capObj() {
@@ -40,7 +40,7 @@ export const GalaxyGenerator = {
   },
 
   get generationCap() {
-    return this.capObj ? this.capObj.cap : Infinity;
+    return this.capObj ? this.capObj.cap : BE.MAX_VALUE;
   },
 
   get capRift() {
@@ -92,8 +92,9 @@ export const GalaxyGenerator = {
       }
 
     }
-    player.celestials.pelle.galaxyGenerator.generatedGalaxies += this.gainPerSecond * diff / 1000;
-    player.celestials.pelle.galaxyGenerator.generatedGalaxies = Math.min(
+    player.celestials.pelle.galaxyGenerator.generatedGalaxies = 
+     player.celestials.pelle.galaxyGenerator.generatedGalaxies.plus(this.gainPerSecond.times(diff / 1000));
+    player.celestials.pelle.galaxyGenerator.generatedGalaxies = BE.min(
       player.celestials.pelle.galaxyGenerator.generatedGalaxies,
       this.generationCap
     );

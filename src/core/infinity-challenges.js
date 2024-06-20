@@ -140,7 +140,7 @@ export const InfinityChallenges = {
   },
   /**
    * Displays a notification if the antimatter gained will surpass the next unlockAM requirement.
-   * @param value {Decimal} - total antimatter
+   * @param value {BE} - total antimatter
    */
   notifyICUnlock(value) {
     // Disable the popup if the user will automatically complete the IC.

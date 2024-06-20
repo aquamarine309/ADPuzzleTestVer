@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 export const GlyphCombiner = Object.freeze({
   /**
@@ -21,10 +21,10 @@ export const GlyphCombiner = Object.freeze({
    */
   addExponents: x => x.reduce(Number.sumReducer, 1 - x.length),
   /**
-   * @param {Decimal[]} x
-   * @returns {Decimal}
+   * @param {BE[]} x
+   * @returns {BE}
    */
-  multiplyDecimal: x => x.reduce(Decimal.prodReducer, DC.D1)
+  multiplyDecimal: x => x.reduce(BE.prodReducer, BEC.D1)
 });
 
 export const glyphEffects = {
@@ -110,8 +110,8 @@ export const glyphEffects = {
     totalDesc: "Dilated Time gain ×{value}",
     shortDesc: "DT ×{value}",
     effect: (level, strength) => (GlyphAlteration.isEmpowered("dilation")
-      ? DC.D1_005.pow(level).times(15)
-      : Decimal.pow(level * strength, 1.5).times(2)),
+      ? BEC.D1_005.pow(level).times(15)
+      : BE.pow(level * strength, 1.5).times(2)),
     formatEffect: x => format(x, 2, 1),
     combine: GlyphCombiner.multiplyDecimal,
     alteredColor: () => GlyphAlteration.getEmpowermentColor("dilation"),
@@ -190,8 +190,8 @@ export const glyphEffects = {
     genericDesc: "Replication speed multiplier",
     shortDesc: "Replication speed ×{value}",
     effect: (level, strength) => (GlyphAlteration.isEmpowered("replication")
-      ? DC.D1_007.pow(level).times(10)
-      : Decimal.times(level, strength).times(3)),
+      ? BEC.D1_007.pow(level).times(10)
+      : BE.times(level, strength).times(3)),
     formatEffect: x => format(x, 2, 1),
     combine: GlyphCombiner.multiplyDecimal,
     alteredColor: () => GlyphAlteration.getEmpowermentColor("replication"),
@@ -220,17 +220,17 @@ export const glyphEffects = {
     isGenerated: true,
     glyphTypes: ["replication"],
     singleDesc: () => (GlyphAlteration.isAdded("replication")
-      ? `Multiply Dilated Time \n[and Replicanti speed] by \n+{value} per ${format(DC.E10000)} replicanti`
-      : `Multiply Dilated Time gain by \n+{value} per ${format(DC.E10000)} replicanti`),
+      ? `Multiply Dilated Time \n[and Replicanti speed] by \n+{value} per ${format(BEC.E10000)} replicanti`
+      : `Multiply Dilated Time gain by \n+{value} per ${format(BEC.E10000)} replicanti`),
     totalDesc: () => (GlyphAlteration.isAdded("replication")
-      ? `Multiply Dilated Time and Replication speed by +{value} per ${format(DC.E10000)} replicanti`
-      : `Multiply Dilated Time gain by +{value} per ${format(DC.E10000)} replicanti`),
+      ? `Multiply Dilated Time and Replication speed by +{value} per ${format(BEC.E10000)} replicanti`
+      : `Multiply Dilated Time gain by +{value} per ${format(BEC.E10000)} replicanti`),
     genericDesc: () => (GlyphAlteration.isAdded("replication")
       ? "Dilated Time+Replicanti mult from replicanti"
       : "Dilated Time gain multiplier from replicanti"),
     shortDesc: () => (GlyphAlteration.isAdded("replication")
-      ? `×DT and repl. by +{value} per ${format(DC.E10000)} replicanti`
-      : `×DT by +{value} per ${format(DC.E10000)} replicanti`),
+      ? `×DT and repl. by +{value} per ${format(BEC.E10000)} replicanti`
+      : `×DT by +{value} per ${format(BEC.E10000)} replicanti`),
     effect: (level, strength) => 0.0003 * Math.pow(level, 0.3) * Math.pow(strength, 0.65),
     formatEffect: x => format(10000 * x, 2, 2),
     formatSingleEffect: x => format(10000 * x, 2, 2),
@@ -340,8 +340,8 @@ export const glyphEffects = {
     genericDesc: "Infinity gain multiplier",
     shortDesc: "Infinities ×{value}",
     effect: (level, strength) => (GlyphAlteration.isEmpowered("infinity")
-      ? DC.D1_02.pow(level)
-      : Decimal.pow(level * strength, 1.5).times(2)),
+      ? BEC.D1_02.pow(level)
+      : BE.pow(level * strength, 1.5).times(2)),
     formatEffect: x => format(x, 2, 1),
     combine: GlyphCombiner.multiplyDecimal,
     alteredColor: () => GlyphAlteration.getEmpowermentColor("infinity"),
@@ -382,8 +382,8 @@ export const glyphEffects = {
     singleDesc: "Antimatter Dimension multipliers ×{value}",
     shortDesc: "AD ×{value}",
     effect: (level, strength) => (GlyphAlteration.isEmpowered("power")
-      ? DC.D11111.pow(level * 220)
-      : Decimal.pow(level * strength * 10, level * strength * 10)),
+      ? BEC.D11111.pow(level * 220)
+      : BE.pow(level * strength * 10, level * strength * 10)),
     formatEffect: x => formatPostBreak(x, 2, 0),
     combine: GlyphCombiner.multiplyDecimal,
     alteredColor: () => GlyphAlteration.getEmpowermentColor("power"),
@@ -593,7 +593,7 @@ export const glyphEffects = {
     totalDesc: "Eternity Point gain / {value}",
     shortDesc: "EP / {value}",
     // Divides e666.6 per glyph
-    effect: level => Decimal.pow10(-level / 10),
+    effect: level => BE.pow10(-level / 10),
     formatEffect: x => format(x.reciprocal()),
     combine: GlyphCombiner.multiplyDecimal,
   },
@@ -679,7 +679,7 @@ export const glyphEffects = {
     // The EP value for this is entirely encoded in rarity, but level needs to be present to
     // make sure the proper parameter is being used. The actual glyph level shouldn't do anything.
     // eslint-disable-next-line no-unused-vars
-    effect: (level, strength) => Decimal.pow10(1e6 * strengthToRarity(strength)),
+    effect: (level, strength) => BE.pow10(1e6 * strengthToRarity(strength)),
     formatEffect: x => formatPostBreak(x, 2),
     combine: GlyphCombiner.multiplyDecimal,
     enabledInDoomed: true,

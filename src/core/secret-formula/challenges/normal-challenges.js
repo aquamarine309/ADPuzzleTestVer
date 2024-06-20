@@ -1,8 +1,8 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 // I tried to make it relatively simple to add more locks; the idea is that you give it a value here
 // and then it's all handled in the backend
-// If you need to lock a challenge, set lockedAt to a new Decimal variable reflective of a desired number of Infinities
+// If you need to lock a challenge, set lockedAt to a new BE variable reflective of a desired number of Infinities
 // They will always be unlocked post-eternity
 
 export const normalChallenges = [
@@ -17,7 +17,7 @@ export const normalChallenges = [
     },
     name: "1st Antimatter Dimension Autobuyer",
     reward: "Upgradeable 1st Antimatter Dimension Autobuyer",
-    lockedAt: DC.D0,
+    lockedAt: BEC.D0,
   },
   {
     id: 2,
@@ -28,7 +28,7 @@ export const normalChallenges = [
       `Production gradually returns to normal over ${formatInt(3)} minutes.`,
     name: "2nd Antimatter Dimension Autobuyer",
     reward: "Upgradeable 2nd Antimatter Dimension Autobuyer",
-    lockedAt: DC.D0,
+    lockedAt: BEC.D0,
   },
   {
     id: 3,
@@ -39,7 +39,7 @@ export const normalChallenges = [
         This multiplier decreases based on unlocked dimensions and resets after Dimension Boosts and Antimatter Galaxies.`,
     name: "3rd Antimatter Dimension",
     reward: "Upgradeable 3rd Antimatter Dimension Autobuyer",
-    lockedAt: DC.D0,
+    lockedAt: BEC.D0,
   },
   {
     id: 4,
@@ -49,7 +49,7 @@ export const normalChallenges = [
       "like a sacrifice without the boost.",
     name: "4th Antimatter Dimension Autobuyer",
     reward: "Upgradeable 4th Antimatter Dimension Autobuyer",
-    lockedAt: DC.D0,
+    lockedAt: BEC.D0,
   },
   {
     id: 5,
@@ -59,7 +59,7 @@ export const normalChallenges = [
       () => `the Tickspeed purchase multiplier starts at ${formatX(1.080, 0, 3)} instead of ${formatX(1.1245, 0, 3)}.`,
     name: "5th Antimatter Dimension Autobuyer",
     reward: "Upgradeable 5th Antimatter Dimension Autobuyer",
-    lockedAt: DC.D0,
+    lockedAt: BEC.D0,
   },
   {
     id: 6,
@@ -69,7 +69,7 @@ export const normalChallenges = [
       "below it instead of antimatter. Antimatter Dimension prices are modified.",
     name: "6th Antimatter Dimension Autobuyer",
     reward: "Upgradeable 6th Antimatter Dimension Autobuyer",
-    lockedAt: DC.D0,
+    lockedAt: BEC.D0,
   },
   {
     id: 7,
@@ -80,7 +80,7 @@ export const normalChallenges = [
         ${formatX(0.3, 1, 1)} per Dimension Boost, to a maximum of ${formatX(7)}, and is unaffected by any upgrades.`,
     name: "7th Antimatter Dimension Autobuyer",
     reward: "Upgradeable 7th Antimatter Dimension Autobuyer",
-    lockedAt: DC.D0,
+    lockedAt: BEC.D0,
   },
   {
     id: 8,
@@ -90,7 +90,7 @@ export const normalChallenges = [
       Sacrifice resets antimatter and all Antimatter Dimensions, but also gives a significantly stronger multiplier.`,
     name: "8th Antimatter Dimension Autobuyer",
     reward: "Upgradeable 8th Antimatter Dimension Autobuyer",
-    lockedAt: DC.D0,
+    lockedAt: BEC.D0,
   },
   {
     id: 9,
@@ -100,7 +100,7 @@ export const normalChallenges = [
       "everything else of equal cost will increase to its next cost step.",
     name: "Tickspeed Autobuyer",
     reward: "Upgradeable Tickspeed Autobuyer",
-    lockedAt: DC.D0,
+    lockedAt: BEC.D0,
   },
   {
     id: 10,
@@ -110,7 +110,7 @@ export const normalChallenges = [
       "and Antimatter Galaxy costs are modified.",
     name: "Automated Dimension Boosts",
     reward: "Dimension Boosts Autobuyer",
-    lockedAt: DC.D16,
+    lockedAt: BEC.D16,
   },
   {
     id: 11,
@@ -120,7 +120,7 @@ export const normalChallenges = [
       "Dimension. If it exceeds your antimatter, it will Dimension Boost without giving the bonus.",
     name: "Automated Antimatter Galaxies",
     reward: "Antimatter Galaxies and their Autobuyer",
-    lockedAt: DC.D16,
+    lockedAt: BEC.D16,
   },
   {
     id: 12,
@@ -131,6 +131,6 @@ export const normalChallenges = [
       The 2nd, 4th, and 6th Dimensions are made stronger to compensate.`,
     name: "Automated Big Crunches",
     reward: "Big Crunches Autobuyer",
-    lockedAt: DC.D16,
+    lockedAt: BEC.D16,
   }
 ];

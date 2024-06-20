@@ -11,9 +11,9 @@ function formatInt(value) {
 
 function formatMachines(realPart, imagPart) {
   const parts = [];
-  if (Decimal.neq(realPart, 0)) parts.push(format(realPart, 2));
-  if (Decimal.neq(imagPart, 0)) parts.push(`${format(imagPart, 2, 2)}i`);
-  if (Decimal.eq(realPart, 0) && Decimal.eq(imagPart, 0)) return format(0);
+  if (BE.neq(realPart, 0)) parts.push(format(realPart, 2));
+  if (BE.neq(imagPart, 0)) parts.push(`${format(imagPart, 2, 2)}i`);
+  if (BE.eq(realPart, 0) && BE.eq(imagPart, 0)) return format(0);
   return parts.join(" + ");
 }
 

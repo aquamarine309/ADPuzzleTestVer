@@ -31,9 +31,9 @@ window.GlobalErrorHandler = {
         clear(id);
       }
     }
-    clearHandles(setInterval, clearInterval);
-    clearHandles(setTimeout, clearTimeout);
-    clearHandles(requestAnimationFrame, cancelAnimationFrame);
+    //clearHandles(setInterval, clearInterval);
+    //clearHandles(setTimeout, clearTimeout);
+    //clearHandles(requestAnimationFrame, cancelAnimationFrame);
   },
   crash(message) {
     if (window.GameUI !== undefined && GameUI.initialized) {

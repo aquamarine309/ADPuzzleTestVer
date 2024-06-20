@@ -3,7 +3,7 @@ import { GameDatabase } from "./secret-formula/game-database.js";
 /**
  * Multiple glyph effects are combined into a summary object of this type.
  * @typedef {Object} GlyphEffectConfig__combine_result
- * @property {number | Decimal} value The final effect value (boost to whatever)
+ * @property {number | BE} value The final effect value (boost to whatever)
  * @property {boolean} capped whether or not a cap or limit was applied (softcaps, etc)
 */
 class GlyphEffectConfig {
@@ -18,13 +18,13 @@ class GlyphEffectConfig {
   * @param {string} [setup.genericDesc] (Defaults to singleDesc with {value} replaced with "x") Generic
   *  description of the glyph's effect
   * @param {string} [setup.shortDesc] Short and condensed version of the glyph's effect for use in the Modal
-  * @param {(function(number, number): number) | function(number, number): Decimal} [setup.effect] Calculate effect
+  * @param {(function(number, number): number) | function(number, number): BE} [setup.effect] Calculate effect
   *  value from level and strength
-  * @param {function(number | Decimal): string} [setup.formatEffect] Format the effect's value into a string. Defaults
+  * @param {function(number | BE): string} [setup.formatEffect] Format the effect's value into a string. Defaults
   *  to format(x, 3, 3)
-  * @param {function(number | Decimal): string} [setup.formatSingleEffect] Format the effect's value into a string, used
+  * @param {function(number | BE): string} [setup.formatSingleEffect] Format the effect's value into a string, used
   *  for effects which need to display different values in single values versus combined values (eg. power effects)
-  * @param {function(number | Decimal): number | Decimal} [setup.softcap] An optional softcap to be applied after glyph
+  * @param {function(number | BE): number | BE} [setup.softcap] An optional softcap to be applied after glyph
   *  effects are combined.
   * @param {((function(number[]): GlyphEffectConfig__combine_result) | function(number[]): number)} setup.combine
   *  Specification of how multiple glyphs combine. Can be GlyphCombiner.add or GlyphCombiner.multiply for most glyphs.
@@ -51,16 +51,16 @@ class GlyphEffectConfig {
     /** @type {string} shortened description for use in glyph choice info modal */
     this._shortDesc = setup.shortDesc;
     /**
-    * @type {(function(number, number): number) | function(number, number): Decimal} Calculate effect
+    * @type {(function(number, number): number) | function(number, number): BE} Calculate effect
     *  value from level and strength
     */
     this.effect = setup.effect;
     /**
-    * @type {function(number | Decimal): string} formatting function for the effect
+    * @type {function(number | BE): string} formatting function for the effect
     * (just the number conversion). Combined with the description strings to make descriptions
     */
     this.formatEffect = setup.formatEffect ?? (x => format(x, 3, 3));
-    /** @type {function(number | Decimal): string} See info about setup, above */
+    /** @type {function(number | BE): string} See info about setup, above */
     this.formatSingleEffect = setup.formatSingleEffect || this.formatEffect;
     /**
     *  @type {function(number[]): GlyphEffectConfig__combine_result} combine Function that combines
@@ -70,11 +70,11 @@ class GlyphEffectConfig {
     /** @type {function(number)} conversion function to produce altered glyph effect */
     this.conversion = setup.conversion;
     /**
-    * @type {function(number | Decimal): string} formatSecondaryEffect formatting function for
+    * @type {function(number | BE): string} formatSecondaryEffect formatting function for
     * the secondary effect (if there is one)
     */
     this.formatSecondaryEffect = setup.formatSecondaryEffect || (x => format(x, 3, 3));
-    /** @type {function(number | Decimal): string} See info about setup, above */
+    /** @type {function(number | BE): string} See info about setup, above */
     this.formatSingleSecondaryEffect = setup.formatSingleSecondaryEffect || this.formatSecondaryEffect;
     /** @type {string} color to show numbers in glyph tooltips if boosted */
     this.alteredColor = setup.alteredColor;
@@ -120,7 +120,7 @@ class GlyphEffectConfig {
 
   /** @returns {number} */
   compareValues(effectValueA, effectValueB) {
-    const result = Decimal.compare(effectValueA, effectValueB);
+    const result = BE.compare(effectValueA, effectValueB);
     return this.biggerIsBetter ? result : -result;
   }
 
@@ -129,8 +129,8 @@ class GlyphEffectConfig {
    * @returns {boolean}
    */
   checkBiggerIsBetter() {
-    const baseEffect = new Decimal(this.effect(1, 1.01));
-    const biggerEffect = new Decimal(this.effect(100, 2));
+    const baseEffect = new BE(this.effect(1, 1.01));
+    const biggerEffect = new BE(this.effect(100, 2));
     return biggerEffect.gt(baseEffect);
   }
 
@@ -150,7 +150,7 @@ class GlyphEffectConfig {
     }
 
     const emptyCombine = setup.combine([]);
-    if (typeof emptyCombine !== "number" && !(emptyCombine instanceof Decimal)) {
+    if (typeof emptyCombine !== "number" && !(emptyCombine instanceof BE)) {
       if (emptyCombine.value === undefined || emptyCombine.capped === undefined) {
         throw new Error(`The combine function for Glyph effect "${setup.id}" has invalid return type`);
       }
@@ -175,9 +175,9 @@ class GlyphEffectConfig {
         return { value: cappedValue, capped: rawValue !== cappedValue };
       };
     }
-    if (emptyCombine instanceof Decimal) {
+    if (emptyCombine instanceof BE) {
       if (softcap === undefined) return effects => ({ value: combine(effects), capped: false });
-      const neqTest = emptyCombine.value instanceof Decimal ? (a, b) => a.neq(b) : (a, b) => a !== b;
+      const neqTest = emptyCombine.value instanceof BE ? (a, b) => a.neq(b) : (a, b) => a !== b;
       return combine = effects => {
         const rawValue = combine(effects);
         const cappedValue = softcap(rawValue.value);

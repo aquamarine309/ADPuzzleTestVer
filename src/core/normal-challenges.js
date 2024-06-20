@@ -1,4 +1,4 @@
-import { DC } from "./constants.js";
+import { BEC } from "./constants.js";
 import { GameMechanicState } from "./game-mechanics/index.js";
 
 export function updateNormalAndInfinityChallenges(diff) {
@@ -6,9 +6,8 @@ export function updateNormalAndInfinityChallenges(diff) {
     if (AntimatterDimension(2).amount.neq(0)) {
       Currency.matter.bumpTo(1);
       // These caps are values which occur at approximately e308 IP
-      const cappedBase = 1.03 + Math.clampMax(DimBoost.totalBoosts, 400) / 100 +
-        Math.clampMax(player.galaxies, 100) / 100;
-      Currency.matter.multiply(Decimal.pow(cappedBase, diff / 20));
+      const cappedBase = DimBoost.totalBoosts.clampMax(400).plus(player.galaxies.clampMax(100)).div(100).plus(1.03);
+      Currency.matter.multiply(cappedBase.pow(diff.div(20)));
     }
     if (Currency.matter.gte(Currency.antimatter.value) && NormalChallenge(11).isRunning && !Player.canCrunch) {
       const values = [Currency.antimatter.value, Currency.matter.value];
@@ -19,12 +18,12 @@ export function updateNormalAndInfinityChallenges(diff) {
   }
 
   if (NormalChallenge(3).isRunning) {
-    const multiplier = Math.pow(Math.log(DimBoost.purchasedBoosts * Currency.infinities.value.add(1).ln() + 1), 1.3) + 1;
-    player.chall3Pow = player.chall3Pow.times(DC.D1_0025.pow(diff * multiplier)).clampMax(DC.E200.pow(1 / Math.pow(Puzzle.maxTier, 2)));
+    const multiplier = Currency.infinities.value.times(DimBoost.purchasedBoosts).add(1).ln().plus(1).ln().pow(1.3).add(1);
+    player.chall3Pow = player.chall3Pow.times(BEC.D1_0025.pow(multiplier.times(diff))).clampMax(BEC.E200.pow(1 / Math.pow(Puzzle.maxTier, 2)));
   }
 
   if (NormalChallenge(2).isRunning) {
-    player.chall2Pow = Math.min(player.chall2Pow + diff / 100 / 1800, 1);
+    player.chall2Pow = Math.min(player.chall2Pow + diff.div(100 * 1800), 1);
   }
 
   if (InfinityChallenge(2).isRunning) {
@@ -111,17 +110,23 @@ class NormalChallengeState extends GameMechanicState {
     TabNotification.newAutobuyer.clearTrigger();
     GameCache.cheapestAntimatterAutobuyer.invalidate();
   }
+  
+  get isBroken() {
+    if (Enslaved.isRunning && Enslaved.BROKEN_CHALLENGES.includes(this.id)) return true;
+    if (LogicChallenge(2).isRunning && player.break) return true;
+    return false;
+  }
 
   get goal() {
-    if (Enslaved.isRunning && Enslaved.BROKEN_CHALLENGES.includes(this.id)) {
-      return DC.E1E15;
+    if (this.isBroken) {
+      return BEC.E1E15;
     }
-    return Decimal.NUMBER_MAX_VALUE;
+    return BE.NUMBER_MAX_VALUE;
   }
 
   updateChallengeTime() {
     const bestTimes = player.challenge.normal.bestTimes;
-    if (bestTimes[this.id - 2] <= player.records.thisInfinity.time) {
+    if (bestTimes[this.id - 2].lte(player.records.thisInfinity.time)) {
       return;
     }
     player.challenge.normal.bestTimes[this.id - 2] = player.records.thisInfinity.time;

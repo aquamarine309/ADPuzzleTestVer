@@ -1,8 +1,10 @@
-import ResourceExchangeLayout from "./ResourceExchangeLayout.js";
-import ResourceInfo from "./ResourceInfo.js";
 import ExchangeButton from "./ExchangeButton.js";
 import LevelUpButton from "./LevelUpButton.js"
 import LogicUpgradeButton from "./LogicUpgradeButton.js";
+import PrimaryButton from "../../PrimaryButton.js";
+import ResourceExchangeLayout from "./ResourceExchangeLayout.js";
+import ResourceInfo from "./ResourceInfo.js";
+import SliderComponent from "../../SliderComponent.js";
 
 export default {
   name: "ResourceExchangeTab",
@@ -11,14 +13,18 @@ export default {
     ResourceInfo,
     ExchangeButton,
     LevelUpButton,
-    LogicUpgradeButton
+    LogicUpgradeButton,
+    SliderComponent,
+    PrimaryButton
   },
   data() {
     return {
       resourceId: 0,
-      logicPoints: new Decimal(0),
-      totalLogicPoints: new Decimal(0),
-      multiplier: new Decimal(0)
+      logicPoints: new BE(0),
+      totalLogicPoints: new BE(0),
+      multiplier: new BE(0),
+      sliderInterval: 1,
+      rateType: PERCENTS_TYPE.NORMAL
     }
   },
   computed: {
@@ -26,6 +32,26 @@ export default {
       return ResourceExchange.all[this.resourceId];
     },
     upgrades: () => LogicUpgrades.all,
+    sliderProps() {
+      return {
+        min: 1,
+        max: 100,
+        interval: 1,
+        width: "100%",
+        tooltip: false,
+        "dot-class": "c-exchange__slider-handle",
+        "bg-class": "c-exchange__slider-bg",
+        "process-class": "c-exchange__slider-process"
+      };
+    },
+    rateTypeName() {
+      switch (this.rateType) {
+        case PERCENTS_TYPE.NORMAL:
+          return "Linear";
+        case PERCENTS_TYPE.LOG:
+          return "Logarithmic";
+      }
+    }
   },
   watch: {
     resourceId(value) {
@@ -38,6 +64,9 @@ export default {
       this.logicPoints = Currency.logicPoints.value;
       this.totalLogicPoints = GameCache.logicPoints.value;
       this.multiplier = ResourceExchangeUpgrade.effectValue;
+      this.rateUnlocked = LogicChallenge(2).isCompleted;
+      this.sliderInterval = this.currentResource.exchangeRate * 100;
+      this.rateType = this.currentResource.rateType;
     },
     handleToggle(index) {
       if (this.resourceId === index) return;
@@ -46,6 +75,14 @@ export default {
     },
     id(row, column) {
       return (row - 1) * 5 + column - 1;
+    },
+    adjustSliderValue(value) {
+      this.sliderInterval = value;
+      this.currentResource.exchangeRate = this.sliderInterval / 100;
+    },
+    toggleMode() {
+      this.currentResource.toggleRateType();
+      GameUI.update();
     }
   },
   template: `
@@ -61,6 +98,28 @@ export default {
         <br>
         <div class="c-lp-text-row--small">
           Total Logic Points and Exchange Levels provide a <span class="c-lp-amount--small">{{ formatX(multiplier, 2, 2) }}</span> multiplier to your Antimatter Dimensions.
+        </div>
+        <div
+          v-if="rateUnlocked"
+          class="c-exchange-rate-conatiner"
+        >
+          <div>
+            <b>Exchange rate: {{ formatInt(sliderInterval) }}%</b>
+            <SliderComponent
+              lass="o-primary-btn--slider__slider"
+              v-bind="sliderProps"
+              :value="sliderInterval"
+              @input="adjustSliderValue($event)"
+            />
+          </div>
+          <div>
+            <PrimaryButton
+              class="c-exchange-mode-toggle-button"
+              @click="toggleMode"
+            >
+              Mode: {{ rateTypeName }}
+            </PrimaryButton>
+          </div>
         </div>
         <div class="c-resource-exchange-buttons-container">
           <ExchangeButton :resource="currentResource" />

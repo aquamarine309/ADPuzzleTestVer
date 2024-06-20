@@ -9,8 +9,8 @@ export default {
     return {
       isDoomed: false,
       remnantsGain: 0,
-      realityShardGain: new Decimal(0),
-      nextRealityShardGain: new Decimal(0),
+      realityShardGain: new BE(0),
+      nextRealityShardGain: new BE(0),
       canArmageddon: false,
     };
   },

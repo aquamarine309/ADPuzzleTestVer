@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 import { DimensionState } from "../../dimensions/dimension.js";
 
 /**
@@ -59,7 +59,7 @@ export class DarkMatterDimensionState extends DimensionState {
   }
 
   get commonDarkMult() {
-    return DC.D1.timesEffectsOf(
+    return BEC.D1.timesEffectsOf(
       SingularityMilestone.darkFromTesseracts,
       SingularityMilestone.darkFromGlyphLevel,
       SingularityMilestone.darkFromTheorems,
@@ -223,7 +223,7 @@ export class DarkMatterDimensionState extends DimensionState {
   static get dimensionCount() { return 4; }
 
   reset() {
-    this.data.amount = DC.D1;
+    this.data.amount = BEC.D1;
     this.data.intervalUpgrades = 0;
     this.data.powerDMUpgrades = 0;
     this.data.powerDEUpgrades = 0;

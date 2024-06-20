@@ -2,32 +2,36 @@ import { AutomatorPanels } from "../components/tabs/automator/AutomatorDocs.js";
 import { GlyphInfo } from "../components/modals/options/SelectGlyphInfoDropdown.js";
 
 import { AUTOMATOR_MODE, AUTOMATOR_TYPE } from "./automator/automator-backend.js";
-import { DC } from "./constants.js";
+import { BEC } from "./constants.js";
 import { deepmergeAll } from "../utility/deepmerge.js";
 import { GlyphTypes } from "./glyph-effects.js";
 
 // This is actually reassigned when importing saves
 // eslint-disable-next-line prefer-const
 window.player = {
-  antimatter: DC.E1,
+  antimatter: BEC.E1,
   dimensions: {
     antimatter: Array.range(0, 8).map(() => ({
-      bought: 0,
-      costBumps: 0,
-      amount: DC.D0
+      bought: BEC.D0,
+      costBumps: BEC.D0,
+      amount: BEC.D0
     })),
     infinity: Array.range(0, 8).map(tier => ({
       isUnlocked: false,
-      bought: 0,
-      amount: DC.D0,
-      cost: [DC.E8, DC.E9, DC.E10, DC.E20, DC.E140, DC.E200, DC.E250, DC.E280][tier],
-      baseAmount: 0
+      bought: BEC.D0,
+      amount: BEC.D0,
+      cost: [BEC.E8, BEC.E9, BEC.E10, BEC.E20, BEC.E140, BEC.E200, BEC.E250, BEC.E280][tier],
+      baseAmount: BEC.D0
     })),
     time: Array.range(0, 8).map(tier => ({
-      cost: [DC.D1, DC.D5, DC.E2, DC.E3, DC.E2350, DC.E2650, DC.E3000, DC.E3350][tier],
-      amount: DC.D0,
-      bought: 0
+      cost: [BEC.D1, BEC.D5, BEC.E2, BEC.E3, BEC.E2350, BEC.E2650, BEC.E3000, BEC.E3350][tier],
+      amount: BEC.D0,
+      bought: BEC.D0
     }))
+  },
+  challengePower: BEC.D0,
+  lc3Rebuyables: {
+    ADMult: 0
   },
   buyUntil10: true,
   hasDLC: false,
@@ -38,19 +42,19 @@ window.player = {
   },
   logic: {
     resourceExchange: {
-      all: Array.range(0, 6).map(() => ({
-        //some resource is based on Decimal, we should use Decimal even if some is based on Number.
-        value: DC.D0,
-        exchangeRate: 1
+      all: Array.range(0, 8).map(() => ({
+        value: BEC.D0,
+        exchangeRate: 1,
+        rateType: PERCENTS_TYPE.NORMAL
       })),
       unlocked: 0,
       lastOpenId: 0
     },
-    spentPoints: DC.D0,
+    spentPoints: BEC.D0,
     upgradeBits: 0,
     upgReqs: 0
   },
-  sacrificed: DC.D0,
+  sacrificed: BEC.D0,
   achievementBits: Array.repeat(0, 17),
   secretAchievementBits: Array.repeat(0, 4),
   infinityUpgrades: new Set(),
@@ -58,17 +62,17 @@ window.player = {
   challenge: {
     normal: {
       current: 0,
-      bestTimes: Array.repeat(Number.MAX_VALUE, 11),
+      bestTimes: Array.range(0, 11).map(() => BE.NUMBER_MAX_VALUE),
       completedBits: 0,
     },
     logic: {
       current: 0,
-      bestTimes: Array.repeat(Number.MAX_VALUE, 8),
+      bestTimes: Array.range(0, 8).map(() => BE.NUMBER_MAX_VALUE),
       completedBits: 0,
     },
     infinity: {
       current: 0,
-      bestTimes: Array.repeat(Number.MAX_VALUE, 8),
+      bestTimes: Array.range(0, 8).map(() => BE.NUMBER_MAX_VALUE),
       completedBits: 0,
     },
     eternity: {
@@ -85,7 +89,7 @@ window.player = {
     disableContinuum: false,
     reality: {
       mode: 0,
-      rm: DC.D1,
+      rm: BEC.D1,
       glyph: 0,
       time: 0,
       shard: 0,
@@ -93,20 +97,20 @@ window.player = {
     },
     eternity: {
       mode: 0,
-      amount: DC.D1,
+      amount: BEC.D1,
       increaseWithMult: true,
       time: 1,
-      xHighest: DC.D1,
+      xHighest: BEC.D1,
       isActive: false
     },
     bigCrunch: {
       cost: 1,
       interval: 150000,
       mode: 0,
-      amount: DC.D1,
+      amount: BEC.D1,
       increaseWithMult: true,
       time: 1,
-      xHighest: DC.D1,
+      xHighest: BEC.D1,
       isActive: true,
       lastTick: 0
     },
@@ -141,7 +145,7 @@ window.player = {
       isBought: false
     },
     sacrifice: {
-      multiplier: DC.D2,
+      multiplier: BEC.D2,
       isActive: true
     },
     antimatterDims: {
@@ -225,11 +229,11 @@ window.player = {
     ipMultBuyer: { isActive: false, },
     epMultBuyer: { isActive: false, },
   },
-  infinityPoints: DC.D0,
-  infinities: DC.D0,
-  infinitiesBanked: DC.D0,
-  dimensionBoosts: 0,
-  galaxies: 0,
+  infinityPoints: BEC.D0,
+  infinities: BEC.D0,
+  infinitiesBanked: BEC.D0,
+  dimensionBoosts: BEC.D0,
+  galaxies: BEC.D0,
   news: {
     // This is properly handled in NewsHandler.addSeenNews which adds properties as needed
     seen: {},
@@ -244,10 +248,10 @@ window.player = {
   lastUpdate: new Date().getTime(),
   backupTimer: 0,
   chall2Pow: 1,
-  chall3Pow: DC.D0_01,
-  matter: DC.D1,
-  chall9TickspeedCostBumps: 0,
-  chall8TotalSacrifice: DC.D1,
+  chall3Pow: BEC.D0_01,
+  matter: BEC.D1,
+  chall9TickspeedCostBumps: BEC.D0,
+  chall8TotalSacrifice: BEC.D1,
   ic2Count: 0,
   partInfinityPoint: 0,
   partInfinitied: 0,
@@ -281,84 +285,84 @@ window.player = {
       noInfinities: true,
       noEternities: true,
       noContinuum: true,
-      maxID1: DC.D0,
+      maxID1: BEC.D0,
       maxStudies: 0,
       maxGlyphs: 0,
       slowestBH: 1,
     },
     permanent: {
-      emojiGalaxies: 0,
+      emojiGalaxies: BEC.D0,
       singleTickspeed: 0,
       perkTreeDragging: 0
     }
   },
   records: {
     gameCreatedTime: Date.now(),
-    totalTimePlayed: 0,
-    timePlayedAtBHUnlock: Number.MAX_VALUE,
+    totalTimePlayed: BEC.D0,
+    timePlayedAtBHUnlock: BE.NUMBER_MAX_VALUE,
     realTimePlayed: 0,
     realTimeDoomed: 0,
     fullGameCompletions: 0,
     previousRunRealTime: 0,
-    totalAntimatter: DC.E1,
+    totalAntimatter: BEC.E1,
     recentInfinities: Array.range(0, 10).map(() =>
-      [Number.MAX_VALUE, Number.MAX_VALUE, DC.D1, DC.D1, ""]),
+      [BE.NUMBER_MAX_VALUE, Number.MAX_VALUE, BEC.D1, BEC.D1, ""]),
     recentEternities: Array.range(0, 10).map(() =>
-      [Number.MAX_VALUE, Number.MAX_VALUE, DC.D1, DC.D1, "", DC.D0]),
+      [BE.NUMBER_MAX_VALUE, Number.MAX_VALUE, BEC.D1, BEC.D1, "", BEC.D0]),
     recentRealities: Array.range(0, 10).map(() =>
-      [Number.MAX_VALUE, Number.MAX_VALUE, DC.D1, 1, "", 0, 0]),
+      [BE.NUMBER_MAX_VALUE, Number.MAX_VALUE, BEC.D1, 1, "", 0, 0]),
     thisInfinity: {
-      time: 0,
+      time: BEC.D0,
       realTime: 0,
-      lastBuyTime: 0,
-      maxAM: DC.D0,
-      bestIPmin: DC.D0,
-      bestIPminVal: DC.D0,
+      lastBuyTime: BEC.D0,
+      maxAM: BEC.D0,
+      bestIPmin: BEC.D0,
+      bestIPminVal: BEC.D0,
     },
     bestInfinity: {
-      time: Number.MAX_VALUE,
+      time: BE.NUMBER_MAX_VALUE,
       realTime: Number.MAX_VALUE,
-      bestIPminEternity: DC.D0,
-      bestIPminReality: DC.D0,
+      bestIPminEternity: BEC.D0,
+      bestIPminReality: BEC.D0,
     },
     thisEternity: {
-      time: 0,
+      time: BEC.D0,
       realTime: 0,
-      maxAM: DC.D0,
-      maxIP: DC.D0,
-      bestIPMsWithoutMaxAll: DC.D0,
-      bestEPmin: DC.D0,
-      bestEPminVal: DC.D0,
-      bestInfinitiesPerMs: DC.D0,
+      maxAM: BEC.D0,
+      maxIP: BEC.D0,
+      bestIPMsWithoutMaxAll: BEC.D0,
+      bestEPmin: BEC.D0,
+      bestEPminVal: BEC.D0,
+      bestInfinitiesPerMs: BEC.D0,
     },
     bestEternity: {
-      time: Number.MAX_VALUE,
+      time: BE.NUMBER_MAX_VALUE,
       realTime: Number.MAX_VALUE,
-      bestEPminReality: DC.D0,
+      bestEPminReality: BEC.D0,
     },
     thisReality: {
-      time: 0,
+      time: BE.NUMBER_MAX_VALUE,
       realTime: 0,
-      maxAM: DC.D0,
-      maxIP: DC.D0,
-      maxEP: DC.D0,
-      bestEternitiesPerMs: DC.D0,
-      maxReplicanti: DC.D0,
-      maxDT: DC.D0,
-      bestRSmin: 0,
-      bestRSminVal: 0,
+      maxAM: BEC.D0,
+      maxIP: BEC.D0,
+      maxEP: BEC.D0,
+      bestEternitiesPerMs: BEC.D0,
+      maxReplicanti: BEC.D0,
+      maxDT: BEC.D0,
+      bestRSmin: BE.NUMBER_MAX_VALUE,
+      bestRSminVal: BE.NUMBER_MAX_VALUE,
     },
     bestReality: {
-      time: Number.MAX_VALUE,
+      time: BE.NUMBER_MAX_VALUE,
       realTime: Number.MAX_VALUE,
       glyphStrength: 0,
-      RM: DC.D0,
+      RM: BEC.D0,
       RMSet: [],
-      RMmin: DC.D0,
+      RMmin: BEC.D0,
       RMminSet: [],
       glyphLevel: 0,
       glyphLevelSet: [],
-      bestEP: DC.D0,
+      bestEP: BEC.D0,
       bestEPSet: [],
       speedSet: [],
       iMCapSet: [],
@@ -383,34 +387,34 @@ window.player = {
     initialSeed: 0,
     previousRuns: {}
   },
-  IPMultPurchases: 0,
+  IPMultPurchases: BEC.D0,
   version: 57,
-  infinityPower: DC.D1,
+  infinityPower: BEC.D1,
   postC4Tier: 0,
-  eternityPoints: DC.D0,
-  eternities: DC.D0,
+  eternityPoints: BEC.D0,
+  eternities: BEC.D0,
   eternityUpgrades: new Set(),
-  epmultUpgrades: 0,
-  timeShards: DC.D0,
-  totalTickGained: 0,
-  totalTickBought: 0,
+  epmultUpgrades: BEC.D0,
+  timeShards: BEC.D0,
+  totalTickGained: BEC.D0,
+  totalTickBought: BEC.D0,
   replicanti: {
     unl: false,
-    amount: DC.D0,
-    chance: 0.01,
-    chanceCost: DC.E150,
-    interval: 1000,
-    intervalCost: DC.E140,
-    boughtGalaxyCap: 0,
-    galaxies: 0,
-    galCost: DC.E170,
+    amount: BEC.D0,
+    chance: BEC.D0_01,
+    chanceCost: BEC.E150,
+    interval: BEC.E3,
+    intervalCost: BEC.E140,
+    boughtGalaxyCap: BEC.D0,
+    galaxies: BEC.D0,
+    galCost: BEC.E170,
   },
   timestudy: {
-    theorem: DC.D0,
-    maxTheorem: DC.D0,
-    amBought: 0,
-    ipBought: 0,
-    epBought: 0,
+    theorem: BEC.D0,
+    maxTheorem: BEC.D0,
+    amBought: BEC.D0,
+    ipBought: BEC.D0,
+    epBought: BEC.D0,
     studies: [],
     shopMinimized: false,
     preferredPaths: [[], 0],
@@ -426,11 +430,11 @@ window.player = {
   dilation: {
     studies: [],
     active: false,
-    tachyonParticles: DC.D0,
-    dilatedTime: DC.D0,
-    nextThreshold: DC.E3,
-    baseTachyonGalaxies: 0,
-    totalTachyonGalaxies: 0,
+    tachyonParticles: BEC.D0,
+    dilatedTime: BEC.D0,
+    nextThreshold: BEC.E3,
+    baseTachyonGalaxies: BEC.D0,
+    totalTachyonGalaxies: BEC.D0,
     upgrades: new Set(),
     rebuyables: {
       1: 0,
@@ -440,15 +444,15 @@ window.player = {
       12: 0,
       13: 0,
     },
-    lastEP: DC.DM1,
+    lastEP: BEC.DM1,
   },
-  realities: 0,
-  partSimulatedReality: 0,
+  realities: BEC.D0,
+  partSimulatedReality: BEC.D0,
   reality: {
-    realityMachines: DC.D0,
-    maxRM: DC.D0,
-    imaginaryMachines: 0,
-    iMCap: 0,
+    realityMachines: BEC.D0,
+    maxRM: BEC.D0,
+    imaginaryMachines: BEC.D0,
+    iMCap: BEC.D0,
     glyphs: {
       active: [],
       inventory: [],
@@ -533,11 +537,11 @@ window.player = {
     autoAutoClean: false,
     applyFilterToPurge: false,
     moveGlyphsOnProtection: false,
-    perkPoints: 0,
+    perkPoints: BEC.D1,
     unlockedEC: 0,
     autoEC: true,
     lastAutoEC: 0,
-    partEternitied: DC.D0,
+    partEternitied: BEC.D0,
     autoAchieve: true,
     gainedAutoAchievements: true,
     automator: {
@@ -559,7 +563,7 @@ window.player = {
       forceUnlock: false,
       currentInfoPane: AutomatorPanels.INTRO_PAGE,
     },
-    achTimer: 0,
+    achTimer: BEC.D0,
     hasCheckedFilter: false,
   },
   blackHole: Array.range(0, 2).map(id => ({
@@ -582,13 +586,13 @@ window.player = {
       quoteBits: 0,
       unlockBits: 0,
       run: false,
-      bestRunAM: DC.D1,
+      bestRunAM: BEC.D1,
       bestAMSet: [],
       perkShop: Array.repeat(0, 5),
-      lastRepeatedMachines: DC.D0
+      lastRepeatedMachines: BEC.D0
     },
     effarig: {
-      relicShards: 0,
+      relicShards: BEC.D0,
       unlockBits: 0,
       run: false,
       quoteBits: 0,
@@ -602,7 +606,7 @@ window.player = {
     },
     enslaved: {
       isStoring: false,
-      stored: 0,
+      stored: BEC.D0,
       isStoringReal: false,
       storedReal: 0,
       autoStoreReal: false,
@@ -682,17 +686,17 @@ window.player = {
       run: false,
       charged: new Set(),
       disCharge: false,
-      peakGamespeed: 1,
+      peakGamespeed: BEC.D1,
       petWithRemembrance: ""
     },
     laitela: {
-      darkMatter: DC.D0,
-      maxDarkMatter: DC.D0,
+      darkMatter: BEC.D0,
+      maxDarkMatter: BEC.D0,
       run: false,
       quoteBits: 0,
       dimensions: Array.range(0, 4).map(() =>
         ({
-          amount: DC.D0,
+          amount: BEC.D0,
           intervalUpgrades: 0,
           powerDMUpgrades: 0,
           powerDEUpgrades: 0,
@@ -704,15 +708,15 @@ window.player = {
       fastestCompletion: 3600,
       difficultyTier: 0,
       upgrades: {},
-      darkMatterMult: 1,
-      darkEnergy: 0,
+      darkMatterMult: BEC.D0,
+      darkEnergy: BEC.D0,
       singularitySorting: {
         displayResource: 0,
         sortResource: 0,
         showCompleted: 0,
         sortOrder: 0,
       },
-      singularities: 0,
+      singularities: BEC.D0,
       singularityCapIncreases: 0,
       lastCheckedMilestones: 0,
       milestoneGlow: true,
@@ -721,11 +725,11 @@ window.player = {
       doomed: false,
       upgrades: new Set(),
       remnants: 0,
-      realityShards: DC.D0,
+      realityShards: BEC.D0,
       records: {
-        totalAntimatter: DC.D0,
-        totalInfinityPoints: DC.D0,
-        totalEternityPoints: DC.D0,
+        totalAntimatter: BEC.D0,
+        totalInfinityPoints: BEC.D0,
+        totalEternityPoints: BEC.D0,
       },
       rebuyables: {
         antimatterDimensionMult: 0,
@@ -741,12 +745,12 @@ window.player = {
       },
       rifts: {
         vacuum: {
-          fill: DC.D0,
+          fill: BEC.D0,
           active: false,
           reducedTo: 1
         },
         decay: {
-          fill: DC.D0,
+          fill: BEC.D0,
           active: false,
           percentageSpent: 0,
           reducedTo: 1
@@ -757,12 +761,12 @@ window.player = {
           reducedTo: 1
         },
         recursion: {
-          fill: DC.D0,
+          fill: BEC.D0,
           active: false,
           reducedTo: 1
         },
         paradox: {
-          fill: DC.D0,
+          fill: BEC.D0,
           active: false,
           reducedTo: 1
         }
@@ -770,8 +774,8 @@ window.player = {
       progressBits: 0,
       galaxyGenerator: {
         unlocked: false,
-        spentGalaxies: 0,
-        generatedGalaxies: 0,
+        spentGalaxies: BEC.D0,
+        generatedGalaxies: BEC.D0,
         phase: 0,
         sacrificeActive: false
       },
@@ -966,9 +970,9 @@ export const Player = {
   },
 
   get canCrunch() {
-    if (Enslaved.isRunning && Enslaved.BROKEN_CHALLENGES.includes(NormalChallenge.current?.id)) return false;
+    if (NormalChallenge.isRunning && NormalChallenge.current.isBroken) return false;
     const challenge = NormalChallenge.current || InfinityChallenge.current;
-    const goal = challenge === undefined ? Decimal.NUMBER_MAX_VALUE : challenge.goal;
+    const goal = challenge === undefined ? BE.NUMBER_MAX_VALUE : challenge.goal;
     return player.records.thisInfinity.maxAM.gte(goal);
   },
 
@@ -994,15 +998,15 @@ export const Player = {
 
   get infinityGoal() {
     const challenge = NormalChallenge.current || InfinityChallenge.current;
-    return challenge === undefined ? Decimal.NUMBER_MAX_VALUE : challenge.goal;
+    return challenge === undefined ? BE.NUMBER_MAX_VALUE : challenge.goal;
   },
 
   get infinityLimit() {
     const antimatterChallenge = NormalChallenge.current || InfinityChallenge.current;
-    const antimatterChallengeGoal = antimatterChallenge ? antimatterChallenge.goal : Decimal.MAX_VALUE;
+    if (antimatterChallenge) return antimatterChallenge.goal;
     const logicChallenge = LogicChallenge.current;
-    const logicGoal = (!logicChallenge || logicChallenge.isCompleted) ? Decimal.MAX_VALUE : logicChallenge.goal;
-    return Decimal.max(logicGoal, antimatterChallengeGoal);
+    if (logicChallenge) return logicChallenge.goal;
+    return BE.MAX_VALUE;
   },
 
   get eternityGoal() {
@@ -1030,7 +1034,7 @@ export const Player = {
           noInfinities: true,
           noEternities: true,
           noContinuum: player.auto.disableContinuum,
-          maxID1: DC.D0,
+          maxID1: BEC.D0,
           maxStudies: 0,
           // This only gets set to the correct value when Glyphs.updateMaxGlyphCount is called, which always happens
           // before this part of the code is reached in the Reality reset. Nevertheless, we want to keep its old value.
@@ -1061,7 +1065,7 @@ export const Player = {
 
 export function guardFromNaNValues(obj) {
   function isObject(ob) {
-    return ob !== null && typeof ob === "object" && !(ob instanceof Decimal);
+    return ob !== null && typeof ob === "object" && !(ob instanceof Decimal) && !(ob instanceof BE);
   }
 
   for (const key in obj) {
@@ -1095,7 +1099,7 @@ export function guardFromNaNValues(obj) {
       });
     }
 
-    if (value instanceof Decimal) {
+    if (value instanceof BE) {
       Object.defineProperty(obj, key, {
         enumerable: true,
         configurable: true,
@@ -1104,10 +1108,10 @@ export function guardFromNaNValues(obj) {
           if (newValue === null || newValue === undefined) {
             throw new Error("null/undefined player property assignment");
           }
-          if (!(newValue instanceof Decimal)) {
-            throw new Error("Non-Decimal assignment to Decimal player property");
+          if (!(newValue instanceof BE)) {
+            throw new Error("Non-BE assignment to BE player property");
           }
-          if (!isFinite(newValue.mantissa) || !isFinite(newValue.exponent)) {
+          if (!isFinite(newValue.mag) || !isFinite(newValue.layer) || !isFinite(newValue.sign)) {
             throw new Error("NaN player property assignment");
           }
           value = newValue;

@@ -4,13 +4,13 @@ export default {
     return {
       type: GALAXY_TYPE.NORMAL,
       galaxies: {
-        normal: 0,
-        replicanti: 0,
-        dilation: 0
+        normal: new BE(0),
+        replicanti: new BE(0),
+        dilation: new BE(0)
       },
       requirement: {
         tier: 1,
-        amount: 0
+        amount: new BE(0)
       },
       canBeBought: false,
       distantStart: 0,
@@ -41,9 +41,9 @@ export default {
         : `Reset your ${makeEnumeration(reset)} to increase the power of Tickspeed upgrades`;
     },
     sumText() {
-      const parts = [Math.max(this.galaxies.normal, 0)];
-      if (this.galaxies.replicanti > 0) parts.push(this.galaxies.replicanti);
-      if (this.galaxies.dilation > 0) parts.push(this.galaxies.dilation);
+      const parts = [BE.max(this.galaxies.normal, 0)];
+      if (this.galaxies.replicanti.gt(0)) parts.push(this.galaxies.replicanti);
+      if (this.galaxies.dilation.gt(0)) parts.push(this.galaxies.dilation);
       const sum = parts.map(this.formatGalaxies).join(" + ");
       if (parts.length >= 2) {
         return `${sum} = ${this.formatGalaxies(parts.sum())}`;
@@ -91,9 +91,9 @@ export default {
       this.showGalaxy = NormalChallenge(11).isCompleted;
       if (!this.showGalaxy) return;
       this.type = Galaxy.type;
-      this.galaxies.normal = player.galaxies + GalaxyGenerator.galaxies;
+      this.galaxies.normal = player.galaxies.plus(GalaxyGenerator.galaxies);
       this.galaxies.replicanti = Replicanti.galaxies.total;
-      this.galaxies.dilation = player.dilation.totalTachyonGalaxies;
+      this.galaxies.dilation.copyFrom(player.dilation.totalTachyonGalaxies);
       const requirement = Galaxy.requirement;
       this.requirement.amount = requirement.amount;
       this.requirement.tier = requirement.tier;
@@ -116,7 +116,7 @@ export default {
       manualRequestGalaxyReset(this.canBulkBuy && bulk);
     },
     formatGalaxies(num) {
-      return num > 1e8 ? format(num, 2) : formatInt(num);
+      return (typeof num !== "number" && num.gt(1e8)) ? format(num, 2) : formatInt(num)
     },
   },
   template: `

@@ -20,16 +20,16 @@ export default {
       hasPrevTier: false,
       isUnlocked: false,
       canUnlock: false,
-      multiplier: new Decimal(0),
-      baseAmount: 0,
-      amount: new Decimal(0),
-      purchases: 0,
-      rateOfChange: new Decimal(0),
+      multiplier: new BE(0),
+      baseAmount: new BE(0),
+      amount: new BE(0),
+      purchases: new BE(0),
+      rateOfChange: new BE(0),
       isAutobuyerUnlocked: false,
-      cost: new Decimal(0),
+      cost: new BE(0),
       isAvailableForPurchase: false,
       isCapped: false,
-      capIP: new Decimal(0),
+      capIP: new BE(0),
       isAutobuyerOn: false,
       isEC8Running: false,
       hardcap: InfinityDimensions.HARDCAP_PURCHASES,
@@ -89,8 +89,8 @@ export default {
       this.isUnlocked = dimension.isUnlocked;
       this.canUnlock = dimension.canUnlock;
       this.multiplier.copyFrom(dimension.multiplier);
-      this.baseAmount = dimension.baseAmount;
-      this.purchases = dimension.purchases;
+      this.baseAmount.copyFrom(dimension.baseAmount);
+      this.purchases.copyFrom(dimension.purchases);
       this.amount.copyFrom(dimension.amount);
       this.rateOfChange.copyFrom(dimension.rateOfChange);
       this.isAutobuyerUnlocked = autobuyer.isUnlocked;
@@ -99,7 +99,7 @@ export default {
       this.isCapped = dimension.isCapped;
       if (this.isCapped) {
         this.capIP.copyFrom(dimension.hardcapIPAmount);
-        this.hardcap = dimension.purchaseCap;
+        this.hardcap.copyFrom(dimension.purchaseCap);
       }
       this.isEC8Running = EternityChallenge(8).isRunning;
       this.isAutobuyerOn = autobuyer.isActive;

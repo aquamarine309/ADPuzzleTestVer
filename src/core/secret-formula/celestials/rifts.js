@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 import wordShift from "../../word-shift.js";
 
 export const pelleRifts = {
@@ -10,9 +10,9 @@ export const pelleRifts = {
     baseEffect: x => `IP gain ${formatX(x, 2, 2)}`,
     additionalEffects: () => [PelleRifts.vacuum.milestones[2]],
     strike: () => PelleStrikes.infinity,
-    percentage: totalFill => Math.log10(totalFill.plus(1).log10() * 10 + 1) ** 2.5 / 100,
-    percentageToFill: percentage => Decimal.pow(10,
-      Decimal.pow(10, (percentage * 100) ** (1 / 2.5)).div(10).minus(0.1)
+    percentage: totalFill => totalFill.plus(1).log10().div(10).add(1).log10().pow(2.5).div(100).toNumberMax(1),
+    percentageToFill: percentage => BE.pow(10,
+      BE.pow(10, (percentage * 100) ** (1 / 2.5)).div(10).minus(0.1)
     ).minus(1),
     effect: totalFill => {
       if (player.challenge.eternity.current !== 0) {
@@ -40,7 +40,7 @@ export const pelleRifts = {
         resource: "vacuum",
         requirement: 0.4,
         description: () => `${wordShift.wordCycle(PelleRifts.vacuum.name)} also affects EP gain`,
-        effect: () => Decimal.pow(4, PelleRifts.vacuum.totalFill.log10() / 2 / 308 + 3),
+        effect: () => BE.pow(4, PelleRifts.vacuum.totalFill.log10() / 2 / 308 + 3),
         formatEffect: x => `EP gain ${formatX(x, 2, 2)}`
       },
     ],
@@ -56,11 +56,11 @@ export const pelleRifts = {
     additionalEffects: () => [PelleRifts.decay.milestones[0], PelleRifts.decay.milestones[2]],
     strike: () => PelleStrikes.powerGalaxies,
     // 0 - 1
-    percentage: totalFill => totalFill.plus(1).log10() * 0.05 / 100,
+    percentage: totalFill => totalFill.plus(1).log10().times(0.0005).toNumberMax(1),
     // 0 - 1
-    percentageToFill: percentage => Decimal.pow(10, 20 * percentage * 100).minus(1),
+    percentageToFill: percentage => BE.pow(10, 20 * percentage * 100).minus(1),
     effect: totalFill => (PelleRifts.chaos.milestones[0].canBeApplied
-      ? Decimal.sqrt(2000 + 1) : Decimal.sqrt(totalFill.plus(1).log10() + 1)),
+      ? BE.sqrt(2000 + 1) : BE.sqrt(totalFill.plus(1).log10() + 1)),
     currency: () => Currency.replicanti,
     galaxyGeneratorThreshold: 1e7,
     milestones: [
@@ -70,16 +70,16 @@ export const pelleRifts = {
         description: "First rebuyable Pelle upgrade also affects 1st Infinity Dimension",
         effect: () => {
           const x = player.celestials.pelle.rebuyables.antimatterDimensionMult;
-          return Decimal.pow(1e50, x - 9);
+          return BE.pow(1e50, x - 9);
         },
         formatEffect: x => `1st Infinity Dimension ${formatX(x, 2, 2)}`
       },
       {
         resource: "decay",
         requirement: 0.6,
-        description: () => `When Replicanti exceeds ${format(DC.E1300)},
+        description: () => `When Replicanti exceeds ${format(BEC.E1300)},
           all Galaxies are ${formatPercents(0.1)} more effective`,
-        effect: () => (Replicanti.amount.gt(DC.E1300) ? 1.1 : 1)
+        effect: () => (Replicanti.amount.gt(BEC.E1300) ? 1.1 : 1)
       },
       {
         resource: "decay",
@@ -107,9 +107,9 @@ export const pelleRifts = {
       const fill = totalFill > 6.5
         ? (totalFill - 6.5) / 7 + 6.5
         : totalFill;
-      return Decimal.pow(6, Decimal.pow(6, Decimal.pow(6, fill / 10 + 0.1)).minus(6))
+      return BE.pow(6, BE.pow(6, BE.pow(6, fill / 10 + 0.1)).minus(6))
         .div(1e5)
-        .plus(Decimal.pow(10, fill / 10 + 0.1));
+        .plus(BE.pow(10, fill / 10 + 0.1));
     },
     currency: () => ({
       get value() {
@@ -149,9 +149,9 @@ export const pelleRifts = {
     baseEffect: x => `EP formula: log(x)/${formatInt(308)} ➜ log(x)/${formatFloat(308 - x.toNumber(), 2)}`,
     additionalEffects: () => [PelleRifts.recursion.milestones[0], PelleRifts.recursion.milestones[1]],
     strike: () => PelleStrikes.ECs,
-    percentage: totalFill => totalFill.plus(1).log10() ** 0.4 / 4000 ** 0.4,
-    percentageToFill: percentage => Decimal.pow(10, percentage ** 2.5 * 4000).minus(1),
-    effect: totalFill => new Decimal(58 * totalFill.plus(1).log10() ** 0.2 / 4000 ** 0.2),
+    percentage: totalFill => totalFill.plus(1).log10().div(4000).pow(0.54).toNumberMax(1),
+    percentageToFill: percentage => BE.pow(10, percentage ** 2.5 * 4000).minus(1),
+    effect: totalFill => totalFill.plus(1).log10().div(4000).pow(0.2).times(58),
     currency: () => Currency.eternityPoints,
     galaxyGeneratorThreshold: 1e10,
     milestones: [
@@ -167,7 +167,7 @@ export const pelleRifts = {
         resource: "recursion",
         requirement: 0.15,
         description: "Infinity Dimensions are stronger based on EC completions",
-        effect: () => Decimal.pow("1e1500", ((EternityChallenges.completions - 25) / 20) ** 1.7).max(1),
+        effect: () => BE.pow(BEC.E1500, ((EternityChallenges.completions - 25) / 20) ** 1.7).max(1),
         formatEffect: x => `Infinity Dimensions ${formatX(x)}`
       },
       {
@@ -186,9 +186,9 @@ export const pelleRifts = {
     baseEffect: x => `All Dimensions ${formatPow(x, 2, 3)}`,
     additionalEffects: () => [PelleRifts.paradox.milestones[2]],
     strike: () => PelleStrikes.dilation,
-    percentage: totalFill => totalFill.plus(1).log10() / 100,
-    percentageToFill: percentage => Decimal.pow10(percentage * 100).minus(1),
-    effect: totalFill => new Decimal(1 + totalFill.plus(1).log10() * 0.004),
+    percentage: totalFill => totalFill.plus(1).log10().div(100).toNumberMax(1),
+    percentageToFill: percentage => BE.pow10(percentage * 100).minus(1),
+    effect: totalFill => totalFill.plus(1).log10().times(0.004).add(1),
     currency: () => Currency.dilatedTime,
     galaxyGeneratorThreshold: 1e5,
     milestones: [

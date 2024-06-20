@@ -9,12 +9,12 @@ export default {
   },
   data() {
     return {
-      totalUpgrades: 0,
-      multPerTickspeed: 0,
-      tickspeedSoftcap: 0,
-      timeShards: new Decimal(0),
-      upgradeThreshold: new Decimal(0),
-      shardsPerSecond: new Decimal(0),
+      totalUpgrades: new BE(0),
+      multPerTickspeed: new BE(0),
+      tickspeedSoftcap: new BE(0),
+      timeShards: new BE(0),
+      upgradeThreshold: new BE(0),
+      shardsPerSecond: new BE(0),
       incomeType: "",
       areAutobuyersUnlocked: false,
       showLockedDimCostNote: true,
@@ -25,10 +25,10 @@ export default {
   },
   methods: {
     update() {
-      this.showLockedDimCostNote = !TimeDimension(8).isUnlocked && player.realities >= 1;
-      this.totalUpgrades = player.totalTickGained;
-      this.multPerTickspeed = FreeTickspeed.multToNext;
-      this.tickspeedSoftcap = FreeTickspeed.softcap;
+      this.showLockedDimCostNote = !TimeDimension(8).isUnlocked && player.realities.gte(1);
+      this.totalUpgrades.copyFrom(player.totalTickGained);
+      this.multPerTickspeed.copyFrom(FreeTickspeed.multToNext);
+      this.tickspeedSoftcap.copyFrom(FreeTickspeed.softcap);
       this.timeShards.copyFrom(Currency.timeShards);
       this.upgradeThreshold.copyFrom(FreeTickspeed.fromShards(Currency.timeShards.value).nextShards);
       this.shardsPerSecond.copyFrom(TimeDimension(1).productionPerRealSecond);

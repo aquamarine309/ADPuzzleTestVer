@@ -1,4 +1,4 @@
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 
 const rebuyable = props => {
   props.cost = () => getHybridCostScaling(
@@ -7,7 +7,7 @@ const rebuyable = props => {
     props.initialCost,
     props.costMult,
     props.costMult / 10,
-    DC.E309,
+    BEC.E309,
     1e3,
     props.initialCost * props.costMult
   );
@@ -134,7 +134,7 @@ export const realityUpgrades = [
     name: "Existentially Prolong",
     id: 10,
     cost: 15,
-    requirement: () => `Complete your first manual Eternity with at least ${formatPostBreak(DC.E400)} Infinity Points`,
+    requirement: () => `Complete your first manual Eternity with at least ${formatPostBreak(BEC.E400)} Infinity Points`,
     hasFailed: () => !player.requirementChecks.reality.noEternities,
     checkRequirement: () => Currency.infinityPoints.exponent >= 400 &&
       player.requirementChecks.reality.noEternities,
@@ -151,7 +151,7 @@ export const realityUpgrades = [
     name: "The Boundless Flow",
     id: 11,
     cost: 50,
-    requirement: () => `${format(Currency.infinitiesBanked.value, 2)}/${format(DC.E12)} Banked Infinities`,
+    requirement: () => `${format(Currency.infinitiesBanked.value, 2)}/${format(BEC.E12)} Banked Infinities`,
     checkRequirement: () => Currency.infinitiesBanked.exponent >= 12,
     checkEvent: [GAME_EVENT.ETERNITY_RESET_AFTER, GAME_EVENT.REALITY_FIRST_UNLOCKED],
     description: "Every second, gain 10% of the Infinities you would normally gain by Infinitying",
@@ -164,7 +164,7 @@ export const realityUpgrades = [
     name: "The Knowing Existence",
     id: 12,
     cost: 50,
-    requirement: () => `Eternity for ${format(DC.E70)} Eternity Points without completing Eternity Challenge 1`,
+    requirement: () => `Eternity for ${format(BEC.E70)} Eternity Points without completing Eternity Challenge 1`,
     hasFailed: () => EternityChallenge(1).completions !== 0,
     checkRequirement: () => Currency.eternityPoints.exponent >= 70 && EternityChallenge(1).completions === 0,
     checkEvent: GAME_EVENT.ETERNITY_RESET_AFTER,
@@ -172,7 +172,7 @@ export const realityUpgrades = [
     lockEvent: "complete Eternity Challenge 1",
     description: "Eternity Point multiplier based on Reality and Time Theorem count",
     effect: () => Currency.timeTheorems.value
-      .minus(DC.E3).clampMin(2)
+      .minus(BEC.E3).clampMin(2)
       .pow(Math.log2(Math.min(Currency.realities.value, 1e4))).clampMin(1),
     formatEffect: value => formatX(value, 2, 2)
   },
@@ -180,7 +180,7 @@ export const realityUpgrades = [
     name: "The Telemechanical Process",
     id: 13,
     cost: 50,
-    requirement: () => `Eternity for ${format(DC.E4000)} Eternity Points without Time Dim. 5-8`,
+    requirement: () => `Eternity for ${format(BEC.E4000)} Eternity Points without Time Dim. 5-8`,
     hasFailed: () => !Array.range(5, 4).every(i => TimeDimension(i).amount.equals(0)),
     checkRequirement: () => Currency.eternityPoints.exponent >= 4000 &&
       Array.range(5, 4).every(i => TimeDimension(i).amount.equals(0)),
@@ -208,7 +208,7 @@ export const realityUpgrades = [
     name: "The Paradoxical Forever",
     id: 15,
     cost: 50,
-    requirement: () => `Have ${format(DC.E10)} Eternity Points without purchasing
+    requirement: () => `Have ${format(BEC.E10)} Eternity Points without purchasing
       the ${formatX(5)} Eternity Point upgrade`,
     hasFailed: () => player.epmultUpgrades !== 0,
     checkRequirement: () => Currency.eternityPoints.exponent >= 10 && player.epmultUpgrades === 0,
@@ -216,7 +216,7 @@ export const realityUpgrades = [
     canLock: true,
     lockEvent: () => `purchase a ${formatX(5)} EP upgrade`,
     description: () => `Boost Tachyon Particle gain based on ${formatX(5)} Eternity Point multiplier`,
-    effect: () => Math.max(Math.sqrt(Decimal.log10(EternityUpgrade.epMult.effectValue)) / 9, 1),
+    effect: () => Math.max(Math.sqrt(BE.log10(EternityUpgrade.epMult.effectValue)) / 9, 1),
     formatEffect: value => formatX(value, 2, 2)
   },
   {
@@ -293,7 +293,7 @@ export const realityUpgrades = [
     requirement: () => `${formatInt(100)} days total play time after unlocking the Black Hole
       (Currently: ${Time.timeSinceBlackHole.toStringShort(false)})`,
     hasFailed: () => !BlackHole(1).isUnlocked && Currency.realityMachines.lt(100),
-    checkRequirement: () => Time.timeSinceBlackHole.totalDays >= 100 && BlackHole(1).isUnlocked,
+    checkRequirement: () => Time.timeSinceBlackHole.totalDays.gte(100) && BlackHole(1).isUnlocked,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     description: "Unlock another Black Hole",
     automatorPoints: 10,
@@ -316,11 +316,11 @@ export const realityUpgrades = [
     name: "Temporal Transcendence",
     id: 22,
     cost: 100000,
-    requirement: () => `${format(Currency.timeShards.value, 1)}/${format(DC.E28000)} Time Shards`,
+    requirement: () => `${format(Currency.timeShards.value, 1)}/${format(BEC.E28000)} Time Shards`,
     checkRequirement: () => Currency.timeShards.exponent >= 28000,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     description: "Time Dimension multiplier based on days spent in this Reality",
-    effect: () => Decimal.pow10(Math.pow(1 + 2 * Math.log10(Time.thisReality.totalDays + 1), 1.6)),
+    effect: () => BE.pow10(Time.thisReality.totalDays.plus(1).log10().times(2).plus(1).pow(1.6)),
     formatEffect: value => formatX(value, 2, 2)
   },
   {
@@ -329,11 +329,11 @@ export const realityUpgrades = [
     cost: 100000,
     requirement: () => `Reality in under ${formatInt(15)} minutes of game time
       (Fastest: ${Time.bestReality.toStringShort()})`,
-    hasFailed: () => Time.thisReality.totalMinutes >= 15,
-    checkRequirement: () => Time.thisReality.totalMinutes < 15,
+    hasFailed: () => Time.thisReality.totalMinutes.gte(15),
+    checkRequirement: () => Time.thisReality.totalMinutes.lt(15),
     checkEvent: GAME_EVENT.REALITY_RESET_BEFORE,
     description: "Replicanti speed is boosted based on your fastest game-time Reality",
-    effect: () => 15 / Math.clamp(Time.bestReality.totalMinutes, 1 / 12, 15),
+    effect: () => BE.div(15, BE.clamp(Time.bestReality.totalMinutes, 1 / 12, 15)),
     cap: 180,
     formatEffect: value => formatX(value, 2, 2)
   },
@@ -355,7 +355,7 @@ export const realityUpgrades = [
     name: "Effortless Existence",
     id: 25,
     cost: 100000,
-    requirement: () => `Reach ${format(DC.E11111)} EP (Best: ${format(player.records.bestReality.bestEP, 2)} EP)`,
+    requirement: () => `Reach ${format(BEC.E11111)} EP (Best: ${format(player.records.bestReality.bestEP, 2)} EP)`,
     checkRequirement: () => player.records.bestReality.bestEP.exponent >= 11111,
     checkEvent: GAME_EVENT.ETERNITY_RESET_AFTER,
     description: "Unlock the Reality autobuyer and Automator command",

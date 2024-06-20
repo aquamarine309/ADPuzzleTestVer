@@ -28,7 +28,7 @@ export default {
       isDisabled: false,
       showingCharged: false,
       hasTS31: false,
-      ts31Effect: new Decimal(0)
+      ts31Effect: new BE(0)
     };
   },
   computed: {
@@ -88,10 +88,10 @@ export default {
       this.isDisabled = upgrade.config.isDisabled && upgrade.config.isDisabled(upgrade.config.effect());
       this.isUseless = Pelle.uselessInfinityUpgrades.includes(upgrade.id) && Pelle.isDoomed;
       this.hasTS31 = TimeStudy(31).canBeApplied;
-      if (!this.isDisabled && this.isImprovedByTS31) this.ts31Effect = Decimal.pow(upgrade.config.effect(), 4);
+      if (!this.isDisabled && this.isImprovedByTS31) this.ts31Effect = BE.pow(upgrade.config.effect(), 4);
       if (upgrade.id !== "challengeMult") return;
       this.showWorstChallenge = upgrade.effectValue !== upgrade.cap &&
-        player.challenge.normal.bestTimes.sum() < Number.MAX_VALUE;
+        player.challenge.normal.bestTimes.reduce(BE.sumReducer).lt(BE.MAX_VALUE);
       const worstChallengeTime = GameCache.worstChallengeTime.value;
       const worstChallengeIndex = 2 + player.challenge.normal.bestTimes.indexOf(worstChallengeTime);
       this.worstChallengeString = `(Challenge ${worstChallengeIndex}: ${timeDisplayShort(worstChallengeTime)})`;

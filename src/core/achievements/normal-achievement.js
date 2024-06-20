@@ -1,5 +1,5 @@
 import { GameMechanicState } from "../game-mechanics/index.js";
-
+import { BEC } from "../constants.js";
 import { SteamRuntime } from "../../steam/index.js";
 
 class AchievementState extends GameMechanicState {
@@ -141,27 +141,27 @@ export const Achievements = {
   autoAchieveUpdate(diff) {
     if (!PlayerProgress.realityUnlocked()) return;
     if (!player.reality.autoAchieve || RealityUpgrade(8).isLockingMechanics) {
-      player.reality.achTimer = Math.clampMax(player.reality.achTimer + diff, this.period);
+      player.reality.achTimer = BE.clampMax(player.reality.achTimer.plus(diff), this.period);
       return;
     }
     if (Achievements.preReality.every(a => a.isUnlocked)) return;
 
-    player.reality.achTimer += diff;
-    if (player.reality.achTimer < this.period) return;
+    player.reality.achTimer = player.reality.achTimer.plus(diff);
+    if (player.reality.achTimer.lt(this.period)) return;
 
     for (const achievement of Achievements.preReality.filter(a => !a.isUnlocked)) {
       achievement.unlock(true);
-      player.reality.achTimer -= this.period;
-      if (player.reality.achTimer < this.period) break;
+      player.reality.achTimer = player.reality.achTimer.minus(this.period);
+      if (player.reality.achTimer.lt(this.period)) break;
     }
     player.reality.gainedAutoAchievements = true;
   },
 
   get timeToNextAutoAchieve() {
-    if (!PlayerProgress.realityUnlocked()) return 0;
-    if (GameCache.achievementPeriod.value === 0) return 0;
-    if (Achievements.preReality.countWhere(a => !a.isUnlocked) === 0) return 0;
-    return this.period - player.reality.achTimer;
+    if (!PlayerProgress.realityUnlocked()) return BEC.D0;
+    if (GameCache.achievementPeriod.value === 0) return BEC.D0;
+    if (Achievements.preReality.countWhere(a => !a.isUnlocked) === 0) return BEC.D0;
+    return this.period.minus(player.reality.achTimer);
   },
 
   _power: new Lazy(() => {

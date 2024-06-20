@@ -22,8 +22,8 @@ export default {
       hasDimensionBoosts: false,
       isQuickResetAvailable: false,
       isSacrificeUnlocked: false,
-      buy10Mult: new Decimal(0),
-      currentSacrifice: new Decimal(0),
+      buy10Mult: new BE(0),
+      currentSacrifice: new BE(0),
       hasRealityButton: false,
       multiplierText: "",
       randomDimOrder: false
@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     update() {
-      this.hasDimensionBoosts = player.dimensionBoosts > 0;
+      this.hasDimensionBoosts = player.dimensionBoosts.gt(0);
       this.isQuickResetAvailable = Player.isInAntimatterChallenge && Player.antimatterChallenge.isQuickResettable;
       this.isSacrificeUnlocked = Sacrifice.isVisible;
       this.buy10Mult.copyFrom(AntimatterDimensions.buyTenMultiplier);

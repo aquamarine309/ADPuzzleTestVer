@@ -1,4 +1,4 @@
-import { DC } from "../constants.js";
+import { BEC } from "../constants.js";
 
 import { credits } from "./credits.js";
 
@@ -164,7 +164,7 @@ ${player.blackHole[0].unlocked
       <br>`
     : ""
 }
-Offline tick count can be adjusted between ${formatInt(500)} and ${formatInt(DC.E6)} ticks. Smaller counts will result
+Offline tick count can be adjusted between ${formatInt(500)} and ${formatInt(BEC.E6)} ticks. Smaller counts will result
 in faster but less accurate simulations, while larger counts will result in more accurate simulations which take longer
 to complete. There is a limit of one day of time per game tick, meaning there are some rare situations (such as not
 playing the game for more than a year) where you may not get all of the time you were away.
@@ -633,7 +633,7 @@ amount of antimatter before you can attempt them.
     }, {
       name: "Replicanti",
       info: () => `
-Replicanti are another resource you unlock at ${format(DC.E140)} IP. Rather
+Replicanti are another resource you unlock at ${format(BEC.E140)} IP. Rather
 than producing something else, Replicanti actually produces <i>itself</i> up to a maximum of
 ${formatPostBreak(Number.MAX_VALUE, 2)}. Replicanti are produced at their own pace, unaffected by Tickspeed Upgrades.
 Each individual Replicanti has a certain chance (initially ${formatPercents(0.01)}) of producing another Replicanti
@@ -652,14 +652,14 @@ Replicanti give a multiplier to all Infinity Dimensions, which will reach a maxi
 ${formatX(Math.pow(2, 20), 2, 2)} at ${formatPostBreak(Number.MAX_VALUE, 2)} Replicanti.
 <br>
 <br>
-<b>Chance upgrade cost:</b> Base ${format(DC.E150)} IP, cost increment ${formatX(DC.E15)} IP
+<b>Chance upgrade cost:</b> Base ${format(BEC.E150)} IP, cost increment ${formatX(BEC.E15)} IP
 <br>
-<b>Interval upgrade cost:</b> Base ${format(DC.E140)} IP, cost increment ${formatX(DC.E10)} IP
+<b>Interval upgrade cost:</b> Base ${format(BEC.E140)} IP, cost increment ${formatX(BEC.E10)} IP
 <br>
-<b>Galaxy upgrade cost:</b> Base ${format(DC.E170)} IP, cost increment ${formatX(DC.E25)} IP and an additional
+<b>Galaxy upgrade cost:</b> Base ${format(BEC.E170)} IP, cost increment ${formatX(BEC.E25)} IP and an additional
 ${formatX(1e5)} IP per upgrade, scaling similarly to distant Antimatter Galaxies. Above ${formatInt(100)} Replicanti
-Galaxies, this ${formatX(1e5)} per upgrade changes to ${formatX(DC.E55)}. Above ${formatInt(1000)}, the scaling switches
-from quadratic to cubic, with the ${formatX(DC.E55)} multiplier itself increasing by ${formatX(DC.E5)} per upgrade.
+Galaxies, this ${formatX(1e5)} per upgrade changes to ${formatX(BEC.E55)}. Above ${formatInt(1000)}, the scaling switches
+from quadratic to cubic, with the ${formatX(BEC.E55)} multiplier itself increasing by ${formatX(BEC.E5)} per upgrade.
 `,
       isUnlocked: () => Replicanti.areUnlocked || PlayerProgress.eternityUnlocked(),
       tags: ["interval", "chance", "infinity", "galaxy", "galaxies", "midgame"],
@@ -681,7 +681,7 @@ Eternity Point gain scales similarly to Infinity Point gain, but scaling off of 
 The base amount of EP gained at ${formatPostBreak(Number.MAX_VALUE, 2)} IP is ~${format(1.62, 2, 2)} EP, multiplied by
 ${formatInt(5)} for every factor of ${formatPostBreak(Number.MAX_VALUE, 2)} more IP you have. This is always rounded
 down, which means that you will get ${formatInt(1)} EP at ${formatPostBreak(Number.MAX_VALUE, 2)} IP but will not reach
-${formatInt(2)} EP until ${formatPostBreak(DC.E349)}.
+${formatInt(2)} EP until ${formatPostBreak(BEC.E349)}.
 <br>
 <br>
 <b>Hotkey: E</b> will try to perform an Eternity reset.
@@ -809,9 +809,9 @@ the middle of an Eternity.
 <br>
 <b>Costs for Time Theorems:</b>
 <br>
-<b>Antimatter:</b> Initially ${format(DC.E20000)}, ${formatX(DC.E20000)} per Theorem
+<b>Antimatter:</b> Initially ${format(BEC.E20000)}, ${formatX(BEC.E20000)} per Theorem
 <br>
-<b>Infinity Points:</b> Initially ${formatInt(1)}, ${formatX(DC.E100)} per Theorem
+<b>Infinity Points:</b> Initially ${formatInt(1)}, ${formatX(BEC.E100)} per Theorem
 <br>
 <b>Eternity Points:</b> Initially ${formatInt(1)}, ${formatX(2)} per Theorem
 `,
@@ -885,7 +885,7 @@ also be repeatedly bought, but eventually reaches a cap.
     }, {
       name: "Reality",
       info: () => `
-When you reach ${formatPostBreak(DC.E4000)} EP and have completed the first
+When you reach ${formatPostBreak(BEC.E4000)} EP and have completed the first
 ${formatInt(13)} rows of Achievements, you will be able to purchase the Time Study that unlocks Reality.
 Unlocking it opens a new tab, where you can find the button to make a new Reality. Starting a new Reality
 will reset almost the entire game up to this point, but in exchange gives
@@ -916,9 +916,9 @@ currency that can be spent in the Perks subtab on different Perks.
 <br>
 Reality Machines scale purely off of EP, and the Reality button will tell you how much EP you need in order to gain
 the next one. The first ${formatInt(10)} RM scale linearly in the exponent between
-${formatPostBreak(DC.E4000)} EP and ${formatPostBreak(DC.C10P16000D3)} EP, and then past that
+${formatPostBreak(BEC.E4000)} EP and ${formatPostBreak(BEC.C10P16000D3)} EP, and then past that
 RM = ${formatInt(1000)}<sup>log<sub>${formatInt(10)}</sub>(EP)/${formatInt(4000)}-${formatInt(1)}</sup>. This formula
-is higher RM gain than linear above ${formatPostBreak(DC.C10P16000D3)} EP.
+is higher RM gain than linear above ${formatPostBreak(BEC.C10P16000D3)} EP.
 <br>
 <br>
 Glyph level scales off of a combination of Eternity Points, Replicanti, and Dilated Time, with a minimum level of
@@ -1183,7 +1183,7 @@ the Black Hole tab.
 <br>
 <b>Increased cost scaling:</b> Above ${format(1e30)} RM, the cost multiplier between purchases increases by an additive
 +${format(0.2, 0, 1)} per upgrade. Above ${format(Number.MAX_VALUE, 1)} RM, a new scaling occurs which ignores all the
-previous behavior. From this point, all upgrades instead behave as if they had an initial cost of ${format(DC.E310)}
+previous behavior. From this point, all upgrades instead behave as if they had an initial cost of ${format(BEC.E310)}
 and further upgrade costs increase by ${format(1e6)}, ${format(1e7)}, and so on (${formatX(10)} between upgrades).
 <br>
 <b>Black Hole 2:</b> All upgrades have an initial cost ${formatX(1000)} higher than the first Black Hole,
@@ -1386,7 +1386,7 @@ amplify a Reality in the Glyphs tab. When you complete the Reality, this uses al
 in order to attempt to repeat that
 exact Reality over and over, giving you all the rewards you would normally get from the repetitions. For example, if
 you have ${formatInt(50)} minutes stored and amplify a Reality which has lasted ${formatInt(10)} minutes and would
-give ${format(DC.E30)} RM and ${format(DC.E12)} Relic Shards, the amplified Reality will give you ${format(5e30)} RM,
+give ${format(BEC.E30)} RM and ${format(BEC.E12)} Relic Shards, the amplified Reality will give you ${format(5e30)} RM,
 ${format(5e12)} Relic Shards, ${formatInt(5)} Glyphs (subject to your filtering settings),
 and ${formatInt(5)} Perk Points.
 <br>
@@ -1614,7 +1614,7 @@ that the reaction cannot proceed due to not having enough of that reagent to get
       name: "Imaginary Machines",
       info: () => `
 Once you are able to gain at least ${format(MachineHandler.baseRMCap)} Reality Machines in a single Reality, you
-unlock the ability to gain a new resource called Imaginary Machines. Reality Machines will also become hardcapped
+unlock the ability to gain a new resource called Imaginary Machines. Reality Machines will also become hardCapped
 at ${format(MachineHandler.baseRMCap)}; you will be unable to gain any more past this limit.
 <br>
 <br>
@@ -1809,7 +1809,7 @@ Rift bars can be filled by clicking them to toggle between "Idle" and "Filling",
 Rift offers a Rift-specific effect which are based on the total amount filled.
 ${PelleStrikes.eternity.hasStrike
     ? `An exception for this is Decay/Collapse/Disarray, whose effect gets capped once you have drained a total of
-    ${formatPostBreak(DC.E2000)} Replicanti.`
+    ${formatPostBreak(BEC.E2000)} Replicanti.`
     : ""}
 In addition, each Rift offers three milestone rewards for filling them up to a certain percentage.
 `,

@@ -1,5 +1,5 @@
 import { Currency } from "../../currency.js";
-import { DC } from "../../constants.js";
+import { BEC } from "../../constants.js";
 import { RebuyableMechanicState } from "../../game-mechanics/rebuyable.js";
 import { SetPurchasableMechanicState } from "../../utils.js";
 
@@ -212,16 +212,16 @@ export const Pelle = {
       description,
       infinity: (isActive("infinity") && player.challenge.eternity.current <= 8)
         ? Currency.infinityPoints.value.plus(1).pow(0.2)
-        : DC.D1,
+        : BEC.D1,
       time: isActive("time")
         ? Currency.eternityPoints.value.plus(1).pow(0.3)
-        : DC.D1,
+        : BEC.D1,
       replication: isActive("replication")
         ? 10 ** 53 ** (PelleRifts.vacuum.percentage)
         : 1,
       dilation: isActive("dilation")
-        ? Decimal.pow(player.dilation.totalTachyonGalaxies, 1.5).max(1)
-        : DC.D1,
+        ? BE.pow(player.dilation.totalTachyonGalaxies, 1.5).max(1)
+        : BEC.D1,
       power: isActive("power")
         ? 1.02
         : 1,
@@ -236,7 +236,7 @@ export const Pelle = {
       case "infinity":
         return `Infinity Point gain ${player.challenge.eternity.current <= 8
           ? formatX(Currency.infinityPoints.value.plus(1).pow(0.2), 2)
-          : formatX(DC.D1, 2)} (based on current IP)`;
+          : formatX(BEC.D1, 2)} (based on current IP)`;
       case "time":
         return `Eternity Point gain ${formatX(Currency.eternityPoints.value.plus(1).pow(0.3), 2)}
           (based on current EP)`;
@@ -244,7 +244,7 @@ export const Pelle = {
         return `Replication speed ${formatX(10 ** 53 ** (PelleRifts.vacuum.percentage), 2)} \
         (based on ${wordShift.wordCycle(PelleRifts.vacuum.name)})`;
       case "dilation":
-        return `Dilated Time gain ${formatX(Decimal.pow(player.dilation.totalTachyonGalaxies, 1.5).max(1), 2)}
+        return `Dilated Time gain ${formatX(BE.pow(player.dilation.totalTachyonGalaxies, 1.5).max(1), 2)}
           (based on Tachyon Galaxies)`;
       case "power":
         return `Galaxies are ${formatPercents(0.02)} stronger`;
@@ -268,15 +268,15 @@ export const Pelle = {
   },
 
   resetResourcesForDilation() {
-    this.cel.records.totalAntimatter = new Decimal("1e180000");
-    this.cel.records.totalInfinityPoints = new Decimal("1e60000");
+    this.cel.records.totalAntimatter = new BE("1e180000");
+    this.cel.records.totalInfinityPoints = new BE("1e60000");
     Currency.eternityPoints.reset();
     // Oddly specific number? Yes, it's roughly the amount of EP you have
     // when starting dilation for the first time
     // Since 5th strike previously did not reset your current EP the previous reset value was kind of useless which
     // lead to some balancing problems, this hopefully prevents people starting dilation too early and getting
     // softlocked, or starting it too late and getting not-softlocked.
-    this.cel.records.totalEternityPoints = new Decimal("1e1050");
+    this.cel.records.totalEternityPoints = new BE("1e1050");
   },
 
   get remnantsGain() {
@@ -298,7 +298,7 @@ export const Pelle = {
   },
 
   realityShardGain(remnants) {
-    return Decimal.pow(10, remnants ** (1 / 7.5) * 4).minus(1).div(1e3);
+    return BE.pow(10, remnants ** (1 / 7.5) * 4).minus(1).div(1e3);
   },
 
   get realityShardGainPerSecond() {
@@ -323,7 +323,7 @@ export const Pelle = {
   },
 
   antimatterDimensionMult(x) {
-    return Decimal.pow(10, Math.log10(x + 1) + x ** 5.1 / 1e3 + 4 ** x / 1e19);
+    return BE.pow(10, Math.log10(x + 1) + x ** 5.1 / 1e3 + 4 ** x / 1e19);
   },
 
   get activeGlyphType() {

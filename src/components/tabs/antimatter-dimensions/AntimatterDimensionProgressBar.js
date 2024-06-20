@@ -1,4 +1,4 @@
-import { DC } from "../../../core/constants.js";
+import { BEC } from "../../../core/constants.js";
 
 export default {
   name: "AntimatterDimensionProgressBar",
@@ -21,7 +21,7 @@ export default {
     update() {
       this.displayPercents = formatPercents(this.fill, 2);
       const setProgress = (current, goal, tooltip) => {
-        this.fill = Math.clampMax(current.pLog10() / Decimal.log10(goal), 1);
+        this.fill = current.pLog10().div(BE.log10(goal)).clampMax(1).toNumber();
         this.tooltip = tooltip;
       };
       const setLinearProgress = (current, goal, tooltip) => {
@@ -59,13 +59,13 @@ export default {
           }
         } else {
           // Lai'tela destabilization; since the progress bar is logarithmically-scaled, we need to pow10 the arguments
-          setProgress(Decimal.pow10(player.celestials.laitela.entropy), 10, "Percentage to Destabilized Reality");
+          setProgress(BE.pow10(player.celestials.laitela.entropy), 10, "Percentage to Destabilized Reality");
         }
       } else if (Pelle.isDoomed) {
         if (PelleRifts.recursion.milestones[2].canBeApplied || GalaxyGenerator.spentGalaxies > 0) {
           setProgress(Currency.infinityPoints.value, Tesseracts.nextCost, "Percentage to next Tesseract");
         } else if (PelleStrikes.dilation.hasStrike) {
-          setProgress(Currency.eternityPoints.value, DC.E4000, "Percentage to Galaxy Generator");
+          setProgress(Currency.eternityPoints.value, BEC.E4000, "Percentage to Galaxy Generator");
         } else if (PelleStrikes.ECs.hasStrike) {
           setLinearProgress(
             (Math.min(Currency.timeTheorems.max.toNumber() / 12900, 1) +
@@ -79,16 +79,16 @@ export default {
           if (player.break) {
             setProgress(Currency.infinityPoints.value, 5e11, "Percentage to second Strike");
           } else {
-            setProgress(Currency.antimatter.value, Decimal.NUMBER_MAX_VALUE, "Percentage to Infinity");
+            setProgress(Currency.antimatter.value, BE.NUMBER_MAX_VALUE, "Percentage to Infinity");
           }
         } else {
-          setProgress(Currency.antimatter.value, Decimal.NUMBER_MAX_VALUE, "Percentage to first Strike");
+          setProgress(Currency.antimatter.value, BE.NUMBER_MAX_VALUE, "Percentage to first Strike");
         }
       } else if (Enslaved.isCompleted) {
         // Show all other goals from the top down, starting at features in the highest prestige layer
         setProgress(Currency.infinityPoints.value, Tesseracts.nextCost, "Percentage to next Tesseract");
       } else if (PlayerProgress.dilationUnlocked()) {
-        setProgress(Currency.eternityPoints.value, DC.E4000, "Percentage to Reality");
+        setProgress(Currency.eternityPoints.value, BEC.E4000, "Percentage to Reality");
       } else if (InfinityDimension(8).isUnlocked) {
         setProgress(Currency.infinityPoints.value, Player.eternityGoal, "Percentage to Eternity");
       } else if (player.break) {
@@ -102,7 +102,7 @@ export default {
           setProgress(player.infinityPoints, nextID.ipRequirement, text);
         }
       } else {
-        setProgress(Currency.antimatter.value, Decimal.NUMBER_MAX_VALUE, "Percentage to Infinity");
+        setProgress(Currency.antimatter.value, BE.NUMBER_MAX_VALUE, "Percentage to Infinity");
       }
     }
   },
