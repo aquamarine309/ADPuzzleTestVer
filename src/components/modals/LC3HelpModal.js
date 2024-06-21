@@ -5,10 +5,10 @@ const operators = [
     name: "+",
     fn: (a, b) => a + b,
     gen: () => {
-      return  [randomInt(20), randomInt(20)];
+      return  [randomInt(19) + 1, randomInt(19) + 1];
     },
     genBase: r => {
-      const a = randomInt(r) - 1;
+      const a = randomInt(r);
       const b = r - a;
       return [a, b];
     },
@@ -47,6 +47,7 @@ const operators = [
       return [a, b];
     },
     canGen: r => {
+      if (r <= 1) return false;
       for (let i = 2; i * i <= r; i++) {
         if (Number.isInteger(r / i)) return true;
       }
@@ -143,14 +144,17 @@ function questionGenerator() {
 }
 
 function checkRow(row) {
-  if (row[0] === "0") return;
-  if (row.countWhere(c => c === "=") !== 1) return;
+  if (row.countWhere(c => c === "=") !== 1) return false;
   const left = row.countWhere(c => c === "(");
   const right = row.countWhere(c => c === ")");
   if (left !== right) return false;
   // It is the worst way, but maybe it can't cause bugs.
-  return eval(row.join("").replace("=", "===").replace(/×/g, "*").replace(/÷/g, "/")
-  .replace(/\d+/g, match => parseInt(match, 10).toString()));
+  try {
+    return eval(row.join("").replace("=", "===").replace(/×/g, "*").replace(/÷/g, "/")
+    .replace(/\d+/g, match => parseInt(match, 10).toString()));
+  } catch (e) {
+    return false;
+  }
 }
 
 function fill(x, l) {
@@ -248,7 +252,6 @@ export default {
     if (player.lc3Game.rows) {
       this.blockRows = player.lc3Game.rows.map(r => [].slice.call(r));
       this.question = player.lc3Game.question;
-      ++this.count;
     } else {
       this.question = questionGenerator();
       this.blockRows = Array.range(0, 5).map(() => Array.repeat("", this.len));
