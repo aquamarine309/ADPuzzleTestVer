@@ -40,7 +40,8 @@ window.player = {
   lc3Game: {
     state: GAME_STATE.NOT_COMPLETE,
     rows: null,
-    questions: ""
+    questions: "",
+    currentRow: 0
   },
   buyUntil10: true,
   hasDLC: false,

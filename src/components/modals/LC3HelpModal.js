@@ -4,9 +4,6 @@ const operators = [
   {
     name: "+",
     fn: (a, b) => a + b,
-    gen: () => {
-      return  [randomInt(19) + 1, randomInt(19) + 1];
-    },
     genBase: r => {
       const a = randomInt(r);
       const b = r - a;
@@ -18,9 +15,6 @@ const operators = [
   {
     name: "-",
     fn: (a, b) => a - b,
-    gen: () => {
-      return  [randomInt(19) + 1, randomInt(19) + 1];
-    },
     genBase: r => {
       const b = randomInt(20);
       const a = b + r;
@@ -32,9 +26,6 @@ const operators = [
   {
     name: "×",
     fn: (a, b) => a * b,
-    gen: () => {
-      return  [randomInt(8) + 2, randomInt(8) + 2];
-    },
     genBase: r => {
       let a, b;
       for (let i = 2; i * i <= r; i++) {
@@ -58,11 +49,6 @@ const operators = [
   {
     name: "÷",
     fn: (a, b) => a / b,
-    gen: () => {
-      const b = randomInt(8) + 2;
-      const a = b * randomInt(10);
-      return [a, b];
-    },
     priority: 1,
     genBase: r => {
       const b = randomInt(8) + 2;
@@ -71,6 +57,18 @@ const operators = [
     },
     canGen: r => r > 0,
   },
+  {
+    name: "^",
+    fn: (a, b) => Math.pow(a, b),
+    priority: 1,
+    genBase: r => {
+      if (Number.isInteger(Math.sqrt(r))) return [Math.sqrt(r), 2];
+      if (Number.isInteger(Math.cbrt(r))) return [Math.cbrt(r), 2];
+    },
+    canGen: r => {
+      return Number.isInteger(Math.sqrt(r)) || Number.isInteger(Math.cbrt(r));
+    },
+  }
 ];
 
 const randomInt = x => Math.floor(Math.random() * x);
@@ -133,7 +131,7 @@ function secondEquationGenerator(answer = randomInt(10)) {
 }
 
 function questionGenerator() {
-  const answer = randomInt(10);
+  const answer = randomInt(9) + 1;
   let question;
   do {
     const  e1  = secondEquationGenerator(answer);
@@ -151,8 +149,10 @@ function checkRow(row) {
   // It is the worst way, but maybe it can't cause bugs.
   try {
     return eval(row.join("").replace("=", "===").replace(/×/g, "*").replace(/÷/g, "/")
-    .replace(/\d+/g, match => parseInt(match, 10).toString()));
+    .replace(/\d+/g, match => parseInt(match, 10).toString())
+    .replace(/\^/g, "**"));
   } catch (e) {
+    console.log(e);
     return false;
   }
 }
@@ -160,6 +160,8 @@ function checkRow(row) {
 function fill(x, l) {
   return Array.repeat("", l).map((c, i) => x[i] ?? c);
 }
+
+const enter = "[✓]";
 
 export default {
   name: "LC3HelpModal",
@@ -170,7 +172,7 @@ export default {
     return {
       question: "",
       answer: false,
-      blockRows: [],
+      blockRows: [[]],
       currentRow: 0,
       count: 0,
       state: GAME_STATE.NOT_COMPLETE
@@ -179,8 +181,8 @@ export default {
   computed: {
     inputRows() {
       return [
-        ["0", "1", "2", "3", "4", "+", "-", "(", ")"],
-        ["5", "6", "7", "8", "9", "×", "÷", "=", "Del"]
+        ["0", "1", "2", "3", "4", "+", "-", "(", ")", enter],
+        ["5", "6", "7", "8", "9", "×", "÷", "=", "^", "Del"]
       ]
     },
     len() {
@@ -197,9 +199,6 @@ export default {
     state(newValue) {
       player.lc3Game.state = newValue;
     },
-    blockRows(newValue) {
-      player.lc3Game.rows = newValue.map(r => [].slice.call(r));
-    }
   },
   methods: {
     input(x) {
@@ -207,55 +206,83 @@ export default {
       let row = this.blockRows[this.currentRow];
       const rowTrim = row.filter(r => r !== "");
       ++this.count;
+      if (x === enter) {
+        if (rowTrim.length !== this.len) return false;
+        if (!checkRow(rowTrim)) return;
+        if (row.join("") === this.question) {
+          this.state = GAME_STATE.COMPLETED;
+          return;
+        }
+        if (this.currentRow >= 6) {
+          this.state = GAME_STATE.FAILED;
+          return;
+        }
+        ++this.currentRow;
+        ++player.lc3Game.currentRow;
+        return;
+      }
       if (x === "Del") {
         if (rowTrim.length === 0) return;
         rowTrim.pop();
         row = fill(rowTrim, this.len);
         this.blockRows[this.currentRow] = row;
+        player.lc3Game.rows[this.currentRow] = row.slice();
         return;
       }
       if (rowTrim.length === this.len) return;
       rowTrim.push(x);
       row = fill(rowTrim, this.len);
       this.blockRows[this.currentRow] = row;
-      if (rowTrim.length === this.len) {
-        if (!checkRow(rowTrim)) return;
-        if (row.join("") === this.question) {
-          this.state = GAME_STATE.COMPLETED;
-        }
-        if (this.currentRow === 5) {
-          this.state = GAME_STATE.COMPLETED;
-        }
-        ++this.currentRow;
-      }
+      player.lc3Game.rows[this.currentRow] = row.slice();
     },
     id(a, b) {
       return 5 * a + b;
     },
-    getBlockClass(char, a, b) {
-      if (this.currentRow <= a) return;
+    getBlockClass(char, row, a, b) {
+      if (this.currentRow <= a && this.state === GAME_STATE.NOT_COMPLETE) return;
       if (char === this.question[b]) return "c-game-block--good";
-      if (this.question.includes(char)) return "c-game-block--mistake";
+      const noGreen = row.filter((c, i) => c === char && c === this.question[i]);
+      if (noGreen.length +
+        row.slice(0, b + 1)
+        .countWhere((c, i) => c === char && c !== this.question[i]) >
+        this.question.split("")
+        .countWhere(c => c === char)
+      ) {
       return "c-game-block--bad";
+      }
+      return "c-game-block--mistake";
     },
     getInputClass(char) {
-      if (char === "Del") return;
+      if (char === "Del" || char === enter) return;
+      let isGray = false;
       const completedRows = this.blockRows.slice(0, this.currentRow);
       for (let i = completedRows.length - 1; i >= 0 ; i--) {
-        const idx = completedRows[i].lastIndexOf(char);
-        if (idx === -1) continue;
-        return this.getBlockClass(char, i, idx);
+        const row = completedRows[i];
+        for (let idx = row.length - 1; idx >= 0; idx--) {
+          if (row[idx] !== char) continue;
+          const btnClass = this.getBlockClass(char, row, i, idx);
+          if (btnClass === "c-game-block--bad") {
+            isGray = true;
+            continue;
+          }
+          return btnClass;
+        }
       };
+      return isGray ? "c-game-block--bad" : void 0;
     }
   },
   created() {
     if (player.lc3Game.rows) {
-      this.blockRows = player.lc3Game.rows.map(r => [].slice.call(r));
       this.question = player.lc3Game.question;
+      this.blockRows = player.lc3Game.rows.map(r => [].slice.call(r));
+      this.currentRow = player.lc3Game.currentRow;
     } else {
       this.question = questionGenerator();
-      this.blockRows = Array.range(0, 5).map(() => Array.repeat("", this.len));
+      this.blockRows = Array.range(0, 6).map(() => Array.repeat("", this.len));
+      this.currentRow = 0;
       player.lc3Game.question = this.question;
+      player.lc3Game.rows = this.blockRows.map(r => [].slice.call(r));
+      player.lc3Game.currentRow = 0;
     }
   },
   template: `
@@ -275,7 +302,7 @@ export default {
       >
         <div
           class="c-game-block"
-          :class="getBlockClass(char, index, idx)"
+          :class="getBlockClass(char, row, index, idx)"
           v-for="(char, idx) in row"
           :key="id(index, idx)"
         >
