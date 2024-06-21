@@ -486,6 +486,11 @@ export const migrations = {
         player.dimensions.infinity[i].baseAmount = new BE(0);
         player.dimensions.infinity[i].amount = new BE(0);
       }
+    },
+    60: player => {
+      player.infinityRebuyables[0] = player.infinityRebuyables[0].clampMax(8);
+      player.infinityRebuyables[1] = player.infinityRebuyables[1].clampMax(7);
+      player.infinityRebuyables[2] = player.infinityRebuyables[2].clampMax(10);
     }
   },
 

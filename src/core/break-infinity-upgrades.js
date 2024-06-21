@@ -32,7 +32,7 @@ class RebuyableBreakInfinityUpgradeState extends RebuyableMechanicState {
   }
 
   get isCapped() {
-    return this.boughtAmount === this.config.maxUpgrades;
+    return this.boughtAmount.eq(this.config.maxUpgrades);
   }
 
   onPurchased() {
