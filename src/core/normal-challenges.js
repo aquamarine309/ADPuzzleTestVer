@@ -18,8 +18,8 @@ export function updateNormalAndInfinityChallenges(diff) {
   }
 
   if (NormalChallenge(3).isRunning) {
-    const multiplier = Currency.infinities.value.add(1).ln().add(1).times(DimBoost.purchasedBoosts).ln().pow(1.3).add(1);
-    player.chall3Pow = player.chall3Pow.times(BEC.D1_0025.pow(multiplier.times(diff.times(1.2)))).clampMax(BEC.E200.pow(1 / Math.pow(Puzzle.maxTier, 2)));
+    const multiplier = Currency.infinities.value.add(1).ln().times(DimBoost.purchasedBoosts).add(1).ln().pow(1.3).add(1);
+    player.chall3Pow = player.chall3Pow.times(BEC.D1_0025.pow(multiplier.times(diff))).clampMax(BEC.E200.pow(1 / Math.pow(Puzzle.maxTier, 2)));
   }
 
   if (NormalChallenge(2).isRunning) {
