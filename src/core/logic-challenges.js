@@ -198,12 +198,12 @@ export const LC3 = {
     const base1 = LC3Upgrade.cpMult.effectValue;
     const base2 = LC3Upgrade.cpBaseAD.effectValue;
     const pow = LC3Upgrade.cpPow.effectValue;
-    return base1.times(base2).pow(pow);
+    return base1.times(base2).pow(pow).pow(0.1);
   },
   
   tick(diff) {
     if (!this.isRunning) return;
-    Currency.challengePower.multiply(this.cpPerSecond.pow(diff.div(1e4)));
+    Currency.challengePower.multiply(this.cpPerSecond.pow(diff.div(1e3)));
   },
   
   get helpThreshold() {

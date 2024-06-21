@@ -28,7 +28,7 @@ export const logicChallenges = [
     description: () => `Antimatter Dimension multiplier is always ${formatX(1)}, but ...`,
     goal: BEC.E4000,
     reward: {
-      description: "Unlock Replicanti."
+      description: "Unlock Replicanti. (NYI)"
     }
   }
 ]

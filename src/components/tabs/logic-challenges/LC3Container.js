@@ -8,6 +8,7 @@ export default {
   data() {
     return {
       challengePower: new BE(0),
+      cpPerSecond: new BE(0),
       isVisible: true,
       showHelp: true
     }
@@ -20,6 +21,7 @@ export default {
       this.isVisible = LC3.isRunning;
       if (!this.isVisible) return;
       this.challengePower.copyFrom(Currency.challengePower);
+      this.cpPerSecond = LC3.cpPerSecond;
       this.showHelp = player.records.thisInfinity.maxAM.gte(LC3.helpThreshold) && LC3.game.isRunning;
     }
   },
@@ -29,7 +31,7 @@ export default {
     class="c-lc3-container"
   >
     <div>
-      You have <span class="c-cp-amount">{{ format(challengePower, 2, 3) }}</span> Challenge Power.
+      You have <span class="c-cp-amount">{{ format(challengePower, 2, 3) }}</span> Challenge Power. ({{ formatX(cpPerSecond, 2, 3) }}/s)
     </div>
     <div class="c-lc3-upgrades-container">
       <LC3UpgradeButton
