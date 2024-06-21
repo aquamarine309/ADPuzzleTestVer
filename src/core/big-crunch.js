@@ -10,11 +10,26 @@ function handleChallengeCompletion() {
   if (!challenge && !NormalChallenge(1).isCompleted) {
     NormalChallenge(1).complete();
   }
-  if (!challenge && !LogicChallenge.isRunning) return;
+  
+  const inLC = LogicChallenge.isRunning;
+  if (!challenge && !inLC) return;
 
   // Clear the IC notification after the first completion (only) so that it can show it again for the next one
   const inIC = InfinityChallenge.isRunning;
   if (inIC && !InfinityChallenge.current.isCompleted) TabNotification.ICUnlock.clearTrigger();
+  
+  if (inLC) {
+    const currentLC = LogicChallenge.current;
+    if (currentLC.canComplete) {
+      if (!currentLC.isCompleted) {
+        currentLC.complete();
+      }
+      currentLC.updateChallengeTime();
+      if (!player.options.retryChallenge) {
+        player.challenge.logic.current = 0;
+      }
+    }
+  }
   
   if (challenge) {
     challenge.complete();
@@ -26,20 +41,6 @@ function handleChallengeCompletion() {
     player.challenge.infinity.current = 0;
   }
   
-  
-  const inLC = LogicChallenge.isRunning;
-  
-  if (inLC) {
-    const currentLC = LogicChallenge.current;
-    if (!currentLC.canComplete) return;
-    if (!currentLC.isCompleted) {
-      currentLC.complete();
-    }
-    currentLC.updateChallengeTime();
-    if (!player.options.retryChallenge) {
-      player.challenge.logic.current = 0;
-    }
-  }
 }
 
 export function manualBigCrunchResetRequest() {

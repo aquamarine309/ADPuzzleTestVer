@@ -135,6 +135,9 @@ class NormalChallengeState extends GameMechanicState {
   }
 
   exit() {
+    if (this.isBroken) {
+      Currency.antimatter.dropTo(BE.NUMBER_MAX_VALUE);
+    }
     player.challenge.normal.current = 0;
     bigCrunchReset(true, false);
     if (!Enslaved.isRunning) Tab.dimensions.antimatter.show();

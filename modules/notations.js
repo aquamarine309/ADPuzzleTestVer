@@ -208,6 +208,8 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
         return decimal.sign < 0 ? this.negativeInfinite : this.infinite;
       }
       
+      decimal = decimal.normalize();
+      
       if (decimal.lt(1e-300)) {
         return decimal.sign < 0 ? this.formatVerySmallNegativeDecimal(decimal.abs(), placesUnder1000) : this.formatVerySmallDecimal(decimal, placesUnder1000);
       }

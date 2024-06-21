@@ -60,7 +60,7 @@ const operators = [
   {
     name: "^",
     fn: (a, b) => Math.pow(a, b),
-    priority: 1,
+    priority: 2,
     genBase: r => {
       if (Number.isInteger(Math.sqrt(r))) return [Math.sqrt(r), 2];
       if (Number.isInteger(Math.cbrt(r))) return [Math.cbrt(r), 2];
@@ -181,8 +181,8 @@ export default {
   computed: {
     inputRows() {
       return [
-        ["0", "1", "2", "3", "4", "+", "-", "(", ")", enter],
-        ["5", "6", "7", "8", "9", "×", "÷", "=", "^", "Del"]
+        ["0", "1", "2", "3", "4", "+", "-", "(", ")", "Del"],
+        ["5", "6", "7", "8", "9", "×", "÷", "=", "^", enter]
       ]
     },
     len() {
