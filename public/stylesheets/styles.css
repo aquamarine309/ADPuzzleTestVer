@@ -9829,6 +9829,7 @@ input.o-automator-block-input {
   margin: 0.2rem;
   color: white;
   transition-duration: 0.2s;
+  border-radius: var(--var-border-radius, 0.2rem)
 }
 
 .c-game-block--good {

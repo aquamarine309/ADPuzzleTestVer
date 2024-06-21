@@ -23,7 +23,7 @@ const operators = [
       return [a, b];
     },
     canGen: () => true,
-    priority: 0
+    priority: 2
   },
   {
     name: "×",
@@ -46,12 +46,12 @@ const operators = [
       }
       return false;
     },
-    priority: 1
+    priority: 3
   },
   {
     name: "÷",
     fn: (a, b) => a / b,
-    priority: 1,
+    priority: 4,
     genBase: r => {
       const b = randomInt(10, 2);
       const a = b * r;
@@ -62,7 +62,7 @@ const operators = [
   {
     name: "^",
     fn: (a, b) => Math.pow(a, b),
-    priority: 2,
+    priority: 5,
     genBase: r => {
       if (Number.isInteger(Math.sqrt(r))) return [Math.sqrt(r), 2];
       if (Number.isInteger(Math.cbrt(r))) return [Math.cbrt(r), 3];
@@ -387,7 +387,7 @@ export default {
         </div>
       </div>
       <div
-         v-if="!lc3Running && !isCompleted"
+         v-if="!lc3Running"
         class="c-game-options-container"
       >
         <b>Game Options (Invalid in LC3)</b>
