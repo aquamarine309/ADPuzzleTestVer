@@ -505,3 +505,17 @@ Currency.logicPoints = new class extends BECurrency {
     player.logic.spentPoints = player.logic.spentPoints.add(spent);
   }
 }
+
+Currency.challengePower = new class extends BECurrency {
+  get value() {
+    return player.challengePower;
+  }
+  
+  set value(value) {
+    player.challengePower = BE.clampMin(value, 1);
+  }
+  
+  get startingValue() {
+    return BEC.E1;
+  }
+}

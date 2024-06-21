@@ -72,6 +72,7 @@ import SwitchAutomatorEditorModal from "../components/modals/SwitchAutomatorEdit
 import UiChoiceModal from "../components/modals/UiChoiceModal.js";
 import UndoGlyphModal from "../components/modals/UndoGlyphModal.js";
 import UpgradeMechanicLockModal from "../components/modals/UpgradeMechanicLockModal.js";
+import LC3HelpModal from "../components/modals/LC3HelpModal.js";
 
 import S12GamesModal from "../components/modals/secret-themes/S12GamesModal.js";
 
@@ -262,6 +263,7 @@ Modal.pelleEffects = new Modal(PelleEffectsModal);
 Modal.sacrifice = new Modal(SacrificeModal, 1, GAME_EVENT.DIMBOOST_AFTER);
 Modal.breakInfinity = new Modal(BreakInfinityModal, 1, GAME_EVENT.ETERNITY_RESET_AFTER);
 Modal.respecIAP = new Modal(RespecIAPModal);
+Modal.lc3Help = new Modal(LC3HelpModal, 1, GAME_EVENT.BIG_CRUNCH_AFTER);
 
 Modal.s12Games = new Modal(S12GamesModal);
 Modal.message = new class extends Modal {

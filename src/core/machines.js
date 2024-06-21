@@ -12,7 +12,7 @@ export const MachineHandler = {
   },
 
   get realityMachineMultiplier() {
-    return ShopPurchase.RMPurchases.currentMult * Teresa.rmMultiplier * Effects.max(1, PerkShopUpgrade.rmMult) *
+    return ShopPurchase.RMPurchases.currentMult * Teresa.rmMultiplier * PerkShopUpgrade.rmMult *
       getAdjustedGlyphEffect("effarigrm") * Achievement(167).effectOrDefault(1);
   },
 

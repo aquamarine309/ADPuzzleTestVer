@@ -1,4 +1,4 @@
-import { DC } from "../../../core/constants.js";
+import { BEC } from "../../../core/constants.js";
 
 import CelestialQuoteHistory from "../../CelestialQuoteHistory.js";
 import CustomizeableTooltip from "../../CustomizeableTooltip.js";
@@ -78,9 +78,9 @@ export default {
       return GameDatabase.celestials.descriptions[0].effects();
     },
     lastMachinesString() {
-      return this.lastMachines.lt(DC.E10000)
+      return this.lastMachines.lt(BEC.E10000)
         ? `${quantify("Reality Machine", this.lastMachines, 2)}`
-        : `${quantify("Imaginary Machine", this.lastMachines.dividedBy(DC.E10000), 2)}`;
+        : `${quantify("Imaginary Machine", this.lastMachines.dividedBy(BEC.E10000), 2)}`;
     },
     unlockInfoTooltipArrowStyle() {
       return {

@@ -6,7 +6,7 @@ function rebuyable(config) {
   return {
     rebuyable: true,
     id,
-    cost: () => config.initialCost * Math.pow(config.costIncrease, player.infinityRebuyables[config.id]),
+    cost: () => BE.pow(config.costIncrease, player.infinityRebuyables[config.id]).times(config.initialCost),
     maxUpgrades,
     description,
     effect: () => effectFunction(player.infinityRebuyables[config.id]),
@@ -17,8 +17,8 @@ function rebuyable(config) {
       (value => {
         const afterECText = config.afterEC ? config.afterEC() : "";
         return value === config.maxUpgrades
-          ? `Currently: ${formatX(10 - value)} ${afterECText}`
-          : `Currently: ${formatX(10 - value)} | Next: ${formatX(10 - value - 1)}`;
+          ? `Currently: ${formatX(BE.minus(10, value))} ${afterECText}`
+          : `Currently: ${formatX(BE.minus(10, value))} | Next: ${formatX(BE.minus(9, value))}`;
       }),
     formatCost: value => format(value, 2, 0),
     noLabel,
@@ -131,11 +131,11 @@ export const breakInfinityUpgrades = {
     initialCost: 1e7,
     costIncrease: 10,
     maxUpgrades: 10,
-    effect: value => Player.bestRunIPPM.times(value / 20),
+    effect: value => Player.bestRunIPPM.times(value.div(20)),
     description: () => {
-      let generation = `Generate ${formatInt(5 * player.infinityRebuyables[2])}%`;
+      let generation = `Generate ${formatInt(player.infinityRebuyables[2].times(5))}%`;
       if (!BreakInfinityUpgrade.ipGen.isCapped) {
-        generation += ` ➜ ${formatInt(5 * (1 + player.infinityRebuyables[2]))}%`;
+        generation += ` ➜ ${formatInt(player.infinityRebuyables[2].plus(1).times(5))}%`;
       }
       return `${generation} of your best IP/min from your last 10 Infinities`;
     },

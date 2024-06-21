@@ -1,4 +1,4 @@
-import { DC } from "../../../core/constants.js";
+import { BEC } from "../../../core/constants.js";
 
 import TypeSacrifice from "./TypeSacrifice.js";
 
@@ -21,9 +21,9 @@ export default {
   computed: {
     types: () => GLYPH_TYPES.filter(type => type !== "cursed" && type !== "companion"),
     lastMachines() {
-      return this.lastMachinesTeresa.lt(DC.E10000)
+      return this.lastMachinesTeresa.lt(BEC.E10000)
         ? `${quantify("Reality Machine", this.lastMachinesTeresa, 2)}`
-        : `${quantify("Imaginary Machine", this.lastMachinesTeresa.dividedBy(DC.E10000), 2)}`;
+        : `${quantify("Imaginary Machine", this.lastMachinesTeresa.dividedBy(BEC.E10000), 2)}`;
     },
     dropDownIconClass() {
       return this.hideAlteration ? "far fa-plus-square" : "far fa-minus-square";

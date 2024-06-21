@@ -10,6 +10,8 @@ window.DLOG10_MAXNUM = BE.log10(Number.MAX_VALUE);
 window.LN_SQRT_2_PI = 0.5 * Math.log(2 * Math.PI);
 window.LOG10_2 = Math.log10(2);
 window.LOG10_E = Math.log10(Math.E);
+window.LN2 = Math.log(2);
+window.DLN2 = BE.ln(2);
 
 Math.PI_2 = Math.PI * 2;
 
@@ -97,37 +99,34 @@ window.decimalDepressedCubicSolution = function decimalDepressedCubicSolution(b,
  * @returns {bulkBuyBinarySearch_result | null}
  */
 window.bulkBuyBinarySearch = function bulkBuyBinarySearch(money, costInfo, alreadyBought, ignoreWarning = false) {
-  // eslint-disable-next-line no-console
-  if (!ignoreWarning) console.log("Bulk Buy Binary Search was used");
   const costFunction = costInfo.costFunction;
   const firstCost = costInfo.firstCost === undefined ? costFunction(alreadyBought) : costInfo.firstCost;
   const isCumulative = costInfo.cumulative === undefined ? true : costInfo.cumulative;
   if (money.lt(firstCost)) return null;
   // Attempt to find the max we can purchase. We know we can buy 1, so we try 2, 4, 8, etc
   // to figure out the upper limit
-  let cantBuy = 1;
+  let cantBuy = BEC.D1;
   let nextCost;
   do {
-    cantBuy *= 2;
-    nextCost = costFunction(alreadyBought + cantBuy - 1);
+    cantBuy = cantBuy.times(2);
+    nextCost = costFunction(alreadyBought.plus(cantBuy).minus(1));
   } while (money.gte(nextCost));
   // Deal with the simple case of buying just one
-  if (cantBuy === 2) {
-    return { quantity: 1, purchasePrice: firstCost };
+  if (cantBuy.eq(2)) {
+    return { quantity: BEC.D1, purchasePrice: firstCost };
   }
   // The amount we can actually buy is in the interval [canBuy/2, canBuy), we do a binary search
   // to find the exact value:
-  let canBuy = cantBuy / 2;
-  if (cantBuy > Number.MAX_SAFE_INTEGER) throw new Error("Overflow in binary search");
-  while (cantBuy - canBuy > 1) {
-    const middle = Math.floor((canBuy + cantBuy) / 2);
-    if (money.gte(costFunction(alreadyBought + middle - 1))) {
+  let canBuy = cantBuy.div(2);
+  while (cantBuy.minus(canBuy).gt(1)) {
+    const middle = canBuy.plus(cantBuy).div(2).floor();
+    if (money.gte(costFunction(alreadyBought.plus(middle).minus(1)))) {
       canBuy = middle;
     } else {
       cantBuy = middle;
     }
   }
-  const baseCost = costFunction(alreadyBought + canBuy - 1);
+  const baseCost = costFunction(alreadyBought.plus(canBuy).minus(1));
   if (!isCumulative) {
     return { quantity: canBuy, purchasePrice: baseCost };
   }
@@ -135,8 +134,8 @@ window.bulkBuyBinarySearch = function bulkBuyBinarySearch(money, costInfo, alrea
   // Account for costs leading up to that purchase; we are basically adding things
   // up until they are insignificant
   let count = 0;
-  for (let i = canBuy - 1; i > 0; --i) {
-    const newCost = otherCost.plus(costFunction(alreadyBought + i - 1));
+  for (let i = canBuy.minus(1); i.gt(0); i = i.minus(1)) {
+    const newCost = otherCost.plus(costFunction(alreadyBought.plus(1).minus(1)));
     if (newCost.eq(otherCost)) break;
     otherCost = newCost;
     if (++count > 1000) throw new Error("unexpected long loop (buggy cost function?)");
@@ -144,7 +143,7 @@ window.bulkBuyBinarySearch = function bulkBuyBinarySearch(money, costInfo, alrea
   let totalCost = baseCost.plus(otherCost);
   // Check the purchase price again
   if (money.lt(totalCost)) {
-    --canBuy;
+    canBuy = canBuy.minus(1);
     // Since prices grow rather steeply, we can safely assume that we can, indeed, buy
     // one less (e.g. if prices were A, B, C, D, we could afford D, but not A+B+C+D; we
     // assume we can afford A+B+C because A+B+C < D)

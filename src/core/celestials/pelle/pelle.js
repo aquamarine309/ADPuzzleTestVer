@@ -396,7 +396,7 @@ export class RebuyablePelleUpgradeState extends RebuyableMechanicState {
   }
 
   get isCapped() {
-    return this.boughtAmount >= this.config.cap;
+    return this.boughtAmount.gte(this.config.cap);
   }
 
   get isCustomEffect() { return true; }

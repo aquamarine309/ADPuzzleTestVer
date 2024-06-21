@@ -57,15 +57,15 @@ export const GameCache = {
     .map(run => run[1])
     .reduce(BE.sumReducer).div(1000 * player.records.recentEternities.length)),
 
-  tickSpeedMultDecrease: new Lazy(() => new BE(10 - Effects.sum(
+  tickSpeedMultDecrease: new Lazy(() => new BE(10).minusEffectsOf(
     BreakInfinityUpgrade.tickspeedCostMult,
     EternityChallenge(11).reward
-  ))),
+  )),
 
-  dimensionMultDecrease: new Lazy(() => new BE(10 - Effects.sum(
+  dimensionMultDecrease: new Lazy(() => new BE(10).minusEffectsOf(
     BreakInfinityUpgrade.dimCostMult,
     EternityChallenge(6).reward
-  ))),
+  )),
 
   timeStudies: new Lazy(() => NormalTimeStudyState.studies
     .map(s => player.timestudy.studies.includes(s.id))),
@@ -77,7 +77,7 @@ export const GameCache = {
     Perk.achievementGroup2,
     Perk.achievementGroup3,
     Perk.achievementGroup4
-  )).totalMilliseconds),
+  )).totalMilliseconds.toNumber()),
 
   buyablePerks: new Lazy(() => Perks.all.filter(p => p.canBeBought)),
 

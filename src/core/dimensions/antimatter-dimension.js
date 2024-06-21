@@ -610,6 +610,10 @@ class AntimatterDimensionState extends DimensionState {
     if (NormalChallenge(2).isRunning) {
       production = production.times(player.chall2Pow);
     }
+    if (LC3.isRunning) {
+      production = production.times(LC3Upgrade.adMult.effectValue);
+      production = production.pow(LC3Upgrade.adPow.effectValue);
+    }
     if (tier === 1) {
       if (NormalChallenge(3).isRunning) {
         production = production.times(player.chall3Pow);
@@ -619,6 +623,7 @@ class AntimatterDimensionState extends DimensionState {
         production = BE.pow10(log10.pow(getAdjustedGlyphEffect("effarigantimatter")));
       }
     }
+    
     production = production.min(this.cappedProductionInNormalChallenges);
     return production;
   }

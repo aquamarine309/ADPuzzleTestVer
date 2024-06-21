@@ -1,4 +1,5 @@
-import { GameMechanicState } from "./game-mechanics/index.js";
+import { BEC } from "./constants.js";
+import { GameMechanicState, RebuyableMechanicState } from "./game-mechanics/index.js";
 
 class LogicChallengeRewardState extends GameMechanicState {
   constructor(config, challenge) {
@@ -18,6 +19,7 @@ class LogicChallengeState extends GameMechanicState {
   }
 
   get isUnlocked() {
+    if (this.id === 3) return false;
     if (this.id === 1) return LogicUpgrade(10).isBought;
     return LogicChallenge(this.id - 1).isCompleted;
   }
@@ -125,3 +127,105 @@ export const LogicChallenges = {
     return LogicChallenges.all.filter(lc => lc.isCompleted);
   }
 };
+
+class LC3UpgradeState extends RebuyableMechanicState {
+
+  get currency() {
+    return Currency.challengePower;
+  }
+
+  get boughtAmount() {
+    return player.lc3Rebuyables[this.id];
+  }
+
+  set boughtAmount(value) {
+    player.lc3Rebuyables[this.id] = value;
+  }
+
+  get isCustomEffect() { return true; }
+
+  get effectValue() {
+    return this.config.effect(this.effectiveAmount);
+  }
+  
+  buyMax(auto) {
+    if (!this.isAffordable) return false;
+    if (this.iscCapped) return false;
+    const bulk = this.config.bulk(this.currency.value).add(1).floor()
+                .clampMax(this.cappedAmount);
+    if (bulk.lte(this.boughtAmount)) return false;
+    this.currency.subtract(this.config.cost(bulk.minus(1)));
+    this.boughtAmount = bulk;
+    return true;
+  }
+  
+  get cappedAmount() {
+    return this.config.cappedAmount ?? BE.MAX_VALUE;
+  }
+  
+  get effectiveAmount() {
+    const base = this.boughtAmount.clampMax(this.cappedAmount);
+    if (this.id === "cpPow" && LC3.game.isCompleted) {
+      return base.times(LC3Upgrade.adMult.effectValue.log10());
+    }
+    return base;
+  }
+  
+  get isCapped() {
+    return this.boughtAmount.gte(this.cappedAmount);
+  }
+}
+
+export const LC3Upgrade = mapGameDataToObject(
+  GameDatabase.logic.lc3Upgs,
+  config => new LC3UpgradeState(config)
+);
+
+export const LC3 = {
+  get isRunning() {
+    return LogicChallenge(3).isRunning;
+  },
+  
+  get cpPerSecond() {
+    if (!this.isRunning) return BEC.D1;
+    const base1 = LC3Upgrade.cpMult.effectValue;
+    const base2 = LC3Upgrade.cpBaseAD.effectValue;
+    const pow = LC3Upgrade.cpPow.effectValue;
+    return base1.times(base2).pow(pow);
+  },
+  
+  tick(diff) {
+    if (!this.isRunning) return;
+    Currency.challengePower.multiply(this.cpPerSecond.pow(diff.div(1000)));
+  },
+  
+  get helpThreshold() {
+    return BEC.E385;
+  },
+  
+  reset() {
+    if (this.isRunning) return;
+    Currency.challengePower.reset();
+    player.lc3Game.state = GAME_STATE.NOT_COMPLETE;
+    player.lc3Game.rows = null;
+    LC3Upgrade.all.forEach(u => u.boughtAmount = BEC.D0);
+  },
+  
+  game: {
+    get state() {
+      return player.lc3Game.state;
+    },
+    
+    get isRunning() {
+      return this.state === GAME_STATE.NOT_COMPLETE;
+    },
+    
+    get isCompleted() {
+      return this.state === GAME_STATE.COMPLETED;
+    },
+    
+    get isFailed() {
+      return this.state === GAME_STATE.FAILED;
+    }
+  }
+}

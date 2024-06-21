@@ -1,5 +1,6 @@
 import ChallengeGrid from "../../ChallengeGrid.js";
 import ChallengeTabHeader from "../../ChallengeTabHeader.js";
+import LC3Container from "./LC3Container.js";
 import LogicChallengeBox from "./LogicChallengeBox.js";
 
 export default {
@@ -7,6 +8,7 @@ export default {
   components: {
     ChallengeGrid,
     ChallengeTabHeader,
+    LC3Container,
     LogicChallengeBox
   },
   data() {
@@ -28,6 +30,7 @@ export default {
   template: `
   <div class="l-challenges-tab">
     <ChallengeTabHeader />
+    <LC3Container />
     <ChallengeGrid
       v-slot="{ challenge }"
       :challenges="challenges"

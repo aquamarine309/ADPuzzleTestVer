@@ -178,6 +178,7 @@ export function secondSoftReset(enteringAntimatterChallenge) {
   player.galaxies = BEC.D0;
   player.records.thisInfinity.maxAM = BEC.D0;
   Currency.antimatter.reset();
+  LC3.reset();
   softReset(0, true, true, enteringAntimatterChallenge);
   InfinityDimensions.resetAmount();
   if (player.replicanti.unl) Replicanti.amount = BEC.D1;

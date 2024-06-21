@@ -46,7 +46,7 @@ export function playerInfinityUpgradesOnReset() {
 
   if (PelleUpgrade.keepInfinityUpgrades.canBeApplied) {
     player.infinityUpgrades = new Set([...player.infinityUpgrades].filter(u => infinityUpgrades.has(u)));
-    player.infinityRebuyables = [0, 0, 0];
+    player.infinityRebuyables = [BEC.D0, BEC.D0, BEC.D0];
     GameCache.tickSpeedMultDecrease.invalidate();
     GameCache.dimensionMultDecrease.invalidate();
     return;
@@ -54,18 +54,18 @@ export function playerInfinityUpgradesOnReset() {
 
   if (RealityUpgrade(10).isBought || EternityMilestone.keepBreakUpgrades.isReached) {
     player.infinityUpgrades = breakInfinityUpgrades;
-    player.infinityRebuyables = [8, 7, 10];
+    player.infinityRebuyables = [BEC.D8, BEC.D7, BEC.E1];
   } else if (EternityMilestone.keepInfinityUpgrades.isReached) {
     player.infinityUpgrades = infinityUpgrades;
-    player.infinityRebuyables = [0, 0, 0];
+    player.infinityRebuyables = [BEC.D0, BEC.D0, BEC.D0];
   } else {
     player.infinityUpgrades.clear();
-    player.infinityRebuyables = [0, 0, 0];
+    player.infinityRebuyables = [BEC.D0, BEC.D0, BEC.D0];
   }
 
   if (Pelle.isDoomed) {
     player.infinityUpgrades.clear();
-    player.infinityRebuyables = [0, 0, 0];
+    player.infinityRebuyables = [BEC.D0, BEC.D0, BEC.D0];
   }
 
   GameCache.tickSpeedMultDecrease.invalidate();
@@ -629,6 +629,7 @@ export function gameLoop(passDiff, options = {}) {
   AutomatorBackend.update(realDiff);
   Pelle.gameLoop(realDiff);
   GalaxyGenerator.loop(realDiff);
+  LC3.tick(diff);
   GameEnd.gameLoop(realDiff);
 
   if (!Enslaved.canAmplify) {
