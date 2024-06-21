@@ -41,7 +41,13 @@ window.player = {
     state: GAME_STATE.NOT_COMPLETE,
     rows: null,
     questions: "",
-    currentRow: 0
+    currentRow: 0,
+    options: {
+      maxResult: 9,
+      minResult: 1,
+      maxLength: 10,
+      minLength: 5
+    }
   },
   buyUntil10: true,
   hasDLC: false,

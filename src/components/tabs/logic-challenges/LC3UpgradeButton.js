@@ -102,7 +102,6 @@ export default {
             {{ effectText.next }}
           </span>
         </template>
-        <span v-if="isCapped">Please wait a moment.</span>
         <div
           class="l-pelle-upgrade-gap"
           data-v-pelle-upgrade

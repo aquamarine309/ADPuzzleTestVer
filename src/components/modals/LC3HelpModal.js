@@ -1,4 +1,6 @@
 import ModalWrapperChoice from "./ModalWrapperChoice.js";
+import PrimaryButton from "../PrimaryButton.js";
+import SliderComponent from "../SliderComponent.js";
 
 const operators = [
   {
@@ -16,7 +18,7 @@ const operators = [
     name: "-",
     fn: (a, b) => a - b,
     genBase: r => {
-      const b = randomInt(20);
+      const b = randomInt(20, 1);
       const a = b + r;
       return [a, b];
     },
@@ -51,7 +53,7 @@ const operators = [
     fn: (a, b) => a / b,
     priority: 1,
     genBase: r => {
-      const b = randomInt(8) + 2;
+      const b = randomInt(10, 2);
       const a = b * r;
       return [a, b];
     },
@@ -63,7 +65,7 @@ const operators = [
     priority: 2,
     genBase: r => {
       if (Number.isInteger(Math.sqrt(r))) return [Math.sqrt(r), 2];
-      if (Number.isInteger(Math.cbrt(r))) return [Math.cbrt(r), 2];
+      if (Number.isInteger(Math.cbrt(r))) return [Math.cbrt(r), 3];
     },
     canGen: r => {
       return Number.isInteger(Math.sqrt(r)) || Number.isInteger(Math.cbrt(r));
@@ -71,7 +73,7 @@ const operators = [
   }
 ];
 
-const randomInt = x => Math.floor(Math.random() * x);
+const randomInt = (x, y = 0) => Math.floor(Math.random() * (x - y)) + y;
 const randomIn = x => Math.random() < 1 / x;
 
 function baseEquationGenerator(canOnlyNumber = false, answer = randomInt(10)) {
@@ -130,14 +132,15 @@ function secondEquationGenerator(answer = randomInt(10)) {
   }
 }
 
-function questionGenerator() {
-  const answer = randomInt(9) + 1;
+function questionGenerator(maxResult = 9, minResult = 1, maxLength = 10, minLength = 5) {
+  const answer = randomInt(maxResult + 1, minResult);
   let question;
   do {
     const  e1  = secondEquationGenerator(answer);
     const  e2  = secondEquationGenerator(answer);
+    if (e1 === e2) continue;
     question = `${e1.equation}=${e2.equation}`;
-  } while (question.length > 10 || question.length < 5);
+  } while (question.length > maxLength || question.length < minLength);
   return question;
 }
 
@@ -166,7 +169,9 @@ const enter = "[✓]";
 export default {
   name: "LC3HelpModal",
   components: {
-    ModalWrapperChoice
+    ModalWrapperChoice,
+    PrimaryButton,
+    SliderComponent
   },
   data() {
     return {
@@ -175,8 +180,12 @@ export default {
       blockRows: [[]],
       currentRow: 0,
       count: 0,
-      state: GAME_STATE.NOT_COMPLETE
-    };
+      state: GAME_STATE.NOT_COMPLETE,
+      maxResult: 9,
+      minResult: 1,
+      maxLength: 10,
+      minLength: 5
+    }
   },
   computed: {
     inputRows() {
@@ -184,6 +193,9 @@ export default {
         ["0", "1", "2", "3", "4", "+", "-", "(", ")", "Del"],
         ["5", "6", "7", "8", "9", "×", "÷", "=", "^", enter]
       ]
+    },
+    lc3Running() {
+      return LC3.isRunning;
     },
     len() {
       return this.question.length;
@@ -193,12 +205,43 @@ export default {
     },
     isFailed() {
       return this.state === GAME_STATE.FAILED;
+    },
+    title() {
+      if (!this.lc3Running) return "LC3 Mimi-game";
+      return "Boost Upgrades";
+    },
+    sliderProps() {
+      return {
+        interval: 1,
+        width: "100%",
+        tooltip: false,
+        valueInDot: true,
+        "dot-class": "c-exchange__slider-handle",
+        "bg-class": "c-exchange__slider-bg",
+        "process-class": "c-exchange__slider-process"
+      };
     }
   },
   watch: {
     state(newValue) {
       player.lc3Game.state = newValue;
     },
+    maxResult(newValue) {
+      if (this.lc3Running) return;
+      player.lc3Game.options.maxResult = Math.max(newValue, player.lc3Game.options.minResult);
+    },
+    minResult(newValue) {
+      if (this.lc3Running) return;
+      player.lc3Game.options.minResult = Math.min(newValue, player.lc3Game.options.maxResult);
+    },
+    maxLength(newValue) {
+      if (this.lc3Running) return;
+      player.lc3Game.options.maxLength = Math.max(newValue, player.lc3Game.options.minLength);
+    },
+    minLength(newValue) {
+      if (this.lc3Running) return;
+      player.lc3Game.options.minLength = Math.min(newValue, player.lc3Game.options.maxLength);
+    }
   },
   methods: {
     input(x) {
@@ -269,30 +312,48 @@ export default {
         }
       };
       return isGray ? "c-game-block--bad" : void 0;
+    },
+    restart() {
+      LC3.game.reset();
+      this.init();
+    },
+    init() {
+      if (!this.lc3Running) {
+        const options = player.lc3Game.options;
+        this.maxResult = options.maxResult;
+        this.minResult = options.minResult;
+        this.maxLength = options.maxLength;
+        this.minLength = options.minLength;
+      }
+      if (player.lc3Game.rows) {
+        this.question = player.lc3Game.question;
+        this.blockRows = player.lc3Game.rows.map(r => [].slice.call(r));
+        this.currentRow = player.lc3Game.currentRow;
+      } else {
+        this.currentRow = 0;
+        this.question = questionGenerator(this.maxResult, this.minResult, this.maxLength, this.minLength);
+        this.blockRows = Array.range(0, 6).map(() => Array.repeat("", this.len));
+        player.lc3Game.question = this.question;
+        player.lc3Game.rows = this.blockRows.map(r => [].slice.call(r));
+        player.lc3Game.currentRow = 0;
+      }
+    },
+    adjustSliderValue(value, name) {
+      this[name] = value;
     }
   },
   created() {
-    if (player.lc3Game.rows) {
-      this.question = player.lc3Game.question;
-      this.blockRows = player.lc3Game.rows.map(r => [].slice.call(r));
-      this.currentRow = player.lc3Game.currentRow;
-    } else {
-      this.question = questionGenerator();
-      this.blockRows = Array.range(0, 6).map(() => Array.repeat("", this.len));
-      this.currentRow = 0;
-      player.lc3Game.question = this.question;
-      player.lc3Game.rows = this.blockRows.map(r => [].slice.call(r));
-      player.lc3Game.currentRow = 0;
-    }
+    this.init();
   },
   template: `
   <ModalWrapperChoice
     :key="count + 'ct'"
     :showConfirm="isCompleted"
     :showCancel="isFailed"
+    class="l-lc3-modal"
   >
     <template #header>
-      Complete the game to gain a multiplier
+      {{ title }}
     </template>
     <div class="c-game-container">
       <div
@@ -309,6 +370,7 @@ export default {
           {{ char }}
         </div>
       </div>
+      <br>
       <div
         class="c-game-block-row"
         v-for="(row, index) in inputRows"
@@ -322,6 +384,64 @@ export default {
           @click="input(char)"
         >
           {{ char }}
+        </div>
+      </div>
+      <div
+         v-if="!lc3Running && !isCompleted"
+        class="c-game-options-container"
+      >
+        <b>Game Options (Invalid in LC3)</b>
+        <PrimaryButton
+          class="c-restart-game-btn"
+          @click="restart"
+        >
+          Restart
+        </PrimaryButton>
+        <div class="c-game-options-progress-bar">
+          <div>
+            <div>Min Length:</div>
+            <div>Max Length:</div>
+            <div>Min Result:</div>
+            <div>Max Result:</div>
+          </div>
+          <div>
+            <div>
+              <SliderComponent
+                v-bind="sliderProps"
+                :value="minLength"
+                :min="5"
+                :max="10"
+                @input="adjustSliderValue($event, 'minLength')"
+              />
+            </div>
+            <div>
+              <SliderComponent
+                v-bind="sliderProps"
+                :value="maxLength"
+                :min="5"
+                :max="10"
+                @input="adjustSliderValue($event, 'maxLength')"
+              />
+            </div>
+            <div>
+              <SliderComponent
+                v-bind="sliderProps"
+                :value="minResult"
+                :min="0"
+                :max="20"
+                @input="adjustSliderValue($event, 'minResult')"
+              />
+            </div>
+            <div>
+              <SliderComponent
+                v-bind="sliderProps"
+                :value="maxResult"
+                :min="0"
+                :max="20"
+                @input="adjustSliderValue($event, 'maxResult')"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

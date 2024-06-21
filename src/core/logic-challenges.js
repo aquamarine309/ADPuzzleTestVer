@@ -193,6 +193,10 @@ export const LC3 = {
     return this.challenge.isUnlocked && this.challenge.isRunning;
   },
   
+  get isCompleted() {
+    return this.challenge.isCompleted;
+  },
+  
   get cpPerSecond() {
     if (!this.isRunning) return BEC.D1;
     const base1 = LC3Upgrade.cpMult.effectValue;
@@ -213,9 +217,7 @@ export const LC3 = {
   reset() {
     if (this.isRunning) return;
     Currency.challengePower.reset();
-    player.lc3Game.state = GAME_STATE.NOT_COMPLETE;
-    player.lc3Game.rows = null;
-    player.lc3Game.curremtRow = 0;
+    this.game.reset();
     LC3Upgrade.all.forEach(u => u.boughtAmount = BEC.D0);
   },
   
@@ -234,6 +236,12 @@ export const LC3 = {
     
     get isFailed() {
       return this.state === GAME_STATE.FAILED;
+    },
+    
+    reset() {
+      player.lc3Game.state = GAME_STATE.NOT_COMPLETE;
+      player.lc3Game.rows = null;
+      player.lc3Game.curremtRow = 0;
     }
   }
 }

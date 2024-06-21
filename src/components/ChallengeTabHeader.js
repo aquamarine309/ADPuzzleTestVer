@@ -15,6 +15,7 @@ export default {
       isAutoECVisible: false,
       showAllChallenges: false,
       autoEC: false,
+      lc3Completed: false
     };
   },
   watch: {
@@ -36,6 +37,7 @@ export default {
       this.isShowAllVisible = PlayerProgress.eternityUnlocked();
       this.isAutoECVisible = Perk.autocompleteEC1.canBeApplied;
       this.autoEC = player.reality.autoEC;
+      this.lc3Completed = LC3.isCompleted && !LC3.isRunning;
     },
     restartChallenge() {
       const current = Player.anyChallenge;
@@ -50,6 +52,9 @@ export default {
         current.exit(false);
       }
     },
+    startGame() {
+      Modal.lc3Help.show();
+    }
   },
   template: `
   <div class="l-challenges-tab__header">
@@ -84,6 +89,13 @@ export default {
         @click="exitChallenge"
       >
         Exit Challenge
+      </PrimaryButton>
+      <PrimaryButton
+        v-if="lc3Completed"
+        class="o-primary-btn--subtab-option o-primary-btn--subtab-option--minigame"
+        @click="startGame"
+      >
+        Start LC3 Mini-game
       </PrimaryButton>
     </div>
   </div>

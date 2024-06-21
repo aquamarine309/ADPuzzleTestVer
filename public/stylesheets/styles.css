@@ -9715,7 +9715,7 @@ input.o-automator-block-input {
   font-size: 1.5rem;
   font-weight: bold;
   background-clip: text;
-
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -9822,24 +9822,28 @@ input.o-automator-block-input {
   height: 6rem;
   text-align: center;
   line-height: 6rem;
-  background-color: #399CB6;
+  background-color: #aaccff80;
+  border: 0.2rem solid #aaccff;
   font-weight: bold;
   font-size: 3rem;
   margin: 0.2rem;
   color: white;
+  transition-duration: 0.2s;
 }
 
 .c-game-block--good {
-  background-color: var(--color-lc3);
-  color: black;
+  background-color: #21ecb180;
+  border-color: #21ecb1;
 }
 
 .c-game-block--mistake {
-  background-color: #ff9800;
+  background-color: #ffcc8880;
+  border-color: #ffcc88;
 }
 
 .c-game-block--bad {
-  background-color: #999999;
+  background-color: #cccccc80;
+  border-color: #cccccc;
 }
 
 .c-game-block--small {
@@ -9847,4 +9851,53 @@ input.o-automator-block-input {
   height: 4rem;
   line-height: 4rem;
   font-size: 2rem;
+  cursor: pointer;
+}
+
+.o-primary-btn--subtab-option--minigame {
+  border-color: var(--color-lc3);
+  box-shadow: 0.1rem 0.1rem 0.5rem var(--color-logic);
+}
+
+.o-primary-btn--subtab-option--minigame:hover {
+  background-color: var(--color-lc3);
+}
+
+.c-game-options-container {
+  margin: 1rem 0;
+  padding: 2rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.l-lc3-modal {
+  min-width: 60rem;
+  font-size: 1.6rem;
+}
+
+.c-restart-game-btn {
+  height: 5rem;
+  padding: 1rem 2rem;
+  margin: 2rem;
+  font-size: 2rem;
+}
+
+.c-game-options-progress-bar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.c-game-options-progress-bar > div {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 50%;
+}
+
+.c-game-options-progress-bar > div > div {
+  height: 3rem;
 }
