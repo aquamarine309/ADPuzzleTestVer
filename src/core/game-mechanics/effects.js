@@ -45,7 +45,7 @@ export const Effects = {
    */
   max(defaultValue, ...effectSources) {
     let result = defaultValue;
-    applyEffectsOf(effectSources, v => result = BE.max(result, v));
+    applyEffectsOf(effectSources, v => result = Math.max(result, v));
     return result;
   },
   /**
@@ -55,7 +55,7 @@ export const Effects = {
    */
   min(defaultValue, ...effectSources) {
     let result = defaultValue;
-    applyEffectsOf(effectSources, v => result = BE.min(result, v));
+    applyEffectsOf(effectSources, v => result = Math.min(result, v));
     return result;
   }
 };
