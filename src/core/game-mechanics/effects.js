@@ -4,8 +4,8 @@ export const Effects = {
    * @return {Number}
    */
   sum(...effectSources) {
-    let result = 0;
-    applyEffectsOf(effectSources, v => result += v);
+    let result = BEC.D0;
+    applyEffectsOf(effectSources, v => result = result.plus(v));
     return result;
   },
   /**
@@ -13,8 +13,8 @@ export const Effects = {
    * @return {Number}
    */
   product(...effectSources) {
-    let result = 1;
-    applyEffectsOf(effectSources, v => result *= v);
+    let result = BEC.D1;
+    applyEffectsOf(effectSources, v => result = result.times(v));
     return result;
   },
   /**
@@ -45,7 +45,7 @@ export const Effects = {
    */
   max(defaultValue, ...effectSources) {
     let result = defaultValue;
-    applyEffectsOf(effectSources, v => result = Math.max(result, v));
+    applyEffectsOf(effectSources, v => result = BE.max(result, v));
     return result;
   },
   /**
@@ -55,7 +55,7 @@ export const Effects = {
    */
   min(defaultValue, ...effectSources) {
     let result = defaultValue;
-    applyEffectsOf(effectSources, v => result = Math.min(result, v));
+    applyEffectsOf(effectSources, v => result = BE.min(result, v));
     return result;
   }
 };

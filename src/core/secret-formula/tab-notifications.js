@@ -14,7 +14,7 @@ export const tabNotifications = {
       },
       {
         parent: "statistics",
-        tab: "multipliers"
+        tab: "prestige runs"
       }
     ],
     condition: () => !PlayerProgress.realityUnlocked() &&

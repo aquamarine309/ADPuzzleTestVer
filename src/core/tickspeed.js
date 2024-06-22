@@ -46,7 +46,7 @@ export function getTickSpeedMultiplier() {
       if (player.galaxies === 1) baseMultiplier = 1 / 1.07632;
       if (player.galaxies === 2) baseMultiplier = 1 / 1.072;
     }
-    const perGalaxy = 0.02 * effects;
+    const perGalaxy = effects.times(0.02);
     if (Pelle.isDoomed) galaxies = galaxies.times(0.5);
 
     galaxies = galaxies.times(Pelle.specialGlyphEffect.power);

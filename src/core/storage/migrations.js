@@ -492,9 +492,12 @@ export const migrations = {
       player.infinityRebuyables[1] = player.infinityRebuyables[1].clampMax(7);
       player.infinityRebuyables[2] = player.infinityRebuyables[2].clampMax(10);
     },
-    51: player => {
+    61: player => {
       player.lc3Game.options.minLength = Math.max(player.lc3Game.options.minLength, 6);
       player.lc3Game.options.maxLength = Math.max(player.lc3Game.options.maxLength, 6);
+    },
+    62: player => {
+      player.replicanti.unl = false;
     }
   },
 
