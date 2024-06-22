@@ -149,9 +149,8 @@ function questionGenerator(maxResult = 9, minResult = 1, maxLength = 10, minLeng
     const e1 = secondEquationGenerator(answer);
     const e2 = secondEquationGenerator(answer);
     const question = `${e1.equation}=${e2.equation}`;
-    if (e1.equation !== e2.equation && question.length <= maxLength && question.length >= minLength) break;
+    if (e1.equation !== e2.equation && question.length <= maxLength && question.length >= minLength) return question;
   };
-  return question;
 }
 
 function checkRow(row) {

@@ -40,7 +40,7 @@ export const pelleRifts = {
         resource: "vacuum",
         requirement: 0.4,
         description: () => `${wordShift.wordCycle(PelleRifts.vacuum.name)} also affects EP gain`,
-        effect: () => BE.pow(4, PelleRifts.vacuum.totalFill.log10() / 2 / 308 + 3),
+        effect: () => BE.pow(4, PelleRifts.vacuum.totalFill.log10().div(616).plus(3)),
         formatEffect: x => `EP gain ${formatX(x, 2, 2)}`
       },
     ],
@@ -60,7 +60,7 @@ export const pelleRifts = {
     // 0 - 1
     percentageToFill: percentage => BE.pow(10, 20 * percentage * 100).minus(1),
     effect: totalFill => (PelleRifts.chaos.milestones[0].canBeApplied
-      ? BE.sqrt(2000 + 1) : BE.sqrt(totalFill.plus(1).log10() + 1)),
+      ? BE.sqrt(2000 + 1) : BE.sqrt(totalFill.plus(1).log10().plus(1))),
     currency: () => Currency.replicanti,
     galaxyGeneratorThreshold: 1e7,
     milestones: [

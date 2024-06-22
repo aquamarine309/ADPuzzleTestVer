@@ -557,10 +557,9 @@ export const Replicanti = {
     };
   },
   unlock(freeUnlock = false) {
-    const cost = BEC.E140.dividedByEffectOf(PelleRifts.vacuum.milestones[1]);
     if (player.replicanti.unl) return;
-    if (freeUnlock || Currency.infinityPoints.gte(cost)) {
-      if (!freeUnlock) Currency.infinityPoints.subtract(cost);
+    return;
+    if (freeUnlock || LC3.isCompleted) {
       player.replicanti.unl = true;
       player.replicanti.timer = BEC.D0;
       Replicanti.amount = BEC.D1;

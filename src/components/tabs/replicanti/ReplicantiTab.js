@@ -139,11 +139,10 @@ export default {
       this.hasTDMult = DilationUpgrade.tdMultReplicanti.isBought;
       this.multTD.copyFrom(DilationUpgrade.tdMultReplicanti.effectValue);
       this.hasDTMult = getAdjustedGlyphEffect("replicationdtgain") !== 0 && !Pelle.isDoomed;
-      this.multDT = Math.clampMin(
-        BE.log10(Replicanti.amount) *
-          getAdjustedGlyphEffect("replicationdtgain"),
-        1
-      );
+      this.multDT = 
+        BE.log10(Replicanti.amount).times
+          (getAdjustedGlyphEffect("replicationdtgain"))
+          .clampMin(1)
       this.hasIPMult = AlchemyResource.exponential.amount > 0 && !this.isDoomed;
       this.multIP = Replicanti.amount.powEffectOf(AlchemyResource.exponential);
       this.isUncapped = PelleRifts.vacuum.milestones[1].canBeApplied;
@@ -162,7 +161,7 @@ export default {
         Effarig.bonusRG + 2
       );
       this.canSeeGalaxyButton =
-        Replicanti.galaxies.max >= 1 || PlayerProgress.eternityUnlocked();
+        Replicanti.galaxies.max.gte(1) || PlayerProgress.eternityUnlocked();
       this.maxReplicanti.copyFrom(player.records.thisReality.maxReplicanti);
       this.estimateToMax = this.calculateEstimate();
     },
@@ -172,9 +171,9 @@ export default {
     // This is copied out of a short segment of ReplicantiGainText with comments and unneeded variables stripped
     calculateEstimate() {
       const updateRateMs = player.options.updateRate;
-      const logGainFactorPerTick = BE.divide(getGameSpeedupForDisplay() * updateRateMs *
-        (Math.log(player.replicanti.chance + 1)), getReplicantiInterval());
-      const postScale = Math.log10(ReplicantiGrowth.scaleFactor) / ReplicantiGrowth.scaleLog10;
+      const logGainFactorPerTick = BE.divide(getGameSpeedupForDisplay().times(updateRateMs).times
+        (player.replicanti.chance plus(1).log10()), getReplicantiInterval());
+      const postScale = Math.log10(ReplicantiGrowth.scaleFactor).div(ReplicantiGrowth.scaleLog10);
       const nextMilestone = this.maxReplicanti;
       const coeff = BE.divide(updateRateMs / 1000, logGainFactorPerTick.times(postScale));
       return coeff.times(nextMilestone.divide(this.amount).pow(postScale).minus(1));
@@ -248,7 +247,7 @@ export default {
         and even more so above {{ formatInt(remoteRG) }} Replicanti Galaxies.
       </div>
       <br><br>
-      <ReplicantiGainText />
+      <!-- ReplicantiGainText /-->
       <br>
       <ReplicantiGalaxyButton v-if="canSeeGalaxyButton" />
     </template>

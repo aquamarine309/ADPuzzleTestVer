@@ -14,7 +14,7 @@ export default {
       isAutoActive: false,
       isAutoEnabled: false,
       isDivideUnlocked: false,
-      boughtGalaxies: 0,
+      boughtGalaxies: new BE(0),
       extraGalaxies: 0
     };
   },
@@ -43,7 +43,7 @@ export default {
     update() {
       const rg = Replicanti.galaxies;
       this.isAvailable = rg.canBuyMore;
-      this.boughtGalaxies = rg.bought;
+      this.boughtGalaxies.copyFrom(rg.bought);
       this.extraGalaxies = rg.extra;
       this.isDivideUnlocked = Achievement(126).isUnlocked;
       const auto = Autobuyer.replicantiGalaxy;
