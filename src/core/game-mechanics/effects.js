@@ -4,8 +4,8 @@ export const Effects = {
    * @return {Number}
    */
   sum(...effectSources) {
-    let result = BEC.D0;
-    applyEffectsOf(effectSources, v => result = result.plus(v));
+    let result = 0;
+    applyEffectsOf(effectSources, v => result += v);
     return result;
   },
   /**
@@ -13,8 +13,8 @@ export const Effects = {
    * @return {Number}
    */
   product(...effectSources) {
-    let result = BEC.D1;
-    applyEffectsOf(effectSources, v => result = result.times(v));
+    let result = 1;
+    applyEffectsOf(effectSources, v => result *= v);
     return result;
   },
   /**
