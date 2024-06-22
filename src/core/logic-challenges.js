@@ -241,7 +241,7 @@ export const LC3 = {
     reset() {
       player.lc3Game.state = GAME_STATE.NOT_COMPLETE;
       player.lc3Game.rows = null;
-      player.lc3Game.curremtRow = 0;
+      player.lc3Game.currentRow = 0;
     }
   }
 }
