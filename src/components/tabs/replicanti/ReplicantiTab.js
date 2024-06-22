@@ -36,7 +36,6 @@ export default {
       isUncapped: false,
       nextEffarigRGThreshold: 0,
       canSeeGalaxyButton: false,
-      unlockCost: new BE(),
       scrambledText: "",
       maxReplicanti: new BE(),
       estimateToMax: 0,
@@ -126,10 +125,9 @@ export default {
   methods: {
     update() {
       this.isUnlocked = Replicanti.areUnlocked;
-      this.unlockCost = new BE(1e140).dividedByEffectOf(PelleRifts.vacuum.milestones[1]);
       if (this.isDoomed) this.scrambledText = this.vacuumText();
       if (!this.isUnlocked) {
-        this.isUnlockAffordable = Currency.infinityPoints.gte(this.unlockCost);
+        this.isUnlockAffordable = LC3.isCompleted;
         return;
       }
       this.isInEC8 = EternityChallenge(8).isRunning;

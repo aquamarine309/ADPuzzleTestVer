@@ -40,13 +40,14 @@ window.player = {
   lc3Game: {
     state: GAME_STATE.NOT_COMPLETE,
     rows: null,
-    questions: "",
+    question: "",
     currentRow: 0,
     options: {
       maxResult: 9,
       minResult: 1,
       maxLength: 10,
-      minLength: 5
+      minLength: 6,
+      row: 6
     }
   },
   buyUntil10: true,
@@ -404,7 +405,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: BEC.D0,
-  version: 60,
+  version: 61,
   infinityPower: BEC.D1,
   postC4Tier: 0,
   eternityPoints: BEC.D0,

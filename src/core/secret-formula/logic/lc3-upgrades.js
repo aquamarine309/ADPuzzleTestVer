@@ -31,8 +31,7 @@ export const lc3Upgrades = {
     cost: x => BE.pow10(BE.pow(5, x.plus(1)).pow(2.5)),
     effect: x => x.add(1).ln().times(0.02).add(1),
     formatEffect: x => formatPow(x, 2, 3),
-    bulk: x => x.log10().pow(0.4).log(5).minus(1),
-    cappedAmount: 160
+    bulk: x => x.log10().pow(0.4).log(5).minus(1)
   }),
   cpMult: rebuyable({
     id: "cpMult",
@@ -40,8 +39,7 @@ export const lc3Upgrades = {
     cost: x => BE.pow10(BEC.D2.pow(x).div(2)),
     effect: x => BEC.D2.pow(BE.pow(1.2, x.plus(BE.pow(2, x.div(4)).div(BEC.E4)))),
     formatEffect: x => formatX(x, 2, 2),
-    bulk: x => x.log10().times(2).log(2),
-    cappedAmount: 210
+    bulk: x => x.log10().times(2).log(2)
   }),
   cpPow: rebuyable({
     id: "cpPow",

@@ -28,7 +28,7 @@ export const resourceExchange = {
   "infinityPower": {
     id: 3,
     name: "Infinity Power",
-    shortName: "IPW",
+    shortName: "IPow",
     symbol: "Χ",
     currency: () => Currency.infinityPower,
     value: value => value.pow(0.05).times(1.25).add(1)
@@ -39,7 +39,8 @@ export const resourceExchange = {
     shortName: "Rep",
     symbol: "Ξ",
     currency: () => Currency.replicanti,
-    value: value => value.pow(0.1).times(10).add(1)
+    value: value => value.pow(0.1).times(10).add(1),
+    min: BEC.D1
   },
   "eternityPoints": {
     id: 5,

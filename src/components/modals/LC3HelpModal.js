@@ -64,24 +64,33 @@ const operators = [
     fn: (a, b) => Math.pow(a, b),
     priority: 5,
     genBase: r => {
+      if (r === 0) {
+        return [0, randomInt(10, 1)];
+      }
+      if (r === 1) {
+        if (randomIn(2)) {
+          return [1, randomInt(10)];
+        } else {
+          return [randomInt(10), 0];
+        }
+      }
       if (Number.isInteger(Math.sqrt(r))) return [Math.sqrt(r), 2];
       if (Number.isInteger(Math.cbrt(r))) return [Math.cbrt(r), 3];
+      return [r, 1];
     },
-    canGen: r => {
-      return Number.isInteger(Math.sqrt(r)) || Number.isInteger(Math.cbrt(r));
-    },
+    canGen: r => true,
   }
 ];
 
 const randomInt = (x, y = 0) => Math.floor(Math.random() * (x - y)) + y;
 const randomIn = x => Math.random() < 1 / x;
 
-function baseEquationGenerator(canOnlyNumber = false, answer = randomInt(10)) {
-  if (canOnlyNumber && Math.random() > 0.1) {
+function baseEquationGenerator(answer = randomInt(10)) {
+  if (Math.random() > 0.1) {
     return {
       equation: answer.toString(),
       result: answer,
-      priority: Number.MAX_VALUE * Math.sign(answer)
+      priority: Number.MAX_VALUE * Math.sign(answer + 1)
     }
   }
   let operator = operators.randomElement();
@@ -103,11 +112,11 @@ function formatBracket(x) {
 }
 
 function secondEquationGenerator(answer = randomInt(10)) {
-  if (Math.random() < 0.1) {
+  if (randomIn(8)) {
     return {
       equation: answer.toString(),
       result: answer,
-      priority: Number.MAX_VALUE * Math.sign(answer)
+      priority: Number.MAX_VALUE * Math.sign(answer + 1)
     }
   }
   let operator = operators.randomElement();
@@ -115,11 +124,13 @@ function secondEquationGenerator(answer = randomInt(10)) {
     operator = operators.randomElement();
   }
   const number = operator.genBase(answer);
-  const base1 = baseEquationGenerator(true, number[0]);
-  if (operator.priority > base1.priority) {
+  const base1 = baseEquationGenerator(number[0]);
+  if (operator.priority > base1.priority ||
+    (operator.priority >= base1.priority && operator.priority >= 5)
+  ) {
     base1.equation = formatBracket(base1.equation);
   }
-  const base2 = baseEquationGenerator(true, number[1]);
+  const base2 = baseEquationGenerator(number[1]);
   if (operator.priority > base2.priority) {
     base2.equation = formatBracket(base2.equation);
   }
@@ -133,14 +144,13 @@ function secondEquationGenerator(answer = randomInt(10)) {
 }
 
 function questionGenerator(maxResult = 9, minResult = 1, maxLength = 10, minLength = 5) {
-  const answer = randomInt(maxResult + 1, minResult);
-  let question;
-  do {
-    const  e1  = secondEquationGenerator(answer);
-    const  e2  = secondEquationGenerator(answer);
-    if (e1 === e2) continue;
-    question = `${e1.equation}=${e2.equation}`;
-  } while (question.length > maxLength || question.length < minLength);
+  let answer = randomInt(maxResult + 1, minResult);
+  while (true) {
+    const e1 = secondEquationGenerator(answer);
+    const e2 = secondEquationGenerator(answer);
+    const question = `${e1.equation}=${e2.equation}`;
+    if (e1.equation !== e2.equation && question.length <= maxLength && question.length >= minLength) break;
+  };
   return question;
 }
 
@@ -149,11 +159,13 @@ function checkRow(row) {
   const left = row.countWhere(c => c === "(");
   const right = row.countWhere(c => c === ")");
   if (left !== right) return false;
+  const str = row.join("");
+  if (str.includes("**"))  return false;
   // It is the worst way, but maybe it can't cause bugs.
   try {
-    return eval(row.join("").replace("=", "===").replace(/×/g, "*").replace(/÷/g, "/")
+    return eval(str.replace("=", "===").replace(/×/g, "*").replace(/÷/g, "/")
     .replace(/\d+/g, match => parseInt(match, 10).toString())
-    .replace(/\^/g, "**"));
+    .replace(/\^/g, "**").replace(/--/g, "+"));
   } catch (e) {
     console.log(e);
     return false;
@@ -184,7 +196,8 @@ export default {
       maxResult: 9,
       minResult: 1,
       maxLength: 10,
-      minLength: 5
+      minLength: 6,
+      row: 6
     }
   },
   computed: {
@@ -223,9 +236,6 @@ export default {
     }
   },
   watch: {
-    state(newValue) {
-      player.lc3Game.state = newValue;
-    },
     maxResult(newValue) {
       if (this.lc3Running) return;
       player.lc3Game.options.maxResult = Math.max(newValue, player.lc3Game.options.minResult);
@@ -241,23 +251,34 @@ export default {
     minLength(newValue) {
       if (this.lc3Running) return;
       player.lc3Game.options.minLength = Math.min(newValue, player.lc3Game.options.maxLength);
+    },
+    row(newValue) {
+      if (this.lc3Running) return;
+      player.lc3Game.options.row = newValue;
     }
   },
   methods: {
     input(x) {
       if (this.state !== GAME_STATE.NOT_COMPLETE) return;
       let row = this.blockRows[this.currentRow];
+      if (!row) {
+        this.state = GAME_STATE.FAILED;
+        player.lc3Game.state = this.state;
+        return;
+      }
       const rowTrim = row.filter(r => r !== "");
       ++this.count;
       if (x === enter) {
-        if (rowTrim.length !== this.len) return false;
+        if (rowTrim.length !== this.len) return;
         if (!checkRow(rowTrim)) return;
         if (row.join("") === this.question) {
           this.state = GAME_STATE.COMPLETED;
+          player.lc3Game.state = this.state;
           return;
         }
-        if (this.currentRow >= 6) {
+        if (this.currentRow + 1 >= this.row) {
           this.state = GAME_STATE.FAILED;
+          player.lc3Game.state = this.state;
           return;
         }
         ++this.currentRow;
@@ -282,7 +303,7 @@ export default {
       return 5 * a + b;
     },
     getBlockClass(char, row, a, b) {
-      if (this.currentRow <= a && this.state === GAME_STATE.NOT_COMPLETE) return;
+      if (this.currentRow <= a - (this.state === GAME_STATE.NOT_COMPLETE ? 0 : 1)) return;
       if (char === this.question[b]) return "c-game-block--good";
       const noGreen = row.filter((c, i) => c === char && c === this.question[i]);
       if (noGreen.length +
@@ -316,6 +337,7 @@ export default {
     restart() {
       LC3.game.reset();
       this.init();
+      ++this.count;
     },
     init() {
       if (!this.lc3Running) {
@@ -324,15 +346,17 @@ export default {
         this.minResult = options.minResult;
         this.maxLength = options.maxLength;
         this.minLength = options.minLength;
+        this.row = options.row;
       }
       if (player.lc3Game.rows) {
         this.question = player.lc3Game.question;
         this.blockRows = player.lc3Game.rows.map(r => [].slice.call(r));
         this.currentRow = player.lc3Game.currentRow;
+        this.state = player.lc3Game.state;
       } else {
         this.currentRow = 0;
         this.question = questionGenerator(this.maxResult, this.minResult, this.maxLength, this.minLength);
-        this.blockRows = Array.range(0, 6).map(() => Array.repeat("", this.len));
+        this.blockRows = Array.range(0, this.row).map(() => Array.repeat("", this.len));
         player.lc3Game.question = this.question;
         player.lc3Game.rows = this.blockRows.map(r => [].slice.call(r));
         player.lc3Game.currentRow = 0;
@@ -380,7 +404,7 @@ export default {
           class="c-game-block c-game-block--small"
           :class="getInputClass(char)"
           v-for="(char, idx) in row"
-          :key="id(index, idx) + 'ipt'"
+          :key="\`\${id(index, idx)}\${count}ipt\`"
           @click="input(char)"
         >
           {{ char }}
@@ -403,14 +427,15 @@ export default {
             <div>Max Length:</div>
             <div>Min Result:</div>
             <div>Max Result:</div>
+            <div>Rows :</div>
           </div>
           <div>
             <div>
               <SliderComponent
                 v-bind="sliderProps"
                 :value="minLength"
-                :min="5"
-                :max="10"
+                :min="6"
+                :max="15"
                 @input="adjustSliderValue($event, 'minLength')"
               />
             </div>
@@ -418,8 +443,8 @@ export default {
               <SliderComponent
                 v-bind="sliderProps"
                 :value="maxLength"
-                :min="5"
-                :max="10"
+                :min="6"
+                :max="15"
                 @input="adjustSliderValue($event, 'maxLength')"
               />
             </div>
@@ -428,7 +453,7 @@ export default {
                 v-bind="sliderProps"
                 :value="minResult"
                 :min="0"
-                :max="20"
+                :max="30"
                 @input="adjustSliderValue($event, 'minResult')"
               />
             </div>
@@ -437,8 +462,17 @@ export default {
                 v-bind="sliderProps"
                 :value="maxResult"
                 :min="0"
-                :max="20"
+                :max="30"
                 @input="adjustSliderValue($event, 'maxResult')"
+              />
+            </div>
+            <div>
+              <SliderComponent
+                v-bind="sliderProps"
+                :value="row"
+                :min="3"
+                :max="8"
+                @input="adjustSliderValue($event, 'row')"
               />
             </div>
           </div>

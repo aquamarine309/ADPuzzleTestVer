@@ -9801,16 +9801,16 @@ input.o-automator-block-input {
 }
 
 .c-game-container {
-  width: 50rem;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  overflow: auto;
 }
 
 .c-game-block-row {
   width: 100%;
-  overflow-x: auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9818,18 +9818,18 @@ input.o-automator-block-input {
 }
 
 .c-game-block {
-  width: 6rem;
-  height: 6rem;
+  width: 7rem;
+  height: 7rem;
   text-align: center;
-  line-height: 6rem;
+  line-height: 7rem;
   background-color: #aaccff80;
-  border: 0.2rem solid #aaccff;
+  border: 0.3rem solid #aaccff;
   font-weight: bold;
-  font-size: 3rem;
-  margin: 0.2rem;
+  font-size: 3.5rem;
+  margin: 0.25rem;
   color: white;
   transition-duration: 0.2s;
-  border-radius: var(--var-border-radius, 0.2rem)
+  border-radius: var(--var-border-radius, 0.5rem)
 }
 
 .c-game-block--good {
@@ -9848,10 +9848,10 @@ input.o-automator-block-input {
 }
 
 .c-game-block--small {
-  width: 4rem;
-  height: 4rem;
-  line-height: 4rem;
-  font-size: 2rem;
+  width: 5rem;
+  height: 5rem;
+  line-height: 5rem;
+  font-size: 2.5rem;
   cursor: pointer;
 }
 
@@ -9874,8 +9874,9 @@ input.o-automator-block-input {
 }
 
 .l-lc3-modal {
-  min-width: 60rem;
+  min-width: 84rem;
   font-size: 1.6rem;
+  overflow: hidden;
 }
 
 .c-restart-game-btn {
@@ -9895,10 +9896,12 @@ input.o-automator-block-input {
 .c-game-options-progress-bar > div {
   display: flex;
   justify-content: center;
+  text-align: right;
   flex-direction: column;
   width: 50%;
 }
 
 .c-game-options-progress-bar > div > div {
   height: 3rem;
+  max-width: 30rem;
 }
