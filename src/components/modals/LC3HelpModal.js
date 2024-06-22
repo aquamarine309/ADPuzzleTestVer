@@ -85,7 +85,7 @@ const operators = [
 const randomInt = (x, y = 0) => Math.floor(Math.random() * (x - y)) + y;
 const randomIn = x => Math.random() < 1 / x;
 
-function baseEquationGenerator(answer = randomInt(10)) {
+export function baseEquationGenerator(answer = randomInt(10)) {
   if (Math.random() > 0.1) {
     return {
       equation: answer.toString(),
@@ -111,7 +111,7 @@ function formatBracket(x) {
   return `(${x})`;
 }
 
-function secondEquationGenerator(answer = randomInt(10)) {
+export function secondEquationGenerator(answer = randomInt(10)) {
   if (randomIn(8)) {
     return {
       equation: answer.toString(),
@@ -143,7 +143,8 @@ function secondEquationGenerator(answer = randomInt(10)) {
   }
 }
 
-function questionGenerator(maxResult = 9, minResult = 1, maxLength = 10, minLength = 5) {
+export function questionGenerator(maxResult = 9, minResult = 1, maxLength = 10, minLength = 6) {
+  if (minLength < 6 && maxResult >= 10) throw 'Bug!';
   let answer = randomInt(maxResult + 1, minResult);
   while (true) {
     const e1 = secondEquationGenerator(answer);
@@ -336,7 +337,6 @@ export default {
     restart() {
       LC3.game.reset();
       this.init();
-      ++this.count;
     },
     init() {
       if (!this.lc3Running) {
@@ -359,6 +359,7 @@ export default {
         player.lc3Game.question = this.question;
         player.lc3Game.rows = this.blockRows.map(r => [].slice.call(r));
         player.lc3Game.currentRow = 0;
+        player.lc3Game.state = GAME_STATE.NOT_COMPLETE;
       }
     },
     adjustSliderValue(value, name) {

@@ -425,11 +425,11 @@ export const ReplicantiUpgrade = {
     set baseCost(value) { player.replicanti.galCost = value; }
 
     get distantRGStart() {
-      return Effects.sum(GlyphSacrifice.replication).add(100);
+      return BEC.E2.plusEffectOf(GlyphSacrifice.replication);
     }
 
     get remoteRGStart() {
-      return Effects.sum(GlyphSacrifice.replication).add(1000);
+      return BEC.E3.plusEffectOf(GlyphSacrifice.replication);
     }
 
     get costIncrease() {
@@ -451,7 +451,7 @@ export const ReplicantiUpgrade = {
     }
 
     get extra() {
-      return Effects.max(0, TimeStudy(131)).add(PelleRifts.decay.milestones[2].effectOrDefault(0));
+      return BEC.D0.plusEffectOf(TimeStudy(131)).clampMin(0).plus(PelleRifts.decay.milestones[2].effectOrDefault(0));
     }
 
     bulkPurchaseCalc() {

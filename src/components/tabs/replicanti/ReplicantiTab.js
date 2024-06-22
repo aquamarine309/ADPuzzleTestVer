@@ -30,15 +30,15 @@ export default {
       hasRaisedCap: false,
       replicantiCap: new BE(),
       capMultText: "",
-      distantRG: 0,
-      remoteRG: 0,
-      effarigInfinityBonusRG: 0,
+      distantRG: new BE(),
+      remoteRG: new BE(),
+      effarigInfinityBonusRG: new BE(),
       isUncapped: false,
-      nextEffarigRGThreshold: 0,
+      nextEffarigRGThreshold: new BE(),
       canSeeGalaxyButton: false,
       scrambledText: "",
       maxReplicanti: new BE(),
-      estimateToMax: 0,
+      estimateToMax: new BE(),
     };
   },
   computed: {
@@ -82,7 +82,7 @@ export default {
         value => {
           let description = `Max Replicanti Galaxies: `;
           const extra = upgrade.extra;
-          if (extra > 0) {
+          if (extra.gt(0)) {
             const total = value + extra;
             description += `<br>${formatInt(value)} + ${formatInt(extra)} = ${formatInt(total)}`;
           } else {
@@ -158,7 +158,7 @@ export default {
       this.remoteRG = ReplicantiUpgrade.galaxies.remoteRGStart;
       this.effarigInfinityBonusRG = Effarig.bonusRG;
       this.nextEffarigRGThreshold = BE.NUMBER_MAX_VALUE.pow(
-        Effarig.bonusRG + 2
+        Effarig.bonusRG.plus(2)
       );
       this.canSeeGalaxyButton =
         Replicanti.galaxies.max.gte(1) || PlayerProgress.eternityUnlocked();
@@ -173,7 +173,7 @@ export default {
       const updateRateMs = player.options.updateRate;
       const logGainFactorPerTick = BE.divide(getGameSpeedupForDisplay().times(updateRateMs).times
         (player.replicanti.chance.plus(1).log10()), getReplicantiInterval());
-      const postScale = Math.log10(ReplicantiGrowth.scaleFactor).div(ReplicantiGrowth.scaleLog10);
+      const postScale = BE.log10(ReplicantiGrowth.scaleFactor).div(ReplicantiGrowth.scaleLog10);
       const nextMilestone = this.maxReplicanti;
       const coeff = BE.divide(updateRateMs / 1000, logGainFactorPerTick.times(postScale));
       return coeff.times(nextMilestone.divide(this.amount).pow(postScale).minus(1));

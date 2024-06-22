@@ -1543,6 +1543,10 @@ export const devMigrations = {
         value: new BE(0),
         exchangeRate: 1
       })));
+    },
+    player => {
+      delete player.lc3Game.questions;
+      delete player.lc3Game.curremtRow;
     }
   ],
 

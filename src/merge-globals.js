@@ -37,6 +37,9 @@ mergeIntoGlobal(AutomatorTextEditor);
 import * as PerksTab from "./components/tabs/perks/PerksTab.js";
 mergeIntoGlobal(PerksTab);
 
+import * as QuestionGenerator from "./components/modals/LC3HelpModal.js";
+mergeIntoGlobal(QuestionGenerator);
+
 // End of legacy stuff
 
 import * as core from "./core/globals.js";
