@@ -172,7 +172,7 @@ export default {
     calculateEstimate() {
       const updateRateMs = player.options.updateRate;
       const logGainFactorPerTick = BE.divide(getGameSpeedupForDisplay().times(updateRateMs).times
-        (player.replicanti.chance plus(1).log10()), getReplicantiInterval());
+        (player.replicanti.chance.plus(1).log10()), getReplicantiInterval());
       const postScale = Math.log10(ReplicantiGrowth.scaleFactor).div(ReplicantiGrowth.scaleLog10);
       const nextMilestone = this.maxReplicanti;
       const coeff = BE.divide(updateRateMs / 1000, logGainFactorPerTick.times(postScale));
