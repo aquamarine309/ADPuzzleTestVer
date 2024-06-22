@@ -100,7 +100,7 @@ export default {
       this.isShown =
         (DimBoost.totalBoosts.gt(0) && DimBoost.totalBoosts.plus(3).gte(tier)) || PlayerProgress.infinityUnlocked();
       this.isCostsAD = NormalChallenge(6).isRunning && tier > 2 && !this.isContinuumActive;
-      this.amountDisplay = (this.tier < 8 || this.amount.gte(1e9)) ? format(this.amount, 2) : formatInt(this.amount);
+      this.amountDisplay = (this.tier < Puzzle.maxTier || this.amount.gte(1e9)) ? format(this.amount, 2) : formatInt(this.amount);
       this.hasTutorial = ((tier === 1 && Tutorial.isActive(TUTORIAL_STATE.DIM1)) ||
         (tier === 2 && Tutorial.isActive(TUTORIAL_STATE.DIM2))) && this.hasDLC;
     },

@@ -43,7 +43,7 @@ export default {
     },
     amountText() {
       if (this.formattedAmount) return this.formattedAmount;
-      const amount = (this.tier < 8 || this.amount.gte(1e9)) ? format(this.amount, 2) : formatInt(this.amount.toNumber());
+      const amount = (this.tier < Puzzle.maxTier || this.amount.gte(1e9)) ? format(this.amount, 2) : formatInt(this.amount.toNumber());
       return `${amount} (${formatInt(this.boughtBefore10)})`;
     },
     singleText() {
@@ -55,7 +55,7 @@ export default {
     },
     until10Text() {
       if (this.isCapped) return "Shattered by Nameless";
-      if (!this.hasDLC) return "Requires DLC";
+      if (!this.hasDLC) return "Shop";
       if (this.isContinuumActive) return `Continuum: ${this.continuumString}`;
 
       const prefix = `Until ${formatInt(10)},${this.showCostTitle(this.until10Cost) ? " Cost" : ""}`;
