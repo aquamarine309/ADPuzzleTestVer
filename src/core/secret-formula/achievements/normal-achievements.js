@@ -845,7 +845,7 @@ export const normalAchievements = [
     id: 118,
     name: "IT'S OVER 9000",
     get description() { return `Get a total Dimensional Sacrifice multiplier of ${formatPostBreak(BEC.E9000)}.`; },
-    checkRequirement: () => Sacrifice.totalBoost.gte(BCE.E9000),
+    checkRequirement: () => Sacrifice.totalBoost.gte(BEC.E9000),
     checkEvent: GAME_EVENT.SACRIFICE_RESET_AFTER,
     reward: `Dimensional Sacrifice doesn't reset your Antimatter Dimensions
       and the Autobuyer activates every tick if turned on.`,

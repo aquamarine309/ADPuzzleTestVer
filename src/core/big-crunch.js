@@ -5,7 +5,7 @@ export function bigCrunchAnimation() {
   FullScreenAnimationHandler.display("a-implode", 2);
 }
 
-function handleChallengeCompletion() {
+function handleChallengeCompletion(enteringAntimatterChallenge) {
   const challenge = Player.antimatterChallenge;
   if (!challenge && !NormalChallenge(1).isCompleted) {
     NormalChallenge(1).complete();
@@ -18,7 +18,7 @@ function handleChallengeCompletion() {
   const inIC = InfinityChallenge.isRunning;
   if (inIC && !InfinityChallenge.current.isCompleted) TabNotification.ICUnlock.clearTrigger();
   
-  if (inLC) {
+  if (inLC && !enteringAntimatterChallenge) {
     const currentLC = LogicChallenge.current;
     if (currentLC.canComplete) {
       if (!currentLC.isCompleted) {
@@ -73,7 +73,7 @@ export function bigCrunchReset(
 
   if (Player.canCrunch) {
     EventHub.dispatch(GAME_EVENT.BIG_CRUNCH_BEFORE);
-    bigCrunchGiveRewards();
+    bigCrunchGiveRewards(enteringAntimatterChallenge);
     if (Pelle.isDoomed) PelleStrikes.infinity.trigger();
   }
 
@@ -81,14 +81,14 @@ export function bigCrunchReset(
   EventHub.dispatch(GAME_EVENT.BIG_CRUNCH_AFTER);
 }
 
-function bigCrunchGiveRewards() {
+function bigCrunchGiveRewards(enteringAntimatterChallenge) {
   bigCrunchUpdateStatistics();
   
   const infinityPoints = gainedInfinityPoints();
   Currency.infinityPoints.add(infinityPoints);
   Currency.infinities.add(gainedInfinities().round());
   
-  bigCrunchTabChange(!PlayerProgress.infinityUnlocked());
+  bigCrunchTabChange(!PlayerProgress.infinityUnlocked(), enteringAntimatterChallenge);
   
   bigCrunchCheckUnlocks();
 }
