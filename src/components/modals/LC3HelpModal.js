@@ -207,7 +207,7 @@ export default {
       return this.state === GAME_STATE.FAILED;
     },
     title() {
-      if (!this.lc3Running) return "LC3 Mimi-game";
+      if (!this.lc3Running) return "LC3 Mini-game";
       return "Boost Upgrades";
     },
     sliderProps() {
