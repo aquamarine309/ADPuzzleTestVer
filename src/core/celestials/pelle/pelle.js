@@ -149,14 +149,14 @@ export const Pelle = {
   },
 
   get canArmageddon() {
-    return this.remnantsGain >= 1;
+    return this.remnantsGain.gte(1);
   },
 
   armageddon(gainStuff) {
     if (!this.canArmageddon && gainStuff) return;
     EventHub.dispatch(GAME_EVENT.ARMAGEDDON_BEFORE, gainStuff);
     if (gainStuff) {
-      this.cel.remnants += this.remnantsGain;
+      this.cel.remnants = this.cel.remnants.plus(this.remnantsGain);
     }
     finishProcessReality({ reset: true, armageddon: true });
     disChargeAll();
@@ -264,7 +264,7 @@ export const Pelle = {
   },
 
   get canDilateInPelle() {
-    return this.cel.remnants >= this.remnantRequirementForDilation;
+    return this.cel.remnants.gt(this.remnantRequirementForDilation);
   },
 
   resetResourcesForDilation() {
@@ -285,20 +285,18 @@ export const Pelle = {
     let ep = this.cel.records.totalEternityPoints.plus(1).log10();
 
     if (PelleStrikes.dilation.hasStrike) {
-      am *= 500;
-      ip *= 10;
-      ep *= 5;
+      am = am.times(500);
+      ip = ip.times(10);
+      ep = ep.times(5);
     }
 
-    const gain = (
-      (Math.log10(am + 2) + Math.log10(ip + 2) + Math.log10(ep + 2)) / 1.64
-    ) ** 7.5;
+    const gain = am.plus(2).log10().plus(ip.plus(2).log10()).plus(ep.plus(2).log10()).div(1.64).pow(7.5);
 
-    return gain < 1 ? gain : Math.floor(gain - this.cel.remnants);
+    return gain.lt(1) ? gain : gain.minus(this.cel.remnants);
   },
 
   realityShardGain(remnants) {
-    return BE.pow(10, remnants ** (1 / 7.5) * 4).minus(1).div(1e3);
+    return BE.pow10(remnants.pow((1 / 7.5)) .times(4)).minus(1).div(1e3);
   },
 
   get realityShardGainPerSecond() {
@@ -306,7 +304,7 @@ export const Pelle = {
   },
 
   get nextRealityShardGain() {
-    return this.realityShardGain(this.remnantsGain + this.cel.remnants);
+    return this.realityShardGain(this.remnantsGain.plus(this.cel.remnants));
   },
 
   // Calculations assume this is in units of proportion per second (eg. 0.03 is 3% drain per second)
@@ -323,7 +321,7 @@ export const Pelle = {
   },
 
   antimatterDimensionMult(x) {
-    return BE.pow(10, Math.log10(x + 1) + x ** 5.1 / 1e3 + 4 ** x / 1e19);
+    return BE.pow10(x.plus(1).log10().plus(x.pow(5.1).div(1e3)).plus(BEC.D4.pow(x).div(1e19)));
   },
 
   get activeGlyphType() {

@@ -741,7 +741,7 @@ window.player = {
     pelle: {
       doomed: false,
       upgrades: new Set(),
-      remnants: 0,
+      remnants: BEC.D0,
       realityShards: BEC.D0,
       records: {
         totalAntimatter: BEC.D0,

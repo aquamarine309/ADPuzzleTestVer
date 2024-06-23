@@ -57,8 +57,7 @@ export default {
     bigCrunch() {
       if (PlayerProgress.infinityUnlocked()) bigCrunchResetRequest();
       else Modal.bigCrunch.show();
-    },
-    
+    }
   },
   template: `
   <span v-if="shouldDisplay">

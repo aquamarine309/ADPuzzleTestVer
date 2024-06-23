@@ -29,7 +29,7 @@ export const sidebarResources = [
     id: 4,
     optionName: "Logic Points",
     isAvailable: () => PlayerProgress.infinityUnlocked(),
-    value: () => Currency.logicPoints,
+    value: () => GameCache.logicPoints.value,
     formatValue: x => format(x, 2),
     formatClass: "o-sidebar-currency--logic",
   },

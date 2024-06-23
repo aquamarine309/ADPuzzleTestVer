@@ -156,7 +156,7 @@ export function questionGenerator(maxResult = 9, minResult = 1, maxLength = 10, 
 
 function calc(str) {
   const arr = str.split("");
-   const left = arr.countWhere(c => c === "(");
+  const left = arr.countWhere(c => c === "(");
   const right = arr.countWhere(c => c === ")");
   if (left !== right) return NaN;
   // It is the worst way, but maybe it can't cause bugs.
@@ -165,7 +165,7 @@ function calc(str) {
     .replace(/\d+/g, match => parseInt(match, 10).toString())
     .replace(/\^/g, "**").replace(/--/g, "+"));
     if (!Number.isFinite(result) || Number.isNaN(result)) return NaN;
-    return Math.round(result * 1e6) / 1e6;
+    return Math.round(result * 1e8) / 1e8;
   } catch (e) {
     console.log(e);
     return NaN;
@@ -176,6 +176,7 @@ function checkRow(row) {
   if (row.countWhere(c => c === "=") !== 1) return false;
   const str = row.join("");
   const split = str.split("=");
+  if (str.includes("××")) return false;
   return calc(split[0]) === calc(split[1]);
 }
 
