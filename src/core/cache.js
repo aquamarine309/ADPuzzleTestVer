@@ -77,7 +77,7 @@ export const GameCache = {
     Perk.achievementGroup2,
     Perk.achievementGroup3,
     Perk.achievementGroup4
-  ).toNumber()).totalMilliseconds.toNumber()),
+  )).totalMilliseconds.toNumber()),
 
   buyablePerks: new Lazy(() => Perks.all.filter(p => p.canBeBought)),
 
@@ -119,7 +119,7 @@ export const GameCache = {
   
   logicPoints: new Lazy(() => getLogicPoints()),
   
-  maxTier: new Lazy(() => 1 + Effects.sum(...Array.range(1, 7).map(id => LogicUpgrade(id))).toNumber())
+  maxTier: new Lazy(() => 1 + Effects.sum(...Array.range(1, 7).map(id => LogicUpgrade(id))))
 };
 
 EventHub.logic.on(GAME_EVENT.GLYPHS_CHANGED, () => {

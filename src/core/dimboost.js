@@ -25,7 +25,7 @@ export class DimBoost {
       InfinityChallenge(7),
       TimeStudy(81)
     )
-      
+      .toBE()
       .timesEffectsOf(
         TimeStudy(83),
         TimeStudy(231),
@@ -103,7 +103,7 @@ export class DimBoost {
     const discount = Effects.sum(
       TimeStudy(211),
       TimeStudy(222)
-    ).toNumber();
+    );
     if (tier === 6 && NormalChallenge(10).isRunning) {
       amount = amount.plus(targetResets.minus(3).times(20 - discount).round());
     } else if (tier === 8) {

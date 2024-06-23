@@ -165,7 +165,7 @@ class LC3UpgradeState extends RebuyableMechanicState {
   get effectiveAmount() {
     const base = this.boughtAmount.clampMax(this.cappedAmount);
     if (this.id === "cpPow" && LC3.game.isCompleted) {
-      return base.times(LC3Upgrade.adMult.effectValue.log10().pow(0.942));
+      return base.times(LC3Upgrade.adMult.effectValue.log10().pow(1.91));
     }
     return base;
   }
@@ -199,7 +199,6 @@ export const LC3 = {
   
   get cpPerSecond() {
     if (!this.isRunning) return BEC.D1;
-    if (Player.isInAntimatterChallenge && Player.canCrunch) return BEC.D1;
     const base1 = LC3Upgrade.cpMult.effectValue;
     const base2 = LC3Upgrade.cpBaseAD.effectValue;
     const pow = LC3Upgrade.cpPow.effectValue;
@@ -208,12 +207,11 @@ export const LC3 = {
   
   tick(diff) {
     if (!this.isRunning) return;
-    if (Player.isInAntimatterChallenge && Player.canCrunch) return;
     Currency.challengePower.multiply(this.cpPerSecond.pow(diff.div(1e3)));
   },
   
   get helpThreshold() {
-    return BEC.E1900;
+    return BEC.E430;
   },
   
   reset() {

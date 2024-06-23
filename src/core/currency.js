@@ -257,7 +257,7 @@ Currency.antimatter = new class extends BECurrency {
       Achievement(54),
       Achievement(55),
       Achievement(78)
-    );
+    ).toBE();
   }
 }();
 
@@ -303,7 +303,7 @@ Currency.infinityPoints = new class extends BECurrency {
       Perk.startIP1,
       Perk.startIP2,
       Achievement(104)
-    );
+    ).toBE();
   }
 
   reset() {
@@ -326,7 +326,7 @@ Currency.eternities = new class extends BECurrency {
     return Effects.max(
       0,
       RealityUpgrade(10)
-    );
+    ).toBE();
   }
 }();
 
@@ -353,7 +353,7 @@ Currency.eternityPoints = new class extends BECurrency {
       Perk.startEP1,
       Perk.startEP2,
       Perk.startEP3
-    );
+    ).toBE();
   }
 
   reset() {

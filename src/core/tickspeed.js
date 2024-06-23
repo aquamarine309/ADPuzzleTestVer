@@ -3,10 +3,10 @@ import { BEC } from "./constants.js";
 export function effectiveBaseGalaxies() {
   // Note that this already includes the "50% more" active path effect
   let replicantiGalaxies = Replicanti.galaxies.bought;
-  replicantiGalaxies = replicantiGalaxies.times(Effects.sum(
+  replicantiGalaxies = replicantiGalaxies.times(1 + Effects.sum(
     TimeStudy(132),
     TimeStudy(133)
-  ).plus(1));
+  ));
   // "extra" galaxies unaffected by the passive/idle boosts come from studies 225/226 and Effarig Infinity
   replicantiGalaxies = replicantiGalaxies.add(Replicanti.galaxies.extra);
   const nonActivePathReplicantiGalaxies = BE.min(Replicanti.galaxies.bought,
@@ -46,7 +46,7 @@ export function getTickSpeedMultiplier() {
       if (player.galaxies === 1) baseMultiplier = 1 / 1.07632;
       if (player.galaxies === 2) baseMultiplier = 1 / 1.072;
     }
-    const perGalaxy = effects.times(0.02);
+    const perGalaxy = effects * 0.02;
     if (Pelle.isDoomed) galaxies = galaxies.times(0.5);
 
     galaxies = galaxies.times(Pelle.specialGlyphEffect.power);
@@ -232,8 +232,8 @@ export const FreeTickspeed = {
   },
 
   fromShards(shards) {
-    const tickmult = Effects.min(1.33, TimeStudy(171)).minus(1).times
-      (Math.max(getAdjustedGlyphEffect("cursedtickspeed"), 1)).plus(1);
+    const tickmult = new BE(1 + (Effects.min(1.33, TimeStudy(171)) - 1) *
+      Math.max(getAdjustedGlyphEffect("cursedtickspeed"), 1));
     const logTickmult = BE.log(tickmult);
     const logShards = shards.ln();
     const uncapped = BE.max(0, logShards.div(logTickmult));
