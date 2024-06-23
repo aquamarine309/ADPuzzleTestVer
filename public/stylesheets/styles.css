@@ -9818,32 +9818,37 @@ input.o-automator-block-input {
 }
 
 .c-game-block {
-  width: 7rem;
-  height: 7rem;
+  width: 6rem;
+  height: 6rem;
   text-align: center;
-  line-height: 7rem;
+  line-height: 6rem;
   background-color: #aaccff80;
   border: 0.3rem solid #aaccff;
   font-weight: bold;
   font-size: 3.5rem;
-  margin: 0.25rem;
+  margin: 0.3rem;
   transition-duration: 0.2s;
-  border-radius: var(--var-border-radius, 0.5rem)
+  border-radius: var(--var-border-radius, 0.5rem);
+
+  box-shadow: 0 0 1rem 0.05rem #aaccff inset;
 }
 
 .c-game-block--good {
   background-color: #21ecb180;
   border-color: #21ecb1;
+  box-shadow: 0 0 1rem 0.05rem #21ecb1 inset;
 }
 
 .c-game-block--mistake {
   background-color: #ffcc8880;
   border-color: #ffcc88;
+  box-shadow: 0 0 1rem 0.05rem #ffcc88 inset;
 }
 
 .c-game-block--bad {
   background-color: #cccccc80;
   border-color: #cccccc;
+  box-shadow: 0 0 1rem 0.05rem #cccccc inset;
 }
 
 .c-game-block--small {

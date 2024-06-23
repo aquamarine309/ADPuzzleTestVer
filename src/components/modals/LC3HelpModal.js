@@ -195,7 +195,6 @@ export default {
   data() {
     return {
       question: "",
-      answer: false,
       blockRows: [[]],
       currentRow: 0,
       count: 0,
@@ -343,6 +342,7 @@ export default {
     restart() {
       LC3.game.reset();
       this.init();
+      console.log(this.state, this.blockRows);
     },
     init() {
       if (!this.lc3Running) {
@@ -362,6 +362,7 @@ export default {
         this.currentRow = 0;
         this.question = questionGenerator(this.maxResult, this.minResult, this.maxLength, this.minLength);
         this.blockRows = Array.range(0, this.row).map(() => Array.repeat("", this.len));
+        this.state = GAME_STATE.NOT_COMPLETE;
         player.lc3Game.question = this.question;
         player.lc3Game.rows = this.blockRows.map(r => [].slice.call(r));
         player.lc3Game.currentRow = 0;
