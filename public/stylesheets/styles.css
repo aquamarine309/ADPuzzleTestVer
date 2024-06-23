@@ -9827,7 +9827,6 @@ input.o-automator-block-input {
   font-weight: bold;
   font-size: 3.5rem;
   margin: 0.25rem;
-  color: white;
   transition-duration: 0.2s;
   border-radius: var(--var-border-radius, 0.5rem)
 }
