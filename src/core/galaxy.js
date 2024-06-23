@@ -71,7 +71,7 @@ export class Galaxy {
   static get costMult() {
     const base = Effects.min(NormalChallenge(10).isRunning ? 90 : 60, TimeStudy(42));
     if (Puzzle.maxTier !== 8 && !LogicChallenge(2).isCompleted) {
-      return Math.floor(base * 2.5);
+      return base.times(2.5).floor();
     }
     return base;
   }
@@ -111,7 +111,7 @@ export class Galaxy {
       TimeStudy(224),
       EternityChallenge(5).reward,
       GlyphSacrifice.power
-    );
+    ).toNumber();
   }
 
   static get type() {
