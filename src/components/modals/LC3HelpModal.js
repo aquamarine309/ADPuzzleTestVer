@@ -154,22 +154,29 @@ export function questionGenerator(maxResult = 9, minResult = 1, maxLength = 10, 
   };
 }
 
-function checkRow(row) {
-  if (row.countWhere(c => c === "=") !== 1) return false;
-  const left = row.countWhere(c => c === "(");
-  const right = row.countWhere(c => c === ")");
-  if (left !== right) return false;
-  const str = row.join("");
-  if (str.includes("**"))  return false;
+function calc(str) {
+  const arr = str.split("");
+   const left = arr.countWhere(c => c === "(");
+  const right = arr.countWhere(c => c === ")");
+  if (left !== right) return NaN;
   // It is the worst way, but maybe it can't cause bugs.
   try {
-    return eval(str.replace("=", "===").replace(/×/g, "*").replace(/÷/g, "/")
+    const result = eval(str.replace(/×/g, "*")
     .replace(/\d+/g, match => parseInt(match, 10).toString())
     .replace(/\^/g, "**").replace(/--/g, "+"));
+    if (!Number.isFinite(result) || Number.isNaN(result)) return NaN;
+    return Math.round(result * 1e6) / 1e6;
   } catch (e) {
     console.log(e);
-    return false;
+    return NaN;
   }
+}
+
+function checkRow(row) {
+  if (row.countWhere(c => c === "=") !== 1) return false;
+  const str = row.join("");
+  const split = str.split("=");
+  return calc(split[0]) === calc(split[1]);
 }
 
 function fill(x, l) {
@@ -317,7 +324,6 @@ export default {
     },
     getInputClass(char) {
       if (char === "Del" || char === enter) return;
-      return;
       let isGray = false;
       const completedRows = this.blockRows.slice(0, this.currentRow);
       for (let i = completedRows.length - 1; i >= 0 ; i--) {
