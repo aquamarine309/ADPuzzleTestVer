@@ -56,17 +56,17 @@ export class Sacrifice {
   static get sacrificeExponent() {
     let base;
     // C8 seems weaker, but it actually follows its own formula which ends up being stronger based on how it stacks
-    if (NormalChallenge(8).isRunning) base = 1;
+    if (NormalChallenge(8).isRunning) base = BEC.D1;
     // Pre-Reality this was 100; having ach32/57 results in 1.2x, which is brought back in line by changing to 120
-    else if (InfinityChallenge(2).isCompleted) base = 1 / 120;
-    else base = 2;
+    else if (InfinityChallenge(2).isCompleted) base = BEC.C1D120;
+    else base = BEC.D2;
 
     // All the factors which go into the multiplier have to combine this way in order to replicate legacy behavior
-    const preIC2 = 1 + Effects.sum(Achievement(32), Achievement(57));
-    const postIC2 = 1 + Effects.sum(Achievement(88), TimeStudy(228));
+    const preIC2 = Effects.sum(Achievement(32), Achievement(57)).plus(1);
+    const postIC2 = Effects.sum(Achievement(88), TimeStudy(228)).plus(1);
     const triad = TimeStudy(304).effectOrDefault(1);
 
-    return base * preIC2 * postIC2 * triad;
+    return base.times(preIC2).times(postIC2).times(triad);
   }
 
   static get nextBoost() {
@@ -103,7 +103,7 @@ export class Sacrifice {
     if (InfinityChallenge(2).isCompleted) {
       prePowerBoost = player.sacrificed;
     } else {
-      prePowerBoost = new BE(player.sacrificed.log10().div(10));
+      prePowerBoost = player.sacrificed.log10().div(10);
     }
 
     return prePowerBoost.clampMin(1).pow(this.sacrificeExponent);

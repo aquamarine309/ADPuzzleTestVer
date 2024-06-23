@@ -49,7 +49,7 @@ const operators = [
     priority: 3
   },
   {
-    name: "÷",
+    name: "/",
     fn: (a, b) => a / b,
     priority: 4,
     genBase: r => {
@@ -204,7 +204,7 @@ export default {
     inputRows() {
       return [
         ["0", "1", "2", "3", "4", "+", "-", "(", ")", "Del"],
-        ["5", "6", "7", "8", "9", "×", "÷", "=", "^", enter]
+        ["5", "6", "7", "8", "9", "×", "/", "=", "^", enter]
       ]
     },
     lc3Running() {
@@ -305,19 +305,19 @@ export default {
     getBlockClass(char, row, a, b) {
       if (this.currentRow <= a - (this.state === GAME_STATE.NOT_COMPLETE ? 0 : 1)) return;
       if (char === this.question[b]) return "c-game-block--good";
-      const noGreen = row.filter((c, i) => c === char && c === this.question[i]);
-      if (noGreen.length +
-        row.slice(0, b + 1)
-        .countWhere((c, i) => c === char && c !== this.question[i]) >
+      if (row.countWhere((c, i) => c === char && c === this.question[i]) +
+        row.slice(0, b)
+        .countWhere((c, i) => c === char && c !== this.question[i]) <
         this.question.split("")
         .countWhere(c => c === char)
       ) {
-      return "c-game-block--bad";
+        return "c-game-block--mistake";
       }
-      return "c-game-block--mistake";
+      return "c-game-block--bad";
     },
     getInputClass(char) {
       if (char === "Del" || char === enter) return;
+      return;
       let isGray = false;
       const completedRows = this.blockRows.slice(0, this.currentRow);
       for (let i = completedRows.length - 1; i >= 0 ; i--) {
@@ -364,7 +364,7 @@ export default {
     },
     adjustSliderValue(value, name) {
       this[name] = value;
-    }
+    },
   },
   created() {
     this.init();

@@ -1,11 +1,13 @@
+import { BEC } from "../constants.js";
+
 export const Effects = {
   /**
    * @param effectSources
    * @return {Number}
    */
   sum(...effectSources) {
-    let result = 0;
-    applyEffectsOf(effectSources, v => result += v);
+    let result = BEC.D0;
+    applyEffectsOf(effectSources, v => result = result.plus(v));
     return result;
   },
   /**
@@ -13,8 +15,8 @@ export const Effects = {
    * @return {Number}
    */
   product(...effectSources) {
-    let result = 1;
-    applyEffectsOf(effectSources, v => result *= v);
+    let result = BEC.D1;
+    applyEffectsOf(effectSources, v => result = result.times(v));
     return result;
   },
   /**
@@ -44,8 +46,8 @@ export const Effects = {
    * @return {Number}
    */
   max(defaultValue, ...effectSources) {
-    let result = defaultValue;
-    applyEffectsOf(effectSources, v => result = Math.max(result, v));
+    let result = new BE(defaultValue);
+    applyEffectsOf(effectSources, v => result = BE.max(result, v));
     return result;
   },
   /**
@@ -54,8 +56,8 @@ export const Effects = {
    * @return {Number}
    */
   min(defaultValue, ...effectSources) {
-    let result = defaultValue;
-    applyEffectsOf(effectSources, v => result = Math.min(result, v));
+    let result = new BE(defaultValue);
+    applyEffectsOf(effectSources, v => result = BE.min(result, v));
     return result;
   }
 };

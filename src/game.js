@@ -101,7 +101,7 @@ export function gainedInfinityPoints() {
   }
   let ip = player.break
     ? BE.pow10(player.records.thisInfinity.maxAM.log10().div(div).minus(0.75))
-    : new BE(308 / div);
+    : BE.div(308, div);
   if (Effarig.isRunning && Effarig.currentStage === EFFARIG_STAGES.ETERNITY) {
     ip = ip.min(BEC.E200);
   }
@@ -273,7 +273,7 @@ export function gainedInfinities() {
   let infGain = Effects.max(
     1,
     Achievement(87)
-  ).toBE();
+  );
 
   infGain = infGain.timesEffectsOf(
     TimeStudy(32),
@@ -864,16 +864,16 @@ export function getTTPerSecond() {
     Achievement(137),
     Achievement(156),
   );
-  if (GlyphAlteration.isAdded("dilation")) ttMult *= getSecondaryGlyphEffect("dilationTTgen");
+  if (GlyphAlteration.isAdded("dilation")) ttMult = ttMult.times(getSecondaryGlyphEffect("dilationTTgen"));
 
   // Glyph TT generation
   const glyphTT = Teresa.isRunning || Enslaved.isRunning || Pelle.isDoomed
-    ? 0
-    : getAdjustedGlyphEffect("dilationTTgen") * ttMult;
+    ? BEC.D0
+    : ttMult.times(getAdjustedGlyphEffect("dilationTTgen"));
 
   // Dilation TT generation
   const dilationTT = DilationUpgrade.ttGenerator.isBought
-    ? DilationUpgrade.ttGenerator.effectValue.times(Pelle.isDoomed ? 1 : ttMult)
+    ? DilationUpgrade.ttGenerator.effectValue.times(Pelle.isDoomed ? BEC.D1 : ttMult)
     : BEC.D0;
 
   // Lai'tela TT power
@@ -886,7 +886,6 @@ export function getTTPerSecond() {
 }
 
 export function unstableTimeMultiplier() {
-  if (Puzzle.stableTime) return 1;
   return 0.8 + (Math.floor(Date.now() / 60) % 10) * 0.04;
 }
 

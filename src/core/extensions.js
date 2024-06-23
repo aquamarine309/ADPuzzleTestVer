@@ -231,8 +231,8 @@ Array.prototype.min = function() {
  */
 Array.prototype.countWhere = function(predicate) {
   let count = 0;
-  for (const item of this) {
-    if (predicate(item))++count;
+  for (let i = 0; i < this.length; i++) {
+    if (predicate(this[i], i, this)) ++count;
   }
   return count;
 };
