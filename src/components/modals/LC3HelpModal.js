@@ -279,8 +279,12 @@ export default {
       if (x === enter) {
         if (rowTrim.length !== this.len) {
           this.showNotify("The length is too short");
+          return;
         };
-        if (!checkRow(rowTrim)) return;
+        if (!checkRow(rowTrim)) {
+          this.showNotify("The equation is incorrect.");
+          return;
+        };
         if (row.join("") === this.question) {
           this.state = GAME_STATE.COMPLETED;
           player.lc3Game.state = this.state;
@@ -370,6 +374,10 @@ export default {
         this.state = player.lc3Game.state;
       } else {
         this.currentRow = 0;
+        if (this.minResult === 0 && this.minLength) {
+          this.showNotify(`Cannot start with the options with a minimum result of 0 and a length less than 6.`);
+          return;
+        }
         this.question = questionGenerator(this.maxResult, this.minResult, this.maxLength, this.minLength);
         this.blockRows = Array.range(0, this.row).map(() => Array.repeat("", this.len));
         this.state = GAME_STATE.NOT_COMPLETE;

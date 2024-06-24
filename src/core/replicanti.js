@@ -1,4 +1,5 @@
 import { BEC } from "./constants.js";
+import { DEV }vfrom "../env.js";
 
 // Slowdown parameters for replicanti growth, interval will increase by scaleFactor for every scaleLog10
 // OoM past the cap (default is 308.25 (log10 of 1.8e308), 1.2, Number.MAX_VALUE)
@@ -562,8 +563,7 @@ export const Replicanti = {
     };
   },
   unlock(freeUnlock = false) {
-    if (player.replicanti.unl) return;
-    return;
+    if (player.replicanti.unl || !DEV) return;
     if (freeUnlock || LC3.isCompleted) {
       player.replicanti.unl = true;
       player.replicanti.timer = BEC.D0;

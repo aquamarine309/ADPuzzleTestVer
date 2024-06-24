@@ -504,7 +504,7 @@ Currency.logicPoints = new class extends BECurrency {
     const spent = GameCache.logicPoints.value.minus(value);
     player.logic.spentPoints = player.logic.spentPoints.add(spent);
   }
-}
+}();
 
 Currency.challengePower = new class extends BECurrency {
   get value() {
@@ -518,4 +518,4 @@ Currency.challengePower = new class extends BECurrency {
   get startingValue() {
     return BEC.E1;
   }
-}
+}();
