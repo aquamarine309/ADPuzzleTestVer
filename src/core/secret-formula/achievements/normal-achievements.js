@@ -104,14 +104,20 @@ export const normalAchievements = [
     get reward() {
       return `All Antimatter Dimensions are ${formatPercents(0.5)} stronger.`
     },
-    effect: 1.5
+    effect: 1.5,
+    btnCondition: () => Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked().lte(1),
+    text: "What is AG?",
+    clickFn: () => GameUI.notify.info("Maybe you need some HELP.")
   },
   {
     id: 27,
     name: "Double Galaxy",
     description: "Buy the second Antimatter Galaxy.",
     checkRequirement: () => player.galaxies.gte(2),
-    checkEvent: GAME_EVENT.GALAXY_RESET_AFTER
+    checkEvent: GAME_EVENT.GALAXY_RESET_AFTER,
+    btnCondition: () => Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked().gt(1),
+    btnText: "The literal meaning",
+    clickFn: () => manualRequestGalaxyReset(1, false)
   },
   {
     id: 28,
@@ -671,12 +677,15 @@ export const normalAchievements = [
   {
     id: 95,
     name: "Is this safe?",
-    get description() { return `Gain ${format(BE.NUMBER_MAX_VALUE, 1, 0)} Replicanti in ${formatInt(1)} hour.`; },
+    get description() { return `Gain ${format(BE.NUMBER_MAX_VALUE, 1, 0)} Replicanti in ${formatInt(1)} hour?`; },
     get reward() { return `You keep your Replicanti and ${formatInt(1)} Replicanti Galaxy on Infinity.`; },
     checkRequirement: () =>
       (Replicanti.amount.eq(BE.NUMBER_MAX_VALUE) || player.replicanti.galaxies.gt(0)) &&
       Time.thisInfinityRealTime.totalHours.lt(1),
-    checkEvent: GAME_EVENT.REPLICANTI_TICK_AFTER
+    checkEvent: GAME_EVENT.REPLICANTI_TICK_AFTER,
+    btnCondition: () => !Achievement(95).isUnlocked && player.replicanti.unl,
+    clickFn: () => Achievement(95).unlock(),
+    btnText: "You really want this achievement, don't you?"
   },
   {
     id: 96,

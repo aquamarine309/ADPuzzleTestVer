@@ -17,7 +17,6 @@ function handleChallengeCompletion(enteringAntimatterChallenge) {
   // Clear the IC notification after the first completion (only) so that it can show it again for the next one
   const inIC = InfinityChallenge.isRunning;
   if (inIC && !InfinityChallenge.current.isCompleted) TabNotification.ICUnlock.clearTrigger();
-  
   if (inLC && !enteringAntimatterChallenge) {
     const currentLC = LogicChallenge.current;
     if (currentLC.canComplete) {
@@ -67,7 +66,7 @@ export function bigCrunchResetRequest(disableAnimation = false) {
 
 export function bigCrunchReset(
   forced = false,
-  enteringAntimatterChallenge = (Player.isInAntimatterChallenge && player.options.retryChallenge) || (LogicChallenge.isRunning && !LogicChallenge.current.canComplete && Player.canCrunch)
+  enteringAntimatterChallenge = Player.isInAntimatterChallenge && player.options.retryChallenge
 ) {
   if (!forced && !Player.canCrunch) return;
 
@@ -87,7 +86,6 @@ function bigCrunchGiveRewards(enteringAntimatterChallenge) {
   const infinityPoints = gainedInfinityPoints();
   Currency.infinityPoints.add(infinityPoints);
   Currency.infinities.add(gainedInfinities().round());
-  
   bigCrunchTabChange(!PlayerProgress.infinityUnlocked(), enteringAntimatterChallenge);
   
   bigCrunchCheckUnlocks();
@@ -125,10 +123,10 @@ function bigCrunchUpdateStatistics() {
   }
 }
 
-function bigCrunchTabChange(firstInfinity) {
+function bigCrunchTabChange(firstInfinity, enteringAntimatterChallenge) {
   const earlyGame = player.records.bestInfinity.time.gt(60000) && !player.break;
   const inAntimatterChallenge = Player.isInAntimatterChallenge;
-  handleChallengeCompletion();
+  handleChallengeCompletion(enteringAntimatterChallenge);
 
   if (firstInfinity) {
     Tab.infinity.upgrades.show();
@@ -145,10 +143,10 @@ export function bigCrunchResetValues(enteringAntimatterChallenge) {
   // code structure similar to what it was before to avoid new bugs.
   secondSoftReset(enteringAntimatterChallenge);
 
-  let remainingGalaxies = BEC.S0;
+  let remainingGalaxies = BEC.D0;
   if (Achievement(95).isUnlocked && !Pelle.isDoomed) {
     Replicanti.amount = currentReplicanti;
-    remainingGalaxies = remainingGalaxies.add(BE.min(currentReplicantiGalaxies, 1));
+    remainingGalaxies = remainingGalaxies.add(currentReplicantiGalaxies.min(1));
   }
   if (TimeStudy(33).isBought && !Pelle.isDoomed) {
     remainingGalaxies = remainingGalaxies.add(currentReplicantiGalaxies.div(2).floor());

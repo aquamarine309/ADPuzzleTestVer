@@ -210,11 +210,11 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
       
       decimal = decimal.normalize();
       
-      if (decimal.lt(1e-300)) {
+      if (decimal.abs().lt(1e-300)) {
         return decimal.sign < 0 ? this.formatVerySmallNegativeDecimal(decimal.abs(), placesUnder1000) : this.formatVerySmallDecimal(decimal, placesUnder1000);
       }
 
-      if (decimal.lt(1000)) {
+      if (decimal.abs().lt(1000)) {
         var number = decimal.toNumber();
         return number < 0 ? this.formatNegativeUnder1000(Math.abs(number), placesUnder1000) : this.formatUnder1000(number, placesUnder1000);
       }

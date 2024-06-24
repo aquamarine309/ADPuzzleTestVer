@@ -29,13 +29,11 @@ export default {
       realityUnlocked: false,
       garbleTimer: 0,
       garbleKey: 0,
-      achievementTime: 0
+      achievementTime: 0,
+      showBtn: false
     };
   },
   computed: {
-    showBtn() {
-      return this.buttonAch && this.buttonAch.id === this.id;
-    },
     id() {
       return this.achievement.id;
     },
@@ -107,9 +105,6 @@ export default {
         ? "Given at Speedrun start"
         : `Achieved after ${TimeSpan.fromMilliseconds(this.achievementTime).toStringShort()}`;
     },
-    buttonAch() {
-      return Puzzle.buttonAch;
-    }
   },
   beforeDestroy() {
     clearTimeout(this.mouseOverInterval);
@@ -121,7 +116,7 @@ export default {
       this.isCancer = Theme.current().name === "S4" || player.secretUnlocks.cancerAchievements;
       this.showUnlockState = player.options.showHintText.achievementUnlockStates;
       this.realityUnlocked = PlayerProgress.realityUnlocked();
-
+      this.showBtn = this.config.btnCondition?.() || false;
       this.processedName = this.processText(this.config.name, this.garbledNameTemplate);
       this.processedId = this.processText(this.displayId, this.garbledIDTemplate);
       this.processedDescription = this.processText(this.config.description, this.garbledDescriptionTemplate);
@@ -176,7 +171,7 @@ export default {
     },
     handleClick() {
       if (!this.showBtn) return;
-      this.buttonAch.clickFn();
+      this.config.clickFn();
     }
   },
   template: `
@@ -240,7 +235,7 @@ export default {
         </div>
         <div v-if="showBtn">
           <button class="c-achievement-button">
-            {{ buttonAch.text }}
+            {{ config.text }}
           </button>
         </div>
       </template>

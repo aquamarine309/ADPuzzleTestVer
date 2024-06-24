@@ -45,7 +45,7 @@ export default {
       class="o-lc3-help"
       onclick="Modal.lc3Help.show()"
     >
-      Click for help.
+      Are you in trouble? Complete a mini-game to gain bonus!
     </div>
   </div>
   `

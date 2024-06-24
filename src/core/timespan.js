@@ -198,7 +198,7 @@ window.TimeSpan = class TimeSpan {
       return `${format(this.totalYears, 3, 0)} years`;
     }
     if (this.totalSeconds.gte(10)) {
-      return this.toStringNoBEs();
+      return this.toStringNoDecimals();
     }
     return this.toStringShort();
   }
@@ -206,7 +206,7 @@ window.TimeSpan = class TimeSpan {
   /**
    * @returns {String}
    */
-  toStringNoBEs() {
+  toStringNoDecimals() {
     const parts = [];
     function addCheckedComponent(value, name) {
       if (value.eq(0)) {
@@ -264,7 +264,7 @@ window.TimeSpan = class TimeSpan {
       if (useHMS && !Notations.current.isPainful) {
         const sec = seconds(this.seconds, this.milliseconds);
         if (BE.floor(this.totalHours).eq(0)) return `${formatHMS(this.minutes)}:${sec}`;
-        return `${formatHMS(BE.floor(this.totalHours))}:${formatHMS(this.minutes)}:${sec}`;
+        return `${formatHMS(this.totalHours.floor())}:${formatHMS(this.minutes)}:${sec}`;
       }
       if (this.totalMinutes.lt(60)) {
         return `${format(this.totalMinutes, 0, 2)} minutes`;
@@ -285,7 +285,7 @@ window.TimeSpan = class TimeSpan {
 
     function seconds(s, ms) {
       const sec = formatHMS(s);
-      return isSpeedrun ? `${sec}.${Math.floor(ms.div(100))}` : sec;
+      return isSpeedrun ? `${sec}.${ms.div(100).floor().toNumber()}` : sec;
     }
   }
 

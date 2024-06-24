@@ -9881,6 +9881,7 @@ input.o-automator-block-input {
   min-width: 84rem;
   font-size: 1.6rem;
   overflow: hidden;
+  position: relative;
 }
 
 .c-restart-game-btn {
@@ -9908,4 +9909,38 @@ input.o-automator-block-input {
 .c-game-options-progress-bar > div > div {
   height: 3rem;
   max-width: 30rem;
+}
+
+.l-game-notify-modal {
+  position: absolute;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  left: 50%;
+  top: 50%;
+  width: 50rem;
+  height: 30rem;
+  padding: 3rem 5rem;
+  background-color: #aaccff;
+  font-size: 4rem;
+  font-weight: bold;
+  margin-top: -15rem;
+  margin-left: -25rem;
+  background: linear-gradient(#aaccffcc, #88aacccc);
+  border: 0.3rem solid #88aacc;
+  transition-duration: 0.2s;
+  border-radius: var(--var-border-radius, 1.2rem);
+  box-shadow: 0 0 1rem 0.05rem #aaccff inset;
+  backdrop-filter: blur(0.6rem);
+  opacity: 1;
+}
+
+.a-game-notify-modal-enter-active,
+.a-game-notify-modal-leave-active {
+  transition: opacity 0.2s;
+}
+.a-game-notify-modal-enter,
+.a-game-notify-modal-leave-to {
+  opacity: 0;
 }

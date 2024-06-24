@@ -204,7 +204,8 @@ export default {
       minResult: 1,
       maxLength: 10,
       minLength: 6,
-      row: 6
+      row: 6,
+      notify: null
     }
   },
   computed: {
@@ -276,7 +277,9 @@ export default {
       const rowTrim = row.filter(r => r !== "");
       ++this.count;
       if (x === enter) {
-        if (rowTrim.length !== this.len) return;
+        if (rowTrim.length !== this.len) {
+          this.showNotify("The length is too short");
+        };
         if (!checkRow(rowTrim)) return;
         if (row.join("") === this.question) {
           this.state = GAME_STATE.COMPLETED;
@@ -308,6 +311,12 @@ export default {
     },
     id(a, b) {
       return 5 * a + b;
+    },
+    showNotify(text) {
+      this.notify = text;
+    },
+    hideNotify() {
+      this.notify = null;
     },
     getBlockClass(char, row, a, b) {
       if (this.currentRow <= a - (this.state === GAME_STATE.NOT_COMPLETE ? 0 : 1)) return;
@@ -387,7 +396,20 @@ export default {
     <template #header>
       {{ title }}
     </template>
-    <div class="c-game-container">
+    <div
+      class="c-game-container"
+      @click="hideNotify"
+    >
+      <transition name="a-game-notify-modal">
+        <div
+          v-if="notify"
+          class="l-game-notify-modal"
+        >
+          {{ notify }}
+          <br>
+          (Click to hide)
+        </div>
+      </transition>
       <div
         class="c-game-block-row"
         v-for="(row, index) in blockRows"

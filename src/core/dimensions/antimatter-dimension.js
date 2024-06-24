@@ -211,11 +211,11 @@ export function buyOneDimension(tier) {
   const cost = dimension.cost;
   
   if (!Puzzle.hasDLC(tier)) return false;
-  if (tier === 8 && Enslaved.isRunning && AntimatterDimension(8).bought >= 1) return false;
+  if (tier === 8 && Enslaved.isRunning && AntimatterDimension(8).bought.gte(1)) return false;
 
   dimension.currencyAmount = dimension.currencyAmount.minus(cost);
 
-  if (dimension.boughtBefore10 === 9) {
+  if (dimension.boughtBefore10.eq(9)) {
     dimension.challengeCostBump();
   }
 
@@ -272,7 +272,7 @@ function buyUntilTen(tier) {
   if (Laitela.continuumActive) return;
   const dimension = AntimatterDimension(tier);
   dimension.challengeCostBump();
-  dimension.amount = BE.round(dimension.amount.plus(dimension.remainingUntil10));
+  dimension.amount = dimension.amount.plus(dimension.remainingUntil10).round();
   dimension.bought = dimension.bought.add(dimension.remainingUntil10);
   onBuyDimension(tier);
 }

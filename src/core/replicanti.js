@@ -170,8 +170,13 @@ export function replicantiCap() {
 }
 
 // eslint-disable-next-line complexity
-export function replicantiLoop(diff) {
+export function replicantiLoop(diff, auto = true) {
   if (!player.replicanti.unl) return;
+  if (diff) {
+    player.replicanti.coolingTime = player.replicanti.coolingTime.minus(diff);
+  }
+  if (!auto) player.replicanti.coolingTime = getReplicantiInterval(false);
+  if (auto && !Replicanti.autoreplicateUnlocked) return;
   const replicantiBeforeLoop = Replicanti.amount;
   PerformanceStats.start("Replicanti");
   EventHub.dispatch(GAME_EVENT.REPLICANTI_TICK_BEFORE);
@@ -182,8 +187,8 @@ export function replicantiLoop(diff) {
 
   // Figure out how many ticks to calculate for and roll over any leftover time to the next tick. The rollover
   // calculation is skipped if there's more than 100 replicanti ticks per game tick to reduce round-off problems.
-  let tickCount = BE.divide(diff.add(player.replicanti.timer), interval);
-  if (tickCount.lt(100)) player.replicanti.timer = tickCount.minus(tickCount.floor()).times(interval);
+  let tickCount = auto ? diff.add(player.replicanti.timer).div(interval) : BEC.D1;
+  if (tickCount.lt(100) || !auto) player.replicanti.timer = tickCount.minus(tickCount.floor()).times(interval);
   else player.replicanti.timer = BEC.D0;
   tickCount = tickCount.floor();
 
@@ -244,7 +249,7 @@ export function replicantiLoop(diff) {
 
   if (!isUncapped) Replicanti.amount = BE.min(replicantiCap(), Replicanti.amount);
 
-  if (Pelle.isDoomed && Replicanti.amount.log10() - replicantiBeforeLoop.log10() > 308) {
+  if (Pelle.isDoomed && Replicanti.amount.log10().minus(replicantiBeforeLoop.log10()).gt(308)) {
     Replicanti.amount = replicantiBeforeLoop.times(1e308);
   }
 
@@ -262,7 +267,7 @@ export function replicantiLoop(diff) {
 }
 
 export function replicantiMult() {
-  return BE.pow(BE.log2(Replicanti.amount.clampMin(1)), 2)
+  return Replicanti.amount.clampMin(1).log2().pow(2)
     .plusEffectOf(TimeStudy(21))
     .timesEffectOf(TimeStudy(102))
     .clampMin(1)
@@ -577,10 +582,10 @@ export const Replicanti = {
   galaxies: {
     isPlayerHoldingR: false,
     get bought() {
-      return new BE(player.replicanti.galaxies);
+      return player.replicanti.galaxies;
     },
     get extra() {
-      return BE.floor((Effarig.bonusRG).add(Effects.sum(
+      return BE.floor(Effarig.bonusRG.add(Effects.sum(
         TimeStudy(225),
         TimeStudy(226)
       )).times(TimeStudy(303).effectOrDefault(1)));
@@ -613,5 +618,11 @@ export const Replicanti = {
   },
   get isUncapped() {
     return TimeStudy(192).isBought || PelleRifts.vacuum.milestones[1].canBeApplied;
+  },
+  get autoreplicateUnlocked() {
+    return false;
+  },
+  get coolingTime() {
+    return player.replicanti.coolingTime;
   }
 };

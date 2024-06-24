@@ -39,6 +39,8 @@ export default {
       scrambledText: "",
       maxReplicanti: new BE(),
       estimateToMax: new BE(),
+      autoreplicateUnlocked: false,
+      coolingTime: new BE()
     };
   },
   computed: {
@@ -50,14 +52,18 @@ export default {
         cost => `+${formatPercents(0.01)} Costs: ${format(cost)} IP`
       );
     },
+    replicationInfo() {
+      if (this.autoreplicateUnlocked) return "Auto";
+      if (this.canReplicate) return "Available";
+      return `Cooling Time: ${TimeSpan.fromMilliseconds(this.coolingTime).toStringShort(false)}`;
+    },
     replicantiIntervalSetup() {
       const upgrade = ReplicantiUpgrade.interval;
       function formatInterval(interval) {
         const actualInterval = upgrade.applyModifiers(interval);
-        const intervalNum = actualInterval.toNumber();
         if (
-          Number.isFinite(intervalNum) &&
-          intervalNum > 1 &&
+          actualInterval.isFinite() &&
+          actualInterval.gt(1) &&
           upgrade.isCapped
         ) {
           // Checking isCapped() prevents text overflow when formatted as "__ ➜ __"
@@ -74,6 +80,9 @@ export default {
         cost =>
           `➜ ${formatInterval(upgrade.nextValue)} Costs: ${format(cost)} IP`
       );
+    },
+    canReplicate() {
+      return this.coolingTime.lte(0);
     },
     maxGalaxySetup() {
       const upgrade = ReplicantiUpgrade.galaxies;
@@ -134,6 +143,8 @@ export default {
       if (this.isInEC8) {
         this.ec8Purchases = player.eterc8repl;
       }
+      this.autoreplicateUnlocked = Replicanti.autoreplicateUnlocked;
+      this.coolingTime.copyFrom(Replicanti.coolingTime);
       this.amount.copyFrom(Replicanti.amount);
       this.mult.copyFrom(replicantiMult());
       this.hasTDMult = DilationUpgrade.tdMultReplicanti.isBought;
@@ -177,6 +188,10 @@ export default {
       const nextMilestone = this.maxReplicanti;
       const coeff = BE.divide(updateRateMs / 1000, logGainFactorPerTick.times(postScale));
       return coeff.times(nextMilestone.divide(this.amount).pow(postScale).minus(1));
+    },
+    replicate() {
+      if (!this.canReplicate || this.autoreplicateUnlocked) return;
+      replicantiLoop(null, false);
     }
   },
   template: `
@@ -247,9 +262,16 @@ export default {
         and even more so above {{ formatInt(remoteRG) }} Replicanti Galaxies.
       </div>
       <br><br>
-      <!-- ReplicantiGainText /-->
+      <ReplicantiGainText />
       <br>
       <ReplicantiGalaxyButton v-if="canSeeGalaxyButton" />
+      <PrimaryButton
+        :enabled="canReplicate && !autoreplicateUnlocked"
+        class="o-primary-btn--replicanti-galaxy"
+        @click="replicate"
+      >
+        Replicate ({{ replicationInfo }})
+      </PrimaryButton>
     </template>
   </div>
   `
