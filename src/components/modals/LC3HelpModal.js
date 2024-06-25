@@ -144,8 +144,10 @@ export function secondEquationGenerator(answer = randomInt(10)) {
 }
 
 export function questionGenerator(maxResult = 9, minResult = 1, maxLength = 10, minLength = 6) {
-  if (minLength < 6 && maxResult >= 10) throw 'Bug!';
-  let answer = randomInt(maxResult + 1, minResult);
+  let answer;
+  do {
+    answer = randomInt(maxResult + 1, minResult);
+  } while (minLength < 6 && answer === 0);
   while (true) {
     const e1 = secondEquationGenerator(answer);
     const e2 = secondEquationGenerator(answer);
@@ -374,7 +376,10 @@ export default {
         this.state = player.lc3Game.state;
       } else {
         this.currentRow = 0;
-        if (this.minResult === 0 && this.minLength) {
+        if (
+          this.minResult === this.maxResult && this.minResult === 0 &&
+          this.minLength === this.maxLength && this.maxLength === 6
+        ) {
           this.showNotify(`Cannot start with the options with a minimum result of 0 and a length less than 6.`);
           return;
         }
@@ -443,7 +448,7 @@ export default {
           :class="getInputClass(char)"
           v-for="(char, idx) in row"
           :key="\`\${id(index, idx)}\${count}ipt\`"
-          @click="input(char)"
+          @click.stop="input(char)"
         >
           {{ char }}
         </div>
@@ -455,7 +460,7 @@ export default {
         <b>Game Options (Invalid in LC3)</b>
         <PrimaryButton
           class="c-restart-game-btn"
-          @click="restart"
+          @click.stop="restart"
         >
           Restart
         </PrimaryButton>

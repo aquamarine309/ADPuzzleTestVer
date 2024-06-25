@@ -229,12 +229,12 @@ dev.printResourceTotals = function() {
   console.log(`Glyph level: ${100 * Math.floor(gainedGlyphLevel().actualLevel / 100 + 0.5)}`);
 
   console.log(`Tickspeed: e${-Tickspeed.current.exponent.toPrecision(3)}`);
-  console.log(`Gamespeed: ${Math.pow(getGameSpeedupFactor(), 1.2).toPrecision(1)}`);
-  const aGalaxy = 100 * Math.floor(player.galaxies / 100 + 0.5);
-  const rGalaxy = 100 * Math.floor(Replicanti.galaxies.total / 100 + 0.5);
-  const dGalaxy = 100 * Math.floor(player.dilation.totalTachyonGalaxies / 100 + 0.5);
-  console.log(`Galaxies: ${aGalaxy}+${rGalaxy}+${dGalaxy} (${aGalaxy + rGalaxy + dGalaxy})`);
-  console.log(`Tick reduction: e${-Math.round(getTickSpeedMultiplier().log10())}`);
+  console.log(`Gamespeed: ${getGameSpeedupFactor().pow(1.2).toPrecision(1)}`);
+  const aGalaxy = Math.floor(player.galaxies.div(100).plus(0.5)).times(100);
+  const rGalaxy = Math.floor(Replicanti.galaxies.total.div(100).plus(0.5)).times(100);
+  const dGalaxy = Math.floor(player.dilation.totalTachyonGalaxies.div(100).plus(0.5)).times(100);
+  console.log(`Galaxies: ${aGalaxy}+${rGalaxy}+${dGalaxy} (${aGalaxy.plus(rGalaxy).plus(dGalaxy)})`);
+  console.log(`Tick reduction: e${getTickSpeedMultiplier().log10().round().neg()}`);
 
   let ADmults = BEC.D1;
   for (let i = 1; i <= 8; i++) {
@@ -251,15 +251,15 @@ dev.printResourceTotals = function() {
     TDmults = TDmults.times(TimeDimension(i).multiplier);
   }
   console.log(`TD mults: e${TDmults.log10().toPrecision(3)}`);
-  console.log(`Tickspeed from TD: ${formatWithCommas(1000 * Math.floor(player.totalTickGained / 1000 + 0.5))}`);
+  console.log(`Tickspeed from TD: ${formatWithCommas(player.totalTickGained.div(1000).plus(0.5).floor().times(1000))}`);
 
-  console.log(`Infinities: e${Math.round(player.infinities.log10())}`);
-  console.log(`Eternities: e${Math.round(player.eternities.log10())}`);
-  console.log(`Replicanti: e${formatWithCommas(1e5 * Math.floor(Replicanti.amount.log10() / 1e5 + 0.5))}`);
+  console.log(`Infinities: e${BE.round(player.infinities.log10())}`);
+  console.log(`Eternities: e${BE.round(player.eternities.log10())}`);
+  console.log(`Replicanti: e${formatWithCommas(Replicanti.amount.log10().div(1e5).plus(0.5).floor().times(1e5))}`);
 
-  console.log(`TT: e${Math.round(player.timestudy.theorem.log10())}`);
-  console.log(`DT: e${Math.round(player.dilation.dilatedTime.log10())}`);
-  console.log(`TP: e${Math.round(player.dilation.tachyonParticles.log10())}`);
+  console.log(`TT: e${BE.round(player.timestudy.theorem.log10())}`);
+  console.log(`DT: e${BE.round(player.dilation.dilatedTime.log10())}`);
+  console.log(`TP: e${BE.round(player.dilation.tachyonParticles.log10())}`);
 };
 
 dev.unlockCelestialQuotes = function(celestial) {
@@ -281,7 +281,7 @@ dev.testReplicantiCode = function(singleId, useDebugger = false) {
     ],
     [
       function() {
-        player.replicanti.interval = 1;
+        player.replicanti.interval = BEC.D1;
       }
     ],
     [
@@ -360,11 +360,11 @@ dev.testReplicantiCode = function(singleId, useDebugger = false) {
     ],
     [
       function() {
-        player.replicanti.boughtGalaxyCap = 100;
+        player.replicanti.boughtGalaxyCap = BEC.E2;
       },
       function() {
-        player.replicanti.boughtGalaxyCap = 100;
-        player.replicanti.galaxies = 50;
+        player.replicanti.boughtGalaxyCap = NEC.E2;
+        player.replicanti.galaxies = BEC.D50;
       }
     ],
     [
@@ -382,7 +382,7 @@ dev.testReplicantiCode = function(singleId, useDebugger = false) {
     player.infinities = BEC.D1;
     player.infinityPoints = BEC.E150;
     Replicanti.unlock();
-    player.replicanti.chance = 1;
+    player.replicanti.chance = BEC.D1;
     for (let i = 0; i < situationLists.length; i++) {
       const div = situationLists.slice(0, i).map(x => x.length + 1).reduce((x, y) => x * y, 1);
       // eslint-disable-next-line no-empty-function

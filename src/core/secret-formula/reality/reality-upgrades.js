@@ -79,7 +79,7 @@ export const realityUpgrades = [
     canLock: true,
     lockEvent: "gain a Replicanti Galaxy",
     description: "Replicanti speed is multiplied based on Replicanti Galaxies",
-    effect: () => 1 + Replicanti.galaxies.total / 50,
+    effect: () => Replicanti.galaxies.total.div(50).plus(1),
     formatEffect: value => formatX(value, 2, 2)
   },
   {
@@ -93,7 +93,7 @@ export const realityUpgrades = [
     canLock: true,
     lockEvent: "gain another Antimatter Galaxy",
     description: "Infinity gain is boosted from Antimatter Galaxy count",
-    effect: () => 1 + player.galaxies / 30,
+    effect: () => player.galaxies.div(30).plus(1),
     formatEffect: value => formatX(value, 2, 2)
   },
   {
@@ -122,7 +122,7 @@ export const realityUpgrades = [
       const hasValidGlyphInInventory = Glyphs.inventory.countWhere(g => g && g.level >= 3) > 0;
       return invalidEquippedGlyphs || (Glyphs.activeWithoutCompanion.length === 0 && !hasValidGlyphInInventory);
     },
-    checkRequirement: () => Currency.eternityPoints.exponent >= 4000 &&
+    checkRequirement: () => Currency.eternityPoints.gte(BEC.E4000) &&
       Glyphs.activeWithoutCompanion.length === 1 && Glyphs.activeWithoutCompanion[0].level >= 3,
     checkEvent: GAME_EVENT.ETERNITY_RESET_AFTER,
     canLock: true,
@@ -136,12 +136,12 @@ export const realityUpgrades = [
     cost: 15,
     requirement: () => `Complete your first manual Eternity with at least ${formatPostBreak(BEC.E400)} Infinity Points`,
     hasFailed: () => !player.requirementChecks.reality.noEternities,
-    checkRequirement: () => Currency.infinityPoints.exponent >= 400 &&
+    checkRequirement: () => Currency.infinityPoints.gte(BEC.E400) &&
       player.requirementChecks.reality.noEternities,
     checkEvent: GAME_EVENT.ETERNITY_RESET_BEFORE,
     canLock: true,
     lockEvent: "Eternity",
-    bypassLock: () => Currency.infinityPoints.exponent >= 400,
+    bypassLock: () => Currency.infinityPoints.gte(BEC.E400),
     description: () => `Start every Reality with ${formatInt(100)} Eternities (also applies to current Reality)`,
     automatorPoints: 15,
     shortDescription: () => `Start with ${formatInt(100)} Eternities`,
@@ -152,7 +152,7 @@ export const realityUpgrades = [
     id: 11,
     cost: 50,
     requirement: () => `${format(Currency.infinitiesBanked.value, 2)}/${format(BEC.E12)} Banked Infinities`,
-    checkRequirement: () => Currency.infinitiesBanked.exponent >= 12,
+    checkRequirement: () => Currency.infinitiesBanked.gte(BEC.E12),
     checkEvent: [GAME_EVENT.ETERNITY_RESET_AFTER, GAME_EVENT.REALITY_FIRST_UNLOCKED],
     description: "Every second, gain 10% of the Infinities you would normally gain by Infinitying",
     automatorPoints: 5,
@@ -166,14 +166,14 @@ export const realityUpgrades = [
     cost: 50,
     requirement: () => `Eternity for ${format(BEC.E70)} Eternity Points without completing Eternity Challenge 1`,
     hasFailed: () => EternityChallenge(1).completions !== 0,
-    checkRequirement: () => Currency.eternityPoints.exponent >= 70 && EternityChallenge(1).completions === 0,
+    checkRequirement: () => Currency.eternityPoints.gte(BEC.E70) && EternityChallenge(1).completions === 0,
     checkEvent: GAME_EVENT.ETERNITY_RESET_AFTER,
     canLock: true,
     lockEvent: "complete Eternity Challenge 1",
     description: "Eternity Point multiplier based on Reality and Time Theorem count",
     effect: () => Currency.timeTheorems.value
       .minus(BEC.E3).clampMin(2)
-      .pow(Math.log2(Math.min(Currency.realities.value, 1e4))).clampMin(1),
+      .pow(Currency.realities.value.min(1e4).log2()).clampMin(1),
     formatEffect: value => formatX(value, 2, 2)
   },
   {
@@ -182,7 +182,7 @@ export const realityUpgrades = [
     cost: 50,
     requirement: () => `Eternity for ${format(BEC.E4000)} Eternity Points without Time Dim. 5-8`,
     hasFailed: () => !Array.range(5, 4).every(i => TimeDimension(i).amount.equals(0)),
-    checkRequirement: () => Currency.eternityPoints.exponent >= 4000 &&
+    checkRequirement: () => Currency.eternityPoints.gte(NEC.E4000) &&
       Array.range(5, 4).every(i => TimeDimension(i).amount.equals(0)),
     checkEvent: GAME_EVENT.ETERNITY_RESET_AFTER,
     canLock: true,
@@ -201,7 +201,7 @@ export const realityUpgrades = [
     description: "Gain Eternities per second equal to your Reality count",
     automatorPoints: 5,
     shortDescription: () => `Continuous Eternity generation`,
-    effect: () => Currency.realities.value * Ra.unlocks.continuousTTBoost.effects.eternity.effectOrDefault(1),
+    effect: () => Currency.realities.value.times(Ra.unlocks.continuousTTBoost.effects.eternity.effectOrDefault(1)),
     formatEffect: value => `${format(value)} per second`
   },
   {
@@ -210,13 +210,13 @@ export const realityUpgrades = [
     cost: 50,
     requirement: () => `Have ${format(BEC.E10)} Eternity Points without purchasing
       the ${formatX(5)} Eternity Point upgrade`,
-    hasFailed: () => player.epmultUpgrades !== 0,
-    checkRequirement: () => Currency.eternityPoints.exponent >= 10 && player.epmultUpgrades === 0,
+    hasFailed: () => player.epmultUpgrades.neq(0),
+    checkRequirement: () => Currency.eternityPoints.gte(BEC.E10) && player.epmultUpgrades.eq(0),
     checkEvent: GAME_EVENT.ETERNITY_RESET_AFTER,
     canLock: true,
     lockEvent: () => `purchase a ${formatX(5)} EP upgrade`,
     description: () => `Boost Tachyon Particle gain based on ${formatX(5)} Eternity Point multiplier`,
-    effect: () => Math.max(Math.sqrt(BE.log10(EternityUpgrade.epMult.effectValue)) / 9, 1),
+    effect: () => EternityUpgrade.epMult.effectValue.log10().sqrt().div(9).max(1),
     formatEffect: value => formatX(value, 2, 2)
   },
   {
@@ -271,7 +271,7 @@ export const realityUpgrades = [
     checkRequirement: () => Glyphs.activeWithoutCompanion.countWhere(g => g.level >= 10) === 4,
     checkEvent: GAME_EVENT.REALITY_RESET_BEFORE,
     description: "Eternity count boosts Glyph level",
-    effect: () => Math.max(Math.sqrt(Currency.eternities.value.plus(1).log10()) * 0.45, 1),
+    effect: () => Currency.eternities.value.plus(1).log10().sqrt().times(0.45).max(1).toNumberMax(Number.MAX_VALUE),
     formatCost: value => format(value, 1, 0)
   },
   {
@@ -307,7 +307,7 @@ export const realityUpgrades = [
     requirement: () => `${formatInt(Replicanti.galaxies.total + player.galaxies +
       player.dilation.totalTachyonGalaxies)}/${formatInt(2800)} total Galaxies from all types`,
     checkRequirement: () =>
-      Replicanti.galaxies.total + player.galaxies + player.dilation.totalTachyonGalaxies >= 2800,
+      Replicanti.galaxies.total.plus(player.galaxies).plus(player.dilation.totalTachyonGalaxies).gte(2800),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     description: () => `Remote Antimatter Galaxy scaling is moved to ${formatInt(1e5)} galaxies`,
     effect: 1e5
@@ -317,7 +317,7 @@ export const realityUpgrades = [
     id: 22,
     cost: 100000,
     requirement: () => `${format(Currency.timeShards.value, 1)}/${format(BEC.E28000)} Time Shards`,
-    checkRequirement: () => Currency.timeShards.exponent >= 28000,
+    checkRequirement: () => Currency.timeShards.gte(BEC.E28000),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     description: "Time Dimension multiplier based on days spent in this Reality",
     effect: () => BE.pow10(Time.thisReality.totalDays.plus(1).log10().times(2).plus(1).pow(1.6)),
@@ -333,7 +333,7 @@ export const realityUpgrades = [
     checkRequirement: () => Time.thisReality.totalMinutes.lt(15),
     checkEvent: GAME_EVENT.REALITY_RESET_BEFORE,
     description: "Replicanti speed is boosted based on your fastest game-time Reality",
-    effect: () => BE.div(15, BE.clamp(Time.bestReality.totalMinutes, 1 / 12, 15)),
+    effect: () => BE.div(15, Time.bestReality.totalMinutes.clamp(1 / 12, 15)),
     cap: 180,
     formatEffect: value => formatX(value, 2, 2)
   },
@@ -356,7 +356,7 @@ export const realityUpgrades = [
     id: 25,
     cost: 100000,
     requirement: () => `Reach ${format(BEC.E11111)} EP (Best: ${format(player.records.bestReality.bestEP, 2)} EP)`,
-    checkRequirement: () => player.records.bestReality.bestEP.exponent >= 11111,
+    checkRequirement: () => player.records.bestReality.bestEP.gte(BEC.E11111),
     checkEvent: GAME_EVENT.ETERNITY_RESET_AFTER,
     description: "Unlock the Reality autobuyer and Automator command",
     automatorPoints: 100,

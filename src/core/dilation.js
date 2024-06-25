@@ -68,23 +68,23 @@ export function buyDilationUpgrade(id, bulk = 1) {
     if (player.dilation.upgrades.has(id)) return false;
     if (!Currency.dilatedTime.purchase(upgrade.cost)) return false;
     player.dilation.upgrades.add(id);
-    if (id === 4) player.dilation.totalTachyonGalaxies *= 2;
+    if (id === 4) player.dilation.totalTachyonGalaxies = player.dilation.totalTachyonGalaxies.times(2);
   } else {
     const upgAmount = player.dilation.rebuyables[id];
-    if (Currency.dilatedTime.lt(upgrade.cost) || upgAmount >= upgrade.config.purchaseCap) return false;
+    if (Currency.dilatedTime.lt(upgrade.cost) || upgAmount.gte(upgrade.config.purchaseCap)) return false;
 
     let buying = BE.affordGeometricSeries(Currency.dilatedTime.value,
-      upgrade.config.initialCost, upgrade.config.increment, upgAmount).toNumber();
-    buying = Math.clampMax(buying, bulk);
-    buying = Math.clampMax(buying, upgrade.config.purchaseCap - upgAmount);
+      upgrade.config.initialCost, upgrade.config.increment, upgAmount);
+    buying = buying.clampMax(bulk);
+    buying = buying.clamlMax(BE.minus(upgrade.config.purchaseCap, upgAmount));
     const cost = BE.sumGeometricSeries(buying, upgrade.config.initialCost, upgrade.config.increment, upgAmount);
     Currency.dilatedTime.subtract(cost);
-    player.dilation.rebuyables[id] += buying;
+    player.dilation.rebuyables[id] = player.dilation.rebuyables[id].plus(buying);
     if (id === 2) {
       if (!Perk.bypassTGReset.isBought || Pelle.isDoomed) Currency.dilatedTime.reset();
       player.dilation.nextThreshold = BEC.E3;
-      player.dilation.baseTachyonGalaxies = 0;
-      player.dilation.totalTachyonGalaxies = 0;
+      player.dilation.baseTachyonGalaxies = BEC.D0;
+      player.dilation.totalTachyonGalaxies = BEC.D0;
     }
 
     if (id === 3 && !Pelle.isDisabled("tpMults")) {
@@ -107,23 +107,23 @@ export function buyDilationUpgrade(id, bulk = 1) {
 export function getTachyonGalaxyMult(thresholdUpgrade) {
   // This specifically needs to be an undefined check because sometimes thresholdUpgrade is zero
   const upgrade = thresholdUpgrade === undefined ? DilationUpgrade.galaxyThreshold.effectValue : thresholdUpgrade;
-  const thresholdMult = 3.65 * upgrade + 0.35;
+  const thresholdMult = upgrade.times(3.65).plus(0.35);
   const glyphEffect = getAdjustedGlyphEffect("dilationgalaxyThreshold");
   const glyphReduction = glyphEffect === 0 ? 1 : glyphEffect;
   const power = DilationUpgrade.galaxyThresholdPelle.canBeApplied
     ? DilationUpgrade.galaxyThresholdPelle.effectValue : 1;
-  return (1 + thresholdMult * glyphReduction) ** power;
+  return thresholdMult.times(glyphReduction).plus(1).pow(power);
 }
 
 export function getDilationGainPerSecond() {
   if (Pelle.isDoomed) {
     const tachyonEffect = Currency.tachyonParticles.value.pow(PelleRifts.paradox.milestones[1].effectOrDefault(1));
-    return new BE(tachyonEffect)
+    return tachyonEffect
       .timesEffectsOf(DilationUpgrade.dtGain, DilationUpgrade.dtGainPelle, DilationUpgrade.flatDilationMult)
       .times(ShopPurchase.dilatedTimePurchases.currentMult ** 0.5)
       .times(Pelle.specialGlyphEffect.dilation).div(1e5);
   }
-  let dtRate = new BE(Currency.tachyonParticles.value)
+  let dtRate = Currency.tachyonParticles.value
     .timesEffectsOf(
       DilationUpgrade.dtGain,
       Achievement(132),
@@ -143,7 +143,7 @@ export function getDilationGainPerSecond() {
 }
 
 export function tachyonGainMultiplier() {
-  if (Pelle.isDisabled("tpMults")) return new BE(1);
+  if (Pelle.isDisabled("tpMults")) return BEC.D1;
   const pow = Enslaved.isRunning ? Enslaved.tachyonNerf : 1;
   return BEC.D1.timesEffectsOf(
     DilationUpgrade.tachyonGain,
@@ -193,7 +193,6 @@ export function getTachyonReq() {
     effectiveTP
       .times(Math.pow(400, 1.5))
       .pow(2 / 3)
-      .toNumber()
   );
 }
 
@@ -207,15 +206,15 @@ export function getDilationTimeEstimate(goal) {
     const goalNetRate = rawDTGain.minus(BE.multiply(goal, drain));
     const currNetRate = rawDTGain.minus(currentDT.times(drain));
     if (goalNetRate.lt(0)) return "Never affordable due to Rift drain";
-    return TimeSpan.fromSeconds(currNetRate.div(goalNetRate).ln() / drain).toTimeEstimate();
+    return TimeSpan.fromSeconds(currNetRate.div(goalNetRate).ln().div(drain)).toTimeEstimate();
   }
   return TimeSpan.fromSeconds(BE.sub(goal, currentDT)
-    .div(rawDTGain).toNumber()).toTimeEstimate();
+    .div(rawDTGain)).toTimeEstimate();
 }
 
 export function dilatedValueOf(value) {
   const log10 = value.log10();
-  const dilationPenalty = 0.75 * Effects.product(DilationUpgrade.dilationPenalty);
+  const dilationPenalty = Effects.product(DilationUpgrade.dilationPenalty).times(0.75);
   return BE.pow10(log10.abs().pow(dilationPenalty).times(log10.sign));
 }
 

@@ -16,6 +16,7 @@ export default {
       isEC8Running: false,
       EC8PurchasesLeft: 0,
       isEC9Running: false,
+      isLC4Running: false,
       isEnslavedRunning: false,
       isAnyAutobuyerUnlocked: false,
       conversionRate: 0,
@@ -41,15 +42,22 @@ export default {
       const extra = this.extraTesseracts > 0 ? ` + ${format(this.extraTesseracts, 2, 2)}` : "";
       return `${formatInt(this.boughtTesseracts)}${extra}`;
     },
+    formula() {
+      if (LogicChallenge(4).isRunning) return `lg(x)${formatPow(this.conversionRate, 2, 3)}`;
+      return `x${formatPow(this.conversionRate, 2, 3)}`;
+    }
   },
   methods: {
     update() {
       this.showLockedDimCostNote = !InfinityDimension(8).isUnlocked;
       this.isEC9Running = EternityChallenge(9).isRunning;
+      this.isLC9Running = LogicChallenge(9).isRunning;
       this.infinityPower.copyFrom(Currency.infinityPower);
       this.conversionRate = InfinityDimensions.powerConversionRate;
       if (this.isEC9Running) {
         this.dimMultiplier.copyFrom(BE.pow(Decimal.max(this.infinityPower.log2(), 1), 4).max(1));
+      } else if (this.isLC4Running) {
+        this.dimMultiplier.copyFrom(LogicChallenge(4).effectValue);
       } else {
         this.dimMultiplier.copyFrom(this.infinityPower.pow(this.conversionRate).max(1));
       }
@@ -106,16 +114,17 @@ export default {
         <br>
         <span v-if="!isEC9Running">
           increased by
-          <span class="c-infinity-dim-description__accent">{{ formatPow(conversionRate, 2, 3) }}</span>
+          <span class="c-infinity-dim-description__accent">{{ formula }}</span>
         </span>
         <span v-else>
           translated
         </span>
         to a
         <span class="c-infinity-dim-description__accent">{{ formatX(dimMultiplier, 2, 1) }}</span>
-        multiplier on all
-        <span v-if="!isEC9Running">Antimatter Dimensions.</span>
-        <span v-else>Time Dimensions due to Eternity Challenge 9.</span>
+        multiplier on
+        <span v-if="isEC9Running">all Time Dimensions due to Eternity Challenge 9.</span>
+        <span v-else-if="isLC4Running">Game speed due to Logic Challenge 4.</span>
+        <span v-else>all Antimatter Dimensions.</span>
       </p>
     </div>
     <div

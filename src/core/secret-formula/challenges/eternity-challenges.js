@@ -13,7 +13,7 @@ export const eternityChallenges = [
     reward: {
       description: "Time Dimension multiplier based on time spent this Eternity",
       effect: completions =>
-        BE.pow(Math.max(player.records.thisEternity.time / 10, 0.9), 0.3 + (completions * 0.05)),
+        BE.pow(player.records.thisEternity.time.div(10).max(0.9), 0.3 + (completions * 0.05)),
       formatEffect: value => formatX(value, 2, 1)
     },
     // These will get notation-formatted and scrambled between for the final goal
@@ -91,7 +91,7 @@ export const eternityChallenges = [
       description: "Further reduce Antimatter Dimension cost multiplier growth",
       effect: completions => completions * 0.2,
       formatEffect: value => {
-        const total = Math.round(Player.dimensionMultDecrease + Effects.sum(EternityChallenge(6).reward)) - value;
+        const total = Player.dimensionMultDecrease.plus(Effects.sum(EternityChallenge(6).reward)).round().minus(value);
         return `-${format(value, 2, 1)} (${formatX(total, 2, 1)} total)`;
       }
     },
@@ -122,8 +122,8 @@ export const eternityChallenges = [
     reward: {
       description: "Infinity Power strengthens Replicanti Galaxies",
       effect: completions => {
-        const infinityPower = Math.log10(Currency.infinityPower.value.pLog10() + 1);
-        return Math.max(0, Math.pow(infinityPower, 0.03 * completions) - 1);
+        const infinityPower = Currency.infinityPower.value.pLog10().plus(1).log10();
+        return infinityPower.pow(0.03 * completions).minus(1).max(0);
       },
       formatEffect: value => formatPercents(value, 2)
     }
@@ -181,7 +181,7 @@ export const eternityChallenges = [
       description: "Further reduce Tickspeed cost multiplier growth",
       effect: completions => completions * 0.07,
       formatEffect: value => {
-        const total = Math.round(Player.tickSpeedMultDecrease + Effects.sum(EternityChallenge(11).reward)) - value;
+        const total = Player.tickSpeedMultDecrease.plus(Effects.sum(EternityChallenge(11).reward)).minus(value);
         return `-${format(value, 2, 2)} (${formatX(total, 2, 2)} total)`;
       }
     }

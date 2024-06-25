@@ -282,6 +282,30 @@ html {
   --var-border-radius: 0;
 }
 
+:root .t-s13 {
+  --color-good: #95E48B;
+  --color-good-dark: #3EBA01;
+  --color-bad: #e98d7e;
+  --color-infinity: #f7a95f;
+  --color-eternity: #CD6EF1;
+  --color-reality: #14C127;
+  --color-celestials: #8586FF;
+  --color-reality-dark: #51A64D;
+  --color-reality-light: #8CD988;
+  --color-prestige--accent: white;
+  --color-accent: #9bbeda;
+  
+  --color-base: #f3f3f3;
+  --color-teresa--base: #8596ea;
+  --color-effarig--base: #ea8585;
+  --color-pelle--base: #FF527A;
+  
+  --color-laitela--base: #F3F0F2;
+  --color-laitela--accent: #100708;
+  
+  --color-logic: #78D7B2
+}
+
 /* end css vars */
 
 body {
@@ -1603,6 +1627,10 @@ br {
   cursor: default;
 }
 
+.t-s13 .o-primary-btn--disabled {
+  background-color: #e3e0e2;
+}
+
 .o-primary-btn--disabled:hover {
   background-color: var(--color-bad);
 }
@@ -2065,6 +2093,10 @@ br {
   cursor: default;
 }
 
+.t-s13 .o-infinity-button {
+  background-color: rgba(255, 255, 255, 20%);
+}
+
 /* #region Eternity */
 
 .o-eternity-button {
@@ -2099,6 +2131,10 @@ br {
 
 .t-metro .o-eternity-button {
   box-shadow: 0.1rem 0.1rem 0.1rem 0 #9e9e9e;
+}
+
+.t-s13 .o-eternity-button {
+  background-color: rgba(255, 255, 255, 20%);
 }
 
 .o-eternity-button--dilation {
@@ -7819,8 +7855,16 @@ kbd {
   background-color: #81d4fa;
 }
 
+.t-s13 .o-alchemy-node--base {
+  background-color: #C3EAFB;
+}
+
 .o-alchemy-node--active {
   background-color: #9ccc65;
+}
+
+.t-s13 .o-alchemy-node--active {
+  background-color: #C5F291;
 }
 
 .c-ra-unlock-unlocked {
@@ -8675,6 +8719,11 @@ kbd {
 .c-reality-upgrade-btn--bought:hover {
   color: var(--color-reality-light);
   background-color: var(--color-reality);
+}
+
+.t-s13 .c-reality-upgrade-btn--bought {
+  color: var(--color-text);
+  background-color: var(--color-reality-light);
 }
 
 .c-reality-upgrade-btn--possible {
@@ -10026,7 +10075,7 @@ input.o-automator-block-input {
   height: 30rem;
   padding: 3rem 5rem;
   background-color: #aaccff;
-  font-size: 4rem;
+  font-size: 2rem;
   font-weight: bold;
   margin-top: -15rem;
   margin-left: -25rem;
@@ -10037,12 +10086,14 @@ input.o-automator-block-input {
   box-shadow: 0 0 1rem 0.05rem #aaccff inset;
   backdrop-filter: blur(0.6rem);
   opacity: 1;
+  z-index: 6;
 }
 
 .a-game-notify-modal-enter-active,
 .a-game-notify-modal-leave-active {
   transition: opacity 0.2s;
 }
+
 .a-game-notify-modal-enter,
 .a-game-notify-modal-leave-to {
   opacity: 0;

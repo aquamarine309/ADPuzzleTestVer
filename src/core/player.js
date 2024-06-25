@@ -98,9 +98,6 @@ window.player = {
       requirementBits: 0,
     }
   },
-  infinity: {
-    upgradeBits: 0
-  },
   auto: {
     autobuyersOn: true,
     disableContinuum: false,

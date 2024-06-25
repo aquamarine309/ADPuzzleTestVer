@@ -7,12 +7,12 @@ export function updateNormalAndInfinityChallenges(diff) {
       Currency.matter.bumpTo(1);
       // These caps are values which occur at approximately e308 IP
       let cappedBase = DimBoost.totalBoosts.plus(DimBoost.totalBoosts.pow(2).div(500)).clampMax(400).plus(player.galaxies.clampMax(100)).div(80).plus(1.03);
-      if (Currency.matter.gt(BE.NUMBER_MAX_VALUE) && Currency.matter.lt(Currency.antimatter.value.div(BEC.E100))) {
-        cappedBase = cappedBase.times(3);
+      if (Currency.antimatter.gt(BE.NUMBER_MAX_VALUE)) {
+        cappedBase = cappedBase.times(Currency.antimatter.value.log10());
       }
       Currency.matter.multiply(cappedBase.pow(diff.div(20)));
     }
-    if (Currency.matter.gte(Currency.antimatter.value) && NormalChallenge(11).isRunning && !Player.canCrunch) {
+    if (Currency.matter.gte(Currency.antimatter.value) && NormalChallenge(11).isRunning && (!Player.canCrunch && !NormalChallenge(11).isBroken)) {
       const values = [Currency.antimatter.value, Currency.matter.value];
       softReset(0, true, true);
       Modal.message.show(`Your ${format(values[0], 2, 2)} antimatter was annihilated

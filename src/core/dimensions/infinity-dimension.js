@@ -136,6 +136,9 @@ class InfinityDimensionState extends DimensionState {
     if (EternityChallenge(7).isRunning) {
       production = production.times(Tickspeed.perSecond);
     }
+    if (LogicChallenge(5).isRunning) {
+      production = production.times(LogicChallenge(5).effectValue);
+    }
     return production.times(this.multiplier);
   }
 
@@ -409,11 +412,13 @@ export const InfinityDimensions = {
   },
 
   get powerConversionRate() {
+    let base = 7;
     const multiplier = PelleRifts.paradox.milestones[2].effectOrDefault(1);
-    if (LogicChallenge(4).isRunning) {
-      return 2
-    } else {
-      return (7 + getAdjustedGlyphEffect("infinityrate") + PelleUpgrade.infConversion.effectOrDefault(0)) * multiplier;
+    if (LogicChallenge(5).isRunning) {
+      base = 4;
+    } else if (LogicChallenge(4).isRunning) {
+      base = 2;
     }
+    return (base + getAdjustedGlyphEffect("infinityrate") + PelleUpgrade.infConversion.effectOrDefault(0)) * multiplier;
   }
 };

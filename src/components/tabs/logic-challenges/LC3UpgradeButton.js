@@ -21,10 +21,11 @@ export default {
     return {
       canBuy: false,
       purchases: new BE(0),
-      currentTimeEstimate: new BE(0),
+      timeEstimate: new BE(0),
       isCapped: false,
       hovering: false,
-      notAffordable: false
+      notAffordable: false,
+      hideEstimate: false
     };
   },
   computed: {
@@ -40,29 +41,20 @@ export default {
         ? formattedEffect(this.purchases.plus(1))
         : undefined;
       return { prefix, value, next };
-    },
-    timeEstimate() {
-      if (!this.hasTimeEstimate) return null;
-      return this.currentTimeEstimate;
-    },
-    hasTimeEstimate() {
-      return !(this.canBuy ||
-        this.isCapped);
-    },
+    }
   },
   methods: {
     update() {
       this.canBuy = this.upgrade.canBeBought;
       this.isCapped = this.upgrade.isCapped;
       this.purchases = this.upgrade.effectiveAmount;
-      this.currentTimeEstimate = TimeSpan
-        .fromSeconds(this.secondsUntilCost(LC3.cpPerSecond))
-        .toTimeEstimate();
-    },
-    secondsUntilCost(rate) {
-      const value = Currency.challengePower.value;
-      return BE.sub(this.upgrade.cost, value).div(rate);
-    },
+      this.hideEstimate = this.isAffordable || this.isCapped;
+      this.timeEstimate = this.hideEstimate ? null : TimeSpan
+        .fromSeconds(
+          this.upgrade.cost.div(Currency.challengePower.value)
+          .ln().div(LC3.cpPerSecond.ln())
+        ).toTimeEstimate();
+    }
   },
   template: `
   <div class="l-spoon-btn-group">
@@ -78,6 +70,7 @@ export default {
     >
       <CustomizeableTooltip
         v-if="timeEstimate"
+        :show="hovering && !hideEstimate"
         left="50%"
         top="0"
       >

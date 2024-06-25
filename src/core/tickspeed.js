@@ -20,7 +20,7 @@ export function effectiveBaseGalaxies() {
 }
 
 export function getTickSpeedMultiplier() {
-  if (InfinityChallenge(3).isRunning) return BEC.D1;
+  if (InfinityChallenge(3).isRunning || LogicChallenge(5).isRunning) return BEC.D1;
   if (Ra.isRunning) return BEC.C1D1_1245;
   let galaxies = effectiveBaseGalaxies();
   const effects = Effects.product(

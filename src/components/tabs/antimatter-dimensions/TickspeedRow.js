@@ -9,7 +9,7 @@ export default {
       cost: new BE(0),
       isAffordable: false,
       tickspeed: new BE(0),
-      gameSpeedMult: 1,
+      gameSpeedMult: new BE(0),
       galaxyCount: new BE(0),
       isContinuumActive: false,
       continuumValue: new BE(0),
@@ -27,8 +27,9 @@ export default {
     },
     multiplierDisplay() {
       if (InfinityChallenge(3).isRunning) return `Multiply all Antimatter Dimensions by
-        ${formatX(1.05 + this.galaxyCount * 0.005, 3, 3)}`;
+        ${formatX(this.galaxyCount.times(0.005).plus(1.05), 3, 3)}`;
       const tickmult = this.mult;
+      if (LogicChallenge(5).isRunning) return "Invalid for ADs";
       return `${formatX(tickmult.reciprocal(), 2, 3)} faster / upgrade.`;
     },
     tickspeedDisplay() {
@@ -39,8 +40,8 @@ export default {
     },
     upgradeCount() {
       const purchased = this.purchasedTickspeed;
-      if (!this.freeTickspeed) return quantifyInt("Purchased Upgrade", purchased);
-      if (purchased === 0 || this.isContinuumActive) return `${formatInt(this.freeTickspeed)} Free Upgrades`;
+      if (this.freeTickspeed.eq(0)) return quantifyInt("Purchased Upgrade", purchased);
+      if (purchased.eq(0) || this.isContinuumActive) return `${formatInt(this.freeTickspeed)} Free Upgrades`;
       return `${formatInt(purchased)} Purchased + ${formatInt(this.freeTickspeed)} Free`;
     }
   },

@@ -175,7 +175,7 @@ class ResourceExchangeUpgradeState extends GameMechanicState {
   }
   
   get isEffectActive() {
-    return PlayerProgress.infinityUnlocked();
+    return PlayerProgress.infinityUnlocked() && !LogicChallenge(5).isRunning;
   }
 }
 

@@ -33,10 +33,10 @@ export const dilationUpgrades = {
         ), 2, 2)} Dilated Time gain`
         : "Double Dilated Time gain"),
     effect: bought => {
-      const base = 2 * Effects.product(
+      const base = Effects.product(
         SingularityMilestone.dilatedTimeFromSingularities,
         Achievement(187)
-      );
+      ).times(2);
       return BE.pow(base, bought);
     },
     formatEffect: value => {
@@ -45,7 +45,7 @@ export const dilationUpgrades = {
       return formatX(value, 2, nonInteger ? 2 : 0);
     },
     formatCost: value => format(value, 2),
-    purchaseCap: Number.MAX_VALUE
+    purchaseCap: BE.NUMBER_MAX_VALUE
   }),
   galaxyThreshold: rebuyable({
     id: 2,
@@ -56,10 +56,10 @@ export const dilationUpgrades = {
         ? "Reset Tachyon Galaxies, but lower their threshold"
         : "Reset Dilated Time and Tachyon Galaxies, but lower their threshold"),
     // The 38th purchase is at 1e80, and is the last purchase.
-    effect: bought => (bought.lt(38) ? BE.pow(0.8, bought).toNumber() : 0),
+    effect: bought => (bought.lt(38) ? BE.pow(0.8, bought) : 0),
     formatEffect: effect => {
-      if (effect === 0) return `${formatX(getTachyonGalaxyMult(effect), 4, 4)}`;
-      const nextEffect = effect === Math.pow(0.8, 37) ? 0 : 0.8 * effect;
+      if (effect.eq(0)) return `${formatX(getTachyonGalaxyMult(effect), 4, 4)}`;
+      const nextEffect = effect.eq(BE.pow(0.8, 37)) ? BEC.D0 : effect.times(0.8);
       return `${formatX(getTachyonGalaxyMult(effect), 4, 4)} ➜
         Next: ${formatX(getTachyonGalaxyMult(nextEffect), 4, 4)}`;
     },
@@ -82,7 +82,7 @@ export const dilationUpgrades = {
     },
     formatEffect: value => formatX(value, 2),
     formatCost: value => format(value, 2),
-    purchaseCap: Number.MAX_VALUE
+    purchaseCap: BE.NUMBER_MAX_VALUE
   }),
   doubleGalaxies: {
     id: 4,
@@ -96,9 +96,9 @@ export const dilationUpgrades = {
     description: () => {
       const rep10 = replicantiMult().pLog10();
       let multiplier = "0.1";
-      if (rep10 > 9000) {
-        const ratio = DilationUpgrade.tdMultReplicanti.effectValue.pLog10() / rep10;
-        if (ratio < 0.095) {
+      if (rep10.gt(9000)) {
+        const ratio = DilationUpgrade.tdMultReplicanti.effectValue.pLog10().div(rep10);
+        if (ratio.lt(0.095)) {
           multiplier = ratio.toFixed(2);
         }
       }
@@ -190,7 +190,7 @@ export const dilationUpgrades = {
     cost: 1e55,
     pelleOnly: true,
     description: () => `Gain more Dilated Time based on current EP`,
-    effect: () => 1e9 ** Math.min((Math.max(player.eternityPoints.log10() - 1500, 0) / 2500) ** 1.2, 1),
+    effect: () => BEC.E9.pow(player.eternityPoints.log10().minus(1500).max(0).div(2500).pow(1.2).min(1)),
     formatEffect: value => formatX(value, 2, 2)
   },
 };

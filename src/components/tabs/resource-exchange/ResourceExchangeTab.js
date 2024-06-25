@@ -100,7 +100,7 @@ export default {
           Total Logic Points and Exchange Levels provide a <span class="c-lp-amount--small">{{ formatX(multiplier, 2, 2) }}</span> multiplier to your Antimatter Dimensions.
         </div>
         <div
-          v-if="rateUnlocked"
+          v-if="currentResource.isUnlocked && rateUnlocked"
           class="c-exchange-rate-conatiner"
         >
           <div>

@@ -34,6 +34,8 @@ export default {
       let tickspeedFixed = "";
       if (InfinityChallenge(3).isRunning) {
         tickspeedFixed = `Infinity Challenge ${InfinityChallenge(3).id}`;
+      } else if (LogicChallenge(5).isRunning) {
+        tickspeedFixed = `Logic Challenge ${LogicChallenge(5).id}`
       } else if (Ra.isRunning) {
         tickspeedFixed = `${Ra.displayName}'s Reality`;
       }
