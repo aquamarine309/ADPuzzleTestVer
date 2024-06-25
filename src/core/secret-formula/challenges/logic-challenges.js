@@ -28,17 +28,19 @@ export const logicChallenges = [
     description: () => `Antimatter Dimension multiplier is always ${formatX(1)}, but ...`,
     goal: BEC.E4000,
     reward: {
-      description: "Unlock Replicanti. (NYI)"
+      description: "Unlock Replicanti. (Testing)"
     }
   },
   {
     id: 4,
     description: () => `Infinity Power boost game speed instead of antimatter dimensions.`,
-    goal: BEC.E6000,
+    goal: BEC.E10000,
     effect: () => Currency.infinityPower.value.plus(1).log10().pow(InfinityDimensions.powerConversionRate).clamp(1, 1e30),
     formatEffect: value => format(value, 3, 3),
     reward: {
-      description: "Decrease the cost of Replicanti Upgrade based on current Infinity Points."
+      description: "Decrease the cost of Replicanti Upgrade based on current Infinity Points.",
+      effect: () => BE.pow10(Currency.infinityPoints.plus(1).log10().pow(0.5)).times(BEC.E10),
+      formatEffect: value => format(value, 2, 3)
     }
   }
 ]

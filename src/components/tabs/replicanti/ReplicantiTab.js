@@ -42,7 +42,8 @@ export default {
       autoreplicateUnlocked: false,
       cooldownTime: new BE(),
       boostCost: 0,
-      boosts: 0
+      boosts: new BE(),
+      holding: 0
     };
   },
   computed: {
@@ -154,6 +155,7 @@ export default {
       }
       this.autoreplicateUnlocked = Replicanti.autoreplicateUnlocked;
       this.cooldownTime.copyFrom(Replicanti.cooldownTime);
+      if (this.holding) this.replicate();
       this.boostCost = ReplicantiBoost.cost;
       this.boosts = ReplicantiBoost.amount;
       this.amount.copyFrom(Replicanti.amount);
@@ -289,6 +291,8 @@ export default {
           :enabled="canReplicate && !autoreplicateUnlocked"
           class="o-primary-btn--replicanti-galaxy l-replicanti-upgrade-button"
           @click="replicate"
+          @touchstart="holding = true"
+          @touchend="holding = false"
         >
           Replicate ({{ replicationInfo }})
         </PrimaryButton>

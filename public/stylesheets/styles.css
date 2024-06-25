@@ -1782,6 +1782,12 @@ br {
   height: 5rem;
   font-size: 1rem;
   padding: 0.1rem 0.6rem;
+  -webkit-touch-callout: none;
+  -webkit-touch-callout: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .o-primary-btn--replicanti-galaxy-toggle {
@@ -4652,6 +4658,60 @@ properly on certain themes. */
 
 .t-s11 .c-replicanti-description__accent--level-2 {
   animation: a-replicanti--glow-blob 10s infinite;
+}
+
+.c-replicanti-description__accent--level-3 {
+  animation: a-replicanti--happy 5s infinite;
+  opacity: 1;
+  display: inline-flex;
+}
+
+@keyframes a-replicanti--happy {
+  0% {
+    transform: translate(0);
+  }
+  
+  12.5% {
+    transform: translateY(6rem);
+  }
+  
+  25% {
+    transform: translateY(0);
+  }
+  
+  37.5% {
+    transform: translateY(-6rem);
+  }
+  
+  47.5% {
+    transform: translateY(-6rem);
+  }
+  
+  52.5% {
+    transform: translateY(0) rotate(0deg);
+  }
+  
+  60% {
+    transform: rotate(90deg);
+  }
+  
+  67.5% {
+    transform: rotate(360deg);
+  }
+  
+  75% {
+    transform: rotate(180deg) scale(100%);
+    opacity: 1;
+  }
+  
+  87.5% {
+    transform: rotate(0deg) scale(0);
+    opacity: 0;
+  }
+  
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes a-replicanti--glow {

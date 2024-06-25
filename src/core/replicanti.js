@@ -338,7 +338,10 @@ export const ReplicantiUpgrade = {
     }
 
     get cost() {
-      return player.replicanti.chanceCost.dividedByEffectOf(PelleRifts.vacuum.milestones[1]);
+      return player.replicanti.chanceCost.dividedByEffectsOf(
+        PelleRifts.vacuum.milestones[1],
+        LogicChallenge(4).reward
+      );
     }
 
     get baseCost() { return player.replicanti.chanceCost; }
@@ -389,7 +392,10 @@ export const ReplicantiUpgrade = {
     }
 
     get cost() {
-      return player.replicanti.intervalCost.dividedByEffectOf(PelleRifts.vacuum.milestones[1]);
+      return player.replicanti.intervalCost.dividedByEffectsOf(
+        PelleRifts.vacuum.milestones[1],
+        LogicChallenge(4).reward
+      );
     }
 
     get baseCost() { return player.replicanti.intervalCost; }
@@ -424,7 +430,11 @@ export const ReplicantiUpgrade = {
     }
 
     get cost() {
-      return this.baseCost.dividedByEffectsOf(TimeStudy(233), PelleRifts.vacuum.milestones[1]);
+      return this.baseCost.dividedByEffectsOf(
+        TimeStudy(233),
+        PelleRifts.vacuum.milestones[1],
+        LogicChallenge(4).reward
+      );
     }
 
     get baseCost() { return player.replicanti.galCost; }
@@ -611,7 +621,7 @@ export const Replicanti = {
       if (Achievement(126).isUnlocked) {
         const maxGain = Replicanti.galaxies.max.sub(player.replicanti.galaxies);
         const logReplicanti = Replicanti.amount.log10();
-        return BE.min(maxGain, BE.floor(logReplicanti.div(LOG10_MAX_VALUE)));
+        return logReplicanti.div(LOG10_MAX_VALUE).floor().clampMax(maxGain);
       }
       return BEC.D1;
     },
@@ -635,11 +645,15 @@ export const ReplicantiBoost = {
     player.replicanti.boosts = value;
   },
   get boost() {
-    return BE.pow(this.amount + 1, 2);
+    return BE.pow(this.amount + 1, 2).times(BE.pow(2, this.amount));
   },
   get cost() {
-    const costs = [128, 1e10, 1e100, Infinity];
-    return costs[this.amount];
+    const costs = [128, 1e10, 1e100, 1e308];
+    if (this.amount <= 3) {
+      return new BE(costs[this.amount]);
+    } else {
+      return BEC.E308.pow(BE.pow(this.amount - 2, 2));
+    }
   },
   purchase() {
     if (Replicanti.amount.lt(this.cost)) return;

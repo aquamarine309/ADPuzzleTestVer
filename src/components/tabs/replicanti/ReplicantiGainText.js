@@ -36,7 +36,7 @@ export default {
         // The calculation seems to choke and return zero if the time is too large, probably because of rounding issues
         const timeEstimateText = timeToThousand.eq(0)
           ? "an extremely long time"
-          : `${TimeSpan.fromSeconds(timeToThousand.toNumber())}`;
+          : `${TimeSpan.fromSeconds(timeToThousand)}`;
         this.remainingTimeText = `You are gaining ${formatX(gainFactorPerSecond, 2, 1)} Replicanti per second` +
           ` (${timeEstimateText} until ${format(nextMilestone)})`;
       } else {
