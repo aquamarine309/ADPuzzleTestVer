@@ -45,7 +45,7 @@ export const logicChallenges = [
   },
   {
     id: 5,
-    description: "Infinity Dimensions multiplier based on Galaxies. Galaxies no longer affect Tickspeed. Tickspeed no longer affect Antimatter Dimensions production. Disable the multiplier from Logic Points and Exchange Level. Decrease conversation rate of Infinity Power.",
+    description: "Infinity Dimensions multiplier based on Galaxies. Galaxies no longer affect Tickspeed. Tickspeed no longer affect Antimatter Dimensions production. Disable the multiplier from Logic Points and Exchange Level. Decrease conversion rate of Infinity Power.",
     goal: BEC.E5000,
     effect: () => BEC.D2.pow(BE.pow(1.03, effectiveBaseGalaxies())),
     formatEffect: value => formatX(value, 3, 3),
