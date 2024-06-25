@@ -6,7 +6,10 @@ export function updateNormalAndInfinityChallenges(diff) {
     if (AntimatterDimension(2).amount.neq(0)) {
       Currency.matter.bumpTo(1);
       // These caps are values which occur at approximately e308 IP
-      const cappedBase = DimBoost.totalBoosts.plus(DimBoost.totalBoosts.pow(2).div(500)).clampMax(400).plus(player.galaxies.clampMax(100)).div(80).plus(1.03);
+      let cappedBase = DimBoost.totalBoosts.plus(DimBoost.totalBoosts.pow(2).div(500)).clampMax(400).plus(player.galaxies.clampMax(100)).div(80).plus(1.03);
+      if (Currency.matter.gt(BE.NUMBER_MAX_VALUE) && Currency.matter.lt(Currency.antimatter.value.div(BEC.E100))) {
+        cappedBase = cappedBase.times(3);
+      }
       Currency.matter.multiply(cappedBase.pow(diff.div(20)));
     }
     if (Currency.matter.gte(Currency.antimatter.value) && NormalChallenge(11).isRunning && !Player.canCrunch) {

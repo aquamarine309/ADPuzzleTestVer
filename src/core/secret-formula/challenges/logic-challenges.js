@@ -39,8 +39,8 @@ export const logicChallenges = [
     formatEffect: value => format(value, 3, 3),
     reward: {
       description: "Decrease the cost of Replicanti Upgrade based on current Infinity Points.",
-      effect: () => BE.pow10(Currency.infinityPoints.plus(1).log10().pow(0.5)).times(BEC.E10),
-      formatEffect: value => format(value, 2, 3)
+      effect: () => BE.pow10(Currency.infinityPoints.value.plus(1).log10().pow(0.5)).times(BEC.E10),
+      formatEffect: value => `/${format(value, 2, 3)}`
     }
   }
 ]
