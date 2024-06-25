@@ -51,7 +51,7 @@ export default {
     update() {
       this.showLockedDimCostNote = !InfinityDimension(8).isUnlocked;
       this.isEC9Running = EternityChallenge(9).isRunning;
-      this.isLC9Running = LogicChallenge(9).isRunning;
+      this.isLC5Running = LogicChallenge(5).isRunning;
       this.infinityPower.copyFrom(Currency.infinityPower);
       this.conversionRate = InfinityDimensions.powerConversionRate;
       if (this.isEC9Running) {
