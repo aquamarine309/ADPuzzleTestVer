@@ -1778,14 +1778,14 @@ br {
 }
 
 .o-primary-btn--replicanti-galaxy {
-  width: 22rem;
-  height: 7rem;
-  font-size: 1.2rem;
+  width: 18rem;
+  height: 5rem;
+  font-size: 1rem;
   padding: 0.1rem 0.6rem;
 }
 
 .o-primary-btn--replicanti-galaxy-toggle {
-  width: 22rem;
+  width: 18rem;
   font-size: 1.2rem;
 }
 
@@ -4639,6 +4639,49 @@ properly on certain themes. */
 .t-s6 .c-replicanti-description__accent,
 .t-s10 .c-replicanti-description__accent {
   text-shadow: 0 0 0.7rem #03a9f4;
+}
+
+.c-replicanti-description__accent--level-1 {
+  filter: brightness(125%);
+  font-weight: bold;
+}
+
+.c-replicanti-description__accent--level-2 {
+  animation: a-replicanti--glow 10s infinite;
+}
+
+.t-s11 .c-replicanti-description__accent--level-2 {
+  animation: a-replicanti--glow-blob 10s infinite;
+}
+
+@keyframes a-replicanti--glow {
+
+  0% { color: #2196f3; }
+
+  33% { color: #673ab7; }
+  66% { color: #00bcd4; }
+  100% { color: #2196f3; }
+}
+
+@keyframes a-replicanti--glow-blob {
+
+  0% {
+    color: #fbc21b;
+    text-shadow: 0 0 0.6rem #fbc21b;
+  }
+
+  33% {
+    color: #caa32c;
+    text-shadow: 0 0 1rem #caa32c;
+  }
+  66% {
+    color: #fba11b;
+    text-shadow: 0 0 0.6rem #fba11b;
+  }
+  100% {
+    color: #fbc21b;
+    text-shadow: 0 0 1rem #fbc21b;
+  }
 }
 
 /* #endregion c-replicanti-description */

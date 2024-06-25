@@ -63,7 +63,7 @@ export default {
   <div class="l-spoon-btn-group">
     <PrimaryButton
       :enabled="isAvailable"
-      class="o-primary-btn--replicanti-galaxy"
+      class="o-primary-btn--replicanti-galaxy l-replicanti-upgrade-button"
       @click="handleClick"
     >
       {{ resetActionDisplay }} for a Replicanti Galaxy

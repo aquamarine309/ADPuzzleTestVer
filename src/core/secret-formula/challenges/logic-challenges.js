@@ -17,7 +17,7 @@ export const logicChallenges = [
   },
   {
     id: 2,
-    description: () => `Normal Challenges are broken. Dimension Boost multipiler reduced to ${formatX(1)} and Galaxies are disabled.`,
+    description: () => `Normal Challenges are broken. Dimension Boost multiplier is reduced to ${formatX(1)} and Galaxies are disabled.`,
     goal: BEC.E1750,
     reward: {
       description: "Decrease the requirement of Galaxies. Unlock exchange rate."
@@ -29,6 +29,16 @@ export const logicChallenges = [
     goal: BEC.E4000,
     reward: {
       description: "Unlock Replicanti. (NYI)"
+    }
+  },
+  {
+    id: 4,
+    description: () => `Infinity Power boost game speed instead of antimatter dimensions.`,
+    goal: BEC.E6000,
+    effect: () => Currency.infinityPower.value.plus(1).log10().pow(InfinityDimensions.powerConversionRate).clamp(1, 1e30),
+    formatEffect: value => format(value, 3, 3),
+    reward: {
+      description: "Decrease the cost of Replicanti Upgrade based on current Infinity Points."
     }
   }
 ]

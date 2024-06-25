@@ -31,7 +31,7 @@ export const resourceExchange = {
     shortName: "IPow",
     symbol: "Χ",
     currency: () => Currency.infinityPower,
-    value: value => value.pow(0.05).times(1.25).add(1)
+    value: value => value.pow(0.05).times(1.25).add(value.pow(0.1).div(10)).add(1)
   },
   "replicanti": {
     id: 4,

@@ -9,6 +9,16 @@ export const changelog = [
    * }
    */
   {
+    date: [2024, 6, 25],
+    name: "Replicanti Update Test",
+    info: `
+<b>Current game:</b><br>
+<ul>
+<li>EndGame: e560LP (Do not level up Exchange!)</li>
+</ui>
+    `
+  },
+  {
     date: [2024, 5, 2],
     name: "Celebrate Android Reality Update",
     info: `

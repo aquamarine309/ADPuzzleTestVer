@@ -174,9 +174,9 @@ export function replicantiCap() {
 export function replicantiLoop(diff, auto = true) {
   if (!player.replicanti.unl) return;
   if (diff) {
-    player.replicanti.coolingTime = player.replicanti.coolingTime.minus(diff);
+    player.replicanti.cooldownTime = player.replicanti.cooldownTime.minus(diff);
   }
-  if (!auto) player.replicanti.coolingTime = getReplicantiInterval(false);
+  if (!auto) player.replicanti.cooldownTime = getReplicantiInterval(false);
   if (auto && !Replicanti.autoreplicateUnlocked) return;
   const replicantiBeforeLoop = Replicanti.amount;
   PerformanceStats.start("Replicanti");
@@ -188,7 +188,7 @@ export function replicantiLoop(diff, auto = true) {
 
   // Figure out how many ticks to calculate for and roll over any leftover time to the next tick. The rollover
   // calculation is skipped if there's more than 100 replicanti ticks per game tick to reduce round-off problems.
-  let tickCount = auto ? diff.add(player.replicanti.timer).div(interval) : BEC.D1;
+  let tickCount = auto ? diff.add(player.replicanti.timer).div(interval) : ReplicantiBoost.boost;
   if (tickCount.lt(100) || !auto) player.replicanti.timer = tickCount.minus(tickCount.floor()).times(interval);
   else player.replicanti.timer = BEC.D0;
   tickCount = tickCount.floor();
@@ -563,8 +563,8 @@ export const Replicanti = {
     };
   },
   unlock(freeUnlock = false) {
-    if (player.replicanti.unl || !DEV) return;
-    if (freeUnlock || LC3.isCompleted) {
+    if (player.replicanti.unl) return;
+    if (freeUnlock || (LC3.isCompleted && DEV)) {
       player.replicanti.unl = true;
       player.replicanti.timer = BEC.D0;
       Replicanti.amount = BEC.D1;
@@ -622,7 +622,27 @@ export const Replicanti = {
   get autoreplicateUnlocked() {
     return false;
   },
-  get coolingTime() {
-    return player.replicanti.coolingTime;
+  get cooldownTime() {
+    return player.replicanti.cooldownTime;
   }
 };
+
+export const ReplicantiBoost = {
+  get amount() {
+    return player.replicanti.boosts;
+  },
+  set amount(value) {
+    player.replicanti.boosts = value;
+  },
+  get boost() {
+    return BE.pow(this.amount + 1, 2);
+  },
+  get cost() {
+    const costs = [128, 1e10, 1e100, Infinity];
+    return costs[this.amount];
+  },
+  purchase() {
+    if (Replicanti.amount.lt(this.cost)) return;
+    ++this.amount;
+  }
+}

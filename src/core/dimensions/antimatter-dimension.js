@@ -11,7 +11,7 @@ export function antimatterDimensionCommonMultiplier() {
   multiplier = multiplier.times(ShopPurchase.dimPurchases.currentMult);
   multiplier = multiplier.times(ShopPurchase.unlockDLC.currentMult);
 
-  if (!EternityChallenge(9).isRunning) {
+  if (!EternityChallenge(9).isRunning && !LogicChallenge(4).isRunning) {
     multiplier = multiplier.times(Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate).max(1));
   }
   multiplier = multiplier.timesEffectsOf(

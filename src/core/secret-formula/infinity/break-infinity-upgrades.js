@@ -16,7 +16,7 @@ function rebuyable(config) {
     formatEffect: config.formatEffect ||
       (value => {
         const afterECText = config.afterEC ? config.afterEC() : "";
-        return value === config.maxUpgrades
+        return value.eq(config.maxUpgrades)
           ? `Currently: ${formatX(BE.minus(10, value))} ${afterECText}`
           : `Currently: ${formatX(BE.minus(10, value))} | Next: ${formatX(BE.minus(9, value))}`;
       }),

@@ -81,6 +81,7 @@ export const BEC = deepFreeze({
   C2P30:                    BE.pow(2, 30),
   C2P1024:                  BE.pow(2, 1024),
   C10P16000D3:              BE.pow(10, 16000 / 3),
+  C1D120:                   BE.div(1, 120),
 
   // 1e1 is 10
   E1:                   new BE("1e1"),
@@ -126,6 +127,7 @@ export const BEC = deepFreeze({
   E310:                 new BE("1e310"),
   E315:                 new BE("1e315"),
   E320:                 new BE("1e320"),
+  E340:                 new BE("1e340"),
   E349:                 new BE("1e349"),
   E385:                 new BE("1e385"),
   E400:                 new BE("1e400"),

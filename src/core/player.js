@@ -425,7 +425,8 @@ window.player = {
     boughtGalaxyCap: BEC.D0,
     galaxies: BEC.D0,
     galCost: BEC.E170,
-    coolingTime: BEC.E3
+    cooldownTime: BEC.E3,
+    boosts: 0
   },
   timestudy: {
     theorem: BEC.D0,

@@ -40,7 +40,9 @@ export default {
       maxReplicanti: new BE(),
       estimateToMax: new BE(),
       autoreplicateUnlocked: false,
-      coolingTime: new BE()
+      cooldownTime: new BE(),
+      boostCost: 0,
+      boosts: 0
     };
   },
   computed: {
@@ -55,7 +57,7 @@ export default {
     replicationInfo() {
       if (this.autoreplicateUnlocked) return "Auto";
       if (this.canReplicate) return "Available";
-      return `Cooling Time: ${TimeSpan.fromMilliseconds(this.coolingTime).toStringShort(false)}`;
+      return `Cooldown Time: ${TimeSpan.fromMilliseconds(this.cooldownTime).toStringShort(false)}`;
     },
     replicantiIntervalSetup() {
       const upgrade = ReplicantiUpgrade.interval;
@@ -82,7 +84,10 @@ export default {
       );
     },
     canReplicate() {
-      return this.coolingTime.lte(0);
+      return this.cooldownTime.lte(0);
+    },
+    canBoost() {
+      return this.amount.gte(this.boostCost);
     },
     maxGalaxySetup() {
       const upgrade = ReplicantiUpgrade.galaxies;
@@ -101,6 +106,10 @@ export default {
         },
         cost => `+${formatInt(1)} Costs: ${format(cost)} IP`
       );
+    },
+    amountClass() {
+      return Array.range(1, this.boosts).map
+      (x => `c-replicanti-description__accent--level-${x}`);
     },
     boostText() {
       const boostList = [];
@@ -144,7 +153,9 @@ export default {
         this.ec8Purchases = player.eterc8repl;
       }
       this.autoreplicateUnlocked = Replicanti.autoreplicateUnlocked;
-      this.coolingTime.copyFrom(Replicanti.coolingTime);
+      this.cooldownTime.copyFrom(Replicanti.cooldownTime);
+      this.boostCost = ReplicantiBoost.cost;
+      this.boosts = ReplicantiBoost.amount;
       this.amount.copyFrom(Replicanti.amount);
       this.mult.copyFrom(replicantiMult());
       this.hasTDMult = DilationUpgrade.tdMultReplicanti.isBought;
@@ -192,6 +203,9 @@ export default {
     replicate() {
       if (!this.canReplicate || this.autoreplicateUnlocked) return;
       replicantiLoop(null, false);
+    },
+    boost() {
+      ReplicantiBoost.purchase();
     }
   },
   template: `
@@ -230,7 +244,12 @@ export default {
       </div>
       <p class="c-replicanti-description">
         You have
-        <span class="c-replicanti-description__accent">{{ format(amount, 2, 0) }}</span>
+        <span
+          class="c-replicanti-description__accent"
+          :class="amountClass"
+        >
+          {{ format(amount, 2, 0) }}
+        </span>
         Replicanti, translated to
         <br>
         <span v-html="boostText" />
@@ -264,14 +283,25 @@ export default {
       <br><br>
       <ReplicantiGainText />
       <br>
-      <ReplicantiGalaxyButton v-if="canSeeGalaxyButton" />
-      <PrimaryButton
-        :enabled="canReplicate && !autoreplicateUnlocked"
-        class="o-primary-btn--replicanti-galaxy"
-        @click="replicate"
-      >
-        Replicate ({{ replicationInfo }})
-      </PrimaryButton>
+      <div class="l-replicanti-upgrade-row">
+        <ReplicantiGalaxyButton v-if="canSeeGalaxyButton" />
+        <PrimaryButton
+          :enabled="canReplicate && !autoreplicateUnlocked"
+          class="o-primary-btn--replicanti-galaxy l-replicanti-upgrade-button"
+          @click="replicate"
+        >
+          Replicate ({{ replicationInfo }})
+        </PrimaryButton>
+        <PrimaryButton
+          :enabled="canBoost"
+          class="o-primary-btn--replicanti-galaxy l-replicanti-upgrade-button"
+          @click="boost"
+        >
+          Boost Replicanti
+          <br>
+          Reach {{ format(boostCost) }} Replicanti
+        </PrimaryButton>
+      </div>
     </template>
   </div>
   `

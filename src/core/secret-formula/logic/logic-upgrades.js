@@ -41,11 +41,12 @@ export const logicUpgrades = [
     name: "Pentagonal Dimension",
     id: 4,
     description: "Unlock a new Antimatter Dimension.",
-    requirement: () => `TBD`,
-    checkRequirement: () => false,
-    checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    hasFailed: () => true,
-    effect: 1
+    requirement: () => `Reach ${format(1e5)} Replicanti.`,
+    checkRequirement: () => Replicanti.amount.gte(1e5),
+    checkEvent: GAME_EVENT.REPLICANTI_TICK_AFTER,
+    hasFailed: () => !LC3.isCompleted,
+    effect: 1,
+    cost: BEC.E340
   },
   {
     name: "Could Afford Six",
