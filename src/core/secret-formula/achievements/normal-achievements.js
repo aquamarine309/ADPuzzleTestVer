@@ -105,7 +105,7 @@ export const normalAchievements = [
       return `All Antimatter Dimensions are ${formatPercents(0.5)} stronger.`
     },
     effect: 1.5,
-    btnCondition: () => Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked().lte(1),
+    btnCondition: () => Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked() && player.galaxies.lte(1),
     text: "What is AG?",
     clickFn: () => GameUI.notify.info("Maybe you need some HELP.")
   },
@@ -115,7 +115,7 @@ export const normalAchievements = [
     description: "Buy the second Antimatter Galaxy.",
     checkRequirement: () => player.galaxies.gte(2),
     checkEvent: GAME_EVENT.GALAXY_RESET_AFTER,
-    btnCondition: () => Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked().gt(1),
+    btnCondition: () => Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked() && player.galaxies.lte(1),
     btnText: "The literal meaning",
     clickFn: () => manualRequestGalaxyReset(1, false)
   },
