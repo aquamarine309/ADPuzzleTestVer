@@ -9917,6 +9917,10 @@ input.o-automator-block-input {
   cursor: default;
 }
 
+.t-s13 .c-lc3-upgrade--unavailable {
+  background-color: #acacac;
+}
+
 .c-pellelc3-upgrade--bought {
   color: black;
   background: var(--color-logic);
