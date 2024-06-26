@@ -69,6 +69,9 @@ export class Galaxy {
   }
 
   static get costMult() {
+    if (LogicChallenge(6).isRunning) {
+      return 10;
+    }
     const base = Effects.min(NormalChallenge(10).isRunning ? 90 : 60, TimeStudy(42));
     if (Puzzle.maxTier !== 8 && !LogicChallenge(2).isCompleted) {
       return base.times(2.5).floor();

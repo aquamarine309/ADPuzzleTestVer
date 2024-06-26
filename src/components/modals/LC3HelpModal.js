@@ -144,10 +144,9 @@ export function secondEquationGenerator(answer = randomInt(10)) {
 }
 
 export function questionGenerator(maxResult = 9, minResult = 1, maxLength = 10, minLength = 6) {
-  let answer;
-  do {
-    answer = randomInt(maxResult + 1, minResult);
-  } while (minLength <= 6 && answer === 0);
+  const minAnswer = minLength <= 6 ? 1 : 0;
+  const answer = randomInt(maxResult + 1, Math.max(minResult, minAnswer));
+  
   while (true) {
     const e1 = secondEquationGenerator(answer);
     const e2 = secondEquationGenerator(answer);
@@ -358,7 +357,6 @@ export default {
     restart() {
       LC3.game.reset();
       this.init();
-      console.log(this.state, this.blockRows);
     },
     init() {
       if (!this.lc3Running) {

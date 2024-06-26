@@ -33,7 +33,9 @@ export function getTickSpeedMultiplier() {
     Achievement(178),
     InfinityChallenge(5).reward,
     PelleUpgrade.galaxyPower,
-    PelleRifts.decay.milestones[1]
+    PelleRifts.decay.milestones[1],
+    LogicChallenge(6),
+    LogicChallenge(6).reward
   );
   if (galaxies.lt(3)) {
     // Magic numbers are to retain balancing from before while displaying

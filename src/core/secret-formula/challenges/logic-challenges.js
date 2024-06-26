@@ -50,7 +50,18 @@ export const logicChallenges = [
     effect: () => BEC.D2.pow(BE.pow(1.03, effectiveBaseGalaxies())),
     formatEffect: value => formatX(value, 3, 3),
     reward: {
-      description: "Unlock extra bonus. (NYI)"
+      description: "Unlock extra bonus. (In Shop Tab)"
+    }
+  },
+  {
+    id: 6,
+    description: "Decrease cost and strength of Galaxies.",
+    goal: BEC.E20000,
+    effect: 0.3,
+    reward: {
+      description: "Galaxies are stronger based on highest Antimatter Dimension.",
+      effect: () => Math.pow(2 - Puzzle.maxTier / 8, 0.25),
+      formatEffect: value => `+${formatPercents(value - 1, 3, 3)}`
     }
   }
 ]

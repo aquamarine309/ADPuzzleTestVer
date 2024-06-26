@@ -9,12 +9,19 @@ export const changelog = [
    * }
    */
   {
+    date: [202, 6, 26],
+    name: "IC6 Update",
+    info: `
+Endgame: >e1900LP (IC6).
+    `
+  },
+  {
     date: [2024, 6, 25],
     name: "Replicanti Update Test",
     info: `
 <b>Current game:</b><br>
 <ul>
-<li>EndGame: e560LP (Do not level up Exchange!)</li>
+<li>Endgame: e560LP (Do not level up Exchange!)</li>
 </ui>
     `
   },

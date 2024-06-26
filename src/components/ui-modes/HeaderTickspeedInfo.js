@@ -11,7 +11,8 @@ export default {
       tickspeed: new BE(0),
       galaxyCount: new BE(0),
       purchasedTickspeed: new BE(0),
-      freeTickspeed: new BE(0)
+      freeTickspeed: new BE(0),
+      lc5Running: false
     };
   },
   computed: {
@@ -21,7 +22,7 @@ export default {
     perUpgrade() {
       if (InfinityChallenge(3).isRunning) return `Tickspeed upgrades give
         ${formatX(this.galaxyCount.times(0.005).plus(1.05), 3, 3)} to all ADs`;
-      if (LogicChallenge(5).isRunning) return "Invalid for ADs";
+      if (this.lc5Running) return "Invalid for ADs";
       return `ADs produce ${formatX(this.mult.reciprocal(), 2, 3)} faster per Tickspeed upgrade`;
     },
   },
@@ -32,6 +33,7 @@ export default {
       this.galaxyCount.copyFrom(player.galaxies);
       this.purchasedTickspeed.copyFrom(player.totalTickBought);
       this.freeTickspeed.copyFrom(FreeTickspeed.amount);
+      this.lc5Running = LogicChallenge(5).isRunning;
     },
   },
   template: `
