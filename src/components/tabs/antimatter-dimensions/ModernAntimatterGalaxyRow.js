@@ -46,7 +46,7 @@ export default {
       if (this.galaxies.dilation.gt(0)) parts.push(this.galaxies.dilation);
       const sum = parts.map(this.formatGalaxies).join(" + ");
       if (parts.length >= 2) {
-        return `${sum} = ${this.formatGalaxies(parts.sum())}`;
+        return `${sum} = ${this.formatGalaxies(parts.reduce(BE.sumReducer))}`;
       }
       return sum;
     },
