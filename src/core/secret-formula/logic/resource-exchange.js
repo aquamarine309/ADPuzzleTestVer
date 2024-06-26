@@ -7,7 +7,13 @@ export const resourceExchange = {
     shortName: "AM",
     symbol: "Ω",
     currency: () => Currency.antimatter,
-    value: value => value.pow(0.05).times(value.add(1).log10()).times(0.1).add(1),
+    value: value => {
+      const baseValue = value.clampMax(BEC.E20000).pow(0.05).times
+        (value.add(1).log10()).times(0.1).add(1);
+      const cappedValue = value.div(BEC.E20000).clampMin(1);
+      const capped = cappedValue.pow(0.005);
+      return baseValue.times(capped);
+    },
     min: BEC.E1
   },
   "infinityPoints": {
@@ -23,7 +29,12 @@ export const resourceExchange = {
     name: "Matter",
     symbol: "π",
     currency: () => Currency.matter,
-    value: value => value.pow(0.04).times(0.1).add(1)
+    value: value => {
+      const baseValue = value.clampMax(BEC.E20000).pow(0.04).times(0.1).add(1);
+      const cappedValue = value.div(BEC.E20000).clampMin(1);
+      const capped = cappedValue.pow(0.004);
+      return baseValue.times(capped);
+    }
   },
   "infinityPower": {
     id: 3,

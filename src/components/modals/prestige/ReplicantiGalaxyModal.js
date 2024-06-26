@@ -7,7 +7,7 @@ export default {
   },
   data() {
     return {
-      replicanti: new Decimal(),
+      replicanti: new BE(),
       divideReplicanti: false,
       canBeBought: 0,
     };

@@ -5,7 +5,7 @@ export default {
       isVisible: false,
       canUnlock: false,
       hasIPUnlock: true,
-      amRequirement: new Decimal(0),
+      amRequirement: new BE(0),
       ipRequirement: 0,
     };
   },

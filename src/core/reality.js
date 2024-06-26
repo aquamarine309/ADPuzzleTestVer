@@ -12,7 +12,7 @@ export const GlyphSelection = {
   },
 
   get choiceCount() {
-    return Effects.max(1, Perk.firstPerk) *
+    return Effects.max(1, Perk.firstPerk).toNumber() *
       Ra.unlocks.extraGlyphChoicesAndRelicShardRarityAlwaysMax.effectOrDefault(1);
   },
 
@@ -621,6 +621,8 @@ export function finishProcessReality(realityProps) {
   initializeChallengeCompletions(true);
 
   Currency.infinities.reset();
+  player.bigCrunches = 0;
+  player.bigEternities = 0;
   Currency.infinitiesBanked.reset();
   player.records.bestInfinity.time = 999999999999;
   player.records.bestInfinity.realTime = 999999999999;
@@ -749,6 +751,8 @@ export function finishProcessReality(realityProps) {
   if (Pelle.isDoomed && PelleUpgrade.keepAutobuyers.canBeApplied && Autobuyer.bigCrunch.hasMaxedInterval) {
     player.break = true;
   }
+  
+  GameCache.currentBonus.invalidate();
 }
 
 function restoreCelestialRuns(celestialRunState) {

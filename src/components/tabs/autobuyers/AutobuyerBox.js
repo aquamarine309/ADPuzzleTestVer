@@ -122,7 +122,7 @@ export default {
 
       this.currMode = autobuyer.mode;
       if (this.isShowingStateInfo) {
-        this.nextValue = new Decimal(autobuyer.highestPrevPrestige).times(autobuyer.xHighest);
+        this.nextValue = new BE(autobuyer.highestPrevPrestige).times(autobuyer.xHighest);
         this.nextTime = autobuyer.timeToNextTick;
       }
     },

@@ -9,6 +9,7 @@ import { confirmationTypes } from "./confirmation-types.js";
 import { credits } from "./credits.js";
 import { discordRichPresence } from "./discord-rich-presence.js";
 import { eternity } from "./eternity/index.js";
+import { extraBonus } from "./extra-bonus.js";
 import { h2p } from "./h2p.js";
 import { infinity } from "./infinity/index.js";
 import { logic } from "./logic/index.js";
@@ -30,6 +31,7 @@ export const GameDatabase = {
   credits,
   discordRichPresence,
   eternity,
+  extraBonus,
   h2p,
   infinity,
   logic,

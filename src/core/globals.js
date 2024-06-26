@@ -113,3 +113,4 @@ export * from "./puzzle.js";
 export * from "./resource-exchange.js";
 export * from "./logic-upgrades.js";
 export * from "./logic-challenges.js";
+export * from "./extra-bonus.js";

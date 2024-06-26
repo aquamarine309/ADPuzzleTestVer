@@ -45,8 +45,8 @@ export const Laitela = {
     }
   },
   get matterExtraPurchaseFactor() {
-    return (1 + 0.5 * Math.pow(BE.pLog10(Currency.darkMatter.max) / 50, 0.4) *
-      (1 + SingularityMilestone.continuumMult.effectOrDefault(0)));
+    return BE.pLog10(Currency.darkMatter.max).div(50).pow(0.4).times(0.5).times
+      (1 + SingularityMilestone.continuumMult.effectOrDefault(0)).plus(1);
   },
   get realityReward() {
     return Math.clampMin(Math.pow(100, this.difficultyTier) *
@@ -54,17 +54,17 @@ export const Laitela = {
   },
   // Note that entropy goes from 0 to 1, with 1 being completion
   get entropyGainPerSecond() {
-    return Math.clamp(Math.pow(Currency.antimatter.value.add(1).log10() / 1e11, 2), 0, 100) / 200;
+    return Currency.antimatter.value.add(1).log10().div(1e11).pow(2).clamp(0, 100).div(200).toNumber();
   },
   get darkMatterMultGain() {
-    return BE.pow(Currency.darkMatter.value.dividedBy(this.annihilationDMRequirement)
-      .plus(1).log10(), 1.5).toNumber() * ImaginaryUpgrade(21).effectOrDefault(1);
+    return Currency.darkMatter.value.dividedBy(this.annihilationDMRequirement)
+      .plus(1).log10().pow(1.5).timesEffectOf(ImaginaryUpgrade(21));
   },
   get darkMatterMult() {
     return this.celestial.darkMatterMult;
   },
   get darkMatterMultRatio() {
-    return (this.celestial.darkMatterMult + this.darkMatterMultGain) / this.celestial.darkMatterMult;
+    return this.celestial.darkMatterMult.plus(this.darkMatterMultGain).div(this.celestial.darkMatterMult);
   },
   get annihilationUnlocked() {
     return ImaginaryUpgrade(19).isBought;

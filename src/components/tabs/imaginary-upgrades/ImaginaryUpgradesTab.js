@@ -7,8 +7,8 @@ export default {
   },
   data() {
     return {
-      baseRMCap: new Decimal(),
-      capRM: new Decimal(),
+      baseRMCap: new BE(),
+      capRM: new BE(),
       scaleTime: 0,
       capStr: "",
     };

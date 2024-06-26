@@ -22,8 +22,8 @@ export default {
       canRefresh: false,
       level: 0,
       simRealities: 0,
-      realityMachines: new Decimal(),
-      shardsGained: 0,
+      realityMachines: new BE(),
+      shardsGained: new BE(),
       effarigUnlocked: false,
       willAutoPurge: false,
     };

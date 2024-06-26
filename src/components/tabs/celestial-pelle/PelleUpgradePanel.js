@@ -15,8 +15,8 @@ export default {
       isCollapsed: false,
       isHovering: false,
       remnants: 0,
-      realityShards: new Decimal(0),
-      shardRate: new Decimal(0),
+      realityShards: new BE(0),
+      shardRate: new BE(0),
       upgrades: [],
       boughtUpgrades: []
     };

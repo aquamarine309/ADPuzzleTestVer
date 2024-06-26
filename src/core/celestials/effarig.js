@@ -73,10 +73,10 @@ export const Effarig = {
   get shardsGained() {
     if (!TeresaUnlocks.effarig.canBeApplied) return BEC.D0;
     return Currency.eternityPoints.value.log10().div(7500).pow(this.glyphEffectAmount).floor().times
-      (AlchemyResource.effarig.effectValue);
+      (AlchemyResource.effarig.effectValue).timesEffectOf(ExtraBonus.extraBonusToRelicShards);
   },
   get maxRarityBoost() {
-    return Currency.relicShards.value.plus(10).log10().log10().times(5).clampMax(100).toNumber();
+    return Currency.relicShards.value.plus(10).log10().log10().times(5).toNumberMax(100);
   },
   nerfFactor(power) {
     let c;
@@ -92,13 +92,13 @@ export const Effarig = {
         c = 25;
         break;
     }
-    return 3 * (1 - c / (c + Math.sqrt(power.pLog10())));
+    return BE.div(1, BE.div(c, power.pLog10().sqrt().plus(c))).times(3);
   },
   get tickDilation() {
-    return 0.7 + 0.1 * this.nerfFactor(Currency.timeShards.value);
+    return this.nerfFactor(Currency.timeShards.value).times(0.1).plus(0.7);
   },
   get multDilation() {
-    return 0.25 + 0.25 * this.nerfFactor(Currency.infinityPower.value);
+    return this.nerfFactor(Currency.infinityPower.value).times(0.25).plus(0.25);
   },
   get tickspeed() {
     const base = Tickspeed.baseValue.reciprocal().log10().plus(3);

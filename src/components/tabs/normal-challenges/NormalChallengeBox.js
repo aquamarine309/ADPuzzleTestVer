@@ -21,7 +21,7 @@ export default {
       isCompleted: false,
       isBroken: false,
       isUnlocked: false,
-      lockedAt: new Decimal()
+      lockedAt: new BE()
     };
   },
   computed: {

@@ -20,8 +20,8 @@ export default {
       hasStrike: false,
       isActive: false,
       isMaxed: false,
-      totalFill: new Decimal(),
-      resource: new Decimal(),
+      totalFill: new BE(),
+      resource: new BE(),
       hasEffectiveFill: false,
       effects: []
     };

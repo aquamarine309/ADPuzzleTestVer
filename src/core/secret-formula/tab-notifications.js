@@ -220,4 +220,15 @@ export const tabNotifications = {
     // Always externally triggered
     condition: () => true,
   },
+  extraBonusUnlocked: {
+    id: 17,
+    tabsToHighLight: [
+      {
+        parent: "shop",
+        tab: "shop"
+      }
+    ],
+    condition: () => LogicChallenge(5).isCompleted,
+    events: [GAME_EVENT.LOGIC_CHALLENGE_COMPLETED]
+  }
 };

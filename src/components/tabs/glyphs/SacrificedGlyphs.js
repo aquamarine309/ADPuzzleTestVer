@@ -15,7 +15,7 @@ export default {
       hideAlteration: false,
       maxSacrifice: 0,
       teresaMult: 0,
-      lastMachinesTeresa: new Decimal(0),
+      lastMachinesTeresa: new BE(0),
     };
   },
   computed: {

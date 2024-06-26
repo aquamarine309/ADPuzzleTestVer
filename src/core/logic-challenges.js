@@ -203,7 +203,7 @@ export const LC3 = {
     const base1 = LC3Upgrade.cpMult.effectValue;
     const base2 = LC3Upgrade.cpBaseAD.effectValue;
     const pow = LC3Upgrade.cpPow.effectValue;
-    return base1.times(base2).pow(pow).pow(0.1);
+    return base1.times(base2).pow(pow);
   },
   
   tick(diff) {

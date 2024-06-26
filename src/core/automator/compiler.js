@@ -232,7 +232,7 @@ class Validator extends BaseVisitor {
       case AUTOMATOR_VAR_TYPES.NUMBER:
         // We can't rely on native Decimal parsing here because it largely just discards input past invalid
         // characters and constructs something based on the start of the input string. Notably, this makes
-        // things like new Decimal("11,21,31") return 11 instead of something indicating an error.
+        // things like new BE("11,21,31") return 11 instead of something indicating an error.
         return value.match(/^-?(0|[1-9]\d*)(\.\d+)?([eE][+-]?\d+)?$/u);
       case AUTOMATOR_VAR_TYPES.STUDIES:
         return TimeStudyTree.isValidImportString(value);

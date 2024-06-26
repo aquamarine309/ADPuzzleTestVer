@@ -26,6 +26,9 @@ export default {
       username: "",
       canRespec: false,
       respecTimeStr: "",
+      desceiption: "",
+      lc5Completed: false,
+      extraBonusTimeLeft: new BE(0)
     };
   },
   computed: {
@@ -45,7 +48,14 @@ export default {
     },
     hiddenName() {
       return player.options.hideGoogleName;
-    }
+    },
+    leftTime() {
+      return TimeSpan.fromMilliseconds(this.extraBonusTimeLeft).toStringShort();
+    },
+    hasBonus() {
+      return this.extraBonusTimeLeft.gt(0);
+    },
+    isDoomed: () => Pelle.isDoomed
   },
   methods: {
     update() {
@@ -59,6 +69,19 @@ export default {
       this.canRespec = ShopPurchaseData.canRespec;
       if (!ShopPurchaseData.respecAvailable && !this.canRespec) {
         this.respecTimeStr = ShopPurchaseData.timeUntilRespec.toStringShort();
+      }
+      this.lc5Completed = LogicChallenge(5).isCompleted;
+      if (this.lc5Completed) {
+        if (this.isDoomed) {
+          this.description = wordShift.wordCycle(["Destroyed", "Annihilated", "Nullified"]);
+          return;
+        }
+        this.extraBonusTimeLeft.copyFrom(player.extraBonusTimeLeft);
+        if (!this.hasBonus) {
+          this.description = "Click here to receive free bonus!";
+        } else {
+          this.description = ExtraBonus.current.description;
+        }
       }
     },
     showStore() {
@@ -86,6 +109,12 @@ export default {
         "o-pelle-disabled-pointer": this.creditsClosed,
         "o-primary-btn--disabled": !this.loggedIn || !this.canRespec
       };
+    },
+    getBonus() {
+      if (this.hasBonus || this.isDoomed) return false;
+      // 5 hours
+      player.extraBonusTimeLeft = player.extraBonusTimeLeft.plus(1.8e7);
+      GameUI.update();
     }
   },
   template: `
@@ -127,6 +156,23 @@ export default {
         Respec Shop
       </PrimaryButton>
     </div>
+    <button
+      v-if="lc5Completed"
+      class="extra-bonus-btn"
+      @click="getBonus"
+    >
+      <div v-if="isDoomed">
+        Extra Bonus has been
+        <b class="ad-bonus-destoryed">
+          {{ description }}
+        </b>
+        By Pelle
+      </div>
+      <div v-else>
+        {{ description }}
+      </div>
+      <div v-if="hasBonus">{{ leftTime }} left</div>
+    </button>
     <div
       class="c-shop-header"
       data-v-shop-tab

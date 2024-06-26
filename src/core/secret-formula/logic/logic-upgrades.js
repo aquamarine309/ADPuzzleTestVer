@@ -30,7 +30,7 @@ export const logicUpgrades = [
     name: "Four a minute",
     id: 3,
     description: "Unlock a new Antimatter Dimension.",
-    requirement: () => `Reach ${format(BEC.E1150)} antimatter in any challenge.`,
+    requirement: () => `Reach ${formatPostBreak(BEC.E1150)} antimatter in any challenge.`,
     checkRequirement: () => Player.isInAnyChallenge && Currency.antimatter.gte(BEC.E1150),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     hasFailed: () => !Player.isInAnyChallenge,

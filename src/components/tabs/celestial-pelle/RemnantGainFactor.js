@@ -15,9 +15,9 @@ export default {
   data() {
     return {
       best: {
-        am: new Decimal(0),
-        ip: new Decimal(0),
-        ep: new Decimal(0)
+        am: new BE(0),
+        ip: new BE(0),
+        ep: new BE(0)
       },
       dilationMult: [1, 1, 1],
       remnants: 0,

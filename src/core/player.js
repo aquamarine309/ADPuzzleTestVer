@@ -71,6 +71,7 @@ window.player = {
     upgradeBits: 0,
     upgReqs: 0
   },
+  extraBonusTimeLeft: BEC.D0,
   sacrificed: BEC.D0,
   achievementBits: Array.repeat(0, 17),
   secretAchievementBits: Array.repeat(0, 4),
@@ -403,6 +404,8 @@ window.player = {
   },
   IPMultPurchases: BEC.D0,
   version: 62,
+  bigCrunches: 0,
+  bigEternities: 0,
   infinityPower: BEC.D1,
   postC4Tier: 0,
   eternityPoints: BEC.D0,

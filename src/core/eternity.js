@@ -13,6 +13,7 @@ function giveEternityRewards(auto) {
   }
 
   Currency.eternities.add(newEternities);
+  ++player.bigEternities;
 
   if (EternityChallenge.isRunning) {
     const challenge = EternityChallenge.current;
@@ -140,7 +141,9 @@ export function eternity(force, auto, specialConditions = {}) {
   ECTimeStudyState.invalidateCachedRequirements();
 
   PelleStrikes.eternity.trigger();
-
+  
+  GameCache.currentBonus.invalidate();
+  
   EventHub.dispatch(GAME_EVENT.ETERNITY_RESET_AFTER);
   return true;
 }
@@ -185,6 +188,7 @@ export function initializeChallengeCompletions(isReality) {
 export function initializeResourcesAfterEternity() {
   player.sacrificed = BEC.D0;
   Currency.infinities.reset();
+  player.bigCrunches = 0;
   player.records.bestInfinity.time = BE.NUMBER_MAX_VALUE;
   player.records.bestInfinity.realTime = Number.MAX_VALUE;
   player.records.thisInfinity.time = BEC.D0;
@@ -319,7 +323,7 @@ class EPMultiplierState extends GameMechanicState {
       if (!auto) RealityUpgrade(15).tryShowWarningModal();
       return false;
     }
-    const bulk = dBBBS(Currency.eternityPoints.value, {
+    const bulk = bulkBuyBinarySearch(Currency.eternityPoints.value, {
       costFunction: this.costAfterCount,
       cumulative: true,
       firstCost: this.cost,

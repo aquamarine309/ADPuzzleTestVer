@@ -2,7 +2,7 @@ export default {
   name: "AnnihilationButton",
   data() {
     return {
-      darkMatter: new Decimal(0),
+      darkMatter: new BE(0),
       darkMatterMult: 0,
       darkMatterMultGain: 0,
       autobuyerUnlocked: false,

@@ -47,7 +47,7 @@ export const lc3Upgrades = {
     id: "cpPow",
     purpose: "Challenge Power",
     cost: x => BE.pow10(BEC.D2.pow(BE.pow(1.45, x))),
-    effect: x => BEC.D2.pow(x.pow(10).div(BEC.E10).plus(x.pow(1.4)).plus(x)),
+    effect: x => BEC.D2.pow(x.pow(10).div(BEC.E10).plus(x.pow(1.4)).plus(x).times(0.2)),
     formatEffect: x => formatPow(x, 2, 2),
     bulk: x => x.log10().log2().log(1.45)
   }),

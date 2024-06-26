@@ -73,6 +73,7 @@ html {
   --color-gh-purple: #8957e5;
   --color-notification: red;
   --color-overlay: rgba(30, 30, 50, 70%);
+  --color-extra: #b0e236;
 
   --color-antimatter: #2196f3;
   --color-infinity: #b67f33;
@@ -303,7 +304,9 @@ html {
   --color-laitela--base: #F3F0F2;
   --color-laitela--accent: #100708;
   
-  --color-logic: #78D7B2
+  --color-logic: #78D7B2;
+  --color-notification: #fcc296;
+  --color-text: #2b4563;
 }
 
 /* end css vars */
@@ -10097,4 +10100,31 @@ input.o-automator-block-input {
 .a-game-notify-modal-enter,
 .a-game-notify-modal-leave-to {
   opacity: 0;
+}
+
+.extra-bonus-btn {
+  padding: 1rem;
+  background-color: var(--color-extra);
+  border: 0.1rem solid black;
+  border-radius: var(--var-border-radius, 1rem);
+  margin: 1rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: Typewriter, serif;
+  transition-duration: 0.2s;
+}
+
+.extra-bonus-btn:hover {
+  background-color: black;
+  color: var(--color-extra);
+  border-color: var(--color-extra);
+}
+
+@font-face {
+  font-family: RobotoMono;
+  src:url("RobotoMono-Bold.ttf");
+}
+
+.extra-bonus-destoryed {
+  font-family: RobotoMono;
 }

@@ -31,9 +31,9 @@ export default {
     return {
       canBuy: false,
       isBought: false,
-      purchases: 0,
-      currentTimeEstimate: new Decimal(0),
-      projectedTimeEstimate: new Decimal(0),
+      purchases: new BE(0),
+      currentTimeEstimate: new BE(0),
+      projectedTimeEstimate: new BE(0),
       isCapped: false,
       hovering: false,
       hasRemnants: false,
@@ -51,7 +51,7 @@ export default {
       const formattedEffect = x => this.config.formatEffect(this.config.effect(x));
       const value = formattedEffect(this.purchases);
       const next = (!this.isCapped && this.hovering)
-        ? formattedEffect(this.purchases + 1)
+        ? formattedEffect(this.purchases.gt(1))
         : undefined;
       return { prefix, value, next };
     },
@@ -91,14 +91,14 @@ export default {
       this.projectedTimeEstimate = TimeSpan
         .fromSeconds(this.secondsUntilCost(Pelle.nextRealityShardGain).toNumber())
         .toTimeEstimate();
-      this.hasRemnants = Pelle.cel.remnants > 0;
+      this.hasRemnants = Pelle.cel.remnants.gt(0);
       this.galaxyCap = GalaxyGenerator.generationCap;
       const genDB = GameDatabase.celestials.pelle.galaxyGeneratorUpgrades;
       this.notAffordable = (this.config === genDB.additive || this.config === genDB.multiplicative) &&
-        (Decimal.gt(this.upgrade.cost, this.galaxyCap - GalaxyGenerator.generatedGalaxies + player.galaxies));
+        (Decimal.gt(this.upgrade.cost, this.galaxyCap.minus(GalaxyGenerator.generatedGalaxies).plus(player.galaxies)));
     },
     secondsUntilCost(rate) {
-      const value = this.galaxyGenerator ? player.galaxies + GalaxyGenerator.galaxies : Currency.realityShards.value;
+      const value = this.galaxyGenerator ? player.galaxies.plus(GalaxyGenerator.galaxies) : Currency.realityShards.value;
       return Decimal.sub(this.upgrade.cost, value).div(rate);
     },
   },

@@ -104,6 +104,7 @@ window.GAME_EVENT = {
   AUTOMATOR_SAVE_CHANGED: "AUTOMATOR_SAVE_CHANGED",
   AUTOMATOR_CONSTANT_CHANGED: "AUTOMATOR_CONSTANT_CHANGED",
   PELLE_STRIKE_UNLOCKED: "PELLE_STRIKE_UNLOCKED",
+  LOGIC_CHALLENGE_COMPLETED: "LOGIC_CHALLENGE_COMPLETED",
 
   // Used by events to signify that they are triggered by a particular
   // event, not handled by the event hub

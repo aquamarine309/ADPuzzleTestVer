@@ -286,7 +286,6 @@ export default {
       <ReplicantiGainText />
       <br>
       <div class="l-replicanti-upgrade-row">
-        <ReplicantiGalaxyButton v-if="canSeeGalaxyButton" />
         <PrimaryButton
           :enabled="canReplicate && !autoreplicateUnlocked"
           class="o-primary-btn--replicanti-galaxy l-replicanti-upgrade-button"
@@ -296,6 +295,7 @@ export default {
         >
           Replicate ({{ replicationInfo }})
         </PrimaryButton>
+        <ReplicantiGalaxyButton v-if="canSeeGalaxyButton" />
         <PrimaryButton
           :enabled="canBoost"
           class="o-primary-btn--replicanti-galaxy l-replicanti-upgrade-button"

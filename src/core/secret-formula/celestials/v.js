@@ -2,7 +2,7 @@ import { BEC } from "../../constants.js";
 
 // This is supposed to be in ./navigation.js but importing doesn't work for some stupid reason
 function emphasizeEnd(fraction) {
-  return Math.pow(fraction, 10);
+  return Math.pow(fraction.toNumberMax(1), 10);
 }
 
 export const V_REDUCTION_MODE = {
@@ -19,7 +19,7 @@ export const v = {
       resource: () => Currency.realities.value,
       requirement: 10000,
       format: x => formatInt(x),
-      progress: () => Currency.realities.value.div(10000),
+      progress: () => Currency.realities.value.div(10000).toNumberMax(1),
     },
     eternities: {
       id: 2,

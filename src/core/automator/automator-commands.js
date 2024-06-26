@@ -169,15 +169,15 @@ export const AutomatorCommands = [
           currSetting = `${autobuyer.time > 1000 ? formatInt(autobuyer.time) : quantify("second", autobuyer.time)}`;
         } else if (xHighest !== undefined) {
           autobuyer.mode = xHighestMode;
-          autobuyer.xHighest = new Decimal(xHighest);
+          autobuyer.xHighest = new BE(xHighest);
           currSetting = `${format(xHighest, 2, 2)} times highest`;
         } else if (fixedAmount !== undefined) {
           autobuyer.mode = fixedMode;
           if (isReality) {
-            autobuyer.rm = new Decimal(fixedAmount);
+            autobuyer.rm = new BE(fixedAmount);
             currSetting = `${format(autobuyer.rm, 2)} RM`;
           } else {
-            autobuyer.amount = new Decimal(fixedAmount);
+            autobuyer.amount = new BE(fixedAmount);
             currSetting = `${fixedAmount} ${ctx.PrestigeEvent[0].image === "infinity" ? "IP" : "EP"}`;
           }
         }

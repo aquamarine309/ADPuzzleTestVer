@@ -119,7 +119,15 @@ export const GameCache = {
   
   logicPoints: new Lazy(() => getLogicPoints()),
   
-  maxTier: new Lazy(() => 1 + Effects.sum(...Array.range(1, 7).map(id => LogicUpgrade(id))).toNumber())
+  maxTier: new Lazy(() => 1 + Effects.sum(...Array.range(1, 7).map(id => LogicUpgrade(id))).toNumber()),
+  
+  currentBonus: new Lazy(() => {
+    for (let i = ExtraBonus.all.length - 1; i >= 0; i--) {
+      if (ExtraBonus.all[i].isUnlocked) {
+        return ExtraBonus.all[i];
+      }
+    }
+  })
 };
 
 EventHub.logic.on(GAME_EVENT.GLYPHS_CHANGED, () => {

@@ -15,7 +15,7 @@ export default {
       isAutoEnabled: false,
       isDivideUnlocked: false,
       boughtGalaxies: new BE(0),
-      extraGalaxies: 0
+      extraGalaxies: new BE(0)
     };
   },
   computed: {
@@ -27,7 +27,7 @@ export default {
     galaxyCountDisplay() {
       const bought = this.boughtGalaxies;
       const extra = this.extraGalaxies;
-      const galaxyCount = extra > 0 ? `${formatInt(bought)}+${formatInt(extra)}` : formatInt(bought);
+      const galaxyCount = extra.gt(0) ? `${formatInt(bought)}+${formatInt(extra)}` : formatInt(bought);
       return `Currently: ${galaxyCount}`;
     },
     autobuyer() {
@@ -57,6 +57,9 @@ export default {
     },
     handleClick() {
       replicantiGalaxyRequest();
+    },
+    setHoldingR(value) {
+      setHoldingR(value);
     }
   },
   template: `
@@ -65,6 +68,8 @@ export default {
       :enabled="isAvailable"
       class="o-primary-btn--replicanti-galaxy l-replicanti-upgrade-button"
       @click="handleClick"
+      @touchstart="setHoldingR(true)"
+      @touchend="setHoldingR(false)"
     >
       {{ resetActionDisplay }} for a Replicanti Galaxy
       <br>

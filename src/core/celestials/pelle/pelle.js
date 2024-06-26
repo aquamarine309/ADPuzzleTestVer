@@ -89,7 +89,7 @@ export const Pelle = {
     Pelle.armageddon(false);
     respecTimeStudies(true);
     Currency.infinityPoints.reset();
-    player.IPMultPurchases = 0;
+    player.IPMultPurchases = BEC.D0;
     Autobuyer.bigCrunch.mode = AUTO_CRUNCH_MODE.AMOUNT;
     disChargeAll();
     clearCelestialRuns();
@@ -296,7 +296,7 @@ export const Pelle = {
   },
 
   realityShardGain(remnants) {
-    return BE.pow10(remnants.pow((1 / 7.5)) .times(4)).minus(1).div(1e3);
+    return BE.pow10(remnants.pow((1 / 7.5)).times(4)).minus(1).div(1e3);
   },
 
   get realityShardGainPerSecond() {

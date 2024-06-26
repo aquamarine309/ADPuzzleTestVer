@@ -581,7 +581,7 @@
   height: calc(25% - 0.6rem);
 }
 
-.c-center [data-v-cosmetic-set-choice-modal]{
+.c-center[data-v-cosmetic-set-choice-modal]{
   display: flex;
   flex-direction: column;
   width: 38rem;
@@ -4456,6 +4456,10 @@ p[data-v-pelle-effects-modal] {
   padding: 1rem;
 }
 
+.t-s13 .c-shop-button-container[data-v-shop-button] {
+  background-color: #7f7c7a;
+}
+
 .o-shop-button-button[data-v-shop-button] {
   display: flex;
   align-items: center;
@@ -4469,8 +4473,12 @@ p[data-v-pelle-effects-modal] {
 }
 
 .o-shop-button-button--disabled[data-v-shop-button] {
-  background: rgb(150, 150, 150);
+  background-color: rgb(150, 150, 150);
   cursor: default;
+}
+
+.t-s13 .o-shop-button-button--disabled[data-v-shop-button] {
+  background-color: #637685;
 }
 
 .o-shop-button-button__img[data-v-shop-button] {
@@ -4486,7 +4494,7 @@ p[data-v-pelle-effects-modal] {
 }
 
 .o-shop-button-multiplier--disabled[data-v-shop-button] {
-  color: red;
+  color: var(--color-bad);
   text-decoration: line-through;
 }
 

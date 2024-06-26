@@ -662,9 +662,9 @@ export const Glyphs = {
   saveUndo(targetSlot) {
     const undoData = {
       targetSlot,
-      am: new Decimal(Currency.antimatter.value),
-      ip: new Decimal(Currency.infinityPoints.value),
-      ep: new Decimal(Currency.eternityPoints.value),
+      am: new BE(Currency.antimatter.value),
+      ip: new BE(Currency.infinityPoints.value),
+      ep: new BE(Currency.eternityPoints.value),
       tt: Currency.timeTheorems.max.minus(TimeTheorems.totalPurchased()),
       ecs: EternityChallenges.all.map(e => e.completions),
       thisInfinityTime: player.records.thisInfinity.time,
@@ -677,8 +677,8 @@ export const Glyphs = {
       dilationStudies: player.dilation.studies.toBitmask(),
       dilationUpgrades: player.dilation.upgrades.toBitmask(),
       dilationRebuyables: DilationUpgrades.rebuyable.mapToObject(d => d.id, d => d.boughtAmount),
-      tp: new Decimal(Currency.tachyonParticles.value),
-      dt: new Decimal(Currency.dilatedTime.value),
+      tp: new BE(Currency.tachyonParticles.value),
+      dt: new BE(Currency.dilatedTime.value),
     };
     player.reality.glyphs.undo.push(undoData);
   },
@@ -695,10 +695,10 @@ export const Glyphs = {
       glyphUndo: true,
       restoreCelestialState: true,
     });
-    Currency.antimatter.value = new Decimal(undoData.am);
-    Currency.infinityPoints.value = new Decimal(undoData.ip);
-    Currency.eternityPoints.value = new Decimal(undoData.ep);
-    Currency.timeTheorems.value = new Decimal(undoData.tt);
+    Currency.antimatter.value = new BE(undoData.am);
+    Currency.infinityPoints.value = new BE(undoData.ip);
+    Currency.eternityPoints.value = new BE(undoData.ep);
+    Currency.timeTheorems.value = new BE(undoData.tt);
     EternityChallenges.all.map((ec, ecIndex) => ec.completions = undoData.ecs[ecIndex]);
     player.records.thisInfinity.time = undoData.thisInfinityTime;
     player.records.thisInfinity.realTime = undoData.thisInfinityRealTime;
@@ -713,8 +713,8 @@ export const Glyphs = {
       for (const id of Object.keys(undoData.dilationRebuyables)) {
         DilationUpgrades.fromId(id).boughtAmount = undoData.dilationRebuyables[id];
       }
-      Currency.tachyonParticles.value = new Decimal(undoData.tp);
-      Currency.dilatedTime.value = new Decimal(undoData.dt);
+      Currency.tachyonParticles.value = new BE(undoData.tp);
+      Currency.dilatedTime.value = new BE(undoData.dt);
     }
     if (Player.automatorUnlocked && AutomatorBackend.state.forceRestart) {
       AutomatorBackend.start(player.reality.automator.state.editorScript);

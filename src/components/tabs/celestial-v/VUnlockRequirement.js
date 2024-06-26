@@ -8,7 +8,7 @@ export default {
   },
   data() {
     return {
-      resource: new Decimal(0),
+      resource: new BE(0),
       progress: 0,
     };
   },
@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     update() {
-      this.resource.copyFrom(new Decimal(this.dbEntry.resource()));
+      this.resource.copyFrom(new BE(this.dbEntry.resource()));
       this.progress = Math.clampMax(this.dbEntry.progress(), 1);
     }
   },

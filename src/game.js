@@ -132,7 +132,8 @@ function totalEPMult() {
         TimeStudy(121),
         TimeStudy(123),
         RealityUpgrade(12),
-        GlyphEffect.epMult
+        GlyphEffect.epMult,
+        ExtraBonus.extraBonusToEP
       );
 }
 
@@ -300,7 +301,8 @@ export const GAME_SPEED_EFFECT = {
   TIME_STORAGE: 4,
   SINGULARITY_MILESTONE: 5,
   NERFS: 6,
-  LOGIC_CHALLENGE: 7
+  LOGIC_CHALLENGE: 7,
+  EXTRA_BONUS: 8
 };
 
 /**
@@ -314,7 +316,7 @@ export function getGameSpeedupFactor(effectsToConsider, blackHolesActiveOverride
   if (effectsToConsider === undefined) {
     effects = [GAME_SPEED_EFFECT.FIXED_SPEED, GAME_SPEED_EFFECT.TIME_GLYPH, GAME_SPEED_EFFECT.BLACK_HOLE,
       GAME_SPEED_EFFECT.TIME_STORAGE, GAME_SPEED_EFFECT.SINGULARITY_MILESTONE, GAME_SPEED_EFFECT.NERFS,
-      GAME_SPEED_EFFECT.LOGIC_CHALLENGE
+      GAME_SPEED_EFFECT.LOGIC_CHALLENGE, GAME_SPEED_EFFECT.EXTRA_BONUS
     ];
   } else {
     effects = effectsToConsider;
@@ -338,17 +340,21 @@ export function getGameSpeedupFactor(effectsToConsider, blackHolesActiveOverride
           : blackHole.id <= blackHolesActiveOverride;
         if (!isActive) break;
         factor = BE.pow(blackHole.power, BlackHoles.unpauseAccelerationFactor).times(factor);
-        factor = factor.times(VUnlocks.achievementBH.effectOrDefault(1));
+        factor = factor.timesEffectOf(VUnlocks.achievementBH);
       }
     }
   }
   
   if (effects.includes(GAME_SPEED_EFFECT.LOGIC_CHALLENGE)) {
-    factor = factor.times(LogicChallenge(4).effectOrDefault(1));
+    factor = factor.timesEffectOf(LogicChallenge(4));
+  }
+  
+  if (effects.includes(GAME_SPEED_EFFECT.EXTRA_BONUS)) {
+    factor = factor.timesEffectOf(ExtraBonus.extraBonusToGamespeed);
   }
 
   if (effects.includes(GAME_SPEED_EFFECT.SINGULARITY_MILESTONE)) {
-    factor = factor.times(SingularityMilestone.gamespeedFromSingularities.effectOrDefault(1));
+    factor = factor.timesEffectOf(SingularityMilestone.gamespeedFromSingularities);
   }
 
   if (effects.includes(GAME_SPEED_EFFECT.TIME_GLYPH)) {
@@ -519,7 +525,8 @@ export function gameLoop(passDiff, options = {}) {
       // These variables are the actual game speed used and the game speed unaffected by time storage, respectively
       const reducedTimeFactor = getGameSpeedupFactor();
       const totalTimeFactor = getGameSpeedupFactor([GAME_SPEED_EFFECT.FIXED_SPEED, GAME_SPEED_EFFECT.TIME_GLYPH,
-        GAME_SPEED_EFFECT.BLACK_HOLE, GAME_SPEED_EFFECT.SINGULARITY_MILESTONE, GaAME_SPEED_EFFECT.LOGIC_CHALLENGE]);
+        GAME_SPEED_EFFECT.BLACK_HOLE, GAME_SPEED_EFFECT.SINGULARITY_MILESTONE,
+        GaAME_SPEED_EFFECT.LOGIC_CHALLENGE, GAME_SPEED_EFFECT.EXTRA_BONUS]);
       const amplification = Ra.unlocks.improvedStoredTime.effects.gameTimeAmplification.effectOrDefault(1);
       const beforeStore = player.celestials.enslaved.stored;
       player.celestials.enslaved.stored = BE.clampMax(player.celestials.enslaved.stored.plus(diff.times(totalTimeFactor.minus(reducedTimeFactor)).times(amplification)), Enslaved.timeCap);
@@ -637,6 +644,7 @@ export function gameLoop(passDiff, options = {}) {
   Pelle.gameLoop(realDiff);
   GalaxyGenerator.loop(realDiff);
   LC3.tick(diff);
+  ExtraBonus.tick(realDiff);
   GameEnd.gameLoop(realDiff);
 
   if (!Enslaved.canAmplify) {
