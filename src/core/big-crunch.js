@@ -189,6 +189,8 @@ export function secondSoftReset(enteringAntimatterChallenge) {
   player.records.thisInfinity.time = BEC.D0;
   player.records.thisInfinity.lastBuyTime = BEC.D0;
   player.records.thisInfinity.realTime = 0;
+  player.crunchPunishment.this = player.crunchPunishment.next;
+  player.crunchPunishment.next = false;
   Player.resetRequirements("infinity");
   AchievementTimers.marathon2.reset();
 }

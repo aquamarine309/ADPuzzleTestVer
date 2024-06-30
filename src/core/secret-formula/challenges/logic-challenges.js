@@ -83,7 +83,7 @@ export const logicChallenges = [
       amPow: 1.026
     },
     reward: {
-      description: "Unlock auto-replicate. Logic Points also affect Infinity Points gained,",
+      description: "Unlock auto-replicate. Logic Points also affect Infinity Points gained",
       effect: () => ResourceExchangeUpgrade.effectOrDefault(BEC.D1).pow(0.03),
       formatEffect: value => formatX(value, 2, 3)
     }
@@ -98,8 +98,7 @@ export const logicChallenges = [
     ),
     goal: BEC.E32000,
     reward: {
-      description: () => `Game speed ${formatX(2)}`,
-      effect: 2
+      description: `Dimensional Sacrifice can automatically adjust the required dimensions`
     }
   }
 ]

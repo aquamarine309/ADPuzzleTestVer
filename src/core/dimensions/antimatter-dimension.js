@@ -124,7 +124,7 @@ function applyNDMultipliers(mult, tier) {
         TimeStudy(234)
       );
   }
-  if (tier === 8) {
+  if (tier === Sacrifice.requiredDimensionTier) {
     multiplier = multiplier.times(Sacrifice.totalBoost);
   }
 

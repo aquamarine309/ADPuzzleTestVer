@@ -346,7 +346,7 @@ export function getGameSpeedupFactor(effectsToConsider, blackHolesActiveOverride
   }
   
   if (effects.includes(GAME_SPEED_EFFECT.LOGIC_CHALLENGE)) {
-    factor = factor.timesEffectsOf(LogicChallenge(4), LogicChallenge(8).reward);
+    factor = factor.timesEffectOf(LogicChallenge(4));
   }
   
   if (effects.includes(GAME_SPEED_EFFECT.EXTRA_BONUS)) {

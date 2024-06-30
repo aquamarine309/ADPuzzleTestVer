@@ -50,6 +50,7 @@ export default {
       if (this.totalAmount >= 7) {
         GameUI.notify.error("You have got a punishment. Good luck.");
         this.totalAmount = 1;
+        player.crunchPunishment.next = true;
         return;
       };
       ++this.totalAmount;

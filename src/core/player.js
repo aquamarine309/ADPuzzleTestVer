@@ -72,6 +72,10 @@ window.player = {
     upgReqs: 0
   },
   extraBonusTimeLeft: BEC.D0,
+  crunchPunishment: {
+    this: false,
+    next: false
+  },
   sacrificed: BEC.D0,
   achievementBits: Array.repeat(0, 17),
   secretAchievementBits: Array.repeat(0, 4),

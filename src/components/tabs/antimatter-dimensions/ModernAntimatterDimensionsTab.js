@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     sacrificeTooltip() {
-      if (Puzzle.maxTier < 8) return "Maybe you had 8th Antimatter Dimension before.";
+      if (Puzzle.maxTier < Sacrifice.requiredDimensionTier) return `Maybe you had ${Sacrifice.requiredDimension.shortDisplayName} Antimatter Dimension before.`;
       return `Boosts 8th Antimatter Dimension by ${formatX(this.sacrificeBoost, 2, 2)}`;
     },
     range() {

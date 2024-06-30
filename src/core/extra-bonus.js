@@ -31,6 +31,6 @@ Object.defineProperty(ExtraBonus, "tick", {
   // Real Diff
   value: function(diff) {
     if (player.extraBonusTimeLeft.lte(0)) return;
-    player.extraBonusTimeLeft = player.extraBonusTimeLeft.minus(diff);
+    player.extraBonusTimeLeft = player.extraBonusTimeLeft.minus(diff).clampMin(0);
   }
 });
