@@ -404,7 +404,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: BEC.D0,
-  version: 62,
+  version: 63,
   bigCrunches: 0,
   bigEternities: 0,
   infinityPower: BEC.D1,

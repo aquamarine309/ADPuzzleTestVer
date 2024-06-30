@@ -72,7 +72,7 @@ export const logicChallenges = [
       Achievement multiplier power +${format(1, 0, 1)}.
       Dimension boost multiplier ${formatPow(36)}.
       All dimension power +${format(0.028, 0, 3)}.
-      Antimatter production: ${formatInt(10)}^x ➜ ${formatInt(10)}^(x^${format(1.0298, 0, 4)}).
+      Antimatter production: ${formatInt(10)}^x ➜ ${formatInt(10)}^(x^${format(1.026, 0, 4)}).
     `,
     goal: BEC.E10000,
     effects: {
@@ -80,7 +80,7 @@ export const logicChallenges = [
       achPow: 2,
       dimBoostPow: 36,
       dimPow: 1.028,
-      amPow: 1.0298
+      amPow: 1.026
     },
     reward: {
       description: "Unlock auto-replicate. Logic Points also affect Infinity Points gained,",

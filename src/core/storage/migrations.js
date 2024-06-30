@@ -498,6 +498,12 @@ export const migrations = {
     },
     62: player => {
       player.replicanti.unl = false;
+    },
+    63: player => {
+      if (player.challenge.logic.current === 7) {
+        player.challenge.logic.current = 0;
+      }
+      player.challenge.logic.completedBits &= ~(1 << 7);
     }
   },
 
