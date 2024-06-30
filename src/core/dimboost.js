@@ -32,8 +32,11 @@ export class DimBoost {
         Achievement(117),
         Achievement(142),
         GlyphEffect.dimBoostPower,
-        PelleRifts.recursion.milestones[0]
-      ).powEffectsOf(InfinityUpgrade.dimboostMult.chargedEffect);
+        PelleRifts.recursion.milestones[0],
+      ).powEffectsOf(
+        InfinityUpgrade.dimboostMult.chargedEffect,
+        LogicChallenge(7).effects.dimBoostPow
+      );
     if (GlyphAlteration.isAdded("effarig")) boost = boost.pow(getSecondaryGlyphEffect("effarigforgotten"));
     return boost;
   }
@@ -227,7 +230,7 @@ export function requestDimensionBoost(bulk) {
   if (Currency.antimatter.gt(Player.infinityLimit) || !DimBoost.requirement.isSatisfied) return;
   if (!DimBoost.canBeBought) return;
   Tutorial.turnOffEffect(TUTORIAL_STATE.DIMBOOST);
-  if ((BreakInfinityUpgrade.autobuyMaxDimboosts.isBought && bulk) || NormalChallenge(3).isRunning) maxBuyDimBoosts();
+  if ((BreakInfinityUpgrade.autobuyMaxDimboosts.isBought && (bulk && Autobuyer.dimboost.buyMaxMode)) || NormalChallenge(3).isRunning) maxBuyDimBoosts();
   else maxBuyDimBoosts(LogicUpgrade(8).effectOrDefault(1));
 }
 

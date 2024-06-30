@@ -3613,7 +3613,7 @@ p[data-v-pelle-effects-modal] {
     90% 40%, 100% 65%, 90% 95%, 45% 45%, 70% 100%, 25% 100%, 5% 90%, 10% 60%);
 }
 
-.c-modern-dim-tooltip-container[data-v-modern-infinity-dimension-row] .c-modern-dim-purchase-count-tooltip[data-v-modern-infinity-dimension-row] {
+.c-modern-dim-tooltip-container .c-modern-dim-purchase-count-tooltip[data-v-modern-infinity-dimension-row] {
   position: absolute;
   width: 20rem;
   top: 50%;
@@ -3629,7 +3629,7 @@ p[data-v-pelle-effects-modal] {
   visibility: hidden;
 }
 
-.c-modern-dim-tooltip-container[data-v-modern-time-dimension-row] .c-modern-dim-purchase-count-tooltip[data-v-modern-time-dimension-row] {
+.c-modern-dim-tooltip-container .c-modern-dim-purchase-count-tooltip[data-v-modern-time-dimension-row] {
   position: absolute;
   width: 20rem;
   top: 50%;

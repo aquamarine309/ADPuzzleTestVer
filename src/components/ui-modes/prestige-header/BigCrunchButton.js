@@ -16,6 +16,8 @@ export default {
       headerTextColored: true,
       creditsClosed: false,
       showIPRate: false,
+      inLogicChallenge: false,
+      canCompleteLC: false
     };
   },
   computed: {
@@ -77,6 +79,8 @@ export default {
       this.canCrunch = Player.canCrunch;
       this.infinityGoal.copyFrom(Player.infinityGoal);
       this.inAntimatterChallenge = Player.isInAntimatterChallenge;
+      this.inLogicChallenge = LogicChallenge.isRunning;
+      this.canCompleteLC = this.inLogicChallenge && LogicChallenge.current.canComplete;
       this.headerTextColored = player.options.headerTextColored;
       this.creditsClosed = GameEnd.creditsEverClosed;
 
@@ -113,10 +117,16 @@ export default {
     </template>
 
     <!-- Can Crunch in challenge -->
-    <template v-else-if="inAntimatterChallenge">
+    <template v-else-if="inAntimatterChallenge || canCompleteLC">
       Big Crunch to
       <br>
       complete the challenge
+    </template>
+    
+    <template v-else-if="inLogicChallenge">
+      Cannot gain IP
+      <br>
+      in Logic Challenge
     </template>
 
     <!-- Can Crunch -->

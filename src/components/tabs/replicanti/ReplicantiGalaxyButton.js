@@ -15,7 +15,8 @@ export default {
       isAutoEnabled: false,
       isDivideUnlocked: false,
       boughtGalaxies: new BE(0),
-      extraGalaxies: new BE(0)
+      extraGalaxies: new BE(0),
+      autoreplicateUnlocked: false
     };
   },
   computed: {
@@ -38,6 +39,13 @@ export default {
       const disabled = !this.isAutoEnabled;
       return `Auto Galaxy ${auto ? "ON" : "OFF"}${disabled ? " (disabled)" : ""}`;
     },
+    btnClass() {
+      return {
+        "o-primary-btn--replicanti-galaxy": true,
+        "l-replicanti-upgrade-button": !this.autoreplicateUnlocked,
+        "l-rg-btn-big": this.autoreplicateUnlocked
+      }
+    }
   },
   methods: {
     update() {
@@ -50,6 +58,7 @@ export default {
       this.isAutoUnlocked = auto.isUnlocked;
       this.isAutoActive = auto.isActive;
       this.isAutoEnabled = auto.isEnabled;
+      this.autoreplicateUnlocked = Replicanti.autoreplicateUnlocked;
     },
     handleAutoToggle(value) {
       Autobuyer.replicantiGalaxy.isActive = value;
@@ -59,6 +68,9 @@ export default {
       replicantiGalaxyRequest();
     },
     setHoldingR(value) {
+      if (value === true) {
+        replicantiGalaxyRequest();
+      }
       setHoldingR(value);
     }
   },
@@ -66,7 +78,7 @@ export default {
   <div class="l-spoon-btn-group">
     <PrimaryButton
       :enabled="isAvailable"
-      class="o-primary-btn--replicanti-galaxy l-replicanti-upgrade-button"
+      :class="btnClass"
       @click="handleClick"
       @touchstart="setHoldingR(true)"
       @touchend="setHoldingR(false)"

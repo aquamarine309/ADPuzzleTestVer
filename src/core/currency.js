@@ -223,20 +223,22 @@ Currency.antimatter = new class extends BECurrency {
       TabNotification.newAutobuyer.clearTrigger();
       TabNotification.newAutobuyer.tryTrigger();
     }
-    player.antimatter = value.clampMax(Player.infinityLimit);
-    player.records.thisInfinity.maxAM = player.records.thisInfinity.maxAM.max(value);
-    player.records.thisEternity.maxAM = player.records.thisEternity.maxAM.max(value);
-    player.records.thisReality.maxAM = player.records.thisReality.maxAM.max(value);
+    const gainedAM = value.clampMax(Player.infinityLimit);
+    player.antimatter = gainedAM;
+    player.records.thisInfinity.maxAM = player.records.thisInfinity.maxAM.max(gainedAM);
+    player.records.thisEternity.maxAM = player.records.thisEternity.maxAM.max(gainedAM);
+    player.records.thisReality.maxAM = player.records.thisReality.maxAM.max(gainedAM);
 
     if (Pelle.isDoomed) {
-      player.celestials.pelle.records.totalAntimatter = player.celestials.pelle.records.totalAntimatter.max(value);
+      player.celestials.pelle.records.totalAntimatter = player.celestials.pelle.records.totalAntimatter.max(gainedAM);
     }
   }
 
   add(amount) {
-    super.add(amount);
-    if (amount.gt(0)) {
-      player.records.totalAntimatter = player.records.totalAntimatter.add(amount);
+    const gainedAM = amount.clampMax(Player.infinityLimit);
+    super.add(gainedAM);
+    if (gainedAM.gt(0)) {
+      player.records.totalAntimatter = player.records.totalAntimatter.add(gainedAM);
       player.requirementChecks.reality.noAM = false;
     }
   }

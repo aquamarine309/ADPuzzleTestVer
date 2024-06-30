@@ -5,6 +5,7 @@ export const Puzzle = {
   },
   get maxTier() {
     if (!PlayerProgress.infinityUnlocked()) return 8;
+    if (LogicChallenge(7).isRunning) return 1;
     return GameCache.maxTier.value;
   },
   get randomDimOrder() {

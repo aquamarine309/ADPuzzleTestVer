@@ -37,7 +37,7 @@ export default {
       return `${formatInt(this.boughtTesseracts)}${extra}`;
     },
     formula() {
-      if (LogicChallenge(4).isRunning) return `lg(x)${formatPow(this.conversionRate, 2, 3)}`;
+      if (LogicChallenge(4).isRunning) return `lg(x)${formatPow(this.conversionRate, 1, 1)}`;
       return `x${formatPow(this.conversionRate, 2, 3)}`;
     }
   },
@@ -117,7 +117,7 @@ export default {
         <span class="c-infinity-dim-description__accent">{{ formatX(dimMultiplier, 2, 1) }}</span>
         multiplier on
         <span v-if="isEC9Running">all Time Dimensions due to Eternity Challenge 9.</span>
-        <span v-else-if="isLC4Running">Game speed due to Logic Challenge 4.</span>
+        <span v-else-if="isLC4Running">game speed due to Logic Challenge 4.</span>
         <span v-else>all Antimatter Dimensions.</span>
       </p>
     </div>

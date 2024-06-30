@@ -1821,6 +1821,10 @@ br {
   user-select: none;
 }
 
+.l-rg-btn-big {
+  height: 8rem;
+}
+
 .o-primary-btn--replicanti-galaxy-toggle {
   width: 18rem;
   font-size: 1.2rem;

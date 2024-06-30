@@ -167,7 +167,9 @@ function applyNDPowers(mult, tier) {
       AlchemyResource.power,
       Achievement(183),
       PelleRifts.paradox,
-      LogicChallenge(1).effects.dimensionPow
+      LogicChallenge(1).effects.dimensionPow,
+      LogicChallenge(7).effects.dimPow,
+      LogicChallenge(8)
     );
 
   multiplier = multiplier.pow(getAdjustedGlyphEffect("curseddimensions"));
@@ -592,7 +594,7 @@ class AntimatterDimensionState extends DimensionState {
     const postBreak = (player.break && !(NormalChallenge.isRunning && !NormalChallenge.current.isBroken)) ||
       InfinityChallenge.isRunning ||
       Enslaved.isRunning;
-    return postBreak ? BE.MAX_VALUE : BEC.E315;
+    return postBreak ? Player.infinityLimit : BEC.E315;
   }
 
   get productionPerSecond() {
@@ -621,7 +623,10 @@ class AntimatterDimensionState extends DimensionState {
       }
       if (production.gt(10)) {
         const log10 = production.log10();
-        production = BE.pow10(log10.pow(getAdjustedGlyphEffect("effarigantimatter")));
+        production = BE.pow10(log10.pow(
+          getAdjustedGlyphEffect("effarigantimatter") *
+          LogicChallenge(7).effects.amPow.effectOrDefault(1)
+        ));
       }
     }
     
@@ -678,7 +683,9 @@ export const AntimatterDimensions = {
       Achievement(58)
     ).times(getAdjustedGlyphEffect("powerbuy10"));
 
-    mult = mult.pow(getAdjustedGlyphEffect("effarigforgotten")).powEffectOf(InfinityUpgrade.buy10Mult.chargedEffect);
+    mult = mult.pow(
+      getAdjustedGlyphEffect("effarigforgotten")
+    ).powEffectOf(InfinityUpgrade.buy10Mult.chargedEffect);
     mult = mult.pow(ImaginaryUpgrade(14).effectOrDefault(1));
 
     return mult;
@@ -704,6 +711,7 @@ export const AntimatterDimensions = {
       player.requirementChecks.eternity.noAD1 = false;
     }
     AntimatterDimension(1).produceCurrency(Currency.antimatter, diff);
+    
     if (NormalChallenge(12).isRunning) {
       AntimatterDimension(2).produceCurrency(Currency.antimatter, diff);
     }

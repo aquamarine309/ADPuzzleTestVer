@@ -192,6 +192,7 @@ export const BEC = deepFreeze({
   E28000:               new BE("1e28000"),
   E30000:               new BE("1e30000"),
   E30008:               new BE("1e30008"),
+  E32000:               new BE("1e32000"),
   E45000:               new BE("1e45000"),
   E54000:               new BE("1e54000"),
   E60000:               new BE("1e60000"),

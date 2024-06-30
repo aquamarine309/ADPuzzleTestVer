@@ -58,6 +58,7 @@ export default {
     replicationInfo() {
       if (this.autoreplicateUnlocked) return "Auto";
       if (this.canReplicate) return "Available";
+      if (this.amount.gte(BE.NUMBER_MAX_VALUE)) return "Capped";
       return `Cooldown Time: ${TimeSpan.fromMilliseconds(this.cooldownTime).toStringShort(false)}`;
     },
     replicantiIntervalSetup() {
@@ -85,7 +86,7 @@ export default {
       );
     },
     canReplicate() {
-      return this.cooldownTime.lte(0);
+      return this.cooldownTime.lte(0) && this.amount.lt(BE.NUMBER_MAX_VALUE);
     },
     canBoost() {
       return this.amount.gte(this.boostCost);
@@ -287,7 +288,8 @@ export default {
       <br>
       <div class="l-replicanti-upgrade-row">
         <PrimaryButton
-          :enabled="canReplicate && !autoreplicateUnlocked"
+          v-if="!autoreplicateUnlocked"
+          :enabled="canReplicate"
           class="o-primary-btn--replicanti-galaxy l-replicanti-upgrade-button"
           @click="replicate"
           @touchstart="holding = true"
@@ -297,6 +299,7 @@ export default {
         </PrimaryButton>
         <ReplicantiGalaxyButton v-if="canSeeGalaxyButton" />
         <PrimaryButton
+          v-if="!autoreplicateUnlocked"
           :enabled="canBoost"
           class="o-primary-btn--replicanti-galaxy l-replicanti-upgrade-button"
           @click="boost"

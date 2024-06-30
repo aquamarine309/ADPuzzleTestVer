@@ -16,7 +16,7 @@ export const ReplicantiGrowth = {
 // Internal function to add RGs; called both from within the fast replicanti code and from the function
 // used externally. Only called in cases of automatic RG and does not actually modify replicanti amount
 function addReplicantiGalaxies(newGalaxies) {
-  if (newGalaxies.gte(0)) {
+  if (newGalaxies.gt(0)) {
     player.replicanti.galaxies = player.replicanti.galaxies.add(newGalaxies);
     player.requirementChecks.eternity.noRG = false;
     const keepResources = Pelle.isDoomed
@@ -143,6 +143,9 @@ export function totalReplicantiSpeedMult(overCap) {
     RealityUpgrade(23),
   );
   totalMult = totalMult.times(preCelestialEffects);
+  if (Replicanti.autoreplicateUnlocked) {
+    totalMult = totalMult.times(ReplicantiBoost.boost);
+  }
   if (TimeStudy(132).isBought) {
     totalMult = totalMult.times(Perk.studyPassive.isBought ? 3 : 1.5);
   }
@@ -629,7 +632,7 @@ export const Replicanti = {
     return TimeStudy(192).isBought || PelleRifts.vacuum.milestones[1].canBeApplied;
   },
   get autoreplicateUnlocked() {
-    return false;
+    return LogicChallenge(7).isCompleted;
   },
   get cooldownTime() {
     return player.replicanti.cooldownTime;

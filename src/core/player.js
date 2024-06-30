@@ -148,7 +148,8 @@ window.player = {
       galaxies: 10,
       buyMaxInterval: 0,
       isActive: true,
-      lastTick: 0
+      lastTick: 0,
+      buyMaxMode: true
     },
     tickspeed: {
       isUnlocked: false,

@@ -72,7 +72,7 @@ export const infinityChallenges = [
         and Dimension Boosts by ${formatInt(1)}`,
       effect: 1.1
     },
-    unlockAM: BEC.E18000,
+    unlockAM: BEC.E17500,
   },
   {
     id: 6,

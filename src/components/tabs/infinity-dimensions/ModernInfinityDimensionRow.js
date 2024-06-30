@@ -114,6 +114,7 @@ export default {
     v-show="showRow"
     class="c-dimension-row l-dimension-row-infinity-dim l-dimension-single-row"
     :class="{ 'c-dim-row--not-reached': !isUnlocked && !canUnlock }"
+        data-v-modern-infinity-dimension-row
   >
     <GenericDimensionRowText
       :tier="tier"
@@ -121,6 +122,7 @@ export default {
       :multiplier-text="formatX(multiplier, 2, 1)"
       :amount-text="format(amount, 2)"
       :rate="rateOfChange"
+      data-v-modern-infinity-dimension-row
     />
     <div
       class="l-dim-row-multi-button-container c-modern-dim-tooltip-container"
@@ -137,6 +139,7 @@ export default {
         class="o-primary-btn--buy-id o-primary-btn o-primary-btn--new o-primary-btn--buy-dim"
         :class="{ 'l-dim-row-small-text': hasLongText }"
         @click="buySingleInfinityDimension"
+        data-v-modern-infinity-dimension-row
       >
         {{ costDisplay }}
       </PrimaryButton>
@@ -145,12 +148,14 @@ export default {
         v-model="isAutobuyerOn"
         class="o-primary-btn--id-auto"
         label="Auto:"
+        data-v-modern-infinity-dimension-row
       />
       <PrimaryButton
         v-else
         :enabled="isAvailableForPurchase"
         class="o-primary-btn--id-auto"
         @click="buyMaxInfinityDimension"
+        data-v-modern-infinity-dimension-row
       >
         Buy Max
       </PrimaryButton>
