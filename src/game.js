@@ -837,18 +837,18 @@ function applyAutoprestige(diff) {
 
   if (TeresaUnlocks.epGen.canBeApplied) {
     Currency.eternityPoints.add(player.records.thisEternity.bestEPmin.times(BEC.D0_01)
-      .times(getGameSpeedupFactor() * diff / 1000).timesEffectOf(Ra.unlocks.continuousTTBoost.effects.autoPrestige));
+      .times(getGameSpeedupFactor().times(diff).div(1000)).timesEffectOf(Ra.unlocks.continuousTTBoost.effects.autoPrestige));
   }
 
   if (InfinityUpgrade.ipGen.isCharged) {
     const addedRM = MachineHandler.gainedRealityMachines
       .timesEffectsOf(InfinityUpgrade.ipGen.chargedEffect)
-      .times(diff / 1000);
+      .times(diff).div(1000);
     Currency.realityMachines.add(addedRM);
   }
 
   if (PelleRifts.chaos.milestones[2].canBeApplied) {
-    Currency.eternityPoints.add(gainedEternityPoints().times(BEC.D0_1).times(diff / 1000));
+    Currency.eternityPoints.add(gainedEternityPoints().times(BEC.D0_1).times(diff).div(1000));
   }
 }
 

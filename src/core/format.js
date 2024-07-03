@@ -66,8 +66,18 @@ window.formatPow = function formatPow(value, places, placesUnder1000) {
   return `^${format(value, places, placesUnder1000)}`;
 };
 
-window.formatPercents = function formatPercents(value, places) {
-  return `${format(BE.times(value, 100), 2, places)}%`;
+window.formatPercents = function formatPercents(value, places1, places2) {
+  let places = 0;
+  let placesUnder1000 = 0;
+  if (places1 !== void 0) {
+    if (places2 !== void 0) {
+      places = places1;
+      placesUnder1000 = places2;
+    } else {
+      placesUnder1000 = places1;
+    }
+  }
+  return `${format(BE.times(value, 100), places, placesUnder1000)}%`;
 };
 
 window.formatRarity = function formatRarity(value) {
@@ -81,11 +91,11 @@ window.formatRarity = function formatRarity(value) {
 window.formatMachines = function formatMachines(realPart, imagPart) {
   if (isEND()) return "END";
   const parts = [];
-  if (Decimal.neq(realPart, 0)) parts.push(format(realPart, 2));
-  if (Decimal.neq(imagPart, 0)) parts.push(`${format(imagPart, 2, 2)}i`);
+  if (BE.neq(realPart, 0)) parts.push(format(realPart, 2));
+  if (BE.neq(imagPart, 0)) parts.push(`${format(imagPart, 2, 2)}i`);
   // This function is used for just RM and just iM in a few spots, so we have to push both parts conditionally
   // Nonetheless, we also need to special-case both zero so that it doesn't end up displaying as an empty string
-  if (Decimal.eq(realPart, 0) && Decimal.eq(imagPart, 0)) return format(0);
+  if (BE.eq(realPart, 0) && BE.eq(imagPart, 0)) return format(0);
   return parts.join(" + ");
 };
 
@@ -109,14 +119,14 @@ window.formatWithCommas = function formatWithCommas(value) {
 };
 
 /**
- * Check if a number or Decimal is equal to 1.
- * @param  {number|Decimal} amount
+ * Check if a number or BE is equal to 1.
+ * @param  {number|BE} amount
  * @return {Boolean} - if the {amount} was equal to 1.
  */
 window.isSingular = function isSingular(amount) {
   if (typeof amount === "number") return amount === 1;
-  if ((amount instanceof Decimal) || (amount instanceof BE)) return amount.eq(1);
-  throw `Amount must be either a number or Decimal. Instead, amount was ${amount}`;
+  if (amount instanceof BE) return amount.eq(1);
+  throw `Amount must be either a number or BE. Instead, amount was ${amount}`;
 };
 
 // Some letters in the english language pluralize in a different manner than simply adding an 's' to the end.
@@ -141,7 +151,7 @@ const pluralDatabase = new Map([
 /**
  * A function that pluralizes a word based on a designated amount
  * @param  {string} word           - word to be pluralized
- * @param  {number|Decimal} amount - amount to be used to determine if the value is plural
+ * @param  {number|BE} amount - amount to be used to determine if the value is plural
  * @param  {string} [plural]       - if defined, a specific plural to override the generated plural
  * @return {string} - if the {amount} is anything other than one, return the {plural} provided or the
  *                    plural form of the input {word}. If the {amount} is singular, return {word}
@@ -174,7 +184,7 @@ window.generatePlural = function generatePlural(word) {
 /**
  * Returns the formatted value followed by a name, pluralized based on the value input.
  * @param  {string} name                  - name to pluralize and display after {value}
- * @param  {number|Decimal} value         - number to {format}
+ * @param  {number|BE} value         - number to {format}
  * @param  {number} [places]              - number of places to display for the mantissa
  * @param  {number} [placesUnder1000]     - number of decimal places to display
  * @param  {function} [formatType=format] - how to format the {value}. defaults to format
@@ -192,7 +202,7 @@ window.quantify = function quantify(name, value, places, placesUnder1000, format
 /**
  * Returns the value formatted to formatInt followed by a name, pluralized based on the value input.
  * @param  {string} name                  - name to pluralize and display after {value}
- * @param  {number|Decimal} value         - number to format
+ * @param  {number|BE} value         - number to format
  * @return {string} - the formatted {value} followed by the {name} after having been pluralized based on the {value}
  */
 window.quantifyInt = function quantifyInt(name, value) {

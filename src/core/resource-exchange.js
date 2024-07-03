@@ -111,6 +111,8 @@ class ResourceExchangeState extends GameMechanicState {
   
   reset() {
     this.data.value = BEC.D0;
+    this.exchangeRate = 1;
+    this.rateType = PERCENTS_TYPE.NORMAL;
   }
 }
 
@@ -177,6 +179,10 @@ class ResourceExchangeUpgradeState extends GameMechanicState {
   get isEffectActive() {
     return PlayerProgress.infinityUnlocked() &&
       !LogicChallenge(5).isRunning;
+  }
+  
+  reset() {
+    this.boughtAmount = 0;
   }
 }
 

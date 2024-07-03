@@ -253,7 +253,7 @@ export default {
         :key="index"
       >
         <span
-          v-if="run[0] === Number.MAX_VALUE"
+          v-if="run[0].gte(Number.MAX_VALUE)"
           class="c-empty-row"
           data-v-past-prestige-runs-container
         >

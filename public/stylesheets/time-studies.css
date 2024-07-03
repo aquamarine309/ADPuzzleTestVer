@@ -84,6 +84,10 @@
   transition-duration: 0.2s;
 }
 
+.t-s13 .o-time-study {
+  border: 0.1rem solid #691FA5;
+}
+
 .o-time-study--available {
   animation: a-time-study 7s infinite;
   cursor: pointer;
@@ -139,6 +143,15 @@
   border-color: black;
 }
 
+.t-s13 .o-time-study-normal--available {
+  color: #c5adff;
+  border-color: #c5adff;
+}
+
+.t-s13 .o-time-study-normal--available:hover {
+  background-color: #c5adff;
+}
+
 .o-time-study-antimatter-dim--available {
   color: #22aa48;
   border-color: #198036;
@@ -147,6 +160,15 @@
 .o-time-study-antimatter-dim--available:hover {
   color: #eeeeee;
   background-color: #22aa48;
+}
+
+.t-s13 .o-time-study-antimatter-dim--available {
+  color: #62EA88;
+  border-color: #62EA88;
+}
+
+.t-s13 .o-time-study-antimatter-dim--available:hover {
+  background-color: #62EA88;
 }
 
 .o-time-study-infinity-dim--available {
@@ -159,6 +181,15 @@
   background-color: #b67f33;
 }
 
+.t-s13 .o-time-study-infinity-dim--available {
+  color: #E6AF63;
+  border-color: #E6AF63;
+}
+
+.t-s13 .o-time-study-infinity-dim--available:hover {
+  background-color: #E6AF63;
+}
+
 .o-time-study-time-dim--available {
   color: #b241e3;
   border-color: #951ec8;
@@ -167,6 +198,15 @@
 .o-time-study-time-dim--available:hover {
   color: #eeeeee;
   background-color: #b241e3;
+}
+
+.t-s13 .o-time-study-time-dim--available {
+  color: #E978FF;
+  border-color: #E978FF;
+}
+
+.t-s13 .o-time-study-time-dim--available:hover {
+  background-color: #E978FF;
 }
 
 .o-time-study-active--available {
@@ -179,6 +219,15 @@
   background-color: #e60000;
 }
 
+.t-s13 .o-time-study-active--available {
+  color: #FF8480;
+  border-color: #FF8480;
+}
+
+.t-s13 .o-time-study-active--available:hover {
+  background-color: #FF8480;
+}
+
 .o-time-study-passive--available {
   color: #5e33b6;
   border-color: #4b288f;
@@ -189,6 +238,15 @@
   background-color: #5e33b6;
 }
 
+.t-s13 .o-time-study-passive--available {
+  color: #CE83F8;
+  border-color: #CE83F8;
+}
+
+.t-s13 .o-time-study-passive--available:hover {
+  background-color: #CE83F8;
+}
+
 .o-time-study-idle--available {
   color: #0080ff;
   border-color: #0066cc;
@@ -197,6 +255,15 @@
 .o-time-study-idle--available:hover {
   color: #eeeeee;
   background-color: #0080ff;
+}
+
+.t-s13 .o-time-study-idle--available {
+  color: #A0B0FF;
+  border-color: #A0B0FF;
+}
+
+.t-s13 .o-time-study-idle--available:hover {
+  background-color: #A0B0FF;
 }
 
 .o-time-study-dark--available,
@@ -224,8 +291,22 @@
   background-color: #490066;
 }
 
+.t-s13 .o-time-study-eternity-challenge--available {
+  color: #8D48C3;
+  background-color: #F5EEFA;
+}
+
+.t-s13 .o-time-study-eternity-challenge--available:hover {
+  color: #F5EEFA;
+  background-color: #8D48C3;
+}
+
 .o-time-study-eternity-challenge--complete {
   box-shadow: inset 0 0 3rem var(--color-good-dark);
+}
+
+.t-s13 .o-time-study-eternity-challenge--complete {
+  box-shadow: none;
 }
 
 .o-time-study-dilation--available {
@@ -239,6 +320,15 @@
   color: #64dd17;
   background-color: white;
   animation: a-time-study-dilation 10s infinite;
+}
+
+.t-s13 .o-time-study-dilation--available {
+  color: #a4dd17;
+  border-color: #a4dd17;
+}
+
+.t-s13 .o-time-study-dilation--available:hover {
+  color: #a4dd17;
 }
 
 .o-time-study-reality--available {
@@ -281,6 +371,10 @@
 .t-s10 .o-time-study--unavailable:hover {
   background-color: var(--color-bad);
   border-color: var(--color-bad);
+}
+
+.t-s13 .o-time-study--unavailable {
+  background-color: #c8c8c8;
 }
 
 .o-time-study-antimatter-dim--unavailable {
@@ -337,10 +431,19 @@
   border-color: black;
 }
 
+.t-s13 .o-time-study-normal--bought {
+  background-color: #c2adff;
+}
+
 .o-time-study-antimatter-dim--bought {
   color: black;
   background-color: #22aa48;
   border-color: black;
+}
+
+.t-s13 .o-time-study-antimatter-dim--bought {
+  background-color: #62EA88;
+  border-color: #691fa5;
 }
 
 .o-time-study-infinity-dim--bought {
@@ -349,10 +452,20 @@
   border-color: black;
 }
 
+.t-s13 .o-time-study-infinity-dim--bought {
+  background-color: #E6AF63;
+  border-color: #691fa5;
+}
+
 .o-time-study-time-dim--bought {
   color: black;
   background-color: #b241e3;
   border-color: black;
+}
+
+.t-s13 .o-time-study-time-dim--bought {
+  background-color: #e978ff;
+  border-color: #691fa5;
 }
 
 .o-time-study-active--bought {
@@ -373,6 +486,21 @@
   border-color: black;
 }
 
+.t-s13 .o-time-study-active--bought {
+  background-color: #FF8480;
+  border-color: #691fa5;
+}
+
+.t-s13 .o-time-study-passive--bought {
+  background-color: #CE83F8;
+  border-color: #691fa5;
+}
+
+.t-s13 .o-time-study-idle--bought {
+  background-color: #A0B0FF;
+  border-color: #691fa5;
+}
+
 .o-time-study-dark--bought {
   color: white;
   background-color: black;
@@ -389,10 +517,22 @@
   border-style: double;
 }
 
+.t-s13 .o-time-study-dark--bought,
+.t-s13 .o-time-study-light--bought {
+  border-style: solid;
+  border-width: 0.15rem;
+  border-color: #691fa5;
+}
+
 .o-time-study-eternity-challenge--bought {
   color: white;
   background-color: #490066;
   border-color: black;
+}
+
+.t-s13 .o-time-study-eternity-challenge--bought {
+  background-color: #CD88F8;
+  border-color: #691fa5;
 }
 
 .o-time-study-eternity-challenge--running {
@@ -416,6 +556,11 @@
   border-color: black;
 }
 
+.t-s13 .o-time-study-dilation--bought {
+  background-color: #A4DD17;
+  border-color: #691fa5;
+}
+
 .o-time-study-reality--bought {
   color: black;
   background-color: var(--color-reality);
@@ -426,6 +571,11 @@
   color: black;
   background-color: var(--color-v--base);
   border-color: black;
+}
+
+.t-s13 .o-time-study-triad--bought,
+.t-s13 .o-time-study-reality--bought {
+  border-color: #691fa5;
 }
 
 .t-dark .o-time-study-antimatter-dim--bought,
@@ -573,6 +723,39 @@
 .o-time-study-connection--bought.o-time-study-connection--dilation {
   stroke: #64dd17;
 }
+
+.t-s13 .o-time-study-connection--bought.o-time-study-connection--antimatter-dim {
+  stroke: #62EA88;
+}
+
+.t-s13 .o-time-study-connection--bought.o-time-study-connection--infinity-dim {
+  stroke: #E6AF63;
+}
+
+.t-s13 .o-time-study-connection--bought.o-time-study-connection--time-dim {
+  stroke: #E978FF;
+}
+
+.t-s13 .o-time-study-connection--bought.o-time-study-connection--active {
+  stroke: #FF8480;
+}
+
+.t-s13 .o-time-study-connection--bought.o-time-study-connection--passive {
+  stroke: #ce83f8;
+}
+
+.t-s13 .o-time-study-connection--bought.o-time-study-connection--idle {
+  stroke: #a0b0ff;
+}
+
+.t-s13 .o-time-study-connection--bought.o-time-study-connection--eternity-challenge {
+  stroke: #490066;
+}
+
+.t-s13 .o-time-study-connection--bought.o-time-study-connection--dilation {
+  stroke: #A4DD17;
+}
+
 
 .o-time-study-connection--secret {
   opacity: 0;

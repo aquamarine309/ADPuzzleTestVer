@@ -8,8 +8,14 @@ export const infinityChallenges = [
     goal: BEC.E1300,
     isQuickResettable: true,
     reward: {
-      description: () => `${formatX(1.3, 1, 1)} on all Infinity Dimensions for each Infinity Challenge completed`,
-      effect: () => Math.pow(1.3, InfinityChallenges.completed.length),
+      description: () => {
+        const base = 1.3 + InfinityChallenge(9).reward.effectOrDefault(0);
+        return `${formatX(base, 1, 1)} on all Infinity Dimensions for each Infinity Challenge completed`
+      },
+      effect: () => {
+        const base = 1.3 + InfinityChallenge(9).reward.effectOrDefault(0);
+        return Math.pow(base, InfinityChallenges.completed.length)
+      },
       formatEffect: value => formatX(value, 1, 1)
     },
     unlockAM: BEC.E2000,
@@ -131,4 +137,39 @@ export const infinityChallenges = [
     },
     unlockAM: BEC.E28000,
   },
+  {
+    id: 9,
+    description: "When the number of galaxies increases, the effect of galaxies will decrease.",
+    goal: BEC.E21000,
+    effect: () => BEC.D1.minus(player.galaxies.add(1).ln().div(4)).clampMin(0),
+    formatEffect: value => formatPercents(value, 3, 3),
+    reward: {
+      description: "Improve IC1 reward",
+      effect: () => Math.pow(InfinityChallenges.completed.length, 2) / 12,
+      formatEffect: value => `${format(1.3, 0, 1)}+${format(value, 0, 3)}=${format(value + 1.3, 0, 3)}`
+    },
+    unlockAM: BEC.E37500
+  },
+  {
+    id: 10,
+    description: () => `Increase Antimatter Dimension costs. Buy ten multiplier increases to ${formatX(4, 0, 1)}.`,
+    goal: BEC.E35000,
+    effect: 4,
+    reward: {
+      description: () => `Buy ten multiplier increases to ${formatX(4, 0, 1)}`,
+      effect: 4
+    },
+    unlockAM: BEC.E40000
+  },
+  {
+    id: 11,
+    description: () => `Each consecutive Antimatter Dimension produces antimatter instead of the previous one. Galaxies are ${format(0.01)} stronger.`,
+    goal: BEC.E10000,
+    effect: 0.01,
+    reward: {
+      description: "Improve Infinity Power formula.",
+      effect: 0.1
+    },
+    unlockAM: BEC.E50505
+  }
 ];

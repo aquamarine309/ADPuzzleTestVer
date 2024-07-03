@@ -468,7 +468,7 @@ export const migrations = {
     57: player => {
       if (!player.infinityUpgrades.has("galaxyBoost") && player.infinityPoints.gte(5e11)) {
         player.infinityPoints = player.infinityPoints.minus(5e11).clampMin(0);
-        player.infinityPoints.add("galaxyBoost");
+        player.infinityUpgrades.add("galaxyBoost");
       }
       if (player.infinityUpgrades.has("postGalaxy")) {
         player.infinityUpgrades.delete("postGalaxy");
@@ -504,6 +504,11 @@ export const migrations = {
         player.challenge.logic.current = 0;
       }
       player.challenge.logic.completedBits &= ~(1 << 7);
+    },
+    64: player => {
+      while (player.challenge.infinity.bestTimes.length < 12) {
+        player.challenge.infinity.bestTimes.push(BE.NUMBER_MAX_VALUE);
+      }
     }
   },
 

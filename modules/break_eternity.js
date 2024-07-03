@@ -520,6 +520,9 @@ export default (function () { 'use strict';
         We will assume in calculations that all BEs are either erroneous or satisfy these criteria. (Otherwise: Garbage in, garbage out.)
         */
         //Any 0 is totally 0
+        if (Object.isFrozen(this)) {
+          return BE.fromBE(this);
+        }
         if (this.sign === 0 || this.mag === 0 && this.layer === 0 || this.mag === Number.NEGATIVE_INFINITY && this.layer > 0 && Number.isFinite(this.layer)) {
           this.sign = 0;
           this.mag = 0;

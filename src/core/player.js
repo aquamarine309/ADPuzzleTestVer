@@ -5,6 +5,7 @@ import { AUTOMATOR_MODE, AUTOMATOR_TYPE } from "./automator/automator-backend.js
 import { BEC } from "./constants.js";
 import { deepmergeAll } from "../utility/deepmerge.js";
 import { GlyphTypes } from "./glyph-effects.js";
+import { DEV } from "../env.js";
 
 // This is actually reassigned when importing saves
 // eslint-disable-next-line prefer-const
@@ -94,7 +95,7 @@ window.player = {
     },
     infinity: {
       current: 0,
-      bestTimes: Array.range(0, 8).map(() => BE.NUMBER_MAX_VALUE),
+      bestTimes: Array.range(0, 12).map(() => BE.NUMBER_MAX_VALUE),
       completedBits: 0,
     },
     eternity: {
@@ -408,7 +409,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: BEC.D0,
-  version: 63,
+  version: 64,
   bigCrunches: 0,
   bigEternities: 0,
   infinityPower: BEC.D1,
@@ -1001,6 +1002,7 @@ export const Player = {
   },
 
   get canEternity() {
+    if (!DEV) return false;
     return player.records.thisEternity.maxIP.gte(Player.eternityGoal);
   },
 

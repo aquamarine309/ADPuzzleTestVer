@@ -1,4 +1,5 @@
 import { BitPurchasableMechanicState } from "./game-mechanics/index.js";
+import { BEC } from "./constants.js";
 
 class LogicUpgradeState extends BitPurchasableMechanicState {
   constructor(config) {
@@ -65,5 +66,12 @@ export const LogicUpgrades = {
   /**
    * @type {LogicUpgradeState[]}
    */
-  all: LogicUpgradeState.index.compact()
+  all: LogicUpgradeState.index.compact(),
+  
+  reset() {
+    player.logic.upgradeBits = 0;
+    player.logic.upgReqs = 0;
+    player.logic.spentPoints = BEC.D0;
+    GameCache.maxTier.invalidate();
+  }
 };

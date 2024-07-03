@@ -114,6 +114,7 @@ export function eternity(force, auto, specialConditions = {}) {
   Replicanti.reset();
   resetChallengeStuff();
   AntimatterDimensions.reset();
+  LogicUpgrades.reset();
 
   if (!specialConditions.enteringEC && player.respec) {
     if (noStudies) {
@@ -139,6 +140,8 @@ export function eternity(force, auto, specialConditions = {}) {
   player.records.thisEternity.maxAM = BEC.D0;
   Currency.antimatter.reset();
   ECTimeStudyState.invalidateCachedRequirements();
+  resetAllResourceExchange();
+  ResourceExchangeUpgrade.reset();
 
   PelleStrikes.eternity.trigger();
   
@@ -177,12 +180,15 @@ export function animateAndEternity(callback) {
 export function initializeChallengeCompletions(isReality) {
   NormalChallenges.clearCompletions();
   if (!PelleUpgrade.keepInfinityChallenges.canBeApplied) InfinityChallenges.clearCompletions();
+  LogicChallenges.clearCompletions();
   if (!isReality && EternityMilestone.keepAutobuyers.isReached || Pelle.isDoomed) {
     NormalChallenges.completeAll();
   }
   if (Achievement(133).isUnlocked && !Pelle.isDoomed) InfinityChallenges.completeAll();
   player.challenge.normal.current = 0;
   player.challenge.infinity.current = 0;
+  if (player.challenge.logic.current === 10) GameCache.dimensionMultDecrease.invalidate();
+  player.challenge.logic.current = 0;
 }
 
 export function initializeResourcesAfterEternity() {

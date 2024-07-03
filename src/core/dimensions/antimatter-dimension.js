@@ -434,7 +434,8 @@ class AntimatterDimensionState extends DimensionState {
     const tier = this.tier;
     if (tier === 8 ||
       (tier > 3 && EternityChallenge(3).isRunning) ||
-      (tier > 6 && NormalChallenge(12).isRunning)) {
+      (tier > 6 && NormalChallenge(12).isRunning) ||
+      InfinityChallenge(11).isRunning) {
       return BEC.D0;
     }
 
@@ -673,7 +674,13 @@ export const AntimatterDimensions = {
             buyTenMultiplier.effectValue;
     }
 
-    let mult = BEC.D2.plusEffectsOf(
+    let mult = Effects.max(
+      2,
+      InfinityChallenge(10),
+      InfinityChallenge(10).reward
+    );
+    
+    mult = mult.plusEffectsOf(
       Achievement(141).effects.buyTenMult,
       EternityChallenge(3).reward
     );
@@ -697,23 +704,28 @@ export const AntimatterDimensions = {
     const hasBigCrunchGoal = !player.break || Player.isInAntimatterChallenge;
     if (Currency.antimatter.gt(Player.infinityLimit)) return;
     if (hasBigCrunchGoal && Currency.antimatter.gte(Player.infinityGoal)) return;
-
-    let maxTierProduced = EternityChallenge(3).isRunning ? 3 : 7;
-    let nextTierOffset = 1;
-    if (NormalChallenge(12).isRunning) {
-      maxTierProduced--;
-      nextTierOffset++;
-    }
-    for (let tier = maxTierProduced; tier >= 1; --tier) {
-      AntimatterDimension(tier + nextTierOffset).produceDimensions(AntimatterDimension(tier), diff.div(10));
-    }
-    if (AntimatterDimension(1).amount.gt(0)) {
-      player.requirementChecks.eternity.noAD1 = false;
-    }
-    AntimatterDimension(1).produceCurrency(Currency.antimatter, diff);
+    if (InfinityChallenge(11).isRunning) {
+      for (let tier = Puzzle.maxTier; tier >= 1; --tier) {
+        AntimatterDimension(tier).produceCurrency(Currency.antimatter, diff);
+      }
+    } else {
+      let maxTierProduced = EternityChallenge(3).isRunning ? 3 : 7;
+      let nextTierOffset = 1;
+      if (NormalChallenge(12).isRunning) {
+        maxTierProduced--;
+        nextTierOffset++;
+      }
+      for (let tier = maxTierProduced; tier >= 1; --tier) {
+        AntimatterDimension(tier + nextTierOffset).produceDimensions(AntimatterDimension(tier), diff.div(10));
+      }
+      if (AntimatterDimension(1).amount.gt(0)) {
+        player.requirementChecks.eternity.noAD1 = false;
+      }
+      AntimatterDimension(1).produceCurrency(Currency.antimatter, diff);
     
-    if (NormalChallenge(12).isRunning) {
-      AntimatterDimension(2).produceCurrency(Currency.antimatter, diff);
+      if (NormalChallenge(12).isRunning) {
+        AntimatterDimension(2).produceCurrency(Currency.antimatter, diff);
+      }
     }
     // Production may overshoot the goal on the final tick of the challenge
     if (Currency.antimatter.gt(Player.infinityLimit)) Currency.antimatter.dropTo(Player.infinityLimit);

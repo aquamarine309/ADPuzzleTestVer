@@ -9,7 +9,12 @@ export const changelog = [
    * }
    */
   {
-    date: [202, 6, 26],
+    date: [2024, 7, 3],
+    name: "Pre-eternity Update",
+    info: "new Infinity Challenges."
+  },
+  {
+    date: [2024, 6, 26],
     name: "IC6 Update",
     info: `
 Endgame: >e1900LP (IC6).

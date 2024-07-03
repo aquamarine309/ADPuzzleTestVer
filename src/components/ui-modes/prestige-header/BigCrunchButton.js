@@ -17,7 +17,8 @@ export default {
       creditsClosed: false,
       showIPRate: false,
       inLogicChallenge: false,
-      canCompleteLC: false
+      canCompleteLC: false,
+      lcGoal: new BE(0)
     };
   },
   computed: {
@@ -81,6 +82,9 @@ export default {
       this.inAntimatterChallenge = Player.isInAntimatterChallenge;
       this.inLogicChallenge = LogicChallenge.isRunning;
       this.canCompleteLC = this.inLogicChallenge && LogicChallenge.current.canComplete;
+      if (this.inLogicChallenge) {
+        this.lcGoal = LogicChallenge.current.goal;
+      }
       this.headerTextColored = player.options.headerTextColored;
       this.creditsClosed = GameEnd.creditsEverClosed;
 
@@ -127,6 +131,10 @@ export default {
       Cannot gain IP
       <br>
       in Logic Challenge
+      <br>
+      Reach {{ format(lcGoal, 2, 2) }}
+      <br>
+      antimatter
     </template>
 
     <!-- Can Crunch -->

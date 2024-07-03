@@ -36,7 +36,9 @@ export function getTickSpeedMultiplier() {
     PelleRifts.decay.milestones[1],
     LogicChallenge(6),
     LogicChallenge(6).reward,
-    LogicChallenge(7).effects.galMul
+    LogicChallenge(7).effects.galMul,
+    InfinityChallenge(9),
+    InfinityChallenge(11)
   );
   if (galaxies.lt(3)) {
     // Magic numbers are to retain balancing from before while displaying
@@ -237,7 +239,7 @@ export const FreeTickspeed = {
   fromShards(shards) {
     const tickmult = Effects.min(1.33, TimeStudy(171)).minus(1).times
       (Math.max(getAdjustedGlyphEffect("cursedtickspeed"), 1)).plus(1);
-    const logTickmult = BE.log(tickmult);
+    const logTickmult = BE.ln(tickmult);
     const logShards = shards.ln();
     const uncapped = BE.max(0, logShards.div(logTickmult));
     if (uncapped.lte(FreeTickspeed.softcap)) {

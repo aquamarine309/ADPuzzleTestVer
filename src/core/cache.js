@@ -65,7 +65,7 @@ export const GameCache = {
   dimensionMultDecrease: new Lazy(() => new BE(10).minusEffectsOf(
     BreakInfinityUpgrade.dimCostMult,
     EternityChallenge(6).reward
-  )),
+  ).plusEffectOf(InfinityChallenge(10))),
 
   timeStudies: new Lazy(() => NormalTimeStudyState.studies
     .map(s => player.timestudy.studies.includes(s.id))),
