@@ -18,7 +18,7 @@ export const logicChallenges = [
   {
     id: 2,
     description: () => `Normal Challenges are broken. Dimension Boost multiplier is reduced to ${formatX(1)} and Galaxies are disabled.`,
-    goal: BEC.E1750,
+    goal: BEC.E1650,
     reward: {
       description: "Decrease the requirement of Galaxies. Unlock exchange rate"
     },

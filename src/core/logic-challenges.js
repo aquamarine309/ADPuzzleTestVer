@@ -213,7 +213,7 @@ export const LC3 = {
   },
   
   get helpThreshold() {
-    return BEC.E1900;
+    return BEC.E1200;
   },
   
   reset() {
