@@ -163,11 +163,11 @@ export const infinityChallenges = [
   },
   {
     id: 11,
-    description: () => `Each consecutive Antimatter Dimension produces antimatter instead of the previous one. Galaxies are ${formatPercents(0.01)} stronger.`,
+    description: () => `Each consecutive Antimatter Dimension produces antimatter instead of the previous one. Galaxies are ${formatPercents(0.99)} weaker.`,
     goal: BEC.E10000,
     effect: 0.01,
     reward: {
-      description: "Improve Infinity Power formula.",
+      description: "Improve Infinity Power formula",
       effect: 0.1
     },
     unlockAM: BEC.E50505
