@@ -1,6 +1,7 @@
 import { BreakdownEntryInfo } from "./breakdown-entry-info.js";
 import { getResourceEntryInfoGroups } from "./breakdown-entry-info-group.js";
 import { PercentageRollingAverage } from "./percentage-rolling-average.js";
+import { BEC } from "../../../core/constants.js";
 import PrimaryToggleButton from "../../PrimaryToggleButton.js";
 
 // A few props are special-cased because they're base values which can be less than 1, but we don't want to
@@ -45,7 +46,7 @@ export default {
       lastLayoutChange: Date.now(),
       now: Date.now(),
       totalMultiplier: new BE(),
-      totalPositivePower: 1,
+      totalPositivePower: new BE(),
       replacePowers: player.options.multiplierTab.replacePowers,
       inNC12: false,
     };
@@ -116,6 +117,10 @@ export default {
         }
       }
       this.dilationExponent = this.resource.dilationEffect;
+      if (this.dilationExponent instanceof BE) {
+        console.log(this.resource);
+        throw `Dilation Exponent cannot be a Decimal`;
+      };
       this.isDilated = this.dilationExponent !== 1;
       this.calculatePercents();
       this.now = Date.now();
@@ -133,8 +138,8 @@ export default {
     },
     calculatePercents() {
       const powList = this.entries.map(e => e.data.pow);
-      const totalPosPow = powList.filter(p => p.gt(1)).reduce((x, y) => x.mul(y), new BE(1));
-      const totalNegPow = powList.filter(p => p.lt(1)).reduce((x, y) => x.mul(y), new BE(1));
+      const totalPosPow = powList.filter(p => p.gt(1)).reduce((x, y) => x.mul(y), BEC.D1);
+      const totalNegPow = powList.filter(p => p.lt(1)).reduce((x, y) => x.mul(y), BEC.D1);
       const log10Mult = (this.resource.fakeValue ?? this.resource.mult).log10().div(totalPosPow);
       const isEmpty = log10Mult.eq(0);
       if (!isEmpty) {
@@ -143,20 +148,20 @@ export default {
       let percentList = [];
       for (const entry of this.entries) {
         const multFrac = log10Mult.eq(0)
-          ? new BE()
+          ? BEC.D0
           : BE.log10(entry.data.mult).div(log10Mult);
         const powFrac = totalPosPow.eq(1)
-          ? new BE()
-          : BE.log(entry.data.pow, Math.E).div(BE.log(totalPosPow, Math.E));
+          ? BEC.D0
+          : BE.ln(entry.data.pow).div(BE.ln(totalPosPow));
 
         // Handle nerf powers differently from everything else in order to render them with the correct bar percentage
         const perc = entry.data.pow.gte(1)
-          ? multFrac.div(totalPosPow).add(powFrac.mul(new BE(1).sub(new BE(1).div(totalPosPow))))
-          : BE.log(entry.data.pow, Math.E).div(BE.log(totalNegPow)).mul(totalNegPow.sub(1));
+          ? multFrac.div(totalPosPow).add(powFrac.mul(BEC.D1.sub(BEC.D1.div(totalPosPow))))
+          : BE.ln(entry.data.pow).div(BE.ln(totalNegPow)).mul(totalNegPow.sub(1));
 
         // This is clamped to a minimum of something that's still nonzero in order to show it at <0.1% instead of 0%
         percentList.push(
-          [entry.ignoresNerfPowers, nerfBlacklist.includes(entry.key) ? BE.clampMin(perc, 0.0001) : perc]
+          [entry.ignoresNerfPowers, nerfBlacklist.includes(entry.key) ? BE.clampMin(perc, 0.0001).toNumberMax(1) : perc.toNumberMax(1)]
         );
       }
 
@@ -169,12 +174,13 @@ export default {
       // cleaner to adjust the class structure instead of specifically special-casing it here
       const totalPerc = percentList.filter(p => p[1] > 0).map(p => p[1]).sum();
       const nerfedPerc = percentList.filter(p => p[1] > 0)
-        .reduce((x, y) => x + (y[0] ? y[1] : y[1] * totalNegPow), 0);
+        .reduce((x, y) => x + (y[0] ? y[1] : y[1] * totalNegPow.toNumber()), 0);
       percentList = percentList.map(p => {
         if (p[1] > 0) {
-          return (p[0] ? p[1] : p[1] * totalNegPow) / nerfedPerc;
+          return (p[0] ? p[1] : p[1] * totalNegPow.toNumber()) / nerfedPerc;
         }
-        return Math.clampMin(p[1] * (totalPerc - nerfedPerc) / totalPerc / totalNegPow, -1);
+        // totalNegPow is always less than 1
+        return Math.clampMin(p[1] * (totalPerc - nerfedPerc) / totalPerc / totalNegPow.toNumber(), -1);
       });
       this.percentList = percentList;
       this.rollingAverage.add(isEmpty ? undefined : percentList);
@@ -260,16 +266,16 @@ export default {
             ? format(x, 2, 2)
             : formatX(x, 2, 2);
         };
-        if (this.replacePowers && entry.data.pow !== 1) {
+        if (this.replacePowers && entry.data.pow.neq(1)) {
           // For replacing powers with equivalent multipliers, we calculate what the total additional multiplier
           // from ALL power effects taken together would be, and then we split up that additional multiplier
           // proportionally to this individual power's contribution to all positive powers
-          const powFrac = Math.log(entry.data.pow) / Math.log(this.totalPositivePower);
-          const equivMult = this.totalMultiplier.pow((this.totalPositivePower - 1) * powFrac);
+          const powFrac = entry.data.pow.ln().div(this.totalPositivePower.ln());
+          const equivMult = this.totalMultiplier.pow(this.totalPositivePower.minus(1).times(powFrac));
           values.push(formatFn(entry.data.mult.times(equivMult)));
         } else {
           if (BE.neq(entry.data.mult, 1)) values.push(formatFn(entry.data.mult));
-          if (entry.data.pow !== 1) values.push(formatPow(entry.data.pow, 2, 3));
+          if (entry.data.pow.neq(1)) values.push(formatPow(entry.data.pow, 2, 3));
         }
         valueStr = values.length === 0 ? "" : `(${values.join(", ")})`;
       }
@@ -290,14 +296,14 @@ export default {
       if (overrideStr) valueStr = `(${overrideStr})`;
       else {
         const values = [];
-        if (this.replacePowers && entry.data.pow !== 1) {
+        if (this.replacePowers && entry.data.pow.neq(1)) {
           const finalMult = this.resource.fakeValue ?? this.resource.mult;
-          values.push(formatFn(finalMult.pow(1 - 1 / entry.data.pow)));
+          values.push(formatFn(finalMult.pow(BEC.D1.minus(entry.data.pow.reciprocal()))));
         } else {
-          if (BE.neq(entry.data.mult, 1)) {
+          if (entry.data.mult.neq(1)) {
             values.push(formatFn(entry.data.mult));
           }
-          if (entry.data.pow !== 1) values.push(formatPow(entry.data.pow, 2, 3));
+          if (entry.data.pow.neq(1)) values.push(formatPow(entry.data.pow, 2, 3));
         }
         valueStr = values.length === 0 ? "" : `(${values.join(", ")})`;
       }
@@ -316,7 +322,7 @@ export default {
         : `${name}: ${formatX(val, 2, 2)}`;
     },
     applyDilationExp(value, exp) {
-      return BE.pow10(value.log10() ** exp);
+      return BE.pow10(value.log10().pow(exp));
     },
     dilationString() {
       const resource = this.resource;
@@ -333,7 +339,7 @@ export default {
           .filter(entry => entry.isVisible && entry.isDilated)
           .map(entry => entry.mult)
           .map(val => this.applyDilationExp(val, 1 / this.dilationExponent))
-          .reduce((x, y) => x.times(y), new BE(1));
+          .reduce((x, y) => x.times(y), BEC.D1);
         beforeMult = dilProd.neq(1) ? dilProd : this.applyDilationExp(baseMult, 1 / this.dilationExponent);
         afterMult = resource.mult;
       } else {

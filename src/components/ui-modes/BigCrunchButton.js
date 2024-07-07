@@ -32,6 +32,11 @@ export default {
       return result;
     }
   },
+  watch: {
+    shouldDisplay() {
+      this.totalAmount = 0;
+    }
+  },
   methods: {
     update() {
       this.shouldDisplay = !player.break && Player.canCrunch;

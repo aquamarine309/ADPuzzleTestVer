@@ -27,9 +27,9 @@ export const ID = {
       : (PlayerProgress.eternityUnlocked() || InfinityDimension(1).isProducing)),
     dilationEffect: () => {
       const baseEff = player.dilation.active
-        ? 0.75 * Effects.product(DilationUpgrade.dilationPenalty)
-        : 1;
-      return baseEff * (Effarig.isRunning ? Effarig.multDilation : 1);
+        ? Effects.product(DilationUpgrade.dilationPenalty).times(0.75)
+        : BEC.D1;
+      return baseEff.times(Effarig.isRunning ? Effarig.multDilation : 1).toNumberMax(1);
     },
     isDilated: true,
     overlay: ["∞", "<i class='fa-solid fa-cube' />"],
@@ -39,7 +39,7 @@ export const ID = {
     name: dim => (dim ? `Purchased ID ${dim}` : "Purchases"),
     multValue: dim => {
       const getMult = id => BE.pow(InfinityDimension(id).powerMultiplier,
-        Math.floor(InfinityDimension(id).baseAmount / 10));
+        InfinityDimension(id).baseAmount.div(10).floor());
       if (dim) return getMult(dim);
       return InfinityDimensions.all
         .filter(id => id.isProducing)
@@ -65,8 +65,8 @@ export const ID = {
     multValue: dim => {
       const getMult = id => {
         const purchases = id === 8
-          ? Math.floor(InfinityDimension(id).baseAmount / 10)
-          : Math.min(InfinityDimensions.HARDCAP_PURCHASES, Math.floor(InfinityDimension(id).baseAmount / 10));
+          ? InfinityDimension(id).baseAmount.div(10).floor()
+          : BE.min(InfinityDimensions.HARDCAP_PURCHASES, InfinityDimension(id).baseAmount.div(10).floor());
         const baseMult = InfinityDimension(id)._powerMultiplier;
         return BE.pow(baseMult, purchases);
       };
@@ -84,9 +84,9 @@ export const ID = {
     multValue: dim => {
       const getMult = id => {
         if (id === 8) return BEC.D1;
-        const purchases = Math.floor(InfinityDimension(id).baseAmount / 10);
+        const purchases = InfinityDimension(id).baseAmount.div(10).floor();
         return BE.pow(InfinityDimension(id)._powerMultiplier,
-          Math.clampMin(purchases - InfinityDimensions.HARDCAP_PURCHASES, 0));
+          BE.clampMin(purchases.minus(InfinityDimensions.HARDCAP_PURCHASES), 0));
       };
       if (dim) return getMult(dim);
       return InfinityDimensions.all
@@ -100,7 +100,7 @@ export const ID = {
   infinityGlyphSacrifice: {
     name: "Infinity Glyph sacrifice",
     multValue: () => (InfinityDimension(8).isProducing
-      ? BE.pow(GlyphSacrifice.infinity.effectValue, Math.floor(InfinityDimension(8).baseAmount / 10))
+      ? BE.pow(GlyphSacrifice.infinity.effectValue, InfinityDimension(8).baseAmount.div(10).floor())
       : BEC.D1),
     isActive: () => GlyphSacrifice.infinity.effectValue > 1,
     icon: MultiplierTabIcons.SACRIFICE("infinity"),
@@ -114,13 +114,13 @@ export const ID = {
 
   replicanti: {
     name: "Replicanti Multiplier",
-    multValue: dim => BE.pow(replicantiMult(), dim ? 1 : MultiplierTabHelper.activeDimCount("ID")),
+    multValue: dim => BE.pow(replicantiMult(), dim ? BEC.D1 : MultiplierTabHelper.activeDimCount("ID")),
     isActive: () => Replicanti.areUnlocked,
     icon: MultiplierTabIcons.SPECIFIC_GLYPH("replication"),
   },
   achievementMult: {
     name: "Achievement Multiplier",
-    multValue: dim => BE.pow(Achievements.power, dim ? 1 : MultiplierTabHelper.activeDimCount("ID")),
+    multValue: dim => BE.pow(Achievements.power, dim ? BEC.D1 : MultiplierTabHelper.activeDimCount("ID")),
     isActive: () => Achievement(75).canBeApplied && !Pelle.isDoomed,
     icon: MultiplierTabIcons.ACHIEVEMENT,
   },
@@ -293,5 +293,12 @@ export const ID = {
     powValue: 0.5,
     isActive: () => PelleStrikes.powerGalaxies.hasStrike,
     icon: MultiplierTabIcons.PELLE,
+  },
+  logicChallenge: {
+    name: "Logic Challenges",
+    multValue: dim => BE.pow(LogicChallenge(5).effectOrDefault(1), dim ? 1 : MultiplierTabHelper.activeDimCount("ID")),
+    powValue: () => LogicChallenge(7).effects.dimPow.effectOrDefault(1),
+    isActive: () => LogicChallenge.isRunning,
+    icon: MultiplierTabIcons.CHALLENGE("logic")
   }
 };

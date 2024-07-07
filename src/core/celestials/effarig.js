@@ -95,10 +95,10 @@ export const Effarig = {
     return BE.div(1, BE.div(c, power.pLog10().sqrt().plus(c))).times(3);
   },
   get tickDilation() {
-    return this.nerfFactor(Currency.timeShards.value).times(0.1).plus(0.7);
+    return this.nerfFactor(Currency.timeShards.value).times(0.1).plus(0.7).toNumberMax(1);
   },
   get multDilation() {
-    return this.nerfFactor(Currency.infinityPower.value).times(0.25).plus(0.25);
+    return this.nerfFactor(Currency.infinityPower.value).times(0.25).plus(0.25).toNumberMax(1);
   },
   get tickspeed() {
     const base = Tickspeed.baseValue.reciprocal().log10().plus(3);

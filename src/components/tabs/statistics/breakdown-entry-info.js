@@ -21,9 +21,12 @@ export class BreakdownEntryInfo {
     this._isDilated = createGetter(dbEntry.isDilated, args);
     this._isBase = createGetter(dbEntry.isBase, args);
     this._ignoresNerfPowers = createGetter(dbEntry.ignoresNerfPowers, args);
+    // Do not replace new BE (0) with BEC.D0. BEC.D0 is read-only
+    // While this is updating, BEC.D0.fromBE() will change its value
+    // This is a well-intentioned note. Written by @aquamarine
     this.data = Vue.observable({
       mult: new BE(0),
-      pow: 0,
+      pow: new BE(0),
       isVisible: false,
       lastVisibleAt: 0
     });
@@ -32,7 +35,7 @@ export class BreakdownEntryInfo {
   update() {
     const isVisible = this.isVisible;
     this.data.mult.fromBE(isVisible ? this.mult : BEC.D1);
-    this.data.pow = isVisible ? this.pow : 1;
+    this.data.pow.fromBE(isVisible ? this.pow : BEC.D1);
     this.data.isVisible = isVisible;
     if (isVisible) {
       this.data.lastVisibleAt = Date.now();
@@ -48,7 +51,7 @@ export class BreakdownEntryInfo {
   }
 
   get pow() {
-    return this._powValue() ?? 1;
+    return new BE(this._powValue() ?? 1);
   }
 
   get dilationEffect() {
@@ -84,7 +87,7 @@ export class BreakdownEntryInfo {
   }
 
   get isVisible() {
-    return this.isActive && (this.pow !== 1 || this.mult.neq(1));
+    return this.isActive && (this.pow.neq(1) || this.mult.neq(1));
   }
 }
 

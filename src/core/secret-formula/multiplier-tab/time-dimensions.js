@@ -40,7 +40,7 @@ export const TD = {
     multValue: dim => {
       const getMult = td => {
         const d = TimeDimension(td);
-        const bought = td === 8 ? Math.clampMax(d.bought, 1e8) : d.bought;
+        const bought = td === 8 ? BE.clampMax(d.bought, 1e8) : d.bought;
         return BE.pow(d.powerMultiplier, bought);
       };
       if (dim) return getMult(dim);
@@ -67,7 +67,7 @@ export const TD = {
     name: "Base purchases",
     multValue: dim => {
       const getMult = td => BE.pow(4,
-        td === 8 ? Math.clampMax(TimeDimension(td).bought, 1e8) : TimeDimension(td).bought);
+        td === 8 ? BE.clampMax(TimeDimension(td).bought, 1e8) : TimeDimension(td).bought);
       if (dim) return getMult(dim);
       return TimeDimensions.all
         .filter(td => td.isProducing)
@@ -82,7 +82,7 @@ export const TD = {
   timeGlyphSacrifice: {
     name: "Time Glyph Sacrifice",
     multValue: () => (TimeDimension(8).isProducing
-      ? BE.pow(GlyphSacrifice.time.effectValue, Math.clampMax(TimeDimension(8).bought, 1e8))
+      ? BE.pow(GlyphSacrifice.time.effectValue, BE.clampMax(TimeDimension(8).bought, 1e8))
       : BEC.D1),
     isActive: () => GlyphSacrifice.time.effectValue > 1,
     icon: MultiplierTabIcons.SACRIFICE("time"),
@@ -263,4 +263,10 @@ export const TD = {
     isActive: () => getAdjustedGlyphEffect("curseddimensions") !== 1,
     icon: MultiplierTabIcons.SPECIFIC_GLYPH("cursed"),
   },
+  logicChallenge: {
+    name: "Logic Challenge 7",
+    powValue: () => LogicChallenge(7).effects.dimPow.effectValue,
+    isActive: () => LogicChallenge(7).canBeApplied,
+    icon: MultiplierTabIcons.CHALLENGE("logic")
+  }
 };

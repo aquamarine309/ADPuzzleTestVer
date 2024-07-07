@@ -244,6 +244,9 @@ Currency.antimatter = new class extends BECurrency {
   }
 
   get productionPerSecond() {
+    if (InfinityChallenge(11).isRunning) {
+      return AntimatterDimensions.all.map(dim => dim.productionPerRealSecond).reduce(BE.sumReducer);
+    };
     return NormalChallenge(12).isRunning
       ? AntimatterDimension(1).productionPerRealSecond.plus(AntimatterDimension(2).productionPerRealSecond)
       : AntimatterDimension(1).productionPerRealSecond;

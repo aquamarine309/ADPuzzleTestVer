@@ -596,14 +596,14 @@ window.player = {
     intervalUpgrades: 0,
     powerUpgrades: 0,
     durationUpgrades: 0,
-    phase: 0,
+    phase: BEC.D0,
     active: false,
     unlocked: false,
-    activations: 0,
+    activations: BEC.D0,
   })),
   blackHolePause: false,
   blackHoleAutoPauseMode: 0,
-  blackHolePauseTime: 0,
+  blackHolePauseTime: BEC.D0,
   blackHoleNegative: 1,
   celestials: {
     teresa: {

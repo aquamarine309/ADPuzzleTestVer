@@ -140,4 +140,26 @@ export const general = {
       };
     },
   },
+  logicChallenge: {
+    name: lc => `Logic Challenge ${lc}`,
+    multValue: (lc, dim) => {
+      if (lc !== 5) return 1;
+      if (dim?.length === 2) {
+        return BE.pow(LogicChallenge(5).effectOrDefault(1), MultiplierTabHelper.activeDimCount(dim));
+      }
+      return LogicChallenge(5).effectOrDefault(1);
+    },
+    powValue: (lc, dim) => {
+      if (lc !== 7) return 1;
+      return LogicChallenge(7).effects.dimPow.effectOrDefault(1);
+    },
+    isActive: lc => LogicChallenge(lc).canBeApplied,
+    icon: lc => {
+      const base = MultiplierTabIcons.CHALLENGE("logic");
+      return {
+        color: base.color,
+        symbol: `${base.symbol}${lc}`,
+      };
+    },
+  }
 };

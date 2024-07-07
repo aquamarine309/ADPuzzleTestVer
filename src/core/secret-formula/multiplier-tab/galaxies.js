@@ -8,11 +8,11 @@ export const galaxies = {
   antimatter: {
     name: "Antimatter Galaxies",
     displayOverride: () => {
-      const num = player.galaxies + GalaxyGenerator.galaxies;
+      const num = player.galaxies.plus(GalaxyGenerator.galaxies);
       const mult = MultiplierTabHelper.globalGalaxyMult();
       return `${formatInt(num)}, ${formatX(mult, 2, 2)} strength`;
     },
-    multValue: () => BE.pow10(player.galaxies + GalaxyGenerator.galaxies),
+    multValue: () => BE.pow10(player.galaxies.plus(GalaxyGenerator.galaxies)),
     isActive: true,
     icon: MultiplierTabIcons.ANTIMATTER,
   },
@@ -21,19 +21,19 @@ export const galaxies = {
     displayOverride: () => {
       const num = Replicanti.galaxies.total;
       let rg = Replicanti.galaxies.bought;
-      rg *= (1 + Effects.sum(TimeStudy(132), TimeStudy(133)));
-      rg += Replicanti.galaxies.extra;
-      rg += Math.min(Replicanti.galaxies.bought, ReplicantiUpgrade.galaxies.value) *
-          Effects.sum(EternityChallenge(8).reward);
-      const mult = rg / Math.clampMin(num, 1) * MultiplierTabHelper.globalGalaxyMult();
+      rg = rg.times(Effects.sum(TimeStudy(132), TimeStudy(133)).add(1));
+      rg = rg.add(Replicanti.galaxies.extra);
+      rg = rg.add(BE.min(Replicanti.galaxies.bought, ReplicantiUpgrade.galaxies.value).times
+          (Effects.sum(EternityChallenge(8).reward)));
+      const mult = rg.div(BE.clampMin(num, 1)).times(MultiplierTabHelper.globalGalaxyMult());
       return `${formatInt(num)}, ${formatX(mult, 2, 2)} strength`;
     },
     multValue: () => {
       let rg = Replicanti.galaxies.bought;
-      rg *= (1 + Effects.sum(TimeStudy(132), TimeStudy(133)));
-      rg += Replicanti.galaxies.extra;
-      rg += Math.min(Replicanti.galaxies.bought, ReplicantiUpgrade.galaxies.value) *
-          Effects.sum(EternityChallenge(8).reward);
+      rg = rg.times(Effects.sum(TimeStudy(132), TimeStudy(133)).add(1));
+      rg = rg.add(Replicanti.galaxies.extra);
+      rg = rg.add(BE.min(Replicanti.galaxies.bought, ReplicantiUpgrade.galaxies.value).times
+          (Effects.sum(EternityChallenge(8).reward)));
       return BE.pow10(rg);
     },
     isActive: () => Replicanti.areUnlocked,
@@ -43,8 +43,8 @@ export const galaxies = {
     name: "Tachyon Galaxies",
     displayOverride: () => {
       const num = player.dilation.totalTachyonGalaxies;
-      const mult = MultiplierTabHelper.globalGalaxyMult() *
-          (1 + Math.max(0, Replicanti.amount.log10() / 1e6) * AlchemyResource.alternation.effectValue);
+      const mult = MultiplierTabHelper.globalGalaxyMult().times
+          (BE.max(0, Replicanti.amount.log10().div(1e6).plus(1)).times(AlchemyResource.alternation.effectValue));
       return `${formatInt(num)}, ${formatX(mult, 2, 2)} strength`;
     },
     multValue: () => {

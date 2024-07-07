@@ -4,8 +4,8 @@ export const logicChallenges = [
   {
     id: 1,
     description: () => `All Antimatter Dimensions produce less (${formatPow(0.4, 1, 1)}).
-    Dimensions multiplier will multiply the amount instead of the production, except for the highest dimension.
-    Buy ten multiplier is reduced to ${formatX(0.2, 0, 1)}.`,
+      Dimensions multiplier will multiply the amount instead of the production, except for the highest dimension.
+      Buy ten multiplier is reduced to ${formatX(0.2, 0, 1)}.`,
     goal: BE.NUMBER_MAX_VALUE,
     effects: {
       dimensionPow: 0.4,
@@ -45,7 +45,9 @@ export const logicChallenges = [
   },
   {
     id: 5,
-    description: "Infinity Dimensions multiplier based on Galaxies. Galaxies no longer affect Tickspeed. Tickspeed no longer affect Antimatter Dimensions production. Disable the multiplier from Logic Points and Exchange Level. Decrease conversion rate of Infinity Power.",
+    description: `Infinity Dimensions multiplier based on Galaxies. Galaxies no longer affect Tickspeed.
+      Tickspeed no longer affect Antimatter Dimensions production. Disable the multiplier from Logic Points and Exchange Level.
+      Decrease conversion rate of Infinity Power.`,
     goal: BEC.E5000,
     effect: () => BEC.D2.pow(BE.pow(1.03, effectiveBaseGalaxies())),
     formatEffect: value => formatX(value, 3, 3),

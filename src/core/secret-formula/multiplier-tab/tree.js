@@ -7,13 +7,13 @@ const dynamicGenProps = ["TP", "DT", "infinities", "eternities", "gamespeed", "r
 const propList = {
   AD: ["purchase", "dimboost", "sacrifice", "achievementMult", "achievement", "infinityUpgrade",
     "breakInfinityUpgrade", "infinityPower", "infinityChallenge", "timeStudy", "eternityChallenge", "glyph", "v",
-    "alchemy", "pelle", "iap", "effectNC", "nerfIC", "nerfV", "nerfCursed", "nerfPelle", "DLC", "exchangeMult"],
+    "alchemy", "pelle", "iap", "effectNC", "nerfIC", "nerfV", "nerfCursed", "nerfPelle", "DLC", "exchangeMult", "nerfLC"],
   ID: ["purchase", "achievementMult", "achievement", "replicanti", "infinityChallenge", "timeStudy", "eternityUpgrade",
-    "eternityChallenge", "glyph", "alchemy", "imaginaryUpgrade", "pelle", "iap", "nerfV", "nerfCursed", "nerfPelle"],
+    "eternityChallenge", "glyph", "alchemy", "imaginaryUpgrade", "pelle", "iap", "nerfV", "nerfCursed", "nerfPelle", "logicChallenge"],
   TD: ["purchase", "achievementMult", "achievement", "timeStudy", "eternityUpgrade", "eternityChallenge",
-    "dilationUpgrade", "realityUpgrade", "glyph", "alchemy", "imaginaryUpgrade", "pelle", "iap", "nerfV", "nerfCursed"],
+    "dilationUpgrade", "realityUpgrade", "glyph", "alchemy", "imaginaryUpgrade", "pelle", "iap", "nerfV", "nerfCursed", "logicChallenge"],
   IP: ["base", "infinityUpgrade", "achievement", "timeStudy", "dilationUpgrade", "glyph", "alchemy", "pelle", "iap",
-    "nerfTeresa", "nerfV"],
+    "nerfTeresa", "nerfV", "exchange"],
   EP: ["base", "eternityUpgrade", "timeStudy", "glyph", "realityUpgrade", "pelle", "iap", "nerfTeresa", "nerfV"],
 };
 
@@ -28,10 +28,16 @@ for (const prop of dynamicGenProps) {
 
 // Used for individual dimension breakdowns of effects (eg. full achievement mult into its values on individual ADs)
 // Results in an array of ["key_1", "key_2", ... , "key_8"]
-function append8(key) {
+function appendCount(key, count) {
   const props = [];
-  for (let dim = 1; dim <= 8; dim++) props.push(`${key}_${dim}`);
+  for (let dim = 1; dim <= count; dim++) props.push(`${key}_${dim}`);
   return props;
+}
+
+// Used for individual dimension breakdowns of effects (eg. full achievement mult into its values on individual ADs)
+// Results in an array of ["key_1", "key_2", ... , "key_8"]
+function append8(key) {
+  return appendCount(key, 8);
 }
 
 // Helper method to create very long lists of entries in the tree; format is "RESOURCE_SOURCE_DIMENSION"
@@ -48,7 +54,7 @@ function getProps(resource, tier) {
 // specification, all children props are dynamically added based on the arrays in the helper functions above
 export const multiplierTabTree = {
   AM_total: [
-    ["AD_total", "tickspeed_total", "AM_effarigAM"]
+    ["AD_total", "tickspeed_total", "AM_effarigAM", "AM_lc3AM", "AM_lc7AM"]
   ],
   AD_total: [
     getProps("AD"),
@@ -143,6 +149,11 @@ const targetedEffects = {
     ID: [2, 4, 9],
     TD: [1, 10],
   },
+  logicChallenge: {
+    checkFn: MultiplierTabHelper.LCDimCheck,
+    ID: [5, 7],
+    TD: [7]
+  }
 };
 
 // Highest actively-producing dimensions need a special case
@@ -169,7 +180,7 @@ const removedRegexes = ["AD_sacrifice", "AD_breakInfinityUpgrade", "AD_nerfIC", 
   "ID_replicanti", "ID_infinityChallenge", "ID_eternityUpgrades",
   "TD_achievement", "TD_eternityUpgrade", "TD_dilationUpgrade", "TD_realityUpgrade",
   ".._achievementMult", ".._glyph", ".._alchemy", ".._imaginaryUpgrade", ".._iap",
-  ".._nerfV", ".._nerfCursed", ".._nerfPelle", ".._pelle", ".._exchangeMult", ".._DLC"
+  ".._nerfV", ".._nerfCursed", ".._nerfPelle", ".._pelle", ".._exchangeMult", ".._DLC", ".._nerfLC", ".._logicChallenge"
 ];
 const removedProps = Object.keys(multiplierTabTree)
   .filter(key => removedRegexes.some(regex => key.match(regex)));

@@ -1639,7 +1639,7 @@ export const news = [
     id: "a271",
     text:
       `<i style='border: 0.1rem solid black; border-radius: 50%; padding: 0.4rem; color: #2196F3; background: white;
-      cursor: pointer;' class='fas fa-volume-up' onClick='(function(){new Audio("audio/news.mp3").play();})();'>
+      cursor: pointer;' class='fas fa-volume-up' onClick='(function(){new Audio("public/audio/news.mp3").play();})();'>
       </i> This news message is a test of "News 2.0". News 2.0 will feature things like the ability to listen to
       an audio version of any news message!`
   },
@@ -2302,7 +2302,7 @@ export const news = [
   {
     id: "a355",
     text:
-      `<div style='background: url("./images/unsmith.png"); width: 2.3rem; height: 2.5rem; margin-top: -0.1rem'></div>`
+      `<div style='background: url("./public/images/unsmith.png"); width: 2.3rem; height: 2.5rem; margin-top: -0.1rem'></div>`
   },
   {
     id: "a356",
@@ -2596,7 +2596,7 @@ export const news = [
   {
     id: "l1",
     text: "You just made your 1,000,000,000,000,000th antimatter. This one tastes like chicken.",
-    get unlocked() { return Currency.antimatter.exponent === 15; }
+    get unlocked() { return Currency.antimatter.value.pLog10().floor().eq(15); }
   },
   {
     id: "l2",
@@ -2777,19 +2777,19 @@ export const news = [
     id: "l27",
     text:
       "New strange material was been found. It seems to grow exponentially, but only helps with antimatter production.",
-    get unlocked() { return PlayerProgress.replicantiUnlocked() && player.replicanti.chance === 0.01; }
+    get unlocked() { return PlayerProgress.replicantiUnlocked() && player.replicanti.chance.eq(0.01); }
   },
   {
     id: "l28",
     text: "It seems this \"replicanti\" stuff won't be growing any faster now.",
-    get unlocked() { return player.replicanti.chance === 1 && player.replicanti.interval === 1; }
+    get unlocked() { return player.replicanti.chance.eq(1) && player.replicanti.interval.eq(1); }
   },
   {
     id: "l29",
     text:
       `If you wrote down 3 numbers a second, it would take you less time to write down your antimatter
       amount than it would Hevipelle to update the game.`,
-    get unlocked() { return Currency.antimatter.exponent >= 100000; }
+    get unlocked() { return Currency.antimatter.value.pLog10().gte(100000); }
   },
   {
     id: "l30",

@@ -13,7 +13,7 @@ export const IP = {
     // This effectively hides everything if the player can't actually gain any
     multValue: () => (Player.canCrunch ? gainedInfinityPoints() : 1),
     isActive: () => PlayerProgress.infinityUnlocked() || Player.canCrunch,
-    dilationEffect: () => (Laitela.isRunning ? 0.75 * Effects.product(DilationUpgrade.dilationPenalty) : 1),
+    dilationEffect: () => (Laitela.isRunning ? Effects.product(DilationUpgrade.dilationPenalty).times(0.75).toNumberMax(1) : 1),
     isDilated: true,
     overlay: ["∞", "<i class='fa-solid fa-layer-group' />"],
   },
@@ -22,6 +22,7 @@ export const IP = {
     isBase: true,
     fakeValue: BEC.D5,
     multValue: () => {
+      if (LogicChallenge.isRunning) return BEC.D1;
       const div = Effects.min(308, Achievement(103), TimeStudy(111));
       return BE.pow10(player.records.thisInfinity.maxAM.log10().div(div).minus(0.75));
     },
@@ -33,7 +34,7 @@ export const IP = {
     displayOverride: () => `${format(player.records.thisInfinity.maxAM, 2, 2)} AM`,
     // Just needs to match the value in base and be larger than 1
     multValue: BEC.D5,
-    isActive: () => player.break,
+    isActive: () => player.break && !LogicChallenge.isRunning,
     icon: MultiplierTabIcons.ANTIMATTER,
   },
   divisor: {
@@ -42,14 +43,14 @@ export const IP = {
       const div = Effects.min(308, Achievement(103), TimeStudy(111));
       return `log(AM)/${formatInt(308)} ➜ log(AM)/${format(div, 2, 1)}`;
     },
-    powValue: () => 308 / Effects.min(308, Achievement(103), TimeStudy(111)),
-    isActive: () => Achievement(103).canBeApplied || TimeStudy(111).isBought,
+    powValue: () => BE.div(308, Effects.min(308, Achievement(103), TimeStudy(111))),
+    isActive: () => (Achievement(103).canBeApplied || TimeStudy(111).isBought) && !LogicChallenge.isRunning,
     icon: MultiplierTabIcons.DIVISOR("IP"),
   },
   infinityUpgrade: {
     name: () => `Infinity Upgrade - Repeatable ${formatX(2)} IP`,
     multValue: () => InfinityUpgrade.ipMult.effectOrDefault(1),
-    isActive: () => player.break && !Pelle.isDoomed,
+    isActive: () => player.break && !Pelle.isDoomed && !LogicChallenge.isRunning,
     icon: MultiplierTabIcons.UPGRADE("infinity"),
   },
   achievement: {
@@ -62,7 +63,7 @@ export const IP = {
       Achievement(125),
       Achievement(141).effects.ipGain,
     ),
-    isActive: () => player.break && !Pelle.isDoomed,
+    isActive: () => player.break && !Pelle.isDoomed && !LogicChallenge.isRunning,
     icon: MultiplierTabIcons.ACHIEVEMENT,
   },
   timeStudy: {
@@ -74,51 +75,57 @@ export const IP = {
       TimeStudy(142),
       TimeStudy(143),
     ),
-    isActive: () => player.break && !Pelle.isDoomed,
+    isActive: () => player.break && !Pelle.isDoomed && !LogicChallenge.isRunning,
     icon: MultiplierTabIcons.TIME_STUDY,
   },
   dilationUpgrade: {
     name: "Dilation Upgrade - IP multiplier based on DT",
     multValue: () => DilationUpgrade.ipMultDT.effectOrDefault(1),
-    isActive: () => DilationUpgrade.ipMultDT.canBeApplied,
+    isActive: () => DilationUpgrade.ipMultDT.canBeApplied && !LogicChallenge.isRunning,
     icon: MultiplierTabIcons.UPGRADE("dilation"),
   },
   glyph: {
     name: "Equipped Glyphs",
     multValue: () => Pelle.specialGlyphEffect.infinity.times(Pelle.isDoomed ? 1 : getAdjustedGlyphEffect("infinityIP")),
     powValue: () => (GlyphAlteration.isAdded("infinity") ? getSecondaryGlyphEffect("infinityIP") : 1),
-    isActive: () => PlayerProgress.realityUnlocked(),
+    isActive: () => PlayerProgress.realityUnlocked() && !LogicChallenge.isRunning,
     icon: MultiplierTabIcons.GENERIC_GLYPH,
   },
   alchemy: {
     name: "Glyph Alchemy",
     multValue: () => Replicanti.amount.powEffectOf(AlchemyResource.exponential),
-    isActive: () => Ra.unlocks.unlockGlyphAlchemy.canBeApplied,
+    isActive: () => Ra.unlocks.unlockGlyphAlchemy.canBeApplied && !LogicChallenge.isRunning,
     icon: MultiplierTabIcons.ALCHEMY,
   },
   pelle: {
     name: "Pelle Strike - Vacuum Rift",
     multValue: () => BEC.D1.timesEffectsOf(PelleRifts.vacuum),
-    isActive: () => Pelle.isDoomed,
+    isActive: () => Pelle.isDoomed && !LogicChallenge.isRunning,
     icon: MultiplierTabIcons.PELLE,
   },
   iap: {
     name: "Shop Tab Purchases",
     multValue: () => ShopPurchase.IPPurchases.currentMult,
-    isActive: () => ShopPurchaseData.totalSTD > 0,
+    isActive: () => ShopPurchaseData.totalSTD > 0 && !LogicChallenge.isRunning,
     icon: MultiplierTabIcons.IAP,
   },
 
   nerfTeresa: {
     name: "Teresa's Reality",
     powValue: () => 0.55,
-    isActive: () => Teresa.isRunning,
+    isActive: () => Teresa.isRunning && !LogicChallenge.isRunning,
     icon: MultiplierTabIcons.GENERIC_TERESA,
   },
   nerfV: {
     name: "V's Reality",
     powValue: () => 0.5,
-    isActive: () => V.isRunning,
+    isActive: () => V.isRunning && !LogicChallenge.isRunning,
     icon: MultiplierTabIcons.GENERIC_V,
   },
+  exchange: {
+    name: "Resource Exchange",
+    multValue: () => LogicChallenge(7).reward.effectValue,
+    isActive: () => LogicChallenge(7).reward.canBeApplied && !LogicChallenge.isRunning,
+    icon: MultiplierTabIcons.EXCHANGE
+  }
 };

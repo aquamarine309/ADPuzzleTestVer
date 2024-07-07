@@ -49,6 +49,8 @@ export const MultiplierTabIcons = {
         return { symbol: `<b>∞</b>${tierText}`, color: "var(--color-infinity)" };
       case "eternity":
         return { symbol: `<b>Δ</b>${tierText}`, color: "var(--color-eternity)" };
+      case "logic":
+        return { symbol: `<i class='fas fa-puzzle-piece'></i>${tierText}`, color: "var(--color-logic)" };
       default:
         throw new Error("Unrecognized challenge type in multiplier tab icons");
     }

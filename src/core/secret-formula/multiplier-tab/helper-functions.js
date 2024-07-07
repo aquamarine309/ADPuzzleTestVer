@@ -30,7 +30,12 @@ export const MultiplierTabHelper = {
       Achievement(178),
       InfinityChallenge(5).reward,
       PelleUpgrade.galaxyPower,
-      PelleRifts.decay.milestones[1]
+      PelleRifts.decay.milestones[1],
+      LogicChallenge(6),
+      LogicChallenge(6).reward,
+      LogicChallenge(7).effects.galMul,
+      InfinityChallenge(9),
+      InfinityChallenge(11)
     ).times(Pelle.specialGlyphEffect.power);
   },
 
@@ -58,7 +63,7 @@ export const MultiplierTabHelper = {
       effectiveCount = effectiveCount.times(Pelle.specialGlyphEffect.power);
 
       tickFrac = Tickspeed.totalUpgrades.times(logBase);
-      galFrac = BE.max(0.01, BE.minus(1 / baseMult, effectiveCount.times(perGalaxy))).log10().times(-1).div(logBase);
+      galFrac = BE.max(0.01, BE.minus(1 / baseMult, effectiveCount.times(perGalaxy))).log10().neg().div(logBase);
     } else {
       effectiveCount = effectiveCount.minus(2);
       effectiveCount = effectiveCount.times(effects);
@@ -68,7 +73,7 @@ export const MultiplierTabHelper = {
       // These all need to be framed as INCREASING x/sec tick rate (ie. all multipliers > 1, all logs > 0)
       const baseMult = 0.965 ** 2 / (NormalChallenge(5).isRunning ? 0.83 : 0.8);
       const logBase = Math.log10(baseMult);
-      const logPerGalaxy = BEC.D0_965.log10().times(-1);
+      const logPerGalaxy = BEC.D0_965.log10().neg();
 
       tickFrac = Tickspeed.totalUpgrades.times(logBase);
       galFrac = effectiveCount.div(logBase).times(logPerGalaxy).plus(1);
@@ -181,17 +186,29 @@ export const MultiplierTabHelper = {
     }
   },
 
+  // Helper method to check for whether an LC reward affects a particular dimension or not, see achievementDimCheck()
+  LCDimCheck(lc, dimStr) {
+    switch (lc) {
+      case 5:
+        return dimStr.substr(0, 2) === "ID";
+      case 7:
+        return dimStr.substr(0, 2) === "ID" || dimStr.substr(0, 2) === "TD";
+      default:
+        return false;
+    }
+  },
+
   blackHoleSpeeds() {
     const currBH = BlackHoles.list
       .filter(bh => bh.isUnlocked)
-      .map(bh => (bh.isActive ? bh.power : 1))
-      .reduce((x, y) => x * y, 1);
+      .map(bh => (bh.isActive ? bh.power : BEC.D1))
+      .reduce((x, y) => x.times(y), BEC.D1);
 
     // Calculate an average black hole speedup factor
     const bh1 = BlackHole(1);
     const bh2 = BlackHole(2);
-    const avgBH = 1 + (bh1.isUnlocked ? bh1.dutyCycle * (bh1.power - 1) : 0) +
-        (bh2.isUnlocked ? bh1.dutyCycle * bh2.dutyCycle * bh1.power * (bh2.power - 1) : 0);
+    const avgBH = bh1.isUnlocked ? bh1.dutyCycle.times(bh1.power.minus(1)) : BEC.D0.add(1).add
+        (bh2.isUnlocked ? bh1.dutyCycle.times(bh2.dutyCycle).times(bh1.power).times(bh2.power.minus(1)) : BEC.D0);
 
     return {
       current: currBH,
@@ -206,8 +223,12 @@ export const MultiplierTabHelper = {
   // All of the following NC12-related functions are to make the parsing within the GameDB entry easier in terms of
   // which set of Dimensions are actually producing within NC12 - in nearly every case, one of the odd/even sets will
   // produce significantly more than the other, so we simply assume the larger one is active and the other isn't
+  // ADPuzzle rebalanced C12 pow to ADs
+  // 2nd:        ^7.5
+  // 4th:        ^5.0
+  // 6th:        ^2.5
   evenDimNC12Production() {
-    const nc12Pow = tier => ([2, 4, 6].includes(tier) ? 0.1 * (8 - tier) : 0);
+    const nc12Pow = tier => ([2, 4, 6].includes(tier) ? 9 - tier * 1.25 : 0);
     const maxTier = Math.clampMin(2 * Math.floor(MultiplierTabHelper.activeDimCount("AD") / 2), 2);
     return AntimatterDimensions.all
       .filter(ad => ad.isProducing && ad.tier % 2 === 0)
@@ -230,7 +251,7 @@ export const MultiplierTabHelper = {
   },
 
   multInNC12(dim) {
-    const nc12Pow = tier => ([2, 4, 6].includes(tier) ? 0.1 * (8 - tier) : 0);
+    const nc12Pow = tier => ([2, 4, 6].includes(tier) ? 9 - tier * 1.25 : 0);
     const ad = AntimatterDimension(dim);
     return ad.isProducing ? ad.multiplier.times(ad.totalAmount.pow(nc12Pow(dim))) : BEC.D1;
   },
