@@ -101,6 +101,23 @@ export default {
         property="maxDimBoosts"
       />
     </template>
+    <template
+      v-else
+      #checkboxSlot
+    >
+      <label
+        class="o-autobuyer-toggle-checkbox o-clickable"
+        data-v-dimension-boost-autobuyer-box
+      >
+        <input
+          v-model="buyMax"
+          type="checkbox"
+          class="o-clickable"
+          data-v-dimension-boost-autobuyer-box
+        >
+        Buy Max
+      </label>
+    </template>
     <template #toggleSlot>
       <label
         class="o-autobuyer-toggle-checkbox c-autobuyer-box__small-text l-autobuyer-text-area o-clickable"
@@ -126,23 +143,6 @@ export default {
         type="int"
         property="galaxies"
       />
-    </template>
-    <template
-      v-if="isBuyMaxUnlocked"
-      #checkboxSlot
-    >
-      <label
-        class="o-autobuyer-toggle-checkbox o-clickable"
-        data-v-dimension-boost-autobuyer-box
-      >
-        <input
-          v-model="buyMax"
-          type="checkbox"
-          class="o-clickable"
-          data-v-dimension-boost-autobuyer-box
-        >
-        Buy Max
-      </label>
     </template>
   </AutobuyerBox>
   `

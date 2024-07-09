@@ -70,7 +70,10 @@ window.player = {
     },
     spentPoints: BEC.D0,
     upgradeBits: 0,
-    upgReqs: 0
+    upgReqs: 0,
+    difficulty: 0,
+    initialSeed: Math.floor(Math.random() * Date.now()) + 1,
+    seed: 0
   },
   extraBonusTimeLeft: BEC.D0,
   crunchPunishment: {

@@ -57,9 +57,8 @@ export class PlayerProgress {
   }
 
   static seenAlteredSpeed() {
-    const ec12 = EternityChallenge(12);
     const lc4 = LogicChallenge(4);
-    return this.realityUnlocked() || ec12.completions > 0 || ec12.isRunning || lc4.isCompleted || lc4.isRunning;
+    return this.eternityUnlocked() || lc4.isCompleted || lc4.isRunning;
   }
 
   static challengeCompleted() {

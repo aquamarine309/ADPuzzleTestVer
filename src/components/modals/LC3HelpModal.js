@@ -185,7 +185,7 @@ function fill(x, l) {
   return Array.repeat("", l).map((c, i) => x[i] ?? c);
 }
 
-const enter = "[✓]";
+const correct = "[✓]";
 
 export default {
   name: "LC3HelpModal",
@@ -213,7 +213,7 @@ export default {
     inputRows() {
       return [
         ["0", "1", "2", "3", "4", "+", "-", "(", ")", "Del"],
-        ["5", "6", "7", "8", "9", "×", "/", "=", "^", enter]
+        ["5", "6", "7", "8", "9", "×", "/", "=", "^", correct]
       ]
     },
     lc3Running() {
@@ -277,7 +277,7 @@ export default {
       }
       const rowTrim = row.filter(r => r !== "");
       ++this.count;
-      if (x === enter) {
+      if (x === correct) {
         if (rowTrim.length !== this.len) {
           this.showNotify("The length is too short");
           return;
@@ -337,7 +337,7 @@ export default {
       return "c-game-block--bad";
     },
     getInputClass(char) {
-      if (char === "Del" || char === enter) return;
+      if (char === "Del" || char === correct) return;
       let isGray = false;
       const completedRows = this.blockRows.slice(0, this.currentRow);
       for (let i = completedRows.length - 1; i >= 0 ; i--) {

@@ -228,7 +228,8 @@ export const BEC = deepFreeze({
   E1E8:                 new BE("1ee8"),
   E1_5E12:              new BE("1e1.5e12"),
   E1E15:                new BE("1ee15"),
-  EE30:                 new BE("1ee30")
+  EE30:                 new BE("1ee30"),
+  EE404:                new BE("1ee404")
 });
 
 window.AUTOBUYER_MODE = {

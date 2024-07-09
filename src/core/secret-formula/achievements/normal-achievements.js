@@ -978,8 +978,8 @@ export const normalAchievements = [
       buying any Infinity Dimensions or the ${formatX(2)} Infinity Point multiplier.`;
     },
     checkRequirement: () =>
-      Array.dimensionTiers.map(InfinityDimension).every(dim => dim.baseAmount === 0) &&
-      player.IPMultPurchases === 0 &&
+      Array.dimensionTiers.map(InfinityDimension).every(dim => dim.baseAmount.eq(0)) &&
+      player.IPMultPurchases.eq(0) &&
       Currency.infinityPoints.gte(BEC.E200000),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     reward: "You start Eternities with all Infinity Challenges unlocked and completed."
@@ -1089,7 +1089,7 @@ export const normalAchievements = [
     id: 145,
     name: "Are you sure these are the right way around?",
     description: "Have either Black Hole interval smaller than its duration.",
-    checkRequirement: () => BlackHoles.list.some(bh => bh.interval < bh.duration),
+    checkRequirement: () => BlackHoles.list.some(bh => bh.interval.lt(bh.duration)),
     checkEvent: GAME_EVENT.BLACK_HOLE_UPGRADE_BOUGHT,
     get reward() { return `Black Hole intervals are ${formatPercents(0.1)} shorter.`; },
     effect: 0.9

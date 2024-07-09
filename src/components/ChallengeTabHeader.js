@@ -37,7 +37,7 @@ export default {
       this.isShowAllVisible = PlayerProgress.eternityUnlocked();
       this.isAutoECVisible = Perk.autocompleteEC1.canBeApplied;
       this.autoEC = player.reality.autoEC;
-      this.lc3Completed = LC3.isCompleted && !LC3.isRunning;
+      this.lc3Completed = (LC3.isCompleted || PlayerProgress.eternityUnlocked()) && !LC3.isRunning;
     },
     restartChallenge() {
       const current = Player.anyChallenge;

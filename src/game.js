@@ -116,6 +116,8 @@ export function gainedInfinityPoints() {
   if (GlyphAlteration.isAdded("infinity")) {
     ip = ip.pow(getSecondaryGlyphEffect("infinityIP"));
   }
+  
+  ip = ip.powEffectOf(Difficulty(3));
 
   return ip.floor();
 }

@@ -525,8 +525,9 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     });
 
     LogarithmNotation.prototype.formatDecimal = function (value, places, placesExponent) {
-      var log10 = value.log10();
-      return "e".concat(this.formatExponent(log10, places, function (n, p) {
+      const newDecimal = getSmallDecimal(value);
+      var log10 = newDecimal.decimal.log10().toNumber();
+      return formatSeparator("e", newDecimal.separatorCount + 1).concat(this.formatExponent(log10, places, function (n, p) {
         return n.toFixed(p);
       }, placesExponent));
     };
@@ -550,8 +551,12 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     });
 
     BracketsNotation.prototype.formatDecimal = function (value) {
+      const newDecimal = getSmallDecimal(value);
+      var log10 = newDecimal.decimal.log10().toNumber();
+      
       var table = [")", "[", "{", "]", "(", "}"];
-      var log6 = Math.LN10 / Math.log(6) * value.log10();
+      
+      var log6 = Math.LN10 / Math.log(6) * log10;
       var wholePartOfLog = Math.floor(log6);
       var decimalPartOfLog = log6 - wholePartOfLog;
       var decimalPartTimes36 = Math.floor(decimalPartOfLog * 36);
@@ -564,7 +569,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
         string = table[remainder] + string;
       }
 
-      string = "e".concat(table[wholePartOfLog]).concat(string, ".");
+      string = formatSeparator("e", newDecimal.separatorCount + 1).concat(table[wholePartOfLog]).concat(string, ".");
       string += table[Math.floor(decimalPartTimes36 / 6)];
       string += table[decimalPartTimes36 % 6];
       return string;
@@ -592,8 +597,8 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
 
     InfinityNotation.prototype.formatDecimal = function (value, places) {
       var log10 = value.log10();
-      var infinities = log10 / LOG10_MAX_VALUE;
-      var infPlaces = infinities < 1000 ? 4 : 3;
+      var infinities = log10.div(LOG10_MAX_VALUE);
+      var infPlaces = infinities.lt(1000) ? 4 : 3;
       var formatted = infinities.toFixed(Math.max(infPlaces, places));
 
       if (Settings.exponentCommas.show) {
@@ -641,11 +646,12 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
       if (value.lt(MAXIMUM)) {
         return this.romanize(value.toNumber());
       }
-
-      var log10 = value.log10();
+      const newDecimal = getSmallDecimal(value);
+      var log10 = newDecimal.decimal.log10().toNumber();
+      
       var maximums = log10 / MAX_LOG_10;
       var current = Math.pow(MAXIMUM, maximums - Math.floor(maximums));
-      return "".concat(this.romanize(current), "\u2191").concat(this.formatDecimal(new Decimal__default["default"](maximums)));
+      return formatSeparator("e", newDecimal.separatorCount).concat(this.romanize(current), "\u2191").concat(this.formatDecimal(new Decimal__default["default"](maximums)));
     };
 
     RomanNotation.prototype.romanize = function (value) {
@@ -712,11 +718,11 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
       if (value.lt(16387063.9980315)) {
         return this.dotify(value.toNumber() * 254);
       }
-
-      var log = value.log(254);
+      const newDecimal = getSmallDecimal(value);
+      var log = newDecimal.decimal.log(254).toNumber();
       var exponent = Math.floor(log - 2);
       var mantissa = Math.pow(254, log - exponent);
-      return "".concat(this.dotify(exponent), "\u28FF").concat(this.dotify(mantissa * 254));
+      return formatSeparator("e", newDecimal.separatorCount).concat(this.dotify(exponent), "\u28FF").concat(this.dotify(mantissa * 254));
     };
 
     DotsNotation.prototype.dotify = function (rawValue, pad) {
@@ -780,10 +786,12 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     };
 
     ZalgoNotation.prototype.heComes = function (value) {
-      var scaled = value.plus(1).log10() / 66666 * 1000;
+      const newDecimal = getSmallDecimal(value);
+      var log10 = newDecimal.decimal.plus(1).log10().toNumber();
+      var scaled = log10 / 66666 * 1000;
       var displayPart = Number(scaled.toFixed(2));
       var zalgoPart = Math.floor(Math.abs(Math.pow(2, 30) * (scaled - displayPart)));
-      var displayChars = Array.from(formatWithCommas(displayPart));
+      var displayChars = Array.from(formatSeparator("e", newDecimal.separatorCount).concat(formatWithCommas(displayPart)));
       var zalgoIndices = Array.from(zalgoPart.toString() + scaled.toFixed(0));
 
       for (var i = 0; i < zalgoIndices.length; i++) {
@@ -857,10 +865,10 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     };
 
     HexNotation.prototype.modifiedLogarithm = function (x) {
-      var floorOfLog = Math.floor(Decimal__default["default"].log2(x));
+      var floorOfLog = Decimal__default["default"].log2(x).floor();
       var previousPowerOfTwo = Decimal__default["default"].pow(2, floorOfLog);
-      var fractionToNextPowerOfTwo = Decimal__default["default"].div(x, previousPowerOfTwo).toNumber() - 1;
-      return floorOfLog + fractionToNextPowerOfTwo;
+      var fractionToNextPowerOfTwo = Decimal__default["default"].div(x, previousPowerOfTwo).minus(1);
+      return floorOfLog.plus(fractionToNextPowerOfTwo);
     };
 
     HexNotation.prototype.isFinite = function (x) {
@@ -882,7 +890,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
 
         if (Decimal__default["default"].lt(value, 0)) {
           signs.push(SIGNS.negative);
-          value = -this.modifiedLogarithm(Decimal__default["default"].times(value, -1));
+          value = this.modifiedLogarithm(Decimal__default["default"].times(value, -1)).neg();
         } else {
           signs.push(SIGNS.positive);
           value = this.modifiedLogarithm(value);
@@ -893,7 +901,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
         return x === SIGNS.positive ? 1 : 0;
       }).join("").padEnd(numberOfBits, "0"), 2);
 
-      if (resultValue !== Math.pow(2, numberOfBits) - 1 && (value > 0 || value === 0 && resultValue % 2 === 1)) {
+      if (resultValue !== Math.pow(2, numberOfBits) - 1 && (value.gt(0) || value.eq(0) && resultValue % 2 === 1)) {
         resultValue += 1;
       }
 

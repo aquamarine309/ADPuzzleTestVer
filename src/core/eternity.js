@@ -144,6 +144,7 @@ export function eternity(force, auto, specialConditions = {}) {
   ResourceExchangeUpgrade.reset();
 
   PelleStrikes.eternity.trigger();
+  randomDifficulty();
   
   GameCache.currentBonus.invalidate();
   
