@@ -55,7 +55,7 @@ class LogicChallengeState extends GameMechanicState {
   }
   
   get canComplete() {
-    return Currency.antimatter.gte(this.goal) && Player.canCrunch;
+    return player.records.thisInfinity.maxAM.gte(this.goal) && Player.canCrunch;
   }
 
   /**
