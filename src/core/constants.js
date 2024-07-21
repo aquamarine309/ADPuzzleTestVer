@@ -550,7 +550,7 @@ window.PERCENTS_TYPE = {
   LOG: 1
 };
 
-window.GAME_STATE = {
+window.GAME_STAGE = {
   FAILED: -1,
   NOT_COMPLETE: 0,
   COMPLETED: 1

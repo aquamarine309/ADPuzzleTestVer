@@ -509,6 +509,10 @@ export const migrations = {
       while (player.challenge.infinity.bestTimes.length < 12) {
         player.challenge.infinity.bestTimes.push(BE.NUMBER_MAX_VALUE);
       }
+    },
+    65: player => {
+      player.lc3Game.stage = player.lc3Game.state ?? GAME_STAGE.NOT_COMPLETED;
+      delete player.lc3Game.state;
     }
   },
 

@@ -862,7 +862,7 @@ export const normalAchievements = [
   {
     id: 121,
     name: "Can you get infinite IP?",
-    get description() { return `Reach ${formatPostBreak("1e30008")} Infinity Points.`; },
+    get description() { return `Reach ${formatPostBreak(BEC.E30008)} Infinity Points.`; },
     checkRequirement: () => Currency.infinityPoints.gte(BEC.E30008),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER
   },

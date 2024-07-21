@@ -39,7 +39,7 @@ window.player = {
     cpBaseAD: BEC.D0
   },
   lc3Game: {
-    state: GAME_STATE.NOT_COMPLETE,
+    stage: GAME_STAGE.NOT_COMPLETE,
     rows: null,
     question: "",
     currentRow: 0,
@@ -412,7 +412,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: BEC.D0,
-  version: 64,
+  version: 65,
   bigCrunches: 0,
   bigEternities: 0,
   infinityPower: BEC.D1,

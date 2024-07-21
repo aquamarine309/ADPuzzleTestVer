@@ -224,24 +224,24 @@ export const LC3 = {
   },
   
   game: {
-    get state() {
-      return player.lc3Game.state;
+    get stage() {
+      return player.lc3Game.stage;
     },
     
     get isRunning() {
-      return this.state === GAME_STATE.NOT_COMPLETE;
+      return this.stage === GAME_STAGE.NOT_COMPLETE;
     },
     
     get isCompleted() {
-      return this.state === GAME_STATE.COMPLETED;
+      return this.stage === GAME_STAGE.COMPLETED;
     },
     
     get isFailed() {
-      return this.state === GAME_STATE.FAILED;
+      return this.stage === GAME_STAGE.FAILED;
     },
     
     reset() {
-      player.lc3Game.state = GAME_STATE.NOT_COMPLETE;
+      player.lc3Game.stage = GAME_STAGE.NOT_COMPLETE;
       player.lc3Game.rows = null;
       player.lc3Game.currentRow = 0;
     }

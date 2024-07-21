@@ -14,8 +14,7 @@ export default {
       showExit: false,
       exitText: "",
       resetCelestial: false,
-      inPelle: false,
-      difficulty: 0
+      inPelle: false
     };
   },
   computed: {
@@ -103,9 +102,6 @@ export default {
         return "the Antimatter Universe (no active challenges)";
       }
       return this.activeChallengeNames.join(" + ");
-    },
-    displayDifficulty() {
-      return "★".repeat(this.difficulty);
     }
   },
   methods: {
@@ -119,7 +115,6 @@ export default {
       this.exitText = this.exitDisplay();
       this.resetCelestial = player.options.retryCelestial;
       this.inPelle = Pelle.isDoomed;
-      this.difficulty = player.logic.difficulty;
     },
     // Process exit requests from the inside out; Challenges first, then dilation, then Celestial Reality. If the
     // relevant option is toggled, we pass a bunch of information over to a modal - otherwise we immediately exit
@@ -210,7 +205,6 @@ export default {
       data-v-header-challenge-display
     >
       You are currently in {{ challengeDisplay }}
-      <span v-if="difficulty > 0">[Difficulty: {{ displayDifficulty }}]</span>
     </span>
     <FailableEcText v-if="isInFailableEC" />
     <span

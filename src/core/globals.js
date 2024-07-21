@@ -115,4 +115,4 @@ export * from "./logic-upgrades.js";
 export * from "./logic-challenges.js";
 export * from "./extra-bonus.js";
 
-export * from "./difficulties.js";
+export * from "./challenge-factors.js";

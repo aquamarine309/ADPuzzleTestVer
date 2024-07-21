@@ -53,7 +53,7 @@ export const lc3Upgrades = {
   }),
   cpBaseAD: rebuyable({
     id: "cpBaseAD",
-    purpose: "CP based on AD",
+    purpose: "CPow based on AD",
     cost: x => BE.pow10(BE.pow10(x.plus(1).times(9))),
     effect: x => Currency.antimatter.value.plus(1).log10().pow(x.pow(10).times(5).plus(BE.pow(2, x).div(BEC.E15))),
     formatEffect: x => formatX(x, 2, 2),

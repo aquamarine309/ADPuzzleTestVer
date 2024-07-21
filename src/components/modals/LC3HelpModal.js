@@ -200,7 +200,7 @@ export default {
       blockRows: [[]],
       currentRow: 0,
       count: 0,
-      state: GAME_STATE.NOT_COMPLETE,
+      stage: GAME_STAGE.NOT_COMPLETE,
       maxResult: 9,
       minResult: 1,
       maxLength: 10,
@@ -223,10 +223,10 @@ export default {
       return this.question.length;
     },
     isCompleted() {
-      return this.state === GAME_STATE.COMPLETED;
+      return this.stage === GAME_STAGE.COMPLETED;
     },
     isFailed() {
-      return this.state === GAME_STATE.FAILED;
+      return this.stage === GAME_STAGE.FAILED;
     },
     title() {
       if (!this.lc3Running) return "LC3 Mini-game";
@@ -268,11 +268,11 @@ export default {
   },
   methods: {
     input(x) {
-      if (this.state !== GAME_STATE.NOT_COMPLETE) return;
+      if (this.stage !== GAME_STAGE.NOT_COMPLETE) return;
       let row = this.blockRows[this.currentRow];
       if (!row) {
-        this.state = GAME_STATE.FAILED;
-        player.lc3Game.state = this.state;
+        this.stage = GAME_STAGE.FAILED;
+        player.lc3Game.stage = this.stage;
         return;
       }
       const rowTrim = row.filter(r => r !== "");
@@ -287,13 +287,13 @@ export default {
           return;
         };
         if (row.join("") === this.question) {
-          this.state = GAME_STATE.COMPLETED;
-          player.lc3Game.state = this.state;
+          this.stage = GAME_STAGE.COMPLETED;
+          player.lc3Game.stage = this.stage;
           return;
         }
         if (this.currentRow + 1 >= this.row) {
-          this.state = GAME_STATE.FAILED;
-          player.lc3Game.state = this.state;
+          this.stage = GAME_STAGE.FAILED;
+          player.lc3Game.stage = this.stage;
           return;
         }
         ++this.currentRow;
@@ -324,7 +324,7 @@ export default {
       this.notify = null;
     },
     getBlockClass(char, row, a, b) {
-      if (this.currentRow <= a - (this.state === GAME_STATE.NOT_COMPLETE ? 0 : 1)) return;
+      if (this.currentRow <= a - (this.stage === GAME_STAGE.NOT_COMPLETE ? 0 : 1)) return;
       if (char === this.question[b]) return "c-game-block--good";
       if (row.countWhere((c, i) => c === char && c === this.question[i]) +
         row.slice(0, b)
@@ -371,7 +371,7 @@ export default {
         this.question = player.lc3Game.question;
         this.blockRows = player.lc3Game.rows.map(r => [].slice.call(r));
         this.currentRow = player.lc3Game.currentRow;
-        this.state = player.lc3Game.state;
+        this.stage = player.lc3Game.stage;
       } else {
         this.currentRow = 0;
         if (
@@ -383,11 +383,11 @@ export default {
         }
         this.question = questionGenerator(this.maxResult, this.minResult, this.maxLength, this.minLength);
         this.blockRows = Array.range(0, this.row).map(() => Array.repeat("", this.len));
-        this.state = GAME_STATE.NOT_COMPLETE;
+        this.stage = GAME_STAGE.NOT_COMPLETE;
         player.lc3Game.question = this.question;
         player.lc3Game.rows = this.blockRows.map(r => [].slice.call(r));
         player.lc3Game.currentRow = 0;
-        player.lc3Game.state = GAME_STATE.NOT_COMPLETE;
+        player.lc3Game.stage = GAME_STAGE.NOT_COMPLETE;
       }
     },
     adjustSliderValue(value, name) {

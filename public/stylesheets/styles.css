@@ -9496,7 +9496,7 @@ input.o-automator-block-input {
 }
 
 .c-achievement-button {
-  border: 0.2rem solid var(--color-accent);
+  border: 0.2rem solid var(--color-logic);
   background-color: var(--color-base);
   padding: 0.2rem;
   margin: 0.1rem;
