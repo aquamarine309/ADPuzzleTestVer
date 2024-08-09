@@ -28,7 +28,8 @@ export default {
       respecTimeStr: "",
       desceiption: "",
       lc5Completed: false,
-      extraBonusTimeLeft: new BE(0)
+      extraBonusTimeLeft: new BE(0),
+      factorDisabled: false
     };
   },
   computed: {
@@ -72,6 +73,7 @@ export default {
       }
       this.lc5Completed = LogicChallenge(5).isCompleted;
       if (this.lc5Completed) {
+        this.factorDisabled = ChallengeFactor.noExtra.canBeApplied;
         if (this.isDoomed) {
           this.description = wordShift.wordCycle(["Destroyed", "Annihilated", "Nullified"]);
           return;
@@ -161,12 +163,11 @@ export default {
       class="extra-bonus-btn"
       @click="getBonus"
     >
-      <div v-if="isDoomed">
+      <div v-if="isDoomed || factorDisabled">
         Extra Bonus has been
         <b class="ad-bonus-destoryed">
           {{ description }}
         </b>
-        By Pelle
       </div>
       <div v-else>
         {{ description }}

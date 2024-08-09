@@ -6,7 +6,7 @@ class ExtraBonusState extends GameMechanicState {
   }
   
   get isEffectActive() {
-    return ExtraBonus.current.id === this.id && ExtraBonus.isEffectActive && !Pelle.isDoomed && LogicChallenge(5).isCompleted;
+    return ExtraBonus.current.id === this.id && ExtraBonus.isEffectActive && !Pelle.isDoomed && LogicChallenge(5).isCompleted && !ChallengeFactor.noExtra.canBeApplied;
   }
   
   get description() {

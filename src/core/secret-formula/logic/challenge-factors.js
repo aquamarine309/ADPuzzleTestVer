@@ -67,14 +67,13 @@ export const challengeFactors = {
     effect: 1.2,
     difficulty: 20
   },
-  replicanti: {
+  noExtra: {
     id: 7,
-    name: "复读机",
-    description: "复制速度×11",
-    symbol: "Ξ",
-    color: "#03a9f4",
-    type: CHALLENGE_FACTOR_TYPE.IMPROVE,
-    difficulty: -20,
-    effect: 11
+    name: "广告被摧毁",
+    description: "禁用LC5提供的额外奖励",
+    symbol: "<i class='fas fa-dollar'><i>",
+    color: "#c3a964",
+    type: CHALLENGE_FACTOR_TYPE.DISABLED,
+    difficulty: 12
   }
 };
