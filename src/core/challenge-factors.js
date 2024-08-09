@@ -81,6 +81,10 @@ export const ChallengeFactors = {
       throw `What are you doing???`;
     }
     player.logic.refreshTimer = Math.min(diff + player.logic.refreshTimer, this.refreshPeriod);
+  },
+  
+  get requirement() {
+    return GameCache.timeCoresFactor.value.fromChallengeFactor.div(BEC.D3).times(Currency.eternities.value.add(1).pow(0.25).clampMax(100));
   }
 }
 
@@ -94,7 +98,8 @@ export function timeCoresFactor() {
   const totalLP = player.records.thisEternity.maxLP;
   const fromLP = totalLP.log10().pow(0.5).add(1);
   
-  const fromChallengeFactor = BE.pow(1.25, ChallengeFactors.currentDifficulty);
+  const difficulty = ChallengeFactors.currentDifficulty;
+  const fromChallengeFactor = BE.pow(1.25, Math.abs(difficulty));
   
   const staticDivisor = 1 / 10;
   

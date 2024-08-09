@@ -45,7 +45,7 @@ export const challengeFactors = {
     symbol: "<i class='fas fa-diamond'></i>",
     color: "#99ccff",
     type: CHALLENGE_FACTOR_TYPE.IMPROVE,
-    difficulty: 30
+    difficulty: 20
   },
   tabNerf: {
     id: 5,

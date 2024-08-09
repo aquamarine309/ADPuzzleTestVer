@@ -9,12 +9,14 @@ export default {
     return {
       gainedTC: new BE(0),
       respec: false,
-      canEternity: false
+      canEternity: false,
+      requirement: new BE(0),
+      canRefresh: false
     }
   },
   computed: {
     canRestart() {
-      return this.gainedTC.gte(1);
+      return this.gainedTC.gte(this.requirement) || this.canRefresh;
     },
     title() {
       return this.canEternity ? "Eternity" : `Restart the Eternity`;
@@ -25,6 +27,8 @@ export default {
       this.gainedTC = gainedTimeCores();
       this.respec = player.refreshChallenge;
       this.canEternity = Player.canEternity;
+      this.requirement = ChallengeFactors.requirement;
+      this.canRefresh = player.refreshChallenge;
     },
     restart() {
       if (!this.canRestart) return;
@@ -48,7 +52,7 @@ export default {
       <br>
       <span>Gain {{ quantify("Time Core", gainedTC, 2, 1) }}</span>
     </template>
-    <span v-else>Need to earn at least {{ formatInt(1) }} Time Core</span>
+    <span v-else>Need to earn at least {{ format(requirement, 2, 1) }} Time Core or refresh Challenge Factors</span>
   </PrimaryButton>
   `
 }
