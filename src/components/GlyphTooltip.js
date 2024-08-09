@@ -15,11 +15,11 @@ export default {
       required: true
     },
     level: {
-      type: Number,
+      type: BE,
       required: true
     },
     effects: {
-      type: Number,
+      type: Set,
       required: true
     },
     id: {
@@ -56,9 +56,9 @@ export default {
       default: true,
     },
     displayLevel: {
-      type: Number,
+      type: BE,
       required: false,
-      default: 0,
+      default: new BE(0),
     },
     changeWatcher: {
       type: Number,
@@ -79,7 +79,7 @@ export default {
       return this.displayLevel ? this.displayLevel : this.level;
     },
     sortedEffects() {
-      return getGlyphEffectValuesFromBitmask(this.effects, this.effectiveLevel, this.strength, this.type)
+      return getGlyphEffectValuesFromSet(this.effects, this.effectiveLevel, this.strength, this.type)
         .filter(effect =>
           GlyphEffects[effect.id].isGenerated === generatedTypes.includes(this.type));
     },
@@ -118,10 +118,10 @@ export default {
       }
     },
     isLevelCapped() {
-      return this.displayLevel && this.displayLevel < this.level;
+      return this.displayLevel && this.displayLevel.lt(this.level);
     },
     isLevelBoosted() {
-      return this.displayLevel && this.displayLevel > this.level;
+      return this.displayLevel && this.displayLevel.gt(this.level);
     },
     rarityText() {
       if (!GlyphTypes[this.type].hasRarity) return "";
@@ -140,7 +140,7 @@ export default {
         ? "#ff4444"
         : (this.isLevelBoosted ? "#44FF44" : undefined);
       return `Level: <span style="color: ${color}">
-              ${arrow}${formatInt(this.effectiveLevel)}${arrow}
+              ${arrow}${this.formatLevel(this.effectiveLevel)}${arrow}
               </span>`;
     },
     eventHandlers() {
@@ -250,6 +250,9 @@ export default {
       const showFilterScoreModes = [AUTO_GLYPH_SCORE.SPECIFIED_EFFECT, AUTO_GLYPH_SCORE.EFFECT_SCORE];
       if (!showFilterScoreModes.includes(this.scoreMode)) return "";
       return `Score: ${format(AutoGlyphProcessor.filterValue(this.$parent.glyph), 1, 1)}`;
+    },
+    formatLevel(level) {
+      return level.gte(1e9) ? format(level, 2) : formatInt(level);
     }
   },
   template: `

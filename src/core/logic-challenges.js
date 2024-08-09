@@ -48,6 +48,7 @@ class LogicChallengeState extends GameMechanicState {
   complete() {
     player.challenge.logic.completedBits |= 1 << this.id;
     EventHub.dispatch(GAME_EVENT.LOGIC_CHALLENGE_COMPLETED);
+    LogicChallenges._completions.invalidate();
   }
 
   get isEffectActive() {
@@ -118,12 +119,19 @@ export const LogicChallenges = {
   },
   clearCompletions() {
     player.challenge.logic.completedBits = 0;
+    LogicChallenges._completions.invalidate();
   },
   /**
    * @returns {LogicChallengeState[]}
    */
   get completed() {
     return LogicChallenges.all.filter(lc => lc.isCompleted);
+  },
+  
+  _completions: new Lazy(() => LogicChallenges.all.countWhere(challenge => challenge.isCompleted)),
+  
+  get completions() {
+    return this._completions.value;
   }
 };
 

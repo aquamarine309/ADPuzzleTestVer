@@ -25,6 +25,10 @@ const GLYPH_NAMES = {
     adjective: { high: "Powerful", mid: "Mastered", low: "Potential" },
     noun: "Power"
   },
+  logic: {
+    adjective: { high: "Logical", mid: "Coherent", low: "Lucid" },
+    noun: "Thinking"
+  },
   infinity: {
     adjective: { high: "Infinite", mid: "Boundless", low: "Immense" },
     noun: "Infinity"
@@ -66,6 +70,7 @@ export default {
         { type: "replication", perc: 0, adjOrder: 1 },
         { type: "time", perc: 0, adjOrder: 1 },
         { type: "dilation", perc: 0, adjOrder: 1 },
+        { type: "logic", perc: 0, adjOrder: 1 },
         { type: "effarig", perc: 0, adjOrder: 2 },
         { type: "music", perc: 0, adjOrder: 3 },
         { type: "reality", perc: 0, adjOrder: 4 },

@@ -1,4 +1,4 @@
-import { GlyphInfo } from "./modals/options/SelectGlyphInfoDropdown.js";
+import { GlyphInfoVue } from "./modals/options/SelectGlyphInfoDropdown.js";
 
 import GlyphTooltip from "./GlyphTooltip.js";
 
@@ -268,7 +268,7 @@ export default {
       sacrificeReward: 0,
       uncappedRefineReward: 0,
       refineReward: 0,
-      displayLevel: 0,
+      displayLevel: new BE(0),
       // We use this to not create a ton of tooltip components as soon as the glyph tab loads.
       tooltipLoaded: false,
       logTotalSacrifice: 0,
@@ -371,7 +371,8 @@ export default {
         "text-shadow": this.symbolBlur ? `-0.04em 0.04em 0.08em ${color}` : undefined,
         "border-radius": this.circular ? "50%" : "0",
         "padding-bottom": this.bottomPadding,
-        background: this.bgColor
+        background: this.bgColor,
+        transition: `rotate(180deg)`
       };
     },
     mouseEventHandlers() {
@@ -410,39 +411,14 @@ export default {
     // This finds all the effects of a glyph and shifts all their IDs so that type's lowest-ID effect is 0 and all
     // other effects count up to 3 (or 6 for effarig). Used to add dots in unique positions on glyphs to show effects.
     glyphEffects() {
-      let minEffectID = 0;
-      switch (this.glyph.type) {
-        case "time":
-        case "cursed":
-        case "companion":
-          minEffectID = 0;
-          break;
-        case "dilation":
-        case "reality":
-          minEffectID = 4;
-          break;
-        case "replication":
-          minEffectID = 8;
-          break;
-        case "infinity":
-          minEffectID = 12;
-          break;
-        case "power":
-          minEffectID = 16;
-          break;
-        case "effarig":
-          minEffectID = 20;
-          break;
-        default:
-          throw new Error(`Unrecognized glyph type "${this.glyph.type}" in glyph effect icons`);
+      const effects = [];
+      const type = GlyphTypes[this.glyph.type].effects;
+      for (let i = 0; i < type.length; i++) {
+        if (this.glyph.effects.has(type[i].id)) {
+          effects.push(i);
+        }
       }
-      const effectIDs = [];
-      let remainingEffects = this.glyph.effects >> minEffectID;
-      for (let id = 0; remainingEffects > 0; id++) {
-        if ((remainingEffects & 1) === 1) effectIDs.push(id);
-        remainingEffects >>= 1;
-      }
-      return effectIDs;
+      return effects;
     },
     isRealityGlyph() {
       return this.glyph.type === "reality";
@@ -453,6 +429,9 @@ export default {
     isCompanionGlyph() {
       return this.glyph.type === "companion";
     },
+    isLogicGlyph() {
+      return this.glyph.type === "logic";
+    },
     showGlyphEffectDots() {
       return player.options.showHintText.glyphEffectDots;
     },
@@ -461,16 +440,16 @@ export default {
       if (!this.isInventoryGlyph || blacklist.includes(this.glyph.type)) return null;
 
       const options = player.options.showHintText;
-      if (options.glyphInfoType === GlyphInfo.types.NONE ||
+      if (options.glyphInfoType === GlyphInfoVue.types.NONE ||
         (!options.showGlyphInfoByDefault && !this.$viewModel.shiftDown)) {
         return null;
       }
 
-      const typeEnum = GlyphInfo.types;
+      const typeEnum = GlyphInfoVue.types;
       switch (options.glyphInfoType) {
         case typeEnum.LEVEL:
           this.updateDisplayLevel();
-          return formatInt(this.displayLevel === 0 ? this.glyph.level : this.displayLevel);
+          return formatInt(this.displayLevel.eq(0) ? this.glyph.level : this.displayLevel);
         case typeEnum.RARITY:
           return formatRarity(strengthToRarity(Pelle.isDoomed ? Pelle.glyphStrength : this.glyph.strength));
         case typeEnum.SAC_VALUE:
@@ -538,7 +517,7 @@ export default {
     },
     updateDisplayLevel() {
       if (this.ignoreModifiedLevel) {
-        this.displayLevel = 0;
+        this.displayLevel = new BE(0);
         return;
       }
       // We have to consider some odd interactions in order to properly show level. The getAdjustedGlyphLevel() function
@@ -555,8 +534,8 @@ export default {
       if (this.isActiveGlyph) this.displayLevel = getAdjustedGlyphLevel(this.glyph);
       else if (this.isInventoryGlyph) this.displayLevel = getAdjustedGlyphLevel(this.glyph, 0);
       else {
-        this.displayLevel = this.glyph.level +
-          (BASIC_GLYPH_TYPES.includes(this.glyph.type) ? this.realityGlyphBoost : 0);
+        this.displayLevel = this.glyph.level.add(
+          BASIC_GLYPH_TYPES.includes(this.glyph.type) ? this.realityGlyphBoost : 0);
       }
     },
     hideTooltip() {

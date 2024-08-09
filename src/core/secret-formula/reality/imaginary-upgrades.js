@@ -1,10 +1,10 @@
 import { BEC } from "../../constants.js";
 
 const rebuyable = props => {
-  props.cost = () => props.initialCost * Math.pow(props.costMult, player.reality.imaginaryRebuyables[props.id]);
+  props.cost = () => BE.pow(props.costMult, player.reality.imaginaryRebuyables[props.id]).times(props.initialCost);
   const { effect } = props;
   if (props.isBE) props.effect = () => BE.pow(effect, player.reality.imaginaryRebuyables[props.id]);
-  else props.effect = () => effect * player.reality.imaginaryRebuyables[props.id];
+  else props.effect = () => player.reality.imaginaryRebuyables[props.id].times(effect);
   if (!props.formatEffect) props.formatEffect = value => `+${format(value, 2, 2)}`;
   props.formatCost = value => format(value, 2, 0);
   return props;
@@ -277,7 +277,7 @@ export const imaginaryUpgrades = [
       at most ${formatInt(0)} Glyphs equipped`,
     hasFailed: () => !Ra.isRunning || player.requirementChecks.reality.maxGlyphs > 0,
     checkRequirement: () => Ra.isRunning && player.requirementChecks.reality.maxGlyphs <= 0 &&
-      gainedGlyphLevel().actualLevel >= 20000,
+      gainedGlyphLevel().actualLevel.gte(20000),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     description: "Increase free Dimboost count based on Tesseract count",
     effect: () => BE.floor(BE.pow(Tesseracts.effectiveCount, 2).times(0.25)),
@@ -295,13 +295,13 @@ export const imaginaryUpgrades = [
       with a fully inverted Black Hole`,
     hasFailed: () => !Ra.isRunning || player.requirementChecks.reality.slowestBH > 1e-300,
     checkRequirement: () => Ra.isRunning && player.requirementChecks.reality.slowestBH <= 1e-300 &&
-      player.galaxies >= 13000,
+      player.galaxies.gte(13000),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     canLock: true,
     // Three locking events: uninvert, discharge, and entering (but not auto-completing) EC12
     description: "Increase free Dimboost strength based on Singularity count",
     effect: () => BE.pow(player.celestials.laitela.singularities, 300),
-    formatEffect: value => `${formatX(value, 2, 1)}`,
+    formatEffect: value => formatX(value, 2, 1),
     isDisabledInDoomed: true
   },
   {

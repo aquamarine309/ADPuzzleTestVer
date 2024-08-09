@@ -84,6 +84,16 @@ export const glyphSacrifice = {
     description: amount => `+${formatPercents(amount / 100, 2)} additional Glyph rarity`,
     cap: () => 1e70
   },
+  "logic": {
+    id: "logic",
+    effect: added => {
+      if (Pelle.isDisabled("glyphsac")) return 0;
+      const sac = player.reality.glyphs.sac.logic + (added ?? 0);
+      return Math.pow(sac, 0.2) * 5 + 1;
+    },
+    description: amount => `Multiply Time Core gain by ${formatX(amount, 2, 3)}`,
+    cap: () => GlyphSacrificeHandler.maxSacrificeForEffects
+  },
   "reality": {
     id: "reality",
     effect: added => {

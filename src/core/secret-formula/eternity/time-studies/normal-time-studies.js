@@ -98,6 +98,17 @@ export const normalTimeStudies = [
     description: "You keep half of your Replicanti Galaxies on Infinity"
   },
   {
+    id: 40,
+    cost: 6,
+    requirement: [31],
+    reqType: TS_REQUIREMENT_TYPE.AT_LEAST_ONE,
+    description: () => (Enslaved.isRunning
+      ? "There is not enough space in this Reality"
+      : `Replicanti can go beyond ${format(replicantiCap(), 2, 1)}, but growth slows down at higher amounts`),
+    // 1.2 × 1.5 = 1.8
+    effect: 1.5
+  },
+  {
     id: 41,
     cost: 4,
     requirement: [31],
@@ -450,7 +461,9 @@ export const normalTimeStudies = [
     reqType: TS_REQUIREMENT_TYPE.ALL,
     description: () => (Enslaved.isRunning
       ? "There is not enough space in this Reality"
-      : `Replicanti can go beyond ${format(replicantiCap(), 2, 1)}, but growth slows down at higher amounts`)
+      : `Decrease Replicanti speed scale above ${format(replicantiCap(), 2, 1)}`),
+    // 1.2 × 1 = 1.2 (Same as the original)
+    effect: 1
   },
   {
     id: 193,

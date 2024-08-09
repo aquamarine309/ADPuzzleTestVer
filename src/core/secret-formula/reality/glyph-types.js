@@ -42,6 +42,12 @@ export const glyphTypes = {
     alchemyResource: ALCHEMY_RESOURCE.POWER,
     hasRarity: true
   },
+  logic: {
+    id: "logic",
+    symbol: GLYPH_SYMBOLS.logic,
+    color: "#49be94",
+    hasRarity: true
+  },
   effarig: {
     id: "effarig",
     symbol: GLYPH_SYMBOLS.effarig,

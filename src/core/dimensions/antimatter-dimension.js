@@ -157,7 +157,7 @@ function applyNDPowers(mult, tier) {
     multiplier = multiplier.pow(InfinityChallenge(4).reward.effectValue);
   }
 
-  multiplier = multiplier.pow(glyphPowMultiplier * glyphEffarigPowMultiplier);
+  multiplier = multiplier.pow(glyphPowMultiplier.times(glyphEffarigPowMultiplier));
 
   multiplier = multiplier
     .powEffectsOf(
@@ -548,6 +548,7 @@ class AntimatterDimensionState extends DimensionState {
 
   get isAvailableForPurchase() {
     if (!EternityMilestone.unlockAllND.isReached && DimBoost.totalBoosts.plus(4).lt(this.tier)) return false;
+    if (GameElements.isActive("vertigo")) return false;
     const hasPrevTier = this.tier === 1 || AntimatterDimension(this.tier - 1).totalAmount.gt(0);
     if (!EternityMilestone.unlockAllND.isReached && !hasPrevTier) return false;
     return this.tier < 7 || !NormalChallenge(10).isRunning;
@@ -625,9 +626,9 @@ class AntimatterDimensionState extends DimensionState {
       if (production.gt(10)) {
         const log10 = production.log10();
         production = BE.pow10(log10.pow(
-          getAdjustedGlyphEffect("effarigantimatter") *
-          LogicChallenge(7).effects.amPow.effectOrDefault(1)
-        ));
+          getAdjustedGlyphEffect("effarigantimatter").timesEffectOf(
+          LogicChallenge(7).effects.amPow
+       )));
       }
     }
     
@@ -726,6 +727,10 @@ export const AntimatterDimensions = {
       if (NormalChallenge(12).isRunning) {
         AntimatterDimension(2).produceCurrency(Currency.antimatter, diff);
       }
+    }
+    
+    if (GameElements.isActive("reduceAntimatter") && Currency.antimatter.productionPerSecond.gt(0)) {
+      Currency.antimatter.divide(BEC.D2.pow(diff.div(1000)));
     }
     // Production may overshoot the goal on the final tick of the challenge
     if (Currency.antimatter.gt(Player.infinityLimit)) Currency.antimatter.dropTo(Player.infinityLimit);

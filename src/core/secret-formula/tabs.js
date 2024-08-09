@@ -243,7 +243,7 @@ export const tabs = [
         name: "Logic Challenges",
         symbol: "<i class='fas fa-puzzle-piece'></i>",
         component: "LogicChallengesTab",
-        condition: () => LogicUpgrade(10).isBought,
+        condition: () => LogicUpgrade(10).isBought || PlayerProgress.eternityUnlocked(),
         id: 3,
         hidable: true
       }
@@ -520,6 +520,15 @@ export const tabs = [
         symbol: "<i class='fas fa-exchange'></i>",
         component: "ResourceExchangeTab",
         id: 0,
+        hidable: true
+      },
+      {
+        key: "challenge factors",
+        name: "Challenge Factors",
+        symbol: "<i class='fas fa-map-signs'></i>",
+        component: "ChallengeFactorsTab",
+        id: 1,
+        condition: () => PlayerProgress.eternityUnlocked(),
         hidable: true
       }
     ]

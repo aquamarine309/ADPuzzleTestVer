@@ -1,4 +1,4 @@
-export const GlyphInfo = {
+export const GlyphInfoVue = {
   types: {
     NONE: 0,
     LEVEL: 1,

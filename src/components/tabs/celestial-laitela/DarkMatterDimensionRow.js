@@ -13,12 +13,12 @@ export default {
       hasAscended: false,
       powerDMPerAscension: 0,
       interval: 0,
-      powerDM: new Decimal(0),
+      powerDM: new BE(0),
       powerDE: 0,
       intervalCost: 0,
       powerDMCost: 0,
       powerDECost: 0,
-      amount: new Decimal(0),
+      amount: new BE(0),
       canBuyInterval: false,
       canBuyPowerDM: false,
       canBuyPowerDE: false,
@@ -29,7 +29,7 @@ export default {
       intervalAfterAscension: 0,
       darkEnergyPerSecond: 0,
       portionDE: 0,
-      productionPerSecond: new Decimal(0),
+      productionPerSecond: new BE(0),
       percentPerSecond: 0,
       hoverOverAscension: false,
     };
@@ -124,7 +124,7 @@ export default {
       this.darkEnergyPerSecond = dim.productionPerSecond;
       this.portionDE = this.darkEnergyPerSecond / Currency.darkEnergy.productionPerSecond;
       this.productionPerSecond = this.dimensionProduction(this.tier);
-      this.percentPerSecond = Decimal.divide(this.productionPerSecond, this.amount).toNumber();
+      this.percentPerSecond = BE.divide(this.productionPerSecond, this.amount).toNumber();
       if (!this.isIntervalCapped) this.hoverOverAscension = false;
     },
     handleIntervalClick() {

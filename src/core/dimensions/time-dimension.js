@@ -23,7 +23,7 @@ export function buySingleTimeDimension(tier, auto = false) {
 
   Currency.eternityPoints.subtract(dim.cost);
   dim.amount = dim.amount.plus(1);
-  dim.bought = dim.bought.plus(dim.bought);
+  dim.bought = dim.bought.plus(1);
   dim.cost = dim.nextCost(dim.bought);
   return true;
 }
@@ -67,22 +67,56 @@ export function buyMaxTimeDimension(tier, portionToSpend = 1, isMaxAll = false) 
     return false;
   }
   if (Enslaved.isRunning) return buySingleTimeDimension(tier);
-  const bulk = bulkBuyBinarySearch(canSpend, {
+  /* const bulk = bulkBuyBinarySearch(canSpend, {
     costFunction: bought => dim.nextCost(bought),
     cumulative: true,
     firstCost: dim.cost,
-  }, dim.bought);
-  if (!bulk) return false;
-  Currency.eternityPoints.subtract(bulk.purchasePrice);
-  dim.amount = dim.amount.plus(bulk.quantity);
-  dim.bought = dim.bought.plus(bulk.quantity);
+  }, dim.bought); */
+  let moneyLeft = canSpend;
+  if (PelleRifts.paradox.milestones[0].canBeApplied && tier > 4) {
+    moneyLeft = canSpend.pow(2).times(BEC.E2250);
+  }
+  const costThresholds = dim._costIncreaseThresholds;
+  let bulk = BEC.D0;
+  // Calculate purchases of each part
+  const costMultIncreases = [1, 1.5, 2.2];
+  for (let i = 0; i < costThresholds.length; i++) {
+    const threshold = costThresholds[i];
+    const costMult = dim.costMultiplier.times(costMultIncreases[i]);
+    // Check if this part has been purchased
+    if (BE.pow(costMult, dim.bought).times(dim.baseCost).gt(threshold)) continue;
+    // In the part, cost scaling is linear
+    // 1, 3, 9, 27 ...
+    const scaling = new LinearCostScaling(
+      moneyLeft.clampMax(threshold),
+      BE.pow(costMult, dim.bought.add(bulk)).times(dim.baseCost),
+      costMult
+    );
+    // If cost is not affordable in this part, it is also affordable in next parts.
+    if (scaling.purchases.lte(0) || moneyLeft.lt(scaling.totalCost)) break;
+
+    moneyLeft = moneyLeft.sub(scaling.totalCost);
+    bulk = bulk.add(scaling.purchases);
+    if (moneyLeft.lt(threshold)) break;
+  }
+  
+  const totalAmount = dim.bought.add(bulk);
+  if (totalAmount.add(1).gte(dim.e6000ScalingAmount)) {
+    const scaling = TimeDimensions.scalingPast1e6000;
+    const base = dim.costMultiplier.times(tier <= 4 ? 2.2 : 1);
+    bulk = moneyLeft.log(base).add(scaling.minus(1).times(dim.e6000ScalingAmount)).div(scaling).minus(dim.bought).floor();
+  }
+  
+  Currency.eternityPoints.value = moneyLeft;
+  dim.amount = dim.amount.plus(bulk);
+  dim.bought = dim.bought.plus(bulk);
   dim.cost = dim.nextCost(dim.bought);
   return true;
 }
 
 export function maxAllTimeDimensions() {
   // Try to buy single from the highest affordable new dimensions
-  for (let i = 8; i > 0 && TimeDimension(i).bought === 0; i--) {
+  for (let i = 8; i > 0 && TimeDimension(i).bought.eq(0); i--) {
     buySingleTimeDimension(i, true);
   }
 
@@ -101,7 +135,7 @@ export function maxAllTimeDimensions() {
 }
 
 export function timeDimensionCommonMultiplier() {
-  let mult = new BE(1)
+  let mult = ChallengeFactors.tdMult
     .timesEffectsOf(
       Achievement(105),
       Achievement(128),
@@ -124,7 +158,7 @@ export function timeDimensionCommonMultiplier() {
   if (EternityChallenge(9).isRunning) {
     mult = mult.times(
       BE.pow(
-        BE.clampMin(Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate / 7).log2(), 1),
+        BE.clampMin(Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate.div(7)).log2(), 1),
         4)
         .clampMin(1));
   }
@@ -163,7 +197,7 @@ class TimeDimensionState extends DimensionState {
     if (this._tier > 4 && bought.lt(this.e6000ScalingAmount)) {
       const cost = BE.pow(this.costMultiplier, bought).times(this.baseCost);
       if (PelleRifts.paradox.milestones[0].canBeApplied) {
-        return cost.div("1e2250").pow(0.5);
+        return cost.div(BEC.E2250).pow(0.5);
       }
       return cost;
     }
@@ -176,11 +210,11 @@ class TimeDimensionState extends DimensionState {
 
     let base = this.costMultiplier;
     if (this._tier <= 4) base = base.times(2.2);
-    const exponent = this.e6000ScalingAmount.plus((bought.minus(this.e6000ScalingAmount)).times(TimeDimensions.scalingPast1e6000));
+    const exponent = this.e6000ScalingAmount.plus(bought.minus(this.e6000ScalingAmount).times(TimeDimensions.scalingPast1e6000));
     const cost = BE.pow(base, exponent).times(this.baseCost);
 
     if (PelleRifts.paradox.milestones[0].canBeApplied && this._tier > 4) {
-      return cost.div("1e2250").pow(0.5);
+      return cost.div(BEC.E2250).pow(0.5);
     }
     return cost;
   }

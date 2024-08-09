@@ -143,42 +143,44 @@ export const Achievements = {
 
   autoAchieveUpdate(diff) {
     if (!PlayerProgress.realityUnlocked()) return;
+    const actualDiff = diff.toNumberMax(1e300);
     if (!player.reality.autoAchieve || RealityUpgrade(8).isLockingMechanics) {
-      player.reality.achTimer = BE.clampMax(player.reality.achTimer.plus(diff), this.period);
+      player.reality.achTimer = Math.clampMax(player.reality.achTimer + actualDiff, this.period);
       return;
     }
     if (Achievements.preReality.every(a => a.isUnlocked)) return;
 
-    player.reality.achTimer = player.reality.achTimer.plus(diff);
-    if (player.reality.achTimer.lt(this.period)) return;
+    player.reality.achTimer += actualDiff;
+    if (player.reality.achTimer < this.period) return;
 
     for (const achievement of Achievements.preReality.filter(a => !a.isUnlocked)) {
       achievement.unlock(true);
-      player.reality.achTimer = player.reality.achTimer.minus(this.period);
-      if (player.reality.achTimer.lt(this.period)) break;
+      player.reality.achTimer -= this.period;
+      if (player.reality.achTimer < this.period) break;
     }
     player.reality.gainedAutoAchievements = true;
   },
 
   get timeToNextAutoAchieve() {
-    if (!PlayerProgress.realityUnlocked()) return BEC.D0;
-    if (GameCache.achievementPeriod.value === 0) return BEC.D0;
-    if (Achievements.preReality.countWhere(a => !a.isUnlocked) === 0) return BEC.D0;
-    return this.period.minus(player.reality.achTimer);
+    if (!PlayerProgress.realityUnlocked()) return 0;
+    if (GameCache.achievementPeriod.value === 0) return 0;
+    if (Achievements.preReality.countWhere(a => !a.isUnlocked) === 0) return 0;
+    return this.period - player.reality.achTimer;
   },
 
   _power: new Lazy(() => {
     const unlockedRows = Achievements.allRows
       .countWhere(row => row.every(ach => ach.isUnlocked));
     const basePower = Math.pow(1.25, unlockedRows) * Math.pow(1.03, Achievements.effectiveCount);
-    const exponent = getAdjustedGlyphEffect("effarigachievement") *
-                    Ra.unlocks.achievementPower.effectOrDefault(1) *
-                    LogicChallenge(7).effects.achPow.effectOrDefault(1);
-    return Math.pow(basePower, exponent);
+    const exponent = getAdjustedGlyphEffect("effarigachievement").timesEffectsOf(
+      Ra.unlocks.achievementPower,
+      LogicChallenge(7).effects.achPow
+    );
+    return BE.pow(basePower, exponent);
   }),
 
   get power() {
-    if (Pelle.isDisabled("achievementMult")) return 1;
+    if (GameElements.isActive("noAchievement") || Pelle.isDisabled("achievementMult")) return BEC.D1;
     return Achievements._power.value;
   },
 
@@ -190,5 +192,5 @@ export const Achievements = {
 };
 
 EventHub.logic.on(GAME_EVENT.PERK_BOUGHT, () => {
-  player.reality.achTimer = Math.clampMax(player.reality.achTimer, Achievements.period);
+  player.reality.achTimer = BE.clampMax(player.reality.achTimer, Achievements.period);
 });

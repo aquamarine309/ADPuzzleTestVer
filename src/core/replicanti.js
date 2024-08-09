@@ -9,7 +9,8 @@ export const ReplicantiGrowth = {
   get scaleFactor() {
     if (PelleStrikes.eternity.hasStrike && Replicanti.amount.gte(BEC.E2000)) return 10;
     if (Pelle.isDoomed) return 2;
-    return AlchemyResource.cardinality.effectValue;
+    const factor = Effects.min(Infinity, TimeStudy(43), TimeStudy(192)).toNumber();
+    return AlchemyResource.cardinality.effectValue * factor;
   }
 };
 
@@ -629,7 +630,7 @@ export const Replicanti = {
     },
   },
   get isUncapped() {
-    return TimeStudy(192).isBought || PelleRifts.vacuum.milestones[1].canBeApplied;
+    return TimeStudy(40).isBought || PelleRifts.vacuum.milestones[1].canBeApplied;
   },
   get autoreplicateUnlocked() {
     return LogicChallenge(7).isCompleted;

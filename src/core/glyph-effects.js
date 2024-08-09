@@ -36,8 +36,6 @@ class GlyphEffectConfig {
     GlyphEffectConfig.checkInputs(setup);
     /** @type {string} unique key for the effect -- powerpow, etc */
     this.id = setup.id;
-    /** @type {number} bit position for the effect in the effect bitmask */
-    this.bitmaskIndex = setup.bitmaskIndex;
     /** @type {boolean} flag to separate "basic"/effarig glyphs from cursed/reality glyphs */
     this.isGenerated = setup.isGenerated;
     /** @type {string[]} the types of glyphs this effect can occur on */
@@ -136,7 +134,7 @@ class GlyphEffectConfig {
 
   /** @private */
   static checkInputs(setup) {
-    const KNOWN_KEYS = ["id", "bitmaskIndex", "glyphTypes", "singleDesc", "totalDesc", "genericDesc", "effect",
+    const KNOWN_KEYS = ["id", "glyphTypes", "singleDesc", "totalDesc", "genericDesc", "effect",
       "formatEffect", "formatSingleEffect", "combine", "softcap", "conversion", "formatSecondaryEffect",
       "formatSingleSecondaryEffect", "alteredColor", "alterationType", "isGenerated", "shortDesc", "enabledInDoomed"];
     const unknownField = Object.keys(setup).find(k => !KNOWN_KEYS.includes(k));
@@ -178,7 +176,7 @@ class GlyphEffectConfig {
     if (emptyCombine instanceof BE) {
       if (softcap === undefined) return effects => ({ value: combine(effects), capped: false });
       const neqTest = emptyCombine.value instanceof BE ? (a, b) => a.neq(b) : (a, b) => a !== b;
-      return combine = effects => {
+      return effects => {
         const rawValue = combine(effects);
         const cappedValue = softcap(rawValue.value);
         return { value: cappedValue, capped: rawValue.capped || neqTest(rawValue.value, cappedValue) };
@@ -200,18 +198,14 @@ export function findGlyphTypeEffects(glyphType) {
   return GlyphEffects.all.filter(e => e.glyphTypes.includes(glyphType));
 }
 
-export function makeGlyphEffectBitmask(effectList) {
-  return effectList.reduce((mask, eff) => mask + (1 << GlyphEffects[eff].bitmaskIndex), 0);
+export function getGlyphIDsFromSet(set) {
+  return getGlyphEffectsFromSet(set).map(x => x.id);
 }
 
-export function getGlyphEffectsFromBitmask(bitmask) {
+export function getGlyphEffectsFromSet(set) {
   return orderedEffectList
     .map(effectName => GlyphEffects[effectName])
-    .filter(effect => (bitmask & (1 << effect.bitmaskIndex)) !== 0);
-}
-
-export function getGlyphIDsFromBitmask(bitmask) {
-  return getGlyphEffectsFromBitmask(bitmask).map(x => x.id);
+    .filter(effect => set.has(effect.id));
 }
 
 class FunctionalGlyphType {
@@ -245,6 +239,14 @@ class FunctionalGlyphType {
   /** @returns {boolean} */
   get isUnlocked() {
     return this._isUnlocked?.() ?? true;
+  }
+  
+  indexEffect(i) {
+    return this.effects[i];
+  }
+  
+  indexOf(id) {
+    return this.effects.findIndex(e => e.id === id);
   }
 }
 

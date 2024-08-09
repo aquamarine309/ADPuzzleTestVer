@@ -29,7 +29,10 @@ export default {
       hasContinuum: false,
       isContinuumActive: false,
       multiplierText: "",
-      randomDimOrder: false
+      randomDimOrder: false,
+      vertigo: false,
+      lockTimeString: ""
+      
     };
   },
   computed: {
@@ -88,6 +91,10 @@ export default {
 
       this.multiplierText = `Buy 10 Dimension purchase multiplier: ${formatX(this.buy10Mult, 2, 2)}`;
       this.randomDimOrder = Puzzle.randomDimOrder;
+      this.vertigo = GameElements.isActive("vertigo");
+      if (this.vertigo) {
+        this.lockTimeString = timeDisplayShort(GameElements.getElement("vertigo").time);
+      }
       if (!isSacrificeUnlocked) return;
       this.isSacrificeAffordable = Sacrifice.canSacrifice;
       this.currentSacrifice.copyFrom(Sacrifice.totalBoost);
@@ -129,6 +136,14 @@ export default {
     </div>
     <span>{{ multiplierText }}</span>
     <TickspeedRow />
+    <div
+      v-if="vertigo"
+      class="c-vertigo"
+    >
+      <i class="fas fa-lock" />
+      Connot buy any Antimatter Dimensions.
+      (<i class="fas fa-clock" /> {{ lockTimeString }})
+    </div>
     <div class="l-dimensions-container">
       <AntimatterDimensionRow
         v-for="tier in range"

@@ -59,6 +59,7 @@ class ResourceExchangeState extends GameMechanicState {
     this.data.value = this.newExchanged;
     this.currency.value = leave;
     GameCache.logicPoints.invalidate();
+    player.records.thisEternity.maxLP = BE.max(player.records.thisEternity.maxLP, GameCache.logicPoints.value);
     return true;
   }
   
@@ -98,7 +99,7 @@ class ResourceExchangeState extends GameMechanicState {
   }
   
   get symbol() {
-    return this.isUnlocked ? this.config.symbol : "?";
+    return this.hasUnlocked ? this.config.symbol : "?";
   }
   
   get name() {
@@ -113,6 +114,11 @@ class ResourceExchangeState extends GameMechanicState {
     this.data.value = BEC.D0;
     this.exchangeRate = 1;
     this.rateType = PERCENTS_TYPE.NORMAL;
+    player.logic.resourceExchange.lastOpenId = 0;
+  }
+  
+  get hasUnlocked() {
+    return this.isUnlocked || (this.id < 5 && PlayerProgress.eternityUnlocked());
   }
 }
 
@@ -120,6 +126,12 @@ export const ResourceExchange = mapGameDataToObject(
   GameDatabase.logic.resourceExchange, 
   config => new ResourceExchangeState(config)
 );
+
+Object.defineProperty(ResourceExchange, "selected", {
+  get: function() {
+    return this.all[player.logic.resourceExchange.lastOpenId];
+  }
+});
 
 export function getLogicPoints() {
   return ResourceExchange.all.map(r => r.value).reduce(BE.prodReducer);
@@ -168,12 +180,13 @@ class ResourceExchangeUpgradeState extends GameMechanicState {
     if (!this.isAffordable) return;
     this.currency.subtract(this.cost);
     ++this.boughtAmount;
+    EventHub.dispatch(GAME_EVENT.EXCHANGE_LEVEL_UP);
   }
   
   get effectValue() {
     let effectivePoints = GameCache.logicPoints.value;
     if (effectivePoints.gte(BEC.E50)) effectivePoints = BEC.E45.times(effectivePoints.pow(0.1));
-    return BEC.E5.pow(BE.pow(this.boughtAmount + 1, effectivePoints.add(1).log10().plus(1).log10().plus(1)));
+    return BEC.E5.pow(BE.pow(this.boughtAmount + 1, effectivePoints.add(1).log10().plus(1).log10().plus(1)).timesEffectOf(ChallengeFactor.logicalFallacy));
   }
   
   get isEffectActive() {

@@ -7,13 +7,13 @@ class BlackHoleUpgradeState {
     this.incrementAmount = () => setAmount(getAmount() + 1);
     this._lazyValue = new Lazy(() => calculateValue(getAmount()));
     this._lazyCost = new Lazy(() => getHybridCostScaling(getAmount(),
-      1e30,
+      BEC.E30,
       initialCost,
       costMult,
-      0.2,
+      BEC.D0_2,
       BEC.E310,
-      1e5,
-      10));
+      BEC.E5,
+      BEC.E1));
     this.id = config.id;
     this.hasAutobuyer = config.hasAutobuyer;
     this.onPurchase = config.onPurchase;
@@ -37,7 +37,7 @@ class BlackHoleUpgradeState {
     // Keep the cycle phase consistent before and after purchase so that upgrading doesn't cause weird behavior
     // such as immediately activating it when inactive (or worse, skipping past the active segment entirely).
     const bh = BlackHole(this.id);
-    const beforeProg = bh.isCharged ? 1 - bh.stateProgress : bh.stateProgress;
+    const beforeProg = bh.isCharged ? BEC.D1.minus(bh.stateProgress) : bh.stateProgress;
 
     Currency.realityMachines.purchase(this.cost);
     this.incrementAmount();
@@ -51,7 +51,7 @@ class BlackHoleUpgradeState {
     // in a negative argument to updatePhase(), but this shouldn't cause any problems because it'll never make
     // the phase itself negative. In very rare cases this may result in a single auto-pause getting skipped
     const stateTime = bh.isCharged ? bh.duration : bh.interval;
-    bh.updatePhase(stateTime * beforeProg - bh.phase);
+    bh.updatePhase(stateTime.times(beforeProg).minus(bh.phase));
 
     // Prevents a rare edge case where the player makes an inactive black hole permanent, locking themselves into
     // a permanently inactive black hole
@@ -64,15 +64,15 @@ class BlackHoleUpgradeState {
 class BlackHoleState {
   constructor(id) {
     this.id = id + 1;
-    const blackHoleCostMultipliers = [1, 1000];
+    const blackHoleCostMultipliers = [BEC.D1, BEC.E3];
     // Interval: starts at 3600, x0.8 per upgrade, upgrade cost goes x3.5, starts at 15
     this.intervalUpgrade = new BlackHoleUpgradeState({
       id: this.id,
       getAmount: () => this._data.intervalUpgrades,
       setAmount: amount => this._data.intervalUpgrades = amount,
       calculateValue: amount => BEC.D3600.div(Math.pow(10, id)).times(BE.pow(0.8, amount)),
-      initialCost: 15 * blackHoleCostMultipliers[id],
-      costMult: 3.5,
+      initialCost: blackHoleCostMultipliers[id].times(15),
+      costMult: BEC.D3_5,
       hasAutobuyer: false,
       onPurchase: () => {
         if (!this.isCharged) {
@@ -86,8 +86,8 @@ class BlackHoleState {
       getAmount: () => this._data.powerUpgrades,
       setAmount: amount => this._data.powerUpgrades = amount,
       calculateValue: amount => BE.pow(1.35, amount).times((180 / Math.pow(2, id))),
-      initialCost: 20 * blackHoleCostMultipliers[id],
-      costMult: 2,
+      initialCost: blackHoleCostMultipliers[id].times(2),
+      costMult: BEC.D2,
       hasAutobuyer: true
     });
     // Duration: starts at 10, x1.5 per upgrade, cost goes x4, starts at 10
@@ -96,8 +96,8 @@ class BlackHoleState {
       getAmount: () => this._data.durationUpgrades,
       setAmount: amount => this._data.durationUpgrades = amount,
       calculateValue: amount => BE.pow(1.3, amount).times(10 - id * 3),
-      initialCost: 10 * blackHoleCostMultipliers[id],
-      costMult: 4,
+      initialCost: blackHoleCostMultipliers[id].times(10),
+      costMult: BEC.D4,
       hasAutobuyer: false
     });
   }
@@ -113,7 +113,7 @@ class BlackHoleState {
    * Exists to avoid recursion in calculation of whether the black hole is permanent.
    */
   get rawInterval() {
-    return this.intervalUpgrade.value.times(Achievement(145).effectOrDefault(1));
+    return this.intervalUpgrade.value.timesEffectOf(Achievement(145));
   }
 
   /**
@@ -127,14 +127,14 @@ class BlackHoleState {
    * Multiplier to time the black hole gives when active.
    */
   get power() {
-    return this.powerUpgrade.value.times(Achievement(158).effectOrDefault(1));
+    return this.powerUpgrade.value.timesEffectOf(Achievement(158));
   }
 
   /**
    * Amount of time the black hole is active for.
    */
   get duration() {
-    return this.durationUpgrade.value.times(Achievement(155).effectOrDefault(1));
+    return this.durationUpgrade.value.timesEffectOf(Achievement(155));
   }
 
   get isUnlocked() {

@@ -85,6 +85,10 @@ export const tabNotifications = {
       {
         parent: "dimensions",
         tab: "time"
+      },
+      {
+        parent: "logic",
+        tab: "challenge factors"
       }
     ],
     condition: () => !PlayerProgress.realityUnlocked() &&

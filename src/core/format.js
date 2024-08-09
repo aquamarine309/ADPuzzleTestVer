@@ -18,6 +18,9 @@ window.formatInt = function formatInt(value) {
   if (Notations.current.isPainful && Notations.current.name !== "Standard") {
     return format(value, 2);
   }
+  if ((value instanceof BE) && value.gte(1e9)) {
+    return format(value, 2);
+  }
   return formatWithCommas(typeof value === "number" ? value.toFixed(0) : value.toNumber().toFixed(0));
 };
 

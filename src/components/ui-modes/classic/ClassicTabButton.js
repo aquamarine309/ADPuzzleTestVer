@@ -14,7 +14,8 @@ export default {
     return {
       isAvailable: false,
       hasNotification: false,
-      tabName: ""
+      tabName: "",
+      locked: false
     };
   },
   computed: {
@@ -26,6 +27,7 @@ export default {
     update() {
       this.isAvailable = this.tab.isAvailable;
       this.hasNotification = this.tab.hasNotification;
+      this.locked = GameElements.isActive("tabLock");
       if (this.tabPosition < Pelle.endTabNames.length) {
         this.tabName = Pelle.transitionText(
           this.tab.name,
@@ -48,7 +50,10 @@ export default {
     @click="tab.show(true)"
     data-v-class-tab-button
   >
-    {{ tabName }}
+    <i
+      v-if="locked"
+      class="fas fa-lock"
+    /> {{ tabName }}
     <div
       v-if="hasNotification"
       class="fas fa-circle-exclamation l-notification-icon"

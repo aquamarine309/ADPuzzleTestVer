@@ -1,5 +1,3 @@
-import Decimal from "./break_infinity.js";
-
 export default (function () { 'use strict';
 
   function _classCallCheck(instance, Constructor) {
@@ -401,8 +399,6 @@ export default (function () { 'use strict';
       this.layer = 0;
       if (value instanceof BE) {
         this.fromBE(value);
-      } else if (value instanceof Decimal) {
-        this.fromDecimal(value);
       } else if (typeof value === "number") {
         this.fromNumber(value);
       } else if (typeof value === "string") {
@@ -653,13 +649,6 @@ export default (function () { 'use strict';
        *
        * Note: this function mutates the BE it is called on.
        */
-    }, {
-      key: "fromDecimal",
-      value: function fromDecimal(value) {
-        this.mantissa = value.mantissa;
-        this.exponent = value.exponent;
-        return this;
-      }
     }, {
       key: "fromNumber",
       value: function fromNumber(value) {
@@ -971,9 +960,6 @@ export default (function () { 'use strict';
       value: function fromValue(value) {
         if (value instanceof BE) {
           return this.fromBE(value);
-        }
-        if (value instanceof Decimal) {
-          return this.fromDecimal(value);
         }
         if (typeof value === "number") {
           return this.fromNumber(value);
@@ -3222,14 +3208,6 @@ export default (function () { 'use strict';
        * Converts a floating-point number into a BE.
        */
     }, {
-      key: "fromDecimal",
-      value: function fromDecimal(value) {
-        return new BE().fromDecimal(value);
-      }
-      /**
-       * Converts a floating-point number into a BE.
-       */
-    }, {
       key: "fromNumber",
       value: function fromNumber(value) {
         return new BE().fromNumber(value);
@@ -3267,8 +3245,6 @@ export default (function () { 'use strict';
       value: function fromValue_noAlloc(value) {
         if (value instanceof BE) {
           return value;
-        } else if (value instanceof Decimal) {
-          return BE.fromDecimal(value);
         } else if (typeof value === "string") {
           var cached = BE.fromStringCache.get(value);
           if (cached !== undefined) {

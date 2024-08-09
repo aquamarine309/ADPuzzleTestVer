@@ -176,6 +176,7 @@ function calc(str) {
 function checkRow(row) {
   if (row.countWhere(c => c === "=") !== 1) return false;
   const str = row.join("");
+  if (str.includes("/*") || str.includes("*/")) return false;
   const split = str.split("=");
   if (str.includes("××")) return false;
   return calc(split[0]) === calc(split[1]);

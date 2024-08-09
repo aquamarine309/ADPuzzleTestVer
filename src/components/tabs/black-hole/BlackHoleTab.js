@@ -61,8 +61,8 @@ export default {
       this.isPermanent = BlackHoles.arePermanent;
       this.pauseMode = player.blackHoleAutoPauseMode;
       this.hasBH2 = BlackHole(2).isUnlocked;
-      this.blackHoleUptime = [BlackHole(1).duration / BlackHole(1).cycleLength,
-        BlackHole(2).duration / BlackHole(2).cycleLength];
+      this.blackHoleUptime = [BlackHole(1).duration.div(BlackHole(1).cycleLength),
+        BlackHole(2).duration.div(BlackHole(2).cycleLength)];
       this.detailedBH2 = this.bh2Status();
 
       if (player.blackHoleNegative < 1) this.stateChange = this.isPaused ? "Uninvert" : "Invert";
@@ -79,29 +79,29 @@ export default {
       }
 
       // BH1 active, BH2 will trigger before BH1 runs out
-      if (BlackHole(1).isActive && (bh2Remaining < bh1Remaining)) {
-        const bh2Duration = Math.min(bh1Remaining - bh2Remaining, BlackHole(2).duration);
+      if (BlackHole(1).isActive && (bh2Remaining.lt(bh1Remaining))) {
+        const bh2Duration = bh1Remaining.minus(bh2Remaining).min(BlackHole(2).duration);
         return `Black Hole 2 will activate before Black Hole 1 deactivates,
           for ${TimeSpan.fromSeconds(bh2Duration).toStringShort()}`;
       }
 
       // BH2 won't start yet next cycle
-      if (BlackHole(1).isActive || (bh2Remaining > BlackHole(1).duration)) {
+      if (BlackHole(1).isActive || (bh2Remaining.gt(BlackHole(1).duration))) {
         const cycleCount = BlackHole(1).isActive
-          ? Math.floor((bh2Remaining - bh1Remaining) / BlackHole(1).duration) + 1
-          : Math.floor(bh2Remaining / BlackHole(1).duration);
+          ? bh2Remaining.minus(bh1Remaining).div(BlackHole(1).duration).floor().add(1)
+          : bh2Remaining.div(BlackHole(1).duration).floor();
         return `Black Hole 2 will activate after ${quantifyInt("more active cycle", cycleCount)} of Black Hole 1.`;
       }
 
       // BH1 inactive, BH2 ready to go when BH1 activates
       if (BlackHole(2).isCharged) {
-        const bh2Duration = Math.min(BlackHole(1).duration, bh2Remaining);
+        const bh2Duration = BE.min(BlackHole(1).duration, bh2Remaining);
         return `Black Hole 2 will activate with Black Hole 1,
           for ${TimeSpan.fromSeconds(bh2Duration).toStringShort()}.`;
       }
 
       // BH1 inactive, BH2 starts at some point after BH1 activates
-      const bh2Duration = Math.min(BlackHole(1).duration - bh2Remaining, BlackHole(2).duration);
+      const bh2Duration = BE.min(BlackHole(1).duration.minus(bh2Remaining), BlackHole(2).duration);
       return `Black Hole 2 will activate ${TimeSpan.fromSeconds(bh2Remaining).toStringShort()} after
         Black Hole 1, for ${TimeSpan.fromSeconds(bh2Duration).toStringShort()}.`;
     },

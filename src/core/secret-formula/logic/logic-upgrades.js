@@ -1,5 +1,11 @@
 import { BEC } from "../../constants.js";
 
+const disabledText = () => {
+  return ChallengeFactor.dimensionOverflow.canBeApplied
+    ? `\n(Disabled by ${ChallengeFactor.dimensionOverflow.name})`
+    : "";
+}
+
 export const logicUpgrades = [
   {
     name: "Acceleration Infinity",
@@ -29,7 +35,7 @@ export const logicUpgrades = [
   {
     name: "Four a minute",
     id: 3,
-    description: "Unlock a new Antimatter Dimension.",
+    description: () => `Unlock a new Antimatter Dimension.${disabledText()}`,
     requirement: () => `Reach ${formatPostBreak(BEC.E1150)} antimatter in any challenge.`,
     checkRequirement: () => Player.isInAnyChallenge && Currency.antimatter.gte(BEC.E1150),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
@@ -40,7 +46,7 @@ export const logicUpgrades = [
   {
     name: "Pentagonal Dimension",
     id: 4,
-    description: "Unlock a new Antimatter Dimension.",
+    description: () => `Unlock a new Antimatter Dimension.${disabledText()}`,
     requirement: () => `Reach ${format(BEC.E100)} Replicanti.`,
     checkRequirement: () => Replicanti.amount.gte(BEC.E100),
     checkEvent: GAME_EVENT.REPLICANTI_TICK_AFTER,
@@ -51,17 +57,16 @@ export const logicUpgrades = [
   {
     name: "Could Afford Six",
     id: 5,
-    description: "Unlock a new Antimatter Dimension.",
-    requirement: () => `TBD`,
-    checkRequirement: () => false,
+    description: () => `Unlock a new Antimatter Dimension. ${disabledText()}`,
+    requirement: () => `Enter Time Dilation.`,
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
-    hasFailed: () => true,
+    hasFailed: () => !TimeStudy.dilation.isBought && !TimeStudy.dilation.canBeBought,
     effect: 1
   },
   {
     name: "Lucky Upgrade",
     id: 6,
-    description: "Unlock a new Antimatter Dimension.",
+    description: () => `Unlock a new Antimatter Dimension.${disabledText()}`,
     requirement: () => `TBD`,
     checkRequirement: () => false,
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
@@ -71,7 +76,7 @@ export const logicUpgrades = [
   {
     name: "Not Over Yet",
     id: 7,
-    description: "Unlock a new Antimatter Dimension.",
+    description: () => `Unlock a new Antimatter Dimension.${disabledText()}`,
     requirement: () => `TBD`,
     checkRequirement: () => false,
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
@@ -115,4 +120,8 @@ export const logicUpgrades = [
     },
     cost: 9e28
   }
-]
+].map(upg => {
+  const cost = new BE(upg.cost);
+  upg.cost = () => cost.timesEffectOf(ChallengeFactor.inexpensiveUpgrade);
+  return upg;
+});

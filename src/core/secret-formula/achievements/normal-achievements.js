@@ -1179,7 +1179,7 @@ export const normalAchievements = [
     name: "It's super effective!",
     get description() { return `Get a Glyph with ${formatInt(4)} effects.`; },
     checkRequirement: () => Glyphs.activeList.concat(Glyphs.inventoryList).map(
-      glyph => getGlyphEffectsFromBitmask(glyph.effects, 0, 0)
+      glyph => getGlyphEffectsFromSet(glyph.effects, 0, 0)
         .filter(effect => effect.isGenerated).length
     ).max() >= 4,
     checkEvent: GAME_EVENT.GLYPHS_CHANGED
@@ -1231,7 +1231,7 @@ export const normalAchievements = [
     id: 165,
     name: "Perfectly balanced",
     get description() { return `Get a level ${formatInt(5000)} Glyph with all Glyph level factors equally weighted.`; },
-    checkRequirement: () => gainedGlyphLevel().actualLevel >= 5000 &&
+    checkRequirement: () => gainedGlyphLevel().actualLevel.gte(5000) &&
       ["repl", "dt", "eternities"].every(
         i => player.celestials.effarig.glyphWeights[i] === player.celestials.effarig.glyphWeights.ep),
     checkEvent: GAME_EVENT.REALITY_RESET_BEFORE,
@@ -1241,7 +1241,7 @@ export const normalAchievements = [
     id: 166,
     name: "Nicenice.",
     get description() { return `Get a Glyph with level exactly ${formatInt(6969)}.`; },
-    checkRequirement: () => gainedGlyphLevel().actualLevel === 6969,
+    checkRequirement: () => gainedGlyphLevel().actualLevel.eq(6969),
     checkEvent: GAME_EVENT.REALITY_RESET_BEFORE,
     get reward() { return `+${formatInt(69)} to Glyph level.`; },
     effect: 69
@@ -1260,7 +1260,7 @@ export const normalAchievements = [
     id: 168,
     name: "Woah, we're halfway there",
     get description() { return `Get ${formatInt(50)} total Ra Celestial Memory levels.`; },
-    checkRequirement: () => Ra.totalPetLevel >= 50,
+    checkRequirement: () => Ra.totalPetLevel > 50,
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
     get reward() { return `Get ${formatPercents(0.1)} more memories.`; },
     effect: 1.1

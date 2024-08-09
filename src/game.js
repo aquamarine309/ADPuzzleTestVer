@@ -162,10 +162,10 @@ export function requiredIPForEP(epAmount) {
 
 export function gainedGlyphLevel() {
   const glyphState = getGlyphLevelInputs();
-  let rawLevel = Math.floor(glyphState.rawLevel);
-  if (!isFinite(rawLevel)) rawLevel = 0;
-  let actualLevel = Math.floor(glyphState.actualLevel);
-  if (!isFinite(actualLevel)) actualLevel = 0;
+  let rawLevel = glyphState.rawLevel.floor();
+  if (!rawLevel.isFinite()) rawLevel = BEC.D0;
+  let actualLevel = glyphState.actualLevel.floor();
+  if (!actualLevel.isFinite()) actualLevel = BEC.D0;
   return {
     rawLevel,
     actualLevel
@@ -249,7 +249,7 @@ function isOfflineEPGainEnabled() {
 
 export function getOfflineEPGain(ms) {
   if (!EternityMilestone.autoEP.isReached || !isOfflineEPGainEnabled()) return BEC.D0;
-  return player.records.bestEternity.bestEPminReality.times(TimeSpan.fromMilliseconds(ms).totalMinutes / 4);
+  return player.records.bestEternity.bestEPminReality.times(TimeSpan.fromMilliseconds(ms).totalMinutes.div(4));
 }
 
 // Note: realities and ampFactor must be distinct because there are a few things farther up which only multiply
@@ -264,7 +264,7 @@ export function addRealityTime(time, realTime, rm, level, realities, ampFactor, 
   const shards = Effarig.shardsGained;
   player.records.recentRealities.pop();
   player.records.recentRealities.unshift([time, realTime, rm.times(ampFactor),
-    realities, reality, level, shards * ampFactor, projIM]);
+    realities, reality, level, shards.times(ampFactor), projIM]);
 }
 
 export function gainedInfinities() {
@@ -302,7 +302,8 @@ export const GAME_SPEED_EFFECT = {
   SINGULARITY_MILESTONE: 5,
   NERFS: 6,
   LOGIC_CHALLENGE: 7,
-  EXTRA_BONUS: 8
+  EXTRA_BONUS: 8,
+  ELEMENT: 9
 };
 
 /**
@@ -314,10 +315,7 @@ export const GAME_SPEED_EFFECT = {
 export function getGameSpeedupFactor(effectsToConsider, blackHolesActiveOverride) {
   let effects;
   if (effectsToConsider === undefined) {
-    effects = [GAME_SPEED_EFFECT.FIXED_SPEED, GAME_SPEED_EFFECT.TIME_GLYPH, GAME_SPEED_EFFECT.BLACK_HOLE,
-      GAME_SPEED_EFFECT.TIME_STORAGE, GAME_SPEED_EFFECT.SINGULARITY_MILESTONE, GAME_SPEED_EFFECT.NERFS,
-      GAME_SPEED_EFFECT.LOGIC_CHALLENGE, GAME_SPEED_EFFECT.EXTRA_BONUS
-    ];
+    effects = Object.values(GAME_SPEED_EFFECT);
   } else {
     effects = effectsToConsider;
   }
@@ -351,6 +349,10 @@ export function getGameSpeedupFactor(effectsToConsider, blackHolesActiveOverride
   
   if (effects.includes(GAME_SPEED_EFFECT.EXTRA_BONUS)) {
     factor = factor.timesEffectOf(ExtraBonus.extraBonusToGamespeed);
+  }
+  
+  if (effects.includes(GAME_SPEED_EFFECT.ELEMENT)) {
+    factor = factor.timesEffectOf(ElementEffects.freeze);
   }
 
   if (effects.includes(GAME_SPEED_EFFECT.SINGULARITY_MILESTONE)) {
@@ -508,6 +510,10 @@ export function gameLoop(passDiff, options = {}) {
   GameCache.infinityDimensionCommonMultiplier.invalidate();
   GameCache.timeDimensionCommonMultiplier.invalidate();
   GameCache.totalIPMult.invalidate();
+  
+  if (PlayerProgress.eternityUnlocked() || Player.canEternity) {
+    GameCache.timeCoresFactor.invalidate();
+  }
 
   const blackHoleDiff = realDiff;
   const fixedSpeedActive = EternityChallenge(12).isRunning;
@@ -631,7 +637,7 @@ export function gameLoop(passDiff, options = {}) {
 
   if (Enslaved.canTickHintTimer) {
     player.celestials.enslaved.hintUnlockProgress += Enslaved.isRunning ? realDiff : (realDiff * 0.4);
-    if (player.celestials.enslaved.hintUnlockProgress >= TimeSpan.fromHours(5).totalMilliseconds) {
+    if (player.celestials.enslaved.hintUnlockProgress >= TimeSpan.fromHours(5).totalMilliseconds.toNumber()) {
       EnslavedProgress.hintsUnlocked.giveProgress();
       Enslaved.quotes.hintUnlock.show();
     }
@@ -645,6 +651,8 @@ export function gameLoop(passDiff, options = {}) {
   GalaxyGenerator.loop(realDiff);
   LC3.tick(diff);
   ExtraBonus.tick(realDiff);
+  GameElements.tick(realDiff);
+  ChallengeFactors.tick(realDiff);
   GameEnd.gameLoop(realDiff);
 
   if (!Enslaved.canAmplify) {
@@ -779,7 +787,7 @@ function laitelaRealityTick(realDiff) {
       completionText += `<br><br>Dark Matter Multiplier: ${formatX(oldInfo.realityReward, 2, 2)}
       ➜ ${formatX(Laitela.realityReward, 2, 2)}`;
       if (oldInfo.fastestCompletion === 3600 || oldInfo.fastestCompletion === 300 && oldInfo.difficultyTier > 0) {
-        if (Time.thisRealityRealTime.totalSeconds < 30) {
+        if (Time.thisRealityRealTime.totalSeconds.lt(30)) {
           // First attempt - destabilising
           completionText += `<br>Best Completion Time: None ➜ Destabilized
           <br>Highest Active Dimension: ${formatInt(8 - oldInfo.difficultyTier)} ➜
@@ -790,7 +798,7 @@ function laitelaRealityTick(realDiff) {
             ${TimeSpan.fromSeconds(laitelaInfo.fastestCompletion).toStringShort()}
             <br>Highest Active Dimension: ${formatInt(8 - laitelaInfo.difficultyTier)}`;
         }
-      } else if (Time.thisRealityRealTime.totalSeconds < 30) {
+      } else if (Time.thisRealityRealTime.totalSeconds.lt(30)) {
         // Second+ attempt - destabilising
         completionText += `<br>Best Completion Time: ${TimeSpan.fromSeconds(oldInfo.fastestCompletion).toStringShort()}
           ➜ Destabilized

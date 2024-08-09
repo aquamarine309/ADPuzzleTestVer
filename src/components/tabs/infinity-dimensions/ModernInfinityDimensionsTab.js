@@ -55,7 +55,7 @@ export default {
       this.infinityPower.copyFrom(Currency.infinityPower);
       this.conversionRate = InfinityDimensions.powerConversionRate;
       if (this.isEC9Running) {
-        this.dimMultiplier.copyFrom(BE.pow(Decimal.max(this.infinityPower.log2(), 1), 4).max(1));
+        this.dimMultiplier.copyFrom(BE.pow(this.infinityPower.log2().max(1), 4).max(1));
       } else if (this.isLC4Running) {
         this.dimMultiplier.copyFrom(LogicChallenge(4).effectValue);
       } else {

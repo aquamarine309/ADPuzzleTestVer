@@ -79,10 +79,10 @@ export default {
         ? `You cannot gain this resource (prestige requirement not reached)`
         : `You have no multipliers for this resource (will gain ${format(1)} on prestige)`;
     },
-    // IC4 is the first time the player sees a power-based effect, not counting how infinity power is handled.
-    // This doesn't need to be reactive because completing IC4 for the first time forces a tab switch
+    // LC1 is the first time the player sees a power-based effect, not counting how infinity power is handled.
+    // This doesn't need to be reactive because completing LC1 for the first time forces a tab switch
     hasSeenPowers() {
-      return InfinityChallenge(4).isCompleted || PlayerProgress.eternityUnlocked();
+      return LogicChallenge(1).isCompleted || PlayerProgress.eternityUnlocked();
     },
     // While infinity power is a power-based effect, we want to disallow showing that as an equivalent multiplier
     // since that it doesn't make a whole lot of sense to do that. We also want to hide this for entries related
@@ -152,12 +152,12 @@ export default {
           : BE.log10(entry.data.mult).div(log10Mult);
         const powFrac = totalPosPow.eq(1)
           ? BEC.D0
-          : BE.ln(entry.data.pow).div(BE.ln(totalPosPow));
+          : entry.data.pow.ln().div(totalPosPow.ln());
 
         // Handle nerf powers differently from everything else in order to render them with the correct bar percentage
         const perc = entry.data.pow.gte(1)
           ? multFrac.div(totalPosPow).add(powFrac.mul(BEC.D1.sub(BEC.D1.div(totalPosPow))))
-          : BE.ln(entry.data.pow).div(BE.ln(totalNegPow)).mul(totalNegPow.sub(1));
+          : entry.data.pow.ln().div(totalNegPow.ln()).mul(totalNegPow.sub(1));
 
         // This is clamped to a minimum of something that's still nonzero in order to show it at <0.1% instead of 0%
         percentList.push(

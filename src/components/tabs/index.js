@@ -5,6 +5,7 @@ import AutobuyersTab from "./autobuyers/AutobuyersTab.js";
 import AutomatorTab from "./automator/AutomatorTab.js";
 import BlackHoleTab from "./black-hole/BlackHoleTab.js";
 import BreakInfinityTab from "./break-infinity/BreakInfinityTab.js";
+import ChallengeFactorsTab from "./challenge-factors/ChallengeFactorsTab.js";
 import CelestialNavigationTab from "./celestial-navigation/CelestialNavigationTab.js";
 import ChallengeRecordsTab from "./challenge-records/ChallengeRecordsTab.js";
 import EffarigTab from "./celestial-effarig/EffarigTab.js";
@@ -20,7 +21,6 @@ import InfinityDimensionsTab from "./infinity-dimensions/InfinityDimensionsTab.j
 import InfinityUpgradesTab from "./infinity-upgrades/InfinityUpgradesTab.js";
 import LaitelaTab from "./celestial-laitela/LaitelaTab.js";
 import LogicChallengesTab from "./logic-challenges/LogicChallengesTab.js";
-import ResourceExchangeTab from "./resource-exchange/ResourceExchangeTab.js";
 import MultiplierBreakdownTab from "./statistics/MultiplierBreakdownTab.js";
 import NormalAchievementsTab from "./normal-achievements/NormalAchievementsTab.js";
 import NormalChallengesTab from "./normal-challenges/NormalChallengesTab.js";
@@ -34,6 +34,7 @@ import PreviousSpeedrunTab from "./speedrun-milestones/PreviousSpeedrunTab.js";
 import RaTab from "./celestial-ra/RaTab.js";
 import RealityUpgradesTab from "./reality-upgrades/RealityUpgradesTab.js";
 import ReplicantiTab from "./replicanti/ReplicantiTab.js";
+import ResourceExchangeTab from "./resource-exchange/ResourceExchangeTab.js";
 import SecretAchievementTab from "./secret-achievements/SecretAchievementTab.js";
 import ShopTab from "./shop/ShopTab.js";
 import SpeedrunMilestonesTab from "./speedrun-milestones/SpeedrunMilestonesTab.js";
@@ -88,7 +89,8 @@ const TabComponents = {
   CelestialNavigationTab,
   ShopTab,
   MultiplierBreakdownTab,
-  ResourceExchangeTab
+  ResourceExchangeTab,
+  ChallengeFactorsTab
 };
 
 export default TabComponents;

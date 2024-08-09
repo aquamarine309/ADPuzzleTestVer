@@ -67,6 +67,7 @@ class InfinityChallengeState extends GameMechanicState {
     player.challenge.infinity.completedBits |= 1 << this.id;
     EventHub.dispatch(GAME_EVENT.INFINITY_CHALLENGE_COMPLETED);
     if (this.id === 10) GameCache.dimensionMultDecrease.invalidate();
+    InfinityChallenges._completions.invalidate();
   }
 
   get isEffectActive() {
@@ -134,6 +135,7 @@ export const InfinityChallenges = {
   },
   clearCompletions() {
     player.challenge.infinity.completedBits = 0;
+    InfinityChallenges._completions.invalidate();
   },
   get nextIC() {
     return InfinityChallenges.all.find(x => !x.isUnlocked);
@@ -164,5 +166,11 @@ export const InfinityChallenges = {
    */
   get completed() {
     return InfinityChallenges.all.filter(ic => ic.isCompleted);
+  },
+  
+  _completions: new Lazy(() => InfinityChallenges.all.countWhere(challenge => challenge.isCompleted)),
+  
+  get completions() {
+    return this._completions.value;
   }
 };

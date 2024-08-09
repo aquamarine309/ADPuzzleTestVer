@@ -6,7 +6,9 @@ export const Puzzle = {
   get maxTier() {
     if (!PlayerProgress.infinityUnlocked()) return 8;
     if (LogicChallenge(7).isRunning) return 1;
-    return GameCache.maxTier.value;
+    let tier = GameCache.maxTier.value
+    ChallengeFactor.dimensionOverflow.applyEffect(v => tier = Math.min(tier, v));
+    return tier;
   },
   get randomDimOrder() {
     return DimBoost.purchasedBoosts.eq(4) && player.galaxies.eq(0) && !PlayerProgress.infinityUnlocked();

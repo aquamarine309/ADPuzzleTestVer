@@ -167,7 +167,7 @@ export const infinityChallenges = [
     goal: BEC.E10000,
     effect: 0.01,
     reward: {
-      description: () => `Infinity Power Conversion rate +${format(0.1)}`,
+      description: () => `Infinity Power conversion rate +${format(0.1, 0, 1)}`,
       effect: 0.1
     },
     unlockAM: BEC.E50505

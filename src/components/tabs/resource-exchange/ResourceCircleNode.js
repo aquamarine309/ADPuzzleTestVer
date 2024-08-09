@@ -14,6 +14,7 @@ export default {
   data() {
     return {
       isUnlocked: false,
+      hasUnlocked: false,
       isOpen: false
     }
   },
@@ -21,9 +22,11 @@ export default {
     classObject() {
       return {
         "o-resource-circle-node": true,
-        "o-resource-circle-node--locked": !this.isUnlocked,
+        "o-resource-circle-node--locked": !this.isUnlocked && !this.hasUnlocked,
+        "o-resource-circle-node--seen": !this.isUnlocked && this.hasUnlocked,
         "o-resource-circle-node--open": this.isOpen,
-        "o-resource-circle-node--locked-open": !this.isUnlocked && this.isOpen
+        "o-resource-circle-node--locked-open": !this.isUnlocked && !this.hasUnlocked && this.isOpen,
+        "o-resource-circle-node--seen-open": !this.isUnlocked && this.hasUnlocked && this.isOpen
       }
     },
     displayName() {
@@ -33,6 +36,7 @@ export default {
   methods: {
     update() {
       this.isUnlocked = this.resource.isUnlocked;
+      this.hasUnlocked = this.resource.hasUnlocked;
       this.isOpen = this.resource.id === player.logic.resourceExchange.lastOpenId;
     }
   },

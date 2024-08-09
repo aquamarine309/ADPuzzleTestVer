@@ -8,9 +8,9 @@ export default {
       ecCount: 0,
       missingAchievements: 0,
       unpurchasedDilationUpgrades: 0,
-      currLog10EP: 0,
-      cheapestLog10TD: 0,
-      multEPLog10Cost: 0,
+      currLog10EP: new BE(0),
+      cheapestLog10TD: new BE(0),
+      multEPLog10Cost: new BE(0),
       purchasableTS: 0,
       hasDilated: 0,
       availableCharges: 0,
@@ -28,11 +28,11 @@ export default {
       if (this.unpurchasedDilationUpgrades > 0) {
         arr.push(`Purchase the remaining Dilation Upgrades (${formatInt(this.unpurchasedDilationUpgrades)} left)`);
       }
-      if (this.currLog10EP > 1.3 * this.cheapestLog10TD) {
-        arr.push(`Purchase more TDs (cheapest: ${format(Decimal.pow10(this.cheapestLog10TD))} EP)`);
+      if (this.currLog10EP.gt(this.cheapestLog10TD.times(1.3))) {
+        arr.push(`Purchase more TDs (cheapest: ${format(BE.pow10(this.cheapestLog10TD))} EP)`);
       }
-      if (this.currLog10EP > 1.3 * this.multEPLog10Cost) {
-        arr.push(`Purchase more ${formatX(5)} EP (cost: ${format(Decimal.pow10(this.multEPLog10Cost))} EP)`);
+      if (this.currLog10EP.gt(this.multEPLog10Cost.times(1.3))) {
+        arr.push(`Purchase more ${formatX(5)} EP (cost: ${format(BE.pow10(this.multEPLog10Cost))} EP)`);
       }
       if (this.ecCount < 60) {
         arr.push(`Finish the rest of your ECs (Done: ${formatInt(this.ecCount)}/${formatInt(60)})`);
@@ -84,7 +84,7 @@ export default {
       this.unpurchasedDilationUpgrades = DilationUpgrade.all
         .countWhere(u => (u.isBought === undefined ? u.boughtAmount === 0 : !u.isBought) && !u.config.pelleOnly);
       this.currLog10EP = player.eternityPoints.log10();
-      this.cheapestLog10TD = Math.min(...TimeDimensions.all.map(x => x.cost.log10()));
+      this.cheapestLog10TD = TimeDimensions.all.map(x => x.cost.log10()).reduce(BE.minReducer);
       this.multEPLog10Cost = EternityUpgrade.epMult.cost.log10();
       this.purchasableTS = NormalTimeStudyState.studies.countWhere(s => s && s.canBeBought && !s.isBought);
       this.hasDilated = Perk.startTP.canBeApplied ? player.dilation.lastEP.gt(0)

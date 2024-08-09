@@ -23,8 +23,11 @@ export default {
     }
   },
   methods: {
+    update() {
+      this.showAllChallenges = player.options.showAllChallenges;
+    },
     isChallengeVisible(challenge) {
-      return challenge.isUnlocked;
+      return challenge.isUnlocked || (this.showAllChallenges && PlayerProgress.eternityUnlocked());
     }
   },
   template: `

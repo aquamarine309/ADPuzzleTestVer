@@ -10,6 +10,7 @@ import { infinities } from "./infinities.js";
 import { ID } from "./infinity-dimensions.js";
 import { IP } from "./infinity-points.js";
 import { replicanti } from "./replicanti.js";
+import { TC } from "./time-cores.js";
 import { TP } from "./tachyon-particles.js";
 import { tickspeed, tickspeedUpgrades } from "./tickspeed.js";
 import { TD } from "./time-dimensions.js";
@@ -22,6 +23,7 @@ export const multiplierTabValues = {
   TD,
   IP,
   EP,
+  TC,
   TP,
   DT,
   tickspeed,

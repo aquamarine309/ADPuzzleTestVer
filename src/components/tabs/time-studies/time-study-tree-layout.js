@@ -56,20 +56,20 @@ export class TimeStudyTreeLayout {
      */
     /* eslint-disable no-multi-spaces, space-in-parens, func-call-spacing */
     this.rows = [
-      normalRow(                       null,   TS(11),   null                         ),
-      normalRow(                           TS(21), TS(22)                             ),
-      normalRow(                   null, TS(31), TS(32), TS(33)                       )
+      normalRow(                       null,   TS(11),   null                          ),
+      normalRow(                           TS(21), TS(22)                            ),
+      normalRow(                      null, TS(31), TS(32), TS(33)                     )
     ];
 
     if (type === STUDY_TREE_LAYOUT_TYPE.ALTERNATIVE_62 || type === STUDY_TREE_LAYOUT_TYPE.ALTERNATIVE_62_181 ||
       type === STUDY_TREE_LAYOUT_TYPE.ALTERNATIVE_TRIAD_STUDIES) {
       this.rows.push(
-        normalRow(                     null, TS(41), TS(42), EC(5)                      ),
+        normalRow(                   TS(40), TS(41), TS(42), EC(5)                      ),
         normalRow(                               TS(51)                                 )
       );
     } else {
       this.rows.push(
-        normalRow(                           TS(41), TS(42)                             ),
+        normalRow(                   TS(40), TS(41), TS(42), null                        ),
         normalRow(                       null,   TS(51),  EC(5)                         )
       );
     }

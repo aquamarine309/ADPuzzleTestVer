@@ -419,7 +419,7 @@ window.LinearCostScaling = class LinearCostScaling {
    * @param {Number} maxPurchases max amount of purchases
    * @param {Boolean} free signifies if the purchase is free -> if we only need to consider the last cost
    */
-  constructor(resourcesAvailable, initialCost, costMultiplier, maxPurchases = BEC.BEMAX, free = false) {
+  constructor(resourcesAvailable, initialCost, costMultiplier, maxPurchases = BE.NUMBER_MAX_VALUE, free = false) {
     if (free) {
       this._purchases = BE.min(Math.floor(
         resourcesAvailable.div(initialCost).log10().div(Math.log10(costMultiplier).add(1))), maxPurchases);
@@ -1616,3 +1616,14 @@ window.ExponentialMovingAverage = class ExponentialMovingAverage {
     }
   }
 };
+
+// Note this function is used for glyph bitmasks, news ticker bitmasks, and offline achievements
+window.countValuesFromBitmask = function countValuesFromBitmask(bitmask) {
+  let numEffects = 0;
+  let bits = bitmask;
+  while (bits !== 0) {
+    numEffects += bits & 1;
+    bits >>= 1;
+  }
+  return numEffects;
+}

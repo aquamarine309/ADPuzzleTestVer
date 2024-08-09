@@ -52,6 +52,7 @@ export const BEC = deepFreeze({
   D1_33:                new BE("1.33"),
   D2:                   new BE("2"),
   D3:                   new BE("3"),
+  D3_5:                   new BE("3.5"),
   D4:                   new BE("4"),
   D5:                   new BE("5"),
   D7:                   new BE("7"),
@@ -60,8 +61,12 @@ export const BEC = deepFreeze({
   D15:                  new BE("15"),
   D16:                  new BE("16"),
   D20:                  new BE("20"),
+  D30:                  new BE("30"),
   D50:                  new BE("50"),
+  D500:                new BE("500"),
+  D1500:                new BE("1500"),
   D3600:                new BE("3600"),
+  D6666:                new BE("6666"),
   D11111:                new BE("11111"),
   D3E4:                 new BE("30000"),
   D2E5:                 new BE("2e5"),
@@ -160,6 +165,7 @@ export const BEC = deepFreeze({
   E1800:                new BE("1e1800"),
   E1900:                new BE("1e1900"),
   E2000:                new BE("1e2000"),
+  E2250:                new BE("1e2250"),
   E2350:                new BE("1e2350"),
   E2400:                new BE("1e2400"),
   E2500:                new BE("1e2500"),
@@ -349,7 +355,8 @@ window.GLYPH_TYPES = [
   "effarig",
   "reality",
   "cursed",
-  "companion"
+  "companion",
+  "logic"
 ];
 
 window.BASIC_GLYPH_TYPES = [
@@ -357,7 +364,8 @@ window.BASIC_GLYPH_TYPES = [
   "infinity",
   "replication",
   "time",
-  "dilation"
+  "dilation",
+  "logic"
 ];
 
 window.ALCHEMY_BASIC_GLYPH_TYPES = [
@@ -378,7 +386,8 @@ window.GLYPH_SYMBOLS = {
   effarig: "Ϙ",
   reality: "Ϟ",
   cursed: "⸸",
-  companion: "♥"
+  companion: "♥",
+  logic: "\uE011"
 };
 
 window.CANCER_GLYPH_SYMBOLS = {
@@ -390,7 +399,8 @@ window.CANCER_GLYPH_SYMBOLS = {
   effarig: "🦒",
   reality: "⛧",
   cursed: "☠",
-  companion: "³"
+  companion: "³",
+  logic: ""
 };
 
 window.ALTERATION_TYPE = {
@@ -554,4 +564,10 @@ window.GAME_STAGE = {
   FAILED: -1,
   NOT_COMPLETE: 0,
   COMPLETED: 1
-}
+};
+
+window.CHALLENGE_FACTOR_TYPE = {
+  DISBALED: 0,
+  NERF: 1,
+  IMPROVE: 2
+};

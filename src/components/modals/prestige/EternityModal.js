@@ -10,7 +10,8 @@ export default {
       exitingEC: false,
       startingIP: new BE(),
       gainedEternityPoints: new BE(),
-      gainedEternities: new BE()
+      gainedEternities: new BE(),
+      gainedTimeCores: new BE()
     };
   },
   computed: {
@@ -22,8 +23,8 @@ export default {
           on the Statistics tab. You will also gain an Eternity Point and unlock various upgrades.`;
     },
     gainedEPOnEternity() {
-      return `You will gain ${quantify("Eternity", this.gainedEternities, 2)} 
-      and ${quantify("Eternity Point", this.gainedEternityPoints, 2)} on Eternity.`;
+      return `You will gain ${quantify("Eternity", this.gainedEternities, 2)},
+      ${quantify("Eternity Point", this.gainedEternityPoints, 2)} and ${quantify("Time Core", this.gainedTimeCores, 2)} on Eternity.`;
     },
     startWithIP() {
       return this.startingIP.gt(0)
@@ -48,6 +49,7 @@ export default {
       this.startingIP = Currency.infinityPoints.startingValue;
       this.gainedEternityPoints = gainedEternityPoints();
       this.gainedEternities = gainedEternities();
+      this.gainedTimeCores = gainedTimeCores();
     },
     handleYesClick() {
       animateAndEternity();

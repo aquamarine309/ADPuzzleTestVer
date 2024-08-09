@@ -70,11 +70,11 @@ export const GlyphSelection = {
 
   update(level) {
     if (this.realityProps === undefined) return;
-    if (level.rawLevel > this.realityProps.gainedGlyphLevel.rawLevel) {
+    if (level.rawLevel.gt(this.realityProps.gainedGlyphLevel.rawLevel)) {
       this.realityProps.gainedGlyphLevel.rawLevel = level.rawLevel;
       for (const glyph of this.glyphs) glyph.rawLevel = level.rawLevel;
     }
-    if (level.actualLevel > this.realityProps.gainedGlyphLevel.actualLevel) {
+    if (level.actualLevel.gt(this.realityProps.gainedGlyphLevel.actualLevel)) {
       this.realityProps.gainedGlyphLevel.actualLevel = level.actualLevel;
       for (const glyph of this.glyphs) {
         glyph.level = level.actualLevel;
@@ -111,13 +111,13 @@ export const GlyphSelection = {
   // The uniformity code behaves poorly without START, so we generate actually generate them 4 at a time and then
   // deterministically pick one of them randomly
   get indexWithoutSTART() {
-    const lexIndex = player.realities * ((player.reality.initialSeed % 5) + 3);
+    const lexIndex = player.realities.toNumber() * ((player.reality.initialSeed % 5) + 3);
     return permutationIndex(4, lexIndex)[0];
   }
 };
 
 export function isRealityAvailable() {
-  return player.records.thisReality.maxEP.exponent >= 4000 && TimeStudy.reality.isBought;
+  return player.records.thisReality.maxEP.gte(BEC.E4000) && TimeStudy.reality.isBought;
 }
 
 // Returns the number of "extra" realities from stored real time or Multiversal effects, should be called
@@ -163,7 +163,7 @@ export function startManualReality(sacrifice, glyphID) {
 export function processManualReality(sacrifice, glyphID) {
   if (!isRealityAvailable()) return;
 
-  if (player.realities === 0) {
+  if (player.realities.eq(0)) {
     // If this is our first Reality, lock in the initial seed and then give the companion and starting glyphs
     player.reality.seed = player.reality.initialSeed;
     Glyphs.addToInventory(GlyphGenerator.startingGlyph(gainedGlyphLevel()));

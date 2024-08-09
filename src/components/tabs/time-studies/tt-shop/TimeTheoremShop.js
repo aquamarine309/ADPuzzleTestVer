@@ -44,7 +44,7 @@ export default {
         return format;
       }
       if (!(Teresa.isRunning || Enslaved.isRunning) &&
-        getAdjustedGlyphEffect("dilationTTgen") > 0 && !DilationUpgrade.ttGenerator.isBought) {
+        getAdjustedGlyphEffect("dilationTTgen").gt(0) && !DilationUpgrade.ttGenerator.isBought) {
         return formatFloat;
       }
       return formatInt;

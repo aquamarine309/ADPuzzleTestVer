@@ -10,9 +10,9 @@ export const orderedEffectList = ["powerpow", "infinitypow", "replicationpow", "
   "effarigforgotten", "effarigdimensions", "effarigantimatter",
   "cursedgalaxies", "cursedtickspeed", "curseddimensions", "cursedEP",
   "realityglyphlevel", "realitygalaxies", "realityrow1pow", "realityDTglyph",
-  "companiondescription", "companionEP"];
+  "companiondescription", "companionEP", "logicpow"];
 
-export const generatedTypes = ["power", "infinity", "replication", "time", "dilation", "effarig"];
+export const generatedTypes = ["power", "infinity", "time", "replication", "dilation", "effarig", "logic"];
 
 // eslint-disable-next-line no-unused-vars
 export const GlyphEffectOrder = orderedEffectList.mapToObject(e => e, (e, idx) => idx);
@@ -37,7 +37,7 @@ export const Glyphs = {
     return player.reality.glyphs.inventory;
   },
   get sortedInventoryList() {
-    return this.inventoryList.sort((a, b) => -a.level * a.strength + b.level * b.strength);
+    return this.inventoryList.sort((a, b) => b.level.times(b.strength).cmp(a.level.times(a.strength)));
   },
   get activeList() {
     return player.reality.glyphs.active;
@@ -199,15 +199,18 @@ export const Glyphs = {
   //  +1: Will find glyphs which are equal to or better than targetGlyph
   findByValues(targetGlyph, searchList, fuzzyMatch = { level, strength, effects }) {
     // We need comparison to go both ways for normal matching and subset matching for partially-equipped sets
-    const compFn = (op, comp1, comp2) => {
+    const compFn = (op, comp1, comp2, level = false) => {
+      let x;
       switch (op) {
         case -1:
-          return comp2 - comp1;
+          x = comp2 - comp1;
         case 0:
-          return comp1 === comp2 ? 0 : -1;
+          x = comp1 === comp2 ? 0 : -1;
         case 1:
-          return comp1 - comp2;
+          x = comp1 - comp2;
       }
+      if (level) return new BE(x);
+      else if (x) return x;
       return false;
     };
 
@@ -215,8 +218,8 @@ export const Glyphs = {
     // number if small contains all of large, with a value equal to the number of extra bits. Otherwise, returns a
     // negative number equal to the negative of the number of bits that large has which small doesn't.
     const matchedEffects = (large, small) => {
-      if ((large & small) === large) return countValuesFromBitmask(small - large);
-      return -countValuesFromBitmask(large - (large & small));
+      if (large.every(e => small.has(e))) return small.countWhere(e => !large.has(e));
+      return large.countWhere(e => !small.has(e));
     };
 
     // Make an array containing all glyphs which match the given criteria, with an additional "quality" prop in order
@@ -237,20 +240,20 @@ export const Glyphs = {
           break;
       }
       const str = compFn(fuzzyMatch.strength, glyph.strength, targetGlyph.strength) / 2.5;
-      const lvl = compFn(fuzzyMatch.level, glyph.level, targetGlyph.level) / 5000;
+      const lvl = compFn(fuzzyMatch.level, glyph.level, targetGlyph.level, true).div(5000);
       const sym = glyph.symbol === targetGlyph.symbol;
-      if (type && eff >= 0 && str >= 0 && lvl >= 0 && sym) {
+      if (type && eff >= 0 && str >= 0 && lvl.gte(0) && sym) {
         allMatches.push({
           glyph,
           // Flatten glyph qualities, with 10% rarity, 500 levels, and an extra effect all being equal value. This
           // is used to sort the options by some rough measure of distance from the target glyph
-          gap: str + lvl + eff / 10
+          gap: lvl.add(str).add(eff / 10)
         });
       }
     }
 
     // Sort by increasing gap, then discard the value as it's not directly used anywhere else
-    allMatches.sort((a, b) => a.gap - b.gap);
+    allMatches.sort((a, b) => a.gap.cmp(b.gap));
     return allMatches.map(m => m.glyph);
   },
   findById(id) {
@@ -273,7 +276,7 @@ export const Glyphs = {
           RealityUpgrade(9).tryShowWarningModal("equip another non-Companion Glyph");
           return;
         }
-        if (glyph.level < 3) {
+        if (glyph.level.lt(3)) {
           RealityUpgrade(9).tryShowWarningModal(`equip a Glyph whose level is less than ${formatInt(3)}`);
           return;
         }
@@ -514,10 +517,10 @@ export const Glyphs = {
     if (player.reality.autoCollapse) this.collapseEmptySlots();
   },
   sortByLevel() {
-    this.sort((a, b) => b.level - a.level);
+    this.sort((a, b) => b.level.cmp(a.level));
   },
   sortByPower() {
-    this.sort((a, b) => b.level * b.strength - a.level * a.strength);
+    this.sort((a, b) => b.level.times(b.strength).cmp(a.level.times(a.strength)));
   },
   sortByScore() {
     this.sort((a, b) => AutoGlyphProcessor.filterValue(b) - AutoGlyphProcessor.filterValue(a));
@@ -548,12 +551,12 @@ export const Glyphs = {
       .filter(g => g !== null &&
         g.type === glyph.type &&
         g.id !== glyph.id &&
-        (g.level >= glyph.level || g.strength >= glyph.strength) &&
+        (g.level.gte(glyph.level) || g.strength >= glyph.strength) &&
         ((g.effects & glyph.effects) === glyph.effects));
     let compareThreshold = glyph.type === "effarig" || glyph.type === "reality" ? 1 : 5;
     compareThreshold = Math.clampMax(compareThreshold, threshold);
     if (toCompare.length < compareThreshold) return false;
-    const comparedEffects = getGlyphEffectsFromBitmask(glyph.effects).filter(x => x.id.startsWith(glyph.type));
+    const comparedEffects = getGlyphEffectsFromSet(glyph.effects).filter(x => x.id.startsWith(glyph.type));
     const betterCount = toCompare.countWhere(other => !hasSomeBetterEffects(glyph, other, comparedEffects));
     return betterCount >= compareThreshold;
   },
@@ -721,7 +724,7 @@ export const Glyphs = {
     }
   },
   copyForRecords(glyphList) {
-    // Sorting by effect ensures consistent ordering by type, based on how the effect bitmasks are structured
+    // Sorting by effect ensures consistent ordering by type, based on how the effect sets are structured
     return glyphList.map(g => ({
       type: g.type,
       level: g.level,
@@ -743,9 +746,9 @@ export const Glyphs = {
   applyGamespeed(glyph) {
     if (!Ra.unlocks.allGamespeedGlyphs.canBeApplied) return;
     if (BASIC_GLYPH_TYPES.includes(glyph.type)) {
-      glyph.effects |= (1 << GlyphEffects.timespeed.bitmaskIndex);
+      glyph.effects.add(GlyphEffects.timespeed.id);
       if (glyph.type === "time") {
-        glyph.effects |= (1 << GlyphEffects.timeshardpow.bitmaskIndex);
+        glyph.effects.add(GlyphEffects.timeshardpow.id);
       }
     }
   },
@@ -773,7 +776,7 @@ export const Glyphs = {
     let hash = 1;
     for (const glyph of glyphSet) {
       // This should be at most around e23 or so in practice
-      const singleGlyphHash = Math.pow(glyph.level, 2) * Math.pow(glyph.strength, 4) * glyph.effects *
+      const singleGlyphHash = glyph.level.pow(2).mag * Math.pow(glyph.strength, 4) * glyph.effects.toBitmask() *
         glyph.type.charCodeAt(0);
       hash *= singleGlyphHash;
     }
@@ -791,6 +794,13 @@ export const Glyphs = {
     } else {
       this.addToInventory(GlyphGenerator.cursedGlyph());
       GameUI.notify.error("Created a Cursed Glyph");
+    }
+  },
+  initial() {
+    for (const glyphs of this.allGlyphs) {
+      glyphs.effects = new Set(glyphs.effects);
+      glyphs.level = new BE(glyphs.level);
+      glyphs.rawLevel = new BE(glyphs.rawLevel);
     }
   }
 };
@@ -819,11 +829,11 @@ export function recalculateAllGlyphs() {
 // Makes sure level is a positive whole number and rarity is >0% (retroactive fixes) and recalculates effects
 export function calculateGlyph(glyph) {
   if (glyph.color === undefined && glyph.symbol === undefined) {
-    glyph.level = Math.max(1, Math.round(glyph.level));
+    glyph.level = BE.max(1, BE.round(glyph.level));
     if (glyph.rawLevel === undefined) {
       // Only correct below the second round of instability, but it only matters for glyphs produced before
       // this was merged, so it's not a big deal.
-      glyph.rawLevel = glyph.level < 1000 ? glyph.level : (Math.pow(0.004 * glyph.level - 3, 2) - 1) * 125 + 1000;
+      glyph.rawLevel = glyph.level.lt(1000) ? glyph.level : glyph.level.minus(3).times(0.004).pow(2).minus(1).times(125).add(1000);
     }
 
     // Used to randomly generate strength in this case; I don't think we actually care.
@@ -839,11 +849,11 @@ export function getRarity(x) {
 export function getAdjustedGlyphLevel(glyph, realityGlyphBoost = Glyphs.levelBoost, ignoreCelestialEffects = false) {
   const level = glyph.level;
   if (!ignoreCelestialEffects) {
-    if (Pelle.isDoomed) return Math.min(level, Pelle.glyphMaxLevel);
-    if (Enslaved.isRunning) return Math.max(level, Enslaved.glyphLevelMin);
-    if (Effarig.isRunning) return Math.min(level, Effarig.glyphLevelCap);
+    if (Pelle.isDoomed) return BE.min(level, Pelle.glyphMaxLevel);
+    if (Enslaved.isRunning) return BE.max(level, Enslaved.glyphLevelMin);
+    if (Effarig.isRunning) return BE.min(level, Effarig.glyphLevelCap);
   }
-  if (BASIC_GLYPH_TYPES.includes(glyph.type)) return level + realityGlyphBoost;
+  if (BASIC_GLYPH_TYPES.includes(glyph.type)) return level.add(realityGlyphBoost);
   return level;
 }
 

@@ -7,7 +7,7 @@ export default {
   },
   data() {
     return {
-      pp: 0,
+      pp: new BE(0),
       treeLayout: 0,
       physicsEnabled: false,
       physicsOverride: false,
@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     update() {
-      this.pp = Math.floor(Currency.perkPoints.value);
+      this.pp = Currency.perkPoints.value.floor();
       this.physicsEnabled = player.options.perkPhysicsEnabled;
     },
     togglePhysics() {

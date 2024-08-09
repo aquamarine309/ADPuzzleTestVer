@@ -75,6 +75,9 @@ export function eternity(force, auto, specialConditions = {}) {
   // Annoyingly, we need to check for studies right here; giveEternityRewards removes studies if we're in an EC,
   // so doing the check later doesn't give us the initial state of having studies or not.
   const noStudies = player.timestudy.studies.length === 0;
+  
+  ChallengeFactorHandler.updateHandler();
+  
   if (!force) {
     if (!Player.canEternity) return false;
     if (RealityUpgrade(10).isLockingMechanics) {
@@ -89,6 +92,8 @@ export function eternity(force, auto, specialConditions = {}) {
     giveEternityRewards(auto);
     player.requirementChecks.reality.noEternities = false;
   }
+  
+  Currency.timeCores.add(gainedTimeCores());
 
   if (player.dilation.active) rewardTP();
 
@@ -96,7 +101,7 @@ export function eternity(force, auto, specialConditions = {}) {
   if (force) {
     player.challenge.eternity.current = 0;
   }
-
+  
   initializeChallengeCompletions();
   initializeResourcesAfterEternity();
 
@@ -129,6 +134,7 @@ export function eternity(force, auto, specialConditions = {}) {
   player.records.thisInfinity.bestIPmin = BEC.D0;
   player.records.bestInfinity.bestIPminEternity = BEC.D0;
   player.records.thisEternity.bestEPmin = BEC.D0;
+  player.records.thisEternity.bestLP = BEC.D0;
   player.records.thisEternity.bestInfinitiesPerMs = BEC.D0;
   player.records.thisEternity.bestIPMsWithoutMaxAll = BEC.D0;
   resetTimeDimensions();
@@ -144,9 +150,9 @@ export function eternity(force, auto, specialConditions = {}) {
   ResourceExchangeUpgrade.reset();
 
   PelleStrikes.eternity.trigger();
-  randomDifficulty();
   
   GameCache.currentBonus.invalidate();
+  ChallengeFactorHandler.updatePlayer();
   
   EventHub.dispatch(GAME_EVENT.ETERNITY_RESET_AFTER);
   return true;
@@ -330,14 +336,65 @@ class EPMultiplierState extends GameMechanicState {
       if (!auto) RealityUpgrade(15).tryShowWarningModal();
       return false;
     }
-    const bulk = bulkBuyBinarySearch(Currency.eternityPoints.value, {
+    /* const bulk = bulkBuyBinarySearch(Currency.eternityPoints.value, {
       costFunction: this.costAfterCount,
       cumulative: true,
       firstCost: this.cost,
-    }, this.boughtAmount);
-    if (!bulk) return false;
-    Currency.eternityPoints.subtract(bulk.purchasePrice);
-    this.boughtAmount = this.boughtAmount.plus(bulk.quantity);
+    }, this.boughtAmount); */
+    const multPerUpgrade = [BEC.D50, BEC.E2, BEC.D500, BEC.E3];
+    let moneyLeft = Currency.eternityPoints.value;
+    const costThresholds = EternityUpgrade.epMult.costIncreaseThresholds;
+    let bulk = BEC.D0;
+    // Calculate purchases of each part
+    for (let i = 0; i < costThresholds.length; i++) {
+      const threshold = costThresholds[i];
+      // Check if this part has been purchased
+      if (BE.pow(multPerUpgrade[i], this.boughtAmount).times(500).gt(threshold)) continue;
+      // In the part, cost scaling is linear
+      // 500, 2.5e3, 6.25e4 ...
+      const scaling = new LinearCostScaling(
+        moneyLeft.clampMax(threshold),
+        BE.pow(multPerUpgrade[i], this.boughtAmount.add(bulk)).times(500),
+        multPerUpgrade[i]
+      );
+      // If cost is not affordable in this part, it is also affordable in next parts.
+      if (scaling.purchases.lte(0) || moneyLeft.lt(scaling.totalCost)) break;
+
+      moneyLeft = moneyLeft.sub(scaling.totalCost);
+      bulk = bulk.add(scaling.purchases);
+      if (moneyLeft.lt(threshold)) break;
+    }
+    
+    // The cost above e4000 EP is 1000^((x-1334)^1.2+x)*500,
+    // It starts at 1333 purchases
+    const totalAmount = this.boughtAmount.add(bulk);
+    if (totalAmount.gte(1333)) {
+      // Solve equation: (x-1334)^1.2+x=k
+      const k = moneyLeft.div(500).log(1e3);
+      // When k > 1e90, (x-1334)^2-x is equal to 0
+      // so x = k^(1 / 1.2)-1334;
+      // n - 1334 is equal to n while n is above e75 [n = k^(1 / 1.2)]
+      if (k.gte(BEC.E90)) {
+        bulk = k.pow(1 / 1.2);
+      } else {
+        // Newton's method
+        const iterations = 6;
+        // f(x)=(x-1334)^1.2+x-k
+        // f'(x)=1.2*(x-1334)^0.2+1
+        // x=x0-f(x0)/f'(x0)
+        for (let i = 0; i < iterations; i++) {
+          bulk = bulk.minus(bulk.minus(1334).pow(1.2).add(x).minus(k).div(bulk.minus(1334).pow(0.2).times(1.2).add(1)));
+        }
+        moneyLeft = moneyLeft.minus(bulk.minus(1334).pow(1.2).add(x)).clampMin(0);
+        // bulk should subtract the bought amount baecause
+        // it will be added to purchases
+        bulk = bulk.add(1333).minus(this.boughtAmount).floor();
+      }
+    }
+    
+    if (bulk.lte(0)) return false;
+    Currency.eternityPoints.value = moneyLeft;
+    this.boughtAmount = this.boughtAmount.plus(bulk);
     return true;
   }
 
@@ -351,7 +408,7 @@ class EPMultiplierState extends GameMechanicState {
 
   costAfterCount(count) {
     const costThresholds = EternityUpgrade.epMult.costIncreaseThresholds;
-    const multPerUpgrade = [50, 100, 500, 1000];
+    const multPerUpgrade = [BEC.D50, BEC.E2, BEC.D500, BEC.E3];
     for (let i = 0; i < costThresholds.length; i++) {
       const cost = BE.pow(multPerUpgrade[i], count).times(500);
       if (cost.lt(costThresholds[i])) return cost;

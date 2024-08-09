@@ -106,8 +106,11 @@ html {
   --color-pelle--base: crimson;
   --color-pelle--secondary: #00bcd4;
   
-  --color-logic: #49BE94;
+  --color-logic: #49be94;
   --color-lc3: aquamarine;
+  
+  --color-element-freeze: #4399f1;
+  --color-element-vertigo: #E4C545;
 }
 
 :root .t-metro,
@@ -3610,6 +3613,11 @@ br {
   border-color: #881d1d;
 }
 
+.t-s13 .o-challenge-btn--locked {
+  background-color: #c8c8c8;
+  border-color: var(--color-bad);
+}
+
 .o-challenge-btn--redo {
   color: white;
   background-color: #17a32e;
@@ -4942,6 +4950,16 @@ properly on certain themes. */
   border-color: black;
 }
 
+.t-s13 .o-eternity-upgrade--unavailable {
+  background-color: #c8c8c8;
+  border-color: #691fa5;
+}
+
+
+.t-s13 .o-eternity-upgrade--bought {
+  background-color: #c2adff;
+}
+
 .s-base--metro .o-eternity-upgrade--unavailable:hover {
   background-color: #bdbdbd;
 }
@@ -5078,6 +5096,17 @@ properly on certain themes. */
   background-color: black;
   border-color: var(--color-eternity);
   animation: a-time-study 7s infinite;
+}
+
+.t-s13 .o-eternity-milestone__reward--locked {
+  color: #c2adff;
+  background-color: #272727;
+  border-color: #c2adff;
+  animation: a-time-study 7s infinite;
+}
+
+.t-s13 .o-eternity-milestone__reward--reached {
+  background-color: #c2adff;
 }
 
 .l-eternity-milestone {
@@ -9502,7 +9531,7 @@ input.o-automator-block-input {
   margin: 0.1rem;
   color: var(--color-accent);
   border-radius: var(--var-border-radius, 0.5rem);
-  font-family: Typewriter, sans-serif;
+  font-family: Typewriter, serif;
 }
 
 .l-big-crunch-containter {
@@ -9540,6 +9569,11 @@ input.o-automator-block-input {
   border-color: #999999;
 }
 
+.o-resource-circle-node--seen {
+  color: #ccffaa;
+  border-color: #ccffaa;
+}
+
 .o-resource-circle-node--open {
   color: #ffffff;
   background-color: var(--color-logic);
@@ -9547,10 +9581,14 @@ input.o-automator-block-input {
   box-shadow: 0 0 1rem 0.3rem #2bab77 inset;
 }
 
+.o-resource-circle-node--seen-open {
+  color: #000000;
+  background-color: #ccffaa;
+  box-shadow: 0 0 1rem 0.3rem #ccffaa inset;
+}
+
 .o-resource-circle-node--locked-open {
-  color: #ffffff;
   background-color: #999999;
-  border-color: var(--color-base);
   box-shadow: 0 0 1rem 0.2rem #666666 inset;
 }
 
@@ -9570,6 +9608,10 @@ input.o-automator-block-input {
   stroke: #999999;
   stroke-width: 1;
   fill: none
+}
+
+.c-resource-exchange-line--seen {
+  stroke: #ccffaa;
 }
 
 .c-resource-exchange-line--unlocked {
@@ -10135,4 +10177,140 @@ input.o-automator-block-input {
 
 .extra-bonus-destoryed {
   font-family: RobotoMono;
+}
+
+.c-frozen {
+  color: var(--color-element-freeze) !important;
+}
+
+.c-vertigo {
+  color: var(--color-element-vertigo) !important;
+} 
+
+.c-tc-info {
+  font-size: 1.5rem;
+}
+
+.c-tc-amount {
+  font-size: 2.1rem;
+  font-weight: bold;
+  background: linear-gradient(to bottom, var(--color-logic), var(--color-eternity));
+  background-clip: text;
+  color: transparent;
+}
+
+.c-challenge-factor-component {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  border: 0.1rem solid var(--color-factor);
+  color: var(--color-factor);
+  background-color: #181818;
+  font-size: 2rem;
+  margin: 0.6rem;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  
+  position: relative;
+  box-shadow: 0 0 1rem 0.05rem var(--color-factor) inset;
+  
+  transition-duration: 0.5s;
+}
+
+.c-challenge-factor-component:hover {
+  box-shadow: 0 0 1.5rem 0.1rem var(--color-factor) inset;
+}
+
+.c-challenge-factor-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  flex-direction: column;
+  padding: 1rem 3rem;
+  margin: 0.1rem auto;
+}
+
+.l-challenge-factor-tooltip {
+  position: absolute;
+  top: 100%;
+  width: 18rem;
+  padding: 0.2rem;
+  border: 0.1rem solid var(--color-factor);
+  color: var(--color-factor);
+  border-radius: var(--var-border-radius, 0.5rem);
+  background-color: #121212;
+  font-size: 1rem;
+  margin-top: 0.9rem;
+  opacity: 0;
+  transition-duration: 0.4s;
+  z-index: 3;
+  
+  pointer-events: none;
+}
+
+.l-challenge-factor-tooltip::after {
+  content: " ";
+  bottom: 100%;
+  position: absolute;
+  border-bottom: 0.8rem solid var(--color-factor);
+  border-right: 0.8rem solid transparent;
+  border-left: 0.8rem solid transparent;
+  margin-left: -0.8rem;
+  font-size: 0;
+  line-height: 0;
+  width: 0;
+  transition-duration: 0.4s;
+}
+
+.c-challenge-factor-tooltip--name {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.c-challenge-factor-component:hover .l-challenge-factor-tooltip:not(:hover) {
+  opacity: 1;
+}
+
+.c-challenge-factors-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.c-challenge-factor-type {
+  position: absolute;
+  font-size: 1.05rem;
+  top: 15%;
+  right: 20%;
+}
+
+.c-challenge-factor-tooltip--score {
+  font-size: 0.8rem;
+}
+
+.c-restart-eternity-btn {
+  margin: 0.5rem 0.3rem;
+  padding: 1.2rem 0.4rem;
+  height: 12rem;
+  width: 25rem;
+}
+
+.c-restart-eternity-btn__title {
+  font-size: 1.6rem;
+}
+
+.c-more-td-mult {
+  color: var(--color-good);
+}
+
+.c-factor-button-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 }

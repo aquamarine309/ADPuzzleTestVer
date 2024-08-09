@@ -174,7 +174,7 @@ export const migrations = {
         if (player.records.lastTenInfinities) {
           const infRec = player.records.lastTenInfinities[i];
           player.records.recentInfinities[i] = [
-            infRec[0] ?? Number.MAX_VALUE,
+            infRec[0] ?? BE.NUMBER_MAX_VALUE,
             Number(infRec[3] ?? Number.MAX_VALUE),
             new BE(infRec[1] ?? 1),
             new BE(infRec[2] ?? 1),
@@ -185,7 +185,7 @@ export const migrations = {
         if (player.records.lastTenEternities) {
           const eterRec = player.records.lastTenEternities[i];
           player.records.recentEternities[i] = [
-            eterRec[0] ?? Number.MAX_VALUE,
+            eterRec[0] ?? BE.NUMBER_MAX_VALUE,
             Number(eterRec[3] ?? Number.MAX_VALUE),
             new BE(eterRec[1] ?? 1),
             new BE(eterRec[2] ?? 1),
@@ -197,7 +197,7 @@ export const migrations = {
         if (player.records.lastTenRealities) {
           const realRec = player.records.lastTenRealities[i];
           player.records.recentRealities[i] = [
-            realRec[0] ?? Number.MAX_VALUE,
+            realRec[0] ?? BE.NUMBER_MAX_VALUE,
             Number(realRec[3] ?? Number.MAX_VALUE),
             new BE(realRec[1] ?? 1),
             realRec[2] ?? 1,
@@ -513,6 +513,9 @@ export const migrations = {
     65: player => {
       player.lc3Game.stage = player.lc3Game.state ?? GAME_STAGE.NOT_COMPLETED;
       delete player.lc3Game.state;
+    },
+    66: player => {
+      player.reality.achTimer = parseFloat(player.reality.achTimer);
     }
   },
 
@@ -587,10 +590,10 @@ export const migrations = {
 
   adjustMultCosts(player) {
     if (player.tickSpeedMultDecreaseCost !== undefined) {
-      player.infinityRebuyables[0] = Math.round(Math.log(player.tickSpeedMultDecreaseCost / 3e6) / Math.log(5));
+      player.infinityRebuyables[0] = BE.round(Math.log(player.tickSpeedMultDecreaseCost / 3e6) / Math.log(5));
     }
     if (player.dimensionMultDecreaseCost !== undefined) {
-      player.infinityRebuyables[1] = Math.round(Math.log(player.dimensionMultDecreaseCost / 1e8) / Math.log(5e3));
+      player.infinityRebuyables[1] = BE.round(Math.log(player.dimensionMultDecreaseCost / 1e8) / Math.log(5e3));
     }
     delete player.tickSpeedMultDecrease;
     delete player.tickSpeedMultDecreaseCost;
@@ -664,14 +667,14 @@ export const migrations = {
     }
     if (player.challengeTimes) {
       for (let i = 0; i < player.challengeTimes.length; ++i) {
-        player.challenge.normal.bestTimes[i] = Math.min(player.challenge.normal.bestTimes[i],
+        player.challenge.normal.bestTimes[i] = BE.min(player.challenge.normal.bestTimes[i],
           player.challengeTimes[i]);
       }
       delete player.challengeTimes;
     }
     if (player.infchallengeTimes) {
       for (let i = 0; i < player.infchallengeTimes.length; ++i) {
-        player.challenge.infinity.bestTimes[i] = Math.min(player.challenge.infinity.bestTimes[i],
+        player.challenge.infinity.bestTimes[i] = BE.min(player.challenge.infinity.bestTimes[i],
           player.infchallengeTimes[i]);
       }
       delete player.infchallengeTimes;
@@ -848,7 +851,7 @@ export const migrations = {
       const dimension = player.dimensions.antimatter[tier - 1];
       dimension.cost = new BE(player[oldProps.cost]);
       dimension.amount = new BE(player[oldProps.amount]);
-      dimension.bought = player[oldProps.bought];
+      dimension.bought = new BE(player[oldProps.bought]);
       if (player.costmultipliers) {
         dimension.costMultiplier = new BE(player.costMultipliers[tier - 1]);
       }
@@ -866,8 +869,8 @@ export const migrations = {
         const old = player[oldName];
         dimension.cost = new BE(old.cost);
         dimension.amount = new BE(old.amount);
-        dimension.bought = old.bought;
-        dimension.baseAmount = old.baseAmount;
+        dimension.bought = new BE(old.bought);
+        dimension.baseAmount = new BE(old.baseAmount);
         dimension.isUnlocked = player.infDimensionsUnlocked[tier - 1];
         delete player[oldName];
       }
@@ -882,7 +885,7 @@ export const migrations = {
         if (old !== undefined) {
           dimension.cost = new BE(old.cost);
           dimension.amount = new BE(old.amount);
-          dimension.bought = old.bought;
+          dimension.bought = new BE(old.bought);
           delete player[oldName];
         }
       }
@@ -1037,7 +1040,7 @@ export const migrations = {
   },
 
   renameDimboosts(player) {
-    player.dimensionBoosts = player.resets;
+    player.dimensionBoosts = new BE(player.resets);
     delete player.resets;
   },
 
@@ -1074,7 +1077,7 @@ export const migrations = {
         newAchievements[row - 1] |= (1 << (column - 1));
       }
       // Handle the changed achievement "No DLC Required" correctly (otherwise saves could miss it).
-      if (!isSecret && (player.infinityUpgrades.size >= 16 || player.eternities.gt(0) || player.realities > 0)) {
+      if (!isSecret && (player.infinityUpgrades.size >= 16 || player.eternities.gt(0) || player.realities.gt(0))) {
         newAchievements[3] |= 1;
       } else {
         newAchievements[3] &= ~1;
@@ -1101,9 +1104,9 @@ export const migrations = {
   },
 
   setTutorialState(player) {
-    if (player.infinities.gt(0) || player.eternities.gt(0) || player.realities > 0 || player.galaxies > 0) {
+    if (player.infinities.gt(0) || player.eternities.gt(0) || player.realities.gt(0) || player.galaxies.gt(0)) {
       player.tutorialState = 4;
-    } else if (player.dimensionBoosts > 0) player.tutorialState = TUTORIAL_STATE.GALAXY;
+    } else if (player.dimensionBoosts.gt(0)) player.tutorialState = TUTORIAL_STATE.GALAXY;
   },
 
   migrateLastTenRuns(player) {
@@ -1118,7 +1121,7 @@ export const migrations = {
   },
 
   migrateIPGen(player) {
-    player.infinityRebuyables[2] = player.offlineProd / 5;
+    player.infinityRebuyables[2] = new BE(player.offlineProd / 5);
     delete player.offlineProd;
     delete player.offlineProdCost;
   },
@@ -1191,8 +1194,8 @@ export const migrations = {
   },
 
   migratePlayerVars(player) {
-    player.replicanti.boughtGalaxyCap = player.replicanti.gal;
-    player.dilation.totalTachyonGalaxies = player.dilation.freeGalaxies;
+    player.replicanti.boughtGalaxyCap = new BE(player.replicanti.gal);
+    player.dilation.totalTachyonGalaxies = new BE(player.dilation.freeGalaxies);
 
     delete player.replicanti.gal;
     delete player.dilation.freeGalaxies;
@@ -1217,9 +1220,9 @@ export const migrations = {
   },
 
   convertTimeTheoremPurchases(player) {
-    player.timestudy.amBought = new BE(player.timestudy.amcost).exponent / 20000 - 1;
-    player.timestudy.ipBought = new BE(player.timestudy.ipcost).exponent / 100;
-    player.timestudy.epBought = Math.round(new BE(player.timestudy.epcost).log2());
+    player.timestudy.amBought = new BE(player.timestudy.amcost).pLog10().div(20000);
+    player.timestudy.ipBought = new BE(player.timestudy.ipcost).pLog10().div(100);
+    player.timestudy.epBought = new BE(player.timestudy.epcost).log2();
 
     delete player.timestudy.amcost;
     delete player.timestudy.ipcost;
@@ -1257,7 +1260,7 @@ export const migrations = {
     // A bit of a hack, but needs to be done this way to not trigger the non-BE assignment crash check code
     const purchases = new BE(player.infMult).log2();
     delete player.infMult;
-    player.infMult = Math.round(purchases);
+    player.infMult = BE.round(purchases);
     delete player.infMultCost;
   },
 

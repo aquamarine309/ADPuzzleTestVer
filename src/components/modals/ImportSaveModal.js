@@ -50,6 +50,9 @@ export default {
     inputIsValid() {
       return this.inputIsValidSave || this.inputIsSecret;
     },
+    canImport() {
+      return this.player.version && this.player.version >= 50;
+    },
     inputIsValidSave() {
       return this.player !== undefined;
     },
@@ -212,7 +215,7 @@ export default {
     </div>
 
     <PrimaryButton
-      v-if="inputIsValid"
+      v-if="inputIsValid && canImport"
       class="o-primary-btn--width-medium c-modal-message__okay-btn c-modal__confirm-btn"
       @click="importSave"
     >

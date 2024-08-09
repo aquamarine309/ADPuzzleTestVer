@@ -53,10 +53,10 @@ export const resourceExchange = {
     value: value => value.pow(0.1).times(10).add(1),
     min: BEC.D1
   },
-  "eternityPoints": {
+  "timeCores": {
     id: 5,
-    name: "Eternity Points",
-    shortName: "EP",
+    name: "Time Cores",
+    shortName: "TC",
     symbol: "Δ",
     currency: () => Currency.eternityPoints,
     value: value => value.pow(0.1).times(100).add(1)

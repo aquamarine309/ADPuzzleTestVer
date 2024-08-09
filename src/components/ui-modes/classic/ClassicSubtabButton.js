@@ -15,7 +15,8 @@ export default {
       isAvailable: false,
       hasNotification: false,
       isCurrentSubtab: false,
-      tabName: ""
+      tabName: "",
+      locked: false
     };
   },
   computed: {
@@ -36,6 +37,7 @@ export default {
       this.isAvailable = this.subtab.isAvailable;
       this.hasNotification = this.subtab.hasNotification;
       this.isCurrentSubtab = this.subtab.isOpen && Theme.currentName() !== "S9";
+      this.locked = GameElements.isActive("tabLock");
       this.tabName = Pelle.transitionText(
         this.subtab.name,
         this.subtab.name,
@@ -50,7 +52,10 @@ export default {
     @click="subtab.show(true)"
     data-v-classic-subtab-button
   >
-    {{ tabName }}
+    <i
+      v-if="locked"
+      class="fas fa-lock"
+    /> {{ tabName }}
     <div
       v-if="hasNotification"
       class="fas fa-circle-exclamation l-notification-icon"

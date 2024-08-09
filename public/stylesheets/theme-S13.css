@@ -1,3 +1,35 @@
 body.t-s13 {
   background: linear-gradient(to right, #f3e3d9, #d9f3e3, #e3d9f3);
 }
+
+.t-s13 .c-tt-amount {
+  color: #358cca;
+  text-shadow: 0 0 7px #358cca;
+}
+
+.t-s13 .c-tt-buy-button {
+  border: 0.1rem solid #691fa5;
+  border-radius: var(--var-border-radius, 4px);
+}
+
+.t-s13 .c-tt-buy-button--unlocked {
+  color: #358cca;
+  background: #F6F6F6;
+  cursor: pointer;
+}
+
+.t-s11 .c-tt-buy-button--unlocked:hover {
+  color: black;
+  background: #358cca;
+}
+
+.t-s13 .c-tt-buy-button--locked {
+  color: black;
+  background: #C8C8C8;
+}
+
+.t-s13 .c-tt-buy-button--locked:hover {
+  color: black;
+  background: var(--color-bad);
+  border: 0.1rem solid var(--color-bad);
+}

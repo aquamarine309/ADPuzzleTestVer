@@ -49,6 +49,10 @@ export default {
       return getPositionStyle(this.center, this.center);
     },
   },
+  created() {
+    // Just update line style
+    this.on$(GAME_EVENT.EXCHANGE_LEVEL_UP, () => this.$recompute("circleRadius"));
+  },
   methods: {
     getPosition(index) {
       const pos = resourceExchangeLayout.getPosition(index, this.amount);
@@ -67,6 +71,7 @@ export default {
     lineClass(resource) {
       return {
         "c-resource-exchange-line": true,
+        "c-resource-exchange-line--seen": resource.hasUnlocked && !resource.isUnlocked,
         "c-resource-exchange-line--unlocked": resource.isUnlocked
       }
     },

@@ -121,7 +121,7 @@ export default {
     reductionValue(hex) {
       return hex.config.mode === V_REDUCTION_MODE.SUBTRACTION
         ? formatInt(hex.reduction)
-        : format(Decimal.pow10(hex.reduction));
+        : format(BE.pow10(hex.reduction));
     },
     showRecord(hex) {
       return this.runRecords[hex.id] > 0 || hex.completions > 0;

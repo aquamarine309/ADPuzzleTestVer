@@ -19,13 +19,13 @@ class GlyphEffectState {
 
 export const GlyphEffect = {
   dimBoostPower: new GlyphEffectState("powerdimboost", {
-    adjustApply: value => Math.max(1, value)
+    adjustApply: value => BE.max(1, value)
   }),
   ipMult: new GlyphEffectState("infinityIP", {
-    adjustApply: value => Decimal.max(1, value)
+    adjustApply: value => BE.max(1, value)
   }),
   epMult: new GlyphEffectState("timeEP", {
-    adjustApply: value => Decimal.max(1, value)
+    adjustApply: value => BE.max(1, value)
   })
 };
 
@@ -33,7 +33,7 @@ export const GlyphEffect = {
  * This returns just the value, unlike getTotalEffect(), which outputs the softcap status as well
  * This variant is used by GameCache
  * @param {string} effectKey
- * @return {number | Decimal}
+ * @return {number | BE}
  */
 export function getAdjustedGlyphEffectUncached(effectKey) {
   return getTotalEffect(effectKey).value;
@@ -42,7 +42,7 @@ export function getAdjustedGlyphEffectUncached(effectKey) {
 /**
  * This returns just the value, unlike getTotalEffect(), which outputs the softcap status as well
  * @param {string} effectKey
- * @return {number | Decimal}
+ * @return {number | BE}
  */
 export function getAdjustedGlyphEffect(effectKey) {
   return GameCache.glyphEffects.value[effectKey];
@@ -52,7 +52,7 @@ export function getAdjustedGlyphEffect(effectKey) {
  * Takes the glyph effect value and feeds it through the conversion function that gives the value of the secondary
  * effect from glyph alteration.
  * @param {string} effectKey
- * @return {number | Decimal}
+ * @return {number | BE}
  */
 export function getSecondaryGlyphEffect(effectKey) {
   return GlyphEffects[effectKey].conversion(getAdjustedGlyphEffect(effectKey));
@@ -68,9 +68,9 @@ export function getGlyphEffectValues(effectKey) {
     throw new Error(`Unknown Glyph effect requested "${effectKey}"'`);
   }
   return player.reality.glyphs.active
-    .filter(glyph => ((1 << GlyphEffects[effectKey].bitmaskIndex) & glyph.effects) !== 0)
+    .filter(glyph => glyph.effects.has(GlyphEffects[effectKey].id))
     .filter(glyph => generatedTypes.includes(glyph.type) === GlyphEffects[effectKey].isGenerated)
-    .map(glyph => getSingleGlyphEffectFromBitmask(effectKey, glyph));
+    .map(glyph => getSingleGlyphEffectFromSet(effectKey, glyph));
 }
 
 // Combines all specified glyph effects, reduces some boilerplate
@@ -94,38 +94,27 @@ export function separateEffectKey(effectKey) {
   return [type, effect];
 }
 
-// Turns a glyph effect bitmask into an effect list and corresponding values. This also picks up non-generated effects,
+// Turns a glyph effect set into an effect list and corresponding values. This also picks up non-generated effects,
 // since there is some id overlap. Those should be filtered out as needed after calling this function.
 // eslint-disable-next-line max-params
-export function getGlyphEffectValuesFromBitmask(bitmask, level, baseStrength, type) {
+export function getGlyphEffectValuesFromSet(set, level, baseStrength, type) {
   // If we don't specifically exclude companion glyphs, the first-reality EP record is wrong within Doomed since its
   // value is encoded in the rarity field
   const strength = (Pelle.isDoomed && type !== "companion") ? Pelle.glyphStrength : baseStrength;
-  return getGlyphEffectsFromBitmask(bitmask)
+  return getGlyphEffectsFromSet(set)
     .map(effect => ({
       id: effect.id,
       value: effect.effect(level, strength)
     }));
 }
 
-// Pulls out a single effect value from a glyph's bitmask, returning just the value (nothing for missing effects)
-export function getSingleGlyphEffectFromBitmask(effectName, glyph) {
+// Pulls out a single effect value from a glyph's set, returning just the value (nothing for missing effects)
+export function getSingleGlyphEffectFromSet(effectName, glyph) {
   const glyphEffect = GlyphEffects[effectName];
-  if ((glyph.effects & (1 << glyphEffect.bitmaskIndex)) === 0) {
+  if (!glyph.effects.has(glyphEffect.id)) {
     return undefined;
   }
   return glyphEffect.effect(getAdjustedGlyphLevel(glyph), Pelle.isDoomed ? Pelle.glyphStrength : glyph.strength);
-}
-
-// Note this function is used for glyph bitmasks, news ticker bitmasks, and offline achievements
-export function countValuesFromBitmask(bitmask) {
-  let numEffects = 0;
-  let bits = bitmask;
-  while (bits !== 0) {
-    numEffects += bits & 1;
-    bits >>= 1;
-  }
-  return numEffects;
 }
 
 // Returns both effect value and softcap status
@@ -147,7 +136,7 @@ export function getActiveGlyphEffects() {
     if (effectNames.includes(cursedEffects[i]) && effectNames.includes(conflictingEffects[i])) {
       const combined = combineFunction[i]([getAdjustedGlyphEffect(cursedEffects[i]),
         getAdjustedGlyphEffect(conflictingEffects[i])]);
-      if (Decimal.lt(combined, 1)) {
+      if (BE.lt(combined, 1)) {
         effectValues = effectValues.filter(e => e.id !== conflictingEffects[i]);
         effectValues.filter(e => e.id === cursedEffects[i])[0].value.value = combined;
       } else {

@@ -1,4 +1,4 @@
-import SelectGlyphInfoDropdown, { GlyphInfo } from "../SelectGlyphInfoDropdown.js";
+import SelectGlyphInfoDropdown, { GlyphInfoVue } from "../SelectGlyphInfoDropdown.js";
 
 import ExpandingControlBox from "../../../ExpandingControlBox.js";
 import GlyphCustomization from "./GlyphCustomization.js";

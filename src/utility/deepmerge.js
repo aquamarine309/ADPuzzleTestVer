@@ -10,9 +10,6 @@ function cloneUnlessOtherwiseSpecified(value, options) {
     return new BE(value);
   }
   
-  if (value instanceof Decimal) {
-    return new Decimal(value);
-  }
   if (value instanceof Set) {
     return new Set(value);
   }
@@ -33,9 +30,7 @@ function mergeObject(target, source, options) {
     });
   }
   Object.keys(source).forEach(key => {
-    if (target[key] && target[key] instanceof Decimal) {
-      destination[key] = new Decimal(source[key]);
-    } else if (target[key] && target[key] instanceof BE) {
+    if (target[key] && target[key] instanceof BE) {
       destination[key] = new BE(source[key]);
     } else if (target[key] && target[key] instanceof Set) {
       destination[key] = new Set(source[key]);
@@ -54,10 +49,6 @@ export function deepmerge(target, source, options = {}) {
   
   if (target instanceof BE) {
     return new BE(source);
-  }
-
-  if (target instanceof Decimal) {
-    return new Decimal(source);
   }
 
   if (target instanceof Set) {
@@ -87,10 +78,6 @@ export function deepmergeAll(array, options) {
   if (!options) {
     // eslint-disable-next-line no-shadow
     const deepCloneMerge = (destinationArray, sourceArray, options) => sourceArray.map((element, index) => {
-      if (destinationArray[index] && destinationArray[index] instanceof Decimal) {
-        return new Decimal(element);
-      }
-      
       if (destinationArray[index] && destinationArray[index] instanceof BE) {
         return new BE(element);
       }

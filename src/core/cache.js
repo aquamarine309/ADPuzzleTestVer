@@ -127,7 +127,9 @@ export const GameCache = {
         return ExtraBonus.all[i];
       }
     }
-  })
+  }),
+  
+  timeCoresFactor: new Lazy(() => timeCoresFactor())
 };
 
 EventHub.logic.on(GAME_EVENT.GLYPHS_CHANGED, () => {

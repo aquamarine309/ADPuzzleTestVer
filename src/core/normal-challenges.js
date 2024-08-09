@@ -112,6 +112,7 @@ class NormalChallengeState extends GameMechanicState {
     // unlocking autobuyers (such as Existentially Prolong) should also go through this code path
     TabNotification.newAutobuyer.clearTrigger();
     GameCache.cheapestAntimatterAutobuyer.invalidate();
+    NormalChallenges._completions.invalidate();
   }
   
   get isBroken() {
@@ -174,7 +175,15 @@ export const NormalChallenges = {
   completeAll() {
     for (const challenge of NormalChallenges.all) challenge.complete();
   },
+  
   clearCompletions() {
     player.challenge.normal.completedBits = 0;
+    NormalChallenges._completions.invalidate();
+  },
+  
+  _completions: new Lazy(() => NormalChallenges.all.countWhere(challenge => challenge.isCompleted)),
+  
+  get completions() {
+    return this._completions.value;
   }
 };

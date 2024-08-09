@@ -109,6 +109,7 @@ export const MultiplierTabIcons = {
     let color;
     if (currency === "IP") color = "var(--color-infinity)";
     if (currency === "EP") color = "var(--color-eternity)";
+    if (currency === "TC") color = "var(--color-logic)";
     return {
       symbol: `<i class='fas fa-calculator' />`,
       color,
@@ -223,4 +224,12 @@ export const MultiplierTabIcons = {
     symbol: `<i class="fas fa-exchange" />`,
     color: "var(--color-logic)",
   },
+  CHALLENGE_FACTOR: {
+    symbol: `<i class="fas fa-object-ungroup" />`,
+    color: "linear-gradient(135deg, var(--color-logic), var(--color-eternity))",
+  },
+  FROZEN: {
+    symbol: `<i class="fas fa-snow"></i>`,
+    color: "#4399f1"
+  }
 };

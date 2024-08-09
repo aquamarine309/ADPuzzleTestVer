@@ -20,7 +20,7 @@ export default {
     rate: {
       type: Object,
       required: true
-    },
+    }
   },
   data() {
     return {
@@ -47,7 +47,7 @@ export default {
     adjustableTextClass() {
       return {
         "l-narrow-box": this.isSmall,
-        "l-wide-box": !this.isSmall,
+        "l-wide-box": !this.isSmall
       };
     }
   },

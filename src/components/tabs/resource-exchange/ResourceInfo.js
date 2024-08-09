@@ -13,7 +13,8 @@ export default {
       newExchanged: new BE(0),
       value: new BE(0),
       newValue: new BE(0),
-      isAffordable: false
+      isAffordable: false,
+      hasUnlocked: false
     }
   },
   computed: {
@@ -30,6 +31,7 @@ export default {
   methods: {
     update() {
       this.isUnlocked = this.resource.isUnlocked;
+      this.hasUnlocked = this.resource.hasUnlocked;
       if (!this.isUnlocked) return;
       this.exchanged.copyFrom(this.resource.data.value);
       this.newExchanged.copyFrom(this.resource.newExchanged);
@@ -41,7 +43,7 @@ export default {
   template: `
   <div :class="classObject">
     <div class="c-resource-info-title">
-      <span v-if="isUnlocked">{{ resource.symbol }} {{ resource.name }} {{ resource.symbol }}</span>
+      <span v-if="hasUnlocked">{{ resource.symbol }} {{ resource.name }} {{ resource.symbol }}</span>
       <span v-else>Locked</span>
     </div>
     <div

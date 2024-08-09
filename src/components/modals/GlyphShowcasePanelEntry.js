@@ -50,10 +50,10 @@ export default {
       return getAdjustedGlyphLevel(this.glyph, this.realityGlyphBoost, true);
     },
     isLevelCapped() {
-      return this.effectiveLevel && this.effectiveLevel < this.level;
+      return this.effectiveLevel && this.effectiveLevel.lt(this.level);
     },
     isLevelBoosted() {
-      return this.effectiveLevel && this.effectiveLevel > this.level;
+      return this.effectiveLevel && this.effectiveLevel.gt(this.level);
     },
     levelText() {
       if (this.type === "companion") return "";
@@ -97,7 +97,7 @@ export default {
     glyphEffectList() {
       const db = GlyphEffects;
       const effects =
-      getGlyphEffectValuesFromBitmask(this.glyph.effects, this.effectiveLevel, this.glyph.strength, this.type)
+      getGlyphEffectValuesFromSet(this.glyph.effects, this.effectiveLevel, this.glyph.strength, this.type)
         .filter(e => db[e.id].isGenerated === generatedTypes.includes(this.type));
       const effectStrings = effects
         .map(e => this.formatEffectString(db[e.id], e.value));

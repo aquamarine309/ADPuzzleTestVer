@@ -104,5 +104,11 @@ export const gamespeed = {
     multValue: () => LogicChallenge(4).effectValue,
     isActive: () => LogicChallenge(4).canBeApplied,
     icon: MultiplierTabIcons.CHALLENGE("logic")
+  },
+  element: {
+    name: "Element",
+    multValue: () => ElementEffects.freeze.effectOrDefault(1),
+    isActive: () => GameElements.isActive("freeze"),
+    icon: MultiplierTabIcons.FROZEN
   }
 };

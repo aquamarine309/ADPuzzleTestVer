@@ -6,7 +6,7 @@ export class PlayerProgress {
   get isInfinityUnlocked() {
     // Infinity count data is stored in either player.infinitied or player.infinities based on if the save is before
     // or after the reality update, but this also gets checked in the import modal before any migration code is run.
-    // Thus, it needs to manually support "before" and "after" states by converting both to Decimal.
+    // Thus, it needs to manually support "before" and "after" states by converting both to BE.
     const infinityData = this._player.infinitied ? this._player.infinitied : this._player.infinities;
     return new BE(infinityData).gt(0) || this.isEternityUnlocked;
   }

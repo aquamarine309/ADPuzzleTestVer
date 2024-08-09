@@ -15,6 +15,7 @@ const propList = {
   IP: ["base", "infinityUpgrade", "achievement", "timeStudy", "dilationUpgrade", "glyph", "alchemy", "pelle", "iap",
     "nerfTeresa", "nerfV", "exchange"],
   EP: ["base", "eternityUpgrade", "timeStudy", "glyph", "realityUpgrade", "pelle", "iap", "nerfTeresa", "nerfV"],
+  TC: ["fromChallenge", "fromLP", "fromChallengeFactor"]
 };
 
 // Some of the props above would contain every entry except "total" in their respective value GameDB entry, so we
@@ -80,6 +81,9 @@ export const multiplierTabTree = {
   EP_base: [
     ["EP_IP", "EP_divisor"]
   ],
+  TC_total: [
+    getProps("TC")
+  ],
   TP_total: [
     getProps("TP")
   ],
@@ -120,7 +124,7 @@ multiplierTabTree.DT_total[0].unshift("TP_total");
 
 // Additional data specification for dynamically-generated props
 const dimTypes = ["AD", "ID", "TD"];
-const singleRes = ["IP", "EP", "DT", "infinities", "replicanti"];
+const singleRes = ["IP", "EP", "TC", "DT", "infinities", "replicanti"];
 const targetedEffects = {
   achievement: {
     checkFn: MultiplierTabHelper.achievementDimCheck,

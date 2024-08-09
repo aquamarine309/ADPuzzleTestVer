@@ -44,14 +44,6 @@ Array.prototype.previousSibling = function(current) {
   return this[this.previousSiblingIndex(current)];
 };
 
-Decimal.sumReducer = function(accumulator, previous) {
-  return Decimal.add(accumulator, previous);
-};
-
-Decimal.prodReducer = function(accumulator, previous) {
-  return Decimal.mul(accumulator, previous);
-};
-
 BE.sumReducer = function(accumulator, previous) {
   return BE.add(accumulator, previous);
 };
@@ -68,21 +60,12 @@ Number.prodReducer = function(accumulator, previous) {
   return accumulator * previous;
 };
 
-Decimal.maxReducer = function(a, b) {
-  return Decimal.max(a, b);
-};
-
 BE.maxReducer = function(a, b) {
   return BE.max(a, b);
 };
 
-Decimal.prototype.copyFrom = function(decimal) {
-  if (!(decimal instanceof Decimal)) {
-    console.log("[CopyFrom Error]", decimal);
-    throw "Copy value is not Decimal";
-  }
-  this.mantissa = decimal.mantissa;
-  this.exponent = decimal.exponent;
+BE.minReducer = function(a, b) {
+  return BE.min(a, b);
 };
 
 BE.prototype.copyFrom = function(decimal) {
@@ -238,26 +221,11 @@ Array.prototype.countWhere = function(predicate) {
 };
 
 /**
- * @returns {Decimal}
- */
-Decimal.prototype.clampMaxExponent = function(maxExp) {
-  return this.exponent >= maxExp
-    ? Decimal.fromMantissaExponent_noNormalize(1, maxExp) : this;
-};
-
-/**
  * @returns {BE}
  */
 BE.prototype.clampMaxExponent = function(maxExp) {
   return this.log10().gte(maxExp)
     ? BE.pow10(maxExp) : this;
-};
-
-/**
- * @return {Decimal}
- */
-Number.prototype.toDecimal = function() {
-  return new Decimal(this.valueOf());
 };
 
 /**
@@ -271,10 +239,6 @@ Math.log4 = Math.log(4);
 
 Array.prototype.randomElement = function() {
   return this[Math.floor(Math.random() * this.length)];
-};
-
-Decimal.prototype.valueOf = () => {
-  throw new Error("Implicit conversion from Decimal to number");
 };
 
 BE.prototype.valueOf = () => {

@@ -22,7 +22,8 @@ export class PurchasableMechanicState extends GameMechanicState {
   }
 
   get cost() {
-    return this.config.cost;
+    const cost = this.config.cost;
+    return typeof cost === "function" ? cost() : cost;
   }
 
   /**

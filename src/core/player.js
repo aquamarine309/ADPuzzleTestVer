@@ -1,5 +1,5 @@
 import { AutomatorPanels } from "../components/tabs/automator/AutomatorDocs.js";
-import { GlyphInfo } from "../components/modals/options/SelectGlyphInfoDropdown.js";
+import { GlyphInfoVue } from "../components/modals/options/SelectGlyphInfoDropdown.js";
 
 import { AUTOMATOR_MODE, AUTOMATOR_TYPE } from "./automator/automator-backend.js";
 import { BEC } from "./constants.js";
@@ -51,9 +51,11 @@ window.player = {
       row: 6
     }
   },
+  elements: new Set(),
+  challengeFactorBits: 0,
   buyUntil10: true,
   hasDLC: false,
-  stableTime: false,
+  refreshChallenge: false,
   shop: {
     totalSTD: 0,
     spentSTD: 0
@@ -71,11 +73,16 @@ window.player = {
     spentPoints: BEC.D0,
     upgradeBits: 0,
     upgReqs: 0,
-    difficulty: 0,
     initialSeed: Math.floor(Math.random() * Date.now()) + 1,
-    seed: 0
+    seed: 0,
+    refreshTimer: 0,
+    upgrades: {
+      reduce: 0,
+      half: 0
+    }
   },
   extraBonusTimeLeft: BEC.D0,
+  timeCores: BEC.D0,
   crunchPunishment: {
     this: false,
     next: false
@@ -141,7 +148,7 @@ window.player = {
       cost: 1,
       interval: 20000,
       limitGalaxies: false,
-      maxGalaxies: 1,
+      maxGalaxies: BEC.D1,
       buyMax: false,
       buyMaxInterval: 0,
       isActive: true,
@@ -151,9 +158,9 @@ window.player = {
       cost: 1,
       interval: 4000,
       limitDimBoosts: false,
-      maxDimBoosts: 1,
+      maxDimBoosts: BEC.D1,
       limitUntilGalaxies: false,
-      galaxies: 10,
+      galaxies: BEC.D1,
       buyMaxInterval: 0,
       isActive: true,
       lastTick: 0,
@@ -358,6 +365,7 @@ window.player = {
       bestEPmin: BEC.D0,
       bestEPminVal: BEC.D0,
       bestInfinitiesPerMs: BEC.D0,
+      maxLP: BEC.D0
     },
     bestEternity: {
       time: BE.NUMBER_MAX_VALUE,
@@ -384,7 +392,7 @@ window.player = {
       RMSet: [],
       RMmin: BEC.D0,
       RMminSet: [],
-      glyphLevel: 0,
+      glyphLevel: BEC.D0,
       glyphLevelSet: [],
       bestEP: BEC.D0,
       bestEPSet: [],
@@ -412,7 +420,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: BEC.D0,
-  version: 65,
+  version: 66,
   bigCrunches: 0,
   bigEternities: 0,
   infinityPower: BEC.D1,
@@ -491,7 +499,8 @@ window.player = {
         replication: 0,
         dilation: 0,
         effarig: 0,
-        reality: 0
+        reality: 0,
+        logic: 0
       },
       undo: [],
       sets: new Array(7).fill({
@@ -591,7 +600,7 @@ window.player = {
       forceUnlock: false,
       currentInfoPane: AutomatorPanels.INTRO_PAGE,
     },
-    achTimer: BEC.D0,
+    achTimer: 0,
     hasCheckedFilter: false,
   },
   blackHole: Array.range(0, 2).map(id => ({
@@ -616,7 +625,7 @@ window.player = {
       run: false,
       bestRunAM: BEC.D1,
       bestAMSet: [],
-      perkShop: Array.repeat(0, 5),
+      perkShop: Array.repeat(BEC.D0, 5),
       lastRepeatedMachines: BEC.D0
     },
     effarig: {
@@ -834,6 +843,7 @@ window.player = {
       comma: 5,
       notation: 9
     },
+    tester: false,
     sidebarResourceID: 0,
     retryChallenge: false,
     retryCelestial: false,
@@ -889,7 +899,7 @@ window.player = {
       resourceExchange: true,
       perks: true,
       alchemy: true,
-      glyphInfoType: GlyphInfo.types.NONE,
+      glyphInfoType: GlyphInfoVue.types.NONE,
       showGlyphInfoByDefault: false,
     },
     animations: {
@@ -1005,7 +1015,7 @@ export const Player = {
   },
 
   get canEternity() {
-    if (!DEV) return false;
+    if (!DEV && !player.options.tester) return false;
     return player.records.thisEternity.maxIP.gte(Player.eternityGoal);
   },
 
@@ -1094,7 +1104,7 @@ export const Player = {
 
 export function guardFromNaNValues(obj) {
   function isObject(ob) {
-    return ob !== null && typeof ob === "object" && !(ob instanceof Decimal) && !(ob instanceof BE);
+    return ob !== null && typeof ob === "object" && !(ob instanceof BE);
   }
 
   for (const key in obj) {

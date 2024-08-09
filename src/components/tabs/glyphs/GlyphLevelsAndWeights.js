@@ -37,7 +37,7 @@ export default {
       return `grid-row: 1 / ${rows + 1}; -ms-grid-row: 1; -ms-grid-row-span: ${rows};`;
     },
     formatPerkShop() {
-      return formatPercents(this.factors.perkShop - 1, 1);
+      return formatPercents(this.factors.perkShop.minus(1), 1);
     },
     sliderProps() {
       return {
@@ -117,10 +117,10 @@ export default {
         return;
       }
       const glyphFactors = getGlyphLevelInputs();
-      this.perkShopVisible = glyphFactors.perkShop !== 1;
+      this.perkShopVisible = glyphFactors.perkShop.neq(1);
       this.rowVisible = glyphFactors.rowFactor > 0;
-      this.achievementVisible = glyphFactors.achievementFactor > 0;
-      if (glyphFactors.scalePenalty !== 1) {
+      this.achievementVisible = glyphFactors.achievementFactor.gt(0);
+      if (glyphFactors.scalePenalty.neq(1)) {
         this.penaltyVisible = true;
         this.lastInstability = Date.now();
       } else if (this.penaltyVisible) {
@@ -155,12 +155,12 @@ export default {
     formatFactor(x) {
       // Not applied to + perks since it's always whole; for factors < 1, the slice makes the
       // factor be fixed point.
-      return Notations.current.isPainful || x > 1000
+      return Notations.current.isPainful || x.gt(10000)
         ? format(x, 2, 2)
         : x.toPrecision(5).slice(0, 6);
     },
     formatLevel(x) {
-      return x > 1000
+      return x.gt(1000)
         ? formatInt(Math.floor(x))
         : format(x, 2, 4);
     },

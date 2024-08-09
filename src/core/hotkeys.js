@@ -22,7 +22,7 @@ import { GameKeyboard } from "./keyboard.js";
 // for the other modifier keys (#3093).
 
 // Free keys:
-// i, j, k, l, n, o, p, q, v, w, x
+// i, j, k, l, n, o, p, q, v, w
 
 
 export const shortcuts = [
@@ -90,7 +90,7 @@ export const shortcuts = [
     name: "Exchange",
     keys: ["x"],
     type: "bindRepeatableHotkey",
-    function: () => ResourceExchange.all[player.logic.resourceExchange.lastOpenId].exchange(),
+    function: () => ResourceExchange.selected.exchange(),
     visible: () => PlayerProgress.infinityUnlocked()
   } ,{
     name: "Replicanti Galaxy",

@@ -86,20 +86,6 @@ MathOperations.number = new class NumberMathOperations extends MathOperations {
   lte(left, right) { return left <= right; }
 }();
 
-MathOperations.decimal = new class DecimalMathOperations extends MathOperations {
-  add(left, right) { return Decimal.add(left, right); }
-  subtract(left, right) { return Decimal.subtract(left, right); }
-  multiply(left, right) { return Decimal.multiply(left, right); }
-  divide(left, right) { return Decimal.divide(left, right); }
-  max(left, right) { return Decimal.max(left, right); }
-  min(left, right) { return Decimal.min(left, right); }
-  eq(left, right) { return Decimal.eq(left, right); }
-  gt(left, right) { return Decimal.gt(left, right); }
-  gte(left, right) { return Decimal.gte(left, right); }
-  lt(left, right) { return Decimal.lt(left, right); }
-  lte(left, right) { return Decimal.lte(left, right); }
-}();
-
 MathOperations.be = new class BEMathOperations extends MathOperations {
   add(left, right) { return BE.add(left, right); }
   subtract(left, right) { return BE.subtract(left, right); }
@@ -225,6 +211,14 @@ Currency.antimatter = new class extends BECurrency {
     }
     const gainedAM = value.clampMax(Player.infinityLimit);
     player.antimatter = gainedAM;
+    
+    if (ChallengeFactor.elementImbalance.isActive) {
+      const goal = Player.infinityLimit.pow(0.5);
+      if (player.records.thisInfinity.maxAM.lt(goal) && gainedAM.gt(goal)) {
+        GameElements.addRandomElement(5e3);
+      }
+    }
+    
     player.records.thisInfinity.maxAM = player.records.thisInfinity.maxAM.max(gainedAM);
     player.records.thisEternity.maxAM = player.records.thisEternity.maxAM.max(gainedAM);
     player.records.thisReality.maxAM = player.records.thisReality.maxAM.max(gainedAM);
@@ -522,5 +516,15 @@ Currency.challengePower = new class extends BECurrency {
   
   get startingValue() {
     return BEC.E1;
+  }
+}();
+
+Currency.timeCores = new class extends BECurrency {
+  get value() {
+    return player.timeCores;
+  }
+  
+  set value(value) {
+    player.timeCores = value;
   }
 }();

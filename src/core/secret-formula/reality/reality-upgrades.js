@@ -3,22 +3,21 @@ import { BEC } from "../../constants.js";
 const rebuyable = props => {
   props.cost = () => getHybridCostScaling(
     player.reality.rebuyables[props.id],
-    1e30,
+    BEC.E30,
     props.initialCost,
     props.costMult,
-    props.costMult / 10,
+    props.costMult.div(10),
     BEC.E309,
-    1e3,
-    props.initialCost * props.costMult
+    BEC.E3,
+    props.initialCost.times(props.costMult)
   );
   const { effect } = props;
-  props.effect = () => Math.pow(
-    effect + ImaginaryUpgrade(props.id).effectOrDefault(0),
-    player.reality.rebuyables[props.id] * getAdjustedGlyphEffect("realityrow1pow"));
+  props.effect = () => effect.plusEffectOf(ImaginaryUpgrade(props.id)).pow(
+    player.reality.rebuyables[props.id].times(getAdjustedGlyphEffect("realityrow1pow")));
   props.description = () => props.textTemplate.replace("{value}",
-    ImaginaryUpgrade(props.id).effectValue === 0
+    ImaginaryUpgrade(props.id).effectValue.eq(0)
       ? formatInt(effect)
-      : format(effect + ImaginaryUpgrade(props.id).effectValue, 2, 2));
+      : format(ImaginaryUpgrade(props.id).effectValue.add(effect), 2, 2));
   props.formatEffect = value => formatX(value, 2, 0);
   props.formatCost = value => format(value, 2, 0);
   return props;
@@ -29,47 +28,47 @@ export const realityUpgrades = [
   rebuyable({
     name: "Temporal Amplifier",
     id: 1,
-    initialCost: 1,
-    costMult: 30,
+    initialCost: BEC.D1,
+    costMult: BEC.D30,
     textTemplate: "You gain Dilated Time {value} times faster",
-    effect: 3
+    effect: BEC.D3
   }),
   rebuyable({
     name: "Replicative Amplifier",
     id: 2,
-    initialCost: 1,
-    costMult: 30,
+    initialCost: BEC.D1,
+    costMult: BEC.D30,
     textTemplate: "You gain Replicanti {value} times faster",
-    effect: 3
+    effect: BEC.D3
   }),
   rebuyable({
     name: "Eternal Amplifier",
     id: 3,
-    initialCost: 2,
-    costMult: 30,
+    initialCost: BEC.D2,
+    costMult: BEC.D30,
     textTemplate: "You gain {value} times more Eternities",
-    effect: 3
+    effect: BEC.D3
   }),
   rebuyable({
     name: "Superluminal Amplifier",
     id: 4,
-    initialCost: 2,
-    costMult: 30,
+    initialCost: BEC.D2,
+    costMult: BEC.D30,
     textTemplate: "You gain {value} times more Tachyon Particles",
-    effect: 3
+    effect: BEC.D3
   }),
   rebuyable({
     name: "Boundless Amplifier",
     id: 5,
-    initialCost: 3,
-    costMult: 50,
+    initialCost: BEC.D3,
+    costMult: BEC.D50,
     textTemplate: "You gain {value} times more Infinities",
-    effect: 5
+    effect: BEC.D5
   }),
   {
     name: "Cosmically Duplicate",
     id: 6,
-    cost: 15,
+    cost: BEC.D15,
     requirement: "Complete your first manual Eternity without using Replicanti Galaxies",
     // Note that while noRG resets on eternity, the reality-level check will be false after the first eternity.
     // The noRG variable is eternity-level as it's also used for an achievement check
@@ -85,10 +84,10 @@ export const realityUpgrades = [
   {
     name: "Innumerably Construct",
     id: 7,
-    cost: 15,
+    cost: BEC.D15,
     requirement: "Complete your first Infinity with at most 1 Antimatter Galaxy",
-    hasFailed: () => !(player.galaxies <= 1 && player.requirementChecks.reality.noInfinities),
-    checkRequirement: () => player.galaxies <= 1 && player.requirementChecks.reality.noInfinities,
+    hasFailed: () => !(player.galaxies.lte(1) && player.requirementChecks.reality.noInfinities),
+    checkRequirement: () => player.galaxies.lte(1) && player.requirementChecks.reality.noInfinities,
     checkEvent: GAME_EVENT.BIG_CRUNCH_BEFORE,
     canLock: true,
     lockEvent: "gain another Antimatter Galaxy",
@@ -99,7 +98,7 @@ export const realityUpgrades = [
   {
     name: "Paradoxically Attain",
     id: 8,
-    cost: 15,
+    cost: BEC.D15,
     requirement: "Manually Eternity without any automatic Achievements",
     hasFailed: () => player.reality.gainedAutoAchievements,
     checkRequirement: () => !player.reality.gainedAutoAchievements,
@@ -107,23 +106,23 @@ export const realityUpgrades = [
     canLock: true,
     // We don't have lockEvent because the modal can never show up for this upgrade
     description: "Tachyon Particle gain is boosted based on Achievement multiplier",
-    effect: () => Math.sqrt(Achievements.power),
+    effect: () => Achievements.power.sqrt(),
     formatEffect: value => formatX(value, 2, 2)
   },
   {
     name: "Linguistically Expand",
     id: 9,
-    cost: 15,
+    cost: BEC.D15,
     requirement: () => `Eternity for ${format("1e4000")} Eternity Points using
       only a single Glyph which must be level ${formatInt(3)}+.`,
     hasFailed: () => {
       const invalidEquippedGlyphs = Glyphs.activeWithoutCompanion.length > 1 ||
-        (Glyphs.activeWithoutCompanion.length === 1 && Glyphs.activeWithoutCompanion[0].level < 3);
-      const hasValidGlyphInInventory = Glyphs.inventory.countWhere(g => g && g.level >= 3) > 0;
+        (Glyphs.activeWithoutCompanion.length === 1 && Glyphs.activeWithoutCompanion[0].level.lt(3));
+      const hasValidGlyphInInventory = Glyphs.inventory.countWhere(g => g && g.level.gte(3)) > 0;
       return invalidEquippedGlyphs || (Glyphs.activeWithoutCompanion.length === 0 && !hasValidGlyphInInventory);
     },
     checkRequirement: () => Currency.eternityPoints.gte(BEC.E4000) &&
-      Glyphs.activeWithoutCompanion.length === 1 && Glyphs.activeWithoutCompanion[0].level >= 3,
+      Glyphs.activeWithoutCompanion.length === 1 && Glyphs.activeWithoutCompanion[0].level.gte(3),
     checkEvent: GAME_EVENT.ETERNITY_RESET_AFTER,
     canLock: true,
     // There are two locking events - equipping a glyph with too low a level, and equipping a second glyph
@@ -133,7 +132,7 @@ export const realityUpgrades = [
   {
     name: "Existentially Prolong",
     id: 10,
-    cost: 15,
+    cost: BEC.D15,
     requirement: () => `Complete your first manual Eternity with at least ${formatPostBreak(BEC.E400)} Infinity Points`,
     hasFailed: () => !player.requirementChecks.reality.noEternities,
     checkRequirement: () => Currency.infinityPoints.gte(BEC.E400) &&
@@ -150,7 +149,7 @@ export const realityUpgrades = [
   {
     name: "The Boundless Flow",
     id: 11,
-    cost: 50,
+    cost: BEC.D50,
     requirement: () => `${format(Currency.infinitiesBanked.value, 2)}/${format(BEC.E12)} Banked Infinities`,
     checkRequirement: () => Currency.infinitiesBanked.gte(BEC.E12),
     checkEvent: [GAME_EVENT.ETERNITY_RESET_AFTER, GAME_EVENT.REALITY_FIRST_UNLOCKED],
@@ -163,7 +162,7 @@ export const realityUpgrades = [
   {
     name: "The Knowing Existence",
     id: 12,
-    cost: 50,
+    cost: BEC.D50,
     requirement: () => `Eternity for ${format(BEC.E70)} Eternity Points without completing Eternity Challenge 1`,
     hasFailed: () => EternityChallenge(1).completions !== 0,
     checkRequirement: () => Currency.eternityPoints.gte(BEC.E70) && EternityChallenge(1).completions === 0,
@@ -179,7 +178,7 @@ export const realityUpgrades = [
   {
     name: "The Telemechanical Process",
     id: 13,
-    cost: 50,
+    cost: BEC.D50,
     requirement: () => `Eternity for ${format(BEC.E4000)} Eternity Points without Time Dim. 5-8`,
     hasFailed: () => !Array.range(5, 4).every(i => TimeDimension(i).amount.equals(0)),
     checkRequirement: () => Currency.eternityPoints.gte(NEC.E4000) &&
@@ -194,7 +193,7 @@ export const realityUpgrades = [
   {
     name: "The Eternal Flow",
     id: 14,
-    cost: 50,
+    cost: BEC.D50,
     requirement: () => `${format(Currency.eternities.value, 2)}/${format(1e7)} Eternities`,
     checkRequirement: () => Currency.eternities.gte(1e7),
     checkEvent: [GAME_EVENT.ETERNITY_RESET_AFTER, GAME_EVENT.REALITY_FIRST_UNLOCKED],
@@ -207,7 +206,7 @@ export const realityUpgrades = [
   {
     name: "The Paradoxical Forever",
     id: 15,
-    cost: 50,
+    cost: BEC.D50,
     requirement: () => `Have ${format(BEC.E10)} Eternity Points without purchasing
       the ${formatX(5)} Eternity Point upgrade`,
     hasFailed: () => player.epmultUpgrades.neq(0),
@@ -222,7 +221,7 @@ export const realityUpgrades = [
   {
     name: "Disparity of Rarity",
     id: 16,
-    cost: 1500,
+    cost: BEC.D1500,
     requirement: () => `Reality with ${formatInt(4)} Glyphs equipped of uncommon or better rarity
       (${formatInt(Glyphs.activeWithoutCompanion.countWhere(g => g && g.strength >= 1.5))} equipped)`,
     hasFailed: () => {
@@ -240,7 +239,7 @@ export const realityUpgrades = [
   {
     name: "Duplicity of Potency",
     id: 17,
-    cost: 1500,
+    cost: BEC.D1500,
     requirement: () => `Reality with ${formatInt(4)} Glyphs equipped, each having at least ${formatInt(2)} effects
       (${formatInt(Glyphs.activeWithoutCompanion.countWhere(g => g && countValuesFromBitmask(g.effects) >= 2))}
       equipped)`,
@@ -259,16 +258,16 @@ export const realityUpgrades = [
   {
     name: "Measure of Forever",
     id: 18,
-    cost: 1500,
+    cost: BEC.D1500,
     requirement: () => `Reality with ${formatInt(4)} Glyphs equipped, each at level ${formatInt(10)} or higher
-      (${formatInt(Glyphs.activeWithoutCompanion.countWhere(g => g && g.level >= 10))} equipped)`,
+      (${formatInt(Glyphs.activeWithoutCompanion.countWhere(g => g && g.level.gte(10)))} equipped)`,
     hasFailed: () => {
-      const availableGlyphs = Glyphs.inventory.countWhere(g => g && g.level >= 10);
-      const equipped = Glyphs.activeWithoutCompanion.countWhere(g => g.level >= 10);
+      const availableGlyphs = Glyphs.inventory.countWhere(g => g && g.level.gte(10));
+      const equipped = Glyphs.activeWithoutCompanion.countWhere(g => g.level.gte(10));
       const availableSlots = Glyphs.activeSlotCount - Glyphs.activeList.length;
       return equipped + Math.min(availableGlyphs, availableSlots) < 4;
     },
-    checkRequirement: () => Glyphs.activeWithoutCompanion.countWhere(g => g.level >= 10) === 4,
+    checkRequirement: () => Glyphs.activeWithoutCompanion.countWhere(g => g.level.gte(10)) === 4,
     checkEvent: GAME_EVENT.REALITY_RESET_BEFORE,
     description: "Eternity count boosts Glyph level",
     effect: () => Currency.eternities.value.plus(1).log10().sqrt().times(0.45).max(1).toNumberMax(Number.MAX_VALUE),
@@ -277,7 +276,7 @@ export const realityUpgrades = [
   {
     name: "Scour to Empower",
     id: 19,
-    cost: 1500,
+    cost: BEC.D1500,
     requirement: () => `Have a total of ${formatInt(30)} or more Glyphs at once
       (You have ${formatInt(Glyphs.allGlyphs.countWhere(g => g.type !== "companion"))})`,
     hasFailed: () => Glyphs.allGlyphs.countWhere(g => g.type !== "companion") < 30,
@@ -289,7 +288,7 @@ export const realityUpgrades = [
   {
     name: "Parity of Singularity",
     id: 20,
-    cost: 1500,
+    cost: BEC.D1500,
     requirement: () => `${formatInt(100)} days total play time after unlocking the Black Hole
       (Currently: ${Time.timeSinceBlackHole.toStringShort(false)})`,
     hasFailed: () => !BlackHole(1).isUnlocked && Currency.realityMachines.lt(100),
@@ -303,9 +302,9 @@ export const realityUpgrades = [
   {
     name: "Cosmic Conglomerate",
     id: 21,
-    cost: 100000,
-    requirement: () => `${formatInt(Replicanti.galaxies.total + player.galaxies +
-      player.dilation.totalTachyonGalaxies)}/${formatInt(2800)} total Galaxies from all types`,
+    cost: BEC.E5,
+    requirement: () => `${formatInt(Replicanti.galaxies.total.add(player.galaxies).add
+      (player.dilation.totalTachyonGalaxies))}/${formatInt(2800)} total Galaxies from all types`,
     checkRequirement: () =>
       Replicanti.galaxies.total.plus(player.galaxies).plus(player.dilation.totalTachyonGalaxies).gte(2800),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
@@ -315,7 +314,7 @@ export const realityUpgrades = [
   {
     name: "Temporal Transcendence",
     id: 22,
-    cost: 100000,
+    cost: BEC.E5,
     requirement: () => `${format(Currency.timeShards.value, 1)}/${format(BEC.E28000)} Time Shards`,
     checkRequirement: () => Currency.timeShards.gte(BEC.E28000),
     checkEvent: GAME_EVENT.GAME_TICK_AFTER,
@@ -326,7 +325,7 @@ export const realityUpgrades = [
   {
     name: "Replicative Rapidity",
     id: 23,
-    cost: 100000,
+    cost: BEC.E5,
     requirement: () => `Reality in under ${formatInt(15)} minutes of game time
       (Fastest: ${Time.bestReality.toStringShort()})`,
     hasFailed: () => Time.thisReality.totalMinutes.gte(15),
@@ -340,7 +339,7 @@ export const realityUpgrades = [
   {
     name: "Synthetic Symbolism",
     id: 24,
-    cost: 100000,
+    cost: BEC.E5,
     requirement: () => `Reality for ${formatInt(5000)} Reality Machines without equipped Glyphs`,
     hasFailed: () => Glyphs.activeWithoutCompanion.length > 0,
     checkRequirement: () => MachineHandler.gainedRealityMachines.gte(5000) &&
@@ -354,7 +353,7 @@ export const realityUpgrades = [
   {
     name: "Effortless Existence",
     id: 25,
-    cost: 100000,
+    cost: BEC.E5,
     requirement: () => `Reach ${format(BEC.E11111)} EP (Best: ${format(player.records.bestReality.bestEP, 2)} EP)`,
     checkRequirement: () => player.records.bestReality.bestEP.gte(BEC.E11111),
     checkEvent: GAME_EVENT.ETERNITY_RESET_AFTER,
