@@ -58,7 +58,7 @@ export const resourceExchange = {
     name: "Time Cores",
     shortName: "TC",
     symbol: "Δ",
-    currency: () => Currency.eternityPoints,
-    value: value => value.pow(0.1).times(100).add(1)
+    currency: () => Currency.timeCores,
+    value: value => value.pow(5).times(100).add(1)
   }
 }
