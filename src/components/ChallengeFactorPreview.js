@@ -11,27 +11,54 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      hideChallengeFactor: false
+    }
+  }, 
   computed: {
     averageDifficulty() {
       return formatFloat(ChallengeFactors.calculateDifficulty(this.factors), 1);
+    },
+    classText() {
+      return this.hideChallengeFactor ? "far fa-plus-square" : "far fa-minus-square";
     }
   },
+  watch: {
+    hideChallengeFactor(value) {
+      player.options.hideChallengeFactor = value;
+    }
+  },
+  methods: {
+    update() {
+      this.hideChallengeFactor = player.options.hideChallengeFactor;
+    }
+  }, 
   template: `
   <div class="c-challenge-factor-preview">
-    <div>Current Challenge Factors (Difficulty: {{ averageDifficulty }}):</div>
+    <div><i
+      :class="classText"
+      @click="hideChallengeFactor = !hideChallengeFactor"
+    /> <b>Current Challenge Factors (Difficulty: {{ averageDifficulty }}):</b></div>
+    <div v-if="!hideChallengeFactor">
+      <div
+        v-if="factors.length > 0"
+        class="c-challenge-factors-row"
+      >
+        <ChallengeFactorComponent
+          v-for="factor in factors"
+          :factor="factor"
+          :key="factor.id"
+        />
+      </div>
+      <div v-else>
+        Void
+      </div>
+    </div>
     <div
-      v-if="factors.length > 0"
-      class="c-challenge-factors-row"
-    >
-      <ChallengeFactorComponent
-        v-for="factor in factors"
-        :factor="factor"
-        :key="factor.id"
-      />
-    </div>
-    <div v-else>
-      Void
-    </div>
+      v-else
+      @click="hideChallengeFactor = true"
+    >(Details hidden, click to unhide)</div>
   </div>
   `
 }

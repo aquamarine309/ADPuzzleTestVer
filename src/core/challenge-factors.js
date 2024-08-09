@@ -84,7 +84,7 @@ export const ChallengeFactors = {
   },
   
   get requirement() {
-    return GameCache.timeCoresFactor.value.fromChallengeFactor.div(BEC.D3).times(Math.clampMax(Math.pow(player.eternitiesBeforeRefresh + 1, 0.25), 100));
+    return GameCache.timeCoresFactor.value.fromChallengeFactor.div(BEC.D3).times(Math.clampMax(Math.pow(player.eternitiesBeforeRefresh + 1, 0.8), 100));
   }
 }
 

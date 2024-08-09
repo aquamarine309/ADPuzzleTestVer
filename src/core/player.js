@@ -871,6 +871,7 @@ window.player = {
       showAltGroup: false,
       replacePowers: false,
     },
+    hideChallengeFactor: false,
     autosaveInterval: 30000,
     showTimeSinceSave: true,
     saveFileName: "",
