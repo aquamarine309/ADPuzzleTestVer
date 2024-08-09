@@ -94,6 +94,7 @@ export function eternity(force, auto, specialConditions = {}) {
   }
   
   Currency.timeCores.add(gainedTimeCores());
+  player.eternitiesBeforeRefresh++;
 
   if (player.dilation.active) rewardTP();
 

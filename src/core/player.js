@@ -53,6 +53,7 @@ window.player = {
   },
   elements: new Set(),
   challengeFactorBits: 0,
+  eternitiesBeforeRefresh: 0,
   buyUntil10: true,
   hasDLC: false,
   refreshChallenge: false,
@@ -420,7 +421,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: BEC.D0,
-  version: 66,
+  version: 67,
   bigCrunches: 0,
   bigEternities: 0,
   infinityPower: BEC.D1,

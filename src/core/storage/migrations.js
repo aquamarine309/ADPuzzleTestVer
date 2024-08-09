@@ -516,6 +516,9 @@ export const migrations = {
     },
     66: player => {
       player.reality.achTimer = parseFloat(player.reality.achTimer);
+    },
+    67: player => {
+      player.eternitiesBeforeRefresh = player.eternities.toNumberMax(1e8);
     }
   },
 

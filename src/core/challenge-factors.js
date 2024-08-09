@@ -84,7 +84,7 @@ export const ChallengeFactors = {
   },
   
   get requirement() {
-    return GameCache.timeCoresFactor.value.fromChallengeFactor.div(BEC.D3).times(Currency.eternities.value.add(1).pow(0.25).clampMax(100));
+    return GameCache.timeCoresFactor.value.fromChallengeFactor.div(BEC.D3).times(Math.clampMax(Math.pow(player.eternitiesBeforeRefresh + 1, 0.25), 100));
   }
 }
 
@@ -177,6 +177,7 @@ export const ChallengeFactorHandler = {
     player.refreshChallenge = false;
     ChallengeFactors._current.invalidate();
     HalfRefreshTimeUpgrade.boughtAmount = 0;
+    player.eternitiesBeforeRefresh = 0;
     EventHub.dispatch(GAME_EVENT.CHALLENGE_FACTOR_CHANGED);
     this._comingFactorBits = 0;
   }
