@@ -51,7 +51,7 @@ export default {
       return this.inputIsValidSave || this.inputIsSecret;
     },
     canImport() {
-      return this.player.version && this.player.version >= 50;
+      return this.player?.version && this.player.version >= 50;
     },
     inputIsValidSave() {
       return this.player !== undefined;
