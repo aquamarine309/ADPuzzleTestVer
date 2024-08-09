@@ -654,7 +654,7 @@ export const Glyphs = {
     return 1000000;
   },
   get instabilityThreshold() {
-    return 1000 + getAdjustedGlyphEffect("effarigglyph") + ImaginaryUpgrade(7).effectOrDefault(0);
+    return getAdjustedGlyphEffect("effarigglyph").plusEffectOf(ImaginaryUpgrade(7)).add(1000);
   },
   get hyperInstabilityThreshold() {
     return 3000 + this.instabilityThreshold;

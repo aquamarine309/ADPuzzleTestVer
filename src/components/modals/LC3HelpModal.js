@@ -283,15 +283,15 @@ export default {
           this.showNotify("The length is too short");
           return;
         };
-        if (!checkRow(rowTrim)) {
-          this.showNotify("The equation is incorrect.");
-          return;
-        };
         if (row.join("") === this.question) {
           this.stage = GAME_STAGE.COMPLETED;
           player.lc3Game.stage = this.stage;
           return;
         }
+        if (!checkRow(rowTrim)) {
+          this.showNotify("The equation is incorrect.");
+          return;
+        };
         if (this.currentRow + 1 >= this.row) {
           this.stage = GAME_STAGE.FAILED;
           player.lc3Game.stage = this.stage;
