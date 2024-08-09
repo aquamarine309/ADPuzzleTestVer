@@ -365,7 +365,7 @@ window.player = {
       bestEPmin: BEC.D0,
       bestEPminVal: BEC.D0,
       bestInfinitiesPerMs: BEC.D0,
-      maxLP: BEC.D0
+      maxLP: BEC.D1
     },
     bestEternity: {
       time: BE.NUMBER_MAX_VALUE,

@@ -134,7 +134,7 @@ export function eternity(force, auto, specialConditions = {}) {
   player.records.thisInfinity.bestIPmin = BEC.D0;
   player.records.bestInfinity.bestIPminEternity = BEC.D0;
   player.records.thisEternity.bestEPmin = BEC.D0;
-  player.records.thisEternity.maxLP = BEC.D0;
+  player.records.thisEternity.maxLP = BEC.D1;
   player.records.thisEternity.bestInfinitiesPerMs = BEC.D0;
   player.records.thisEternity.bestIPMsWithoutMaxAll = BEC.D0;
   resetTimeDimensions();
