@@ -91,6 +91,7 @@ export function tryImportSecret(data) {
     case 4:
       if (player.options.tester) return;
       player.options.tester = true;
+      return true;
     default:
       return false;
   }
