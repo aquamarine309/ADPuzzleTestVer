@@ -93,7 +93,7 @@ export default {
       this.randomDimOrder = Puzzle.randomDimOrder;
       this.vertigo = GameElements.isActive("vertigo");
       if (this.vertigo) {
-        this.lockTimeString = timeDisplayShort(GameElements.getElement("vertigo").time);
+        this.lockTimeString = timeDisplayShort(GameElements.getTime("vertigo"));
       }
       if (!isSacrificeUnlocked) return;
       this.isSacrificeAffordable = Sacrifice.canSacrifice;

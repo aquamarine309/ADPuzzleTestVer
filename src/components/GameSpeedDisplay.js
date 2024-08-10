@@ -57,7 +57,7 @@ export default {
       this.isPulsing = this.baseSpeed.neq(this.pulsedSpeed) && Enslaved.canRelease(true);
       this.isFreezeActive = GameElements.isActive("freeze");
       if (!this.isFreezeActive) return;
-      this.freezeTime = GameElements.getElement("freeze").time;
+      this.freezeTime = GameElements.getTime("freeze");
     },
     formatNumber(num) {
       if (num.gte(0.001) && num.lt(1e4) && num.neq(1)) {

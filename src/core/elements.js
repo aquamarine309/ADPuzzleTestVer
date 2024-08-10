@@ -1,62 +1,47 @@
 import { GameMechanicState } from "./game-mechanics/index.js";
 
 export const GameElements = {
-  _activeTypes: new Set(),
   
-  get active() {
+  get data() {
     return player.elements;
   },
   
-  get activeTypes() {
-    return this._activeTypes;
-  },
-  
   isActive(type) {
-    return this.activeTypes.has(type);
+    return this.getTime(type) > 0;
   },
   
   tick(diff) {
-    if (this.active.size === 0) return;
     // Real time
-    this.active.forEach(element => {
-      if (element.time <= diff) {
-        this.active.delete(element);
-        this.activeTypes.delete(element.type);
+    for (let el in this.data) {
+      const time = this.getTime(el);
+      if (time === 0) continue;
+      
+      if (time <= diff) {
+        this.data[el] = 0;
       } else {
-        element.time -= diff;
+        this.data[el] -= diff;
       }
-    });
+    }
   },
   
-  add(element) {
-    if (this.isActive(element.type)) {
-      this.active.forEach(el => {
-        if (element.type === el.type) {
-          el.time = Math.max(element.time, el.time);
-        }
-      });
+  add(type, duration) {
+    const effect = ElementEffects[type];
+    if (this.isActive(type)) {
+      this.data[type] = Math.max(this.getTime(type), duration);
     } else {
-      this.active.add(element);
-      this.activeTypes.add(element.type);
-      GameUI.notify.info(`You have got Element "${ElementEffects[element.type].name}" for ${timeDisplayShort(element.time)}!`);
+      this.data[type] = duration;
+      GameUI.notify.info(`You have got Element "${effect.name}" for ${timeDisplayShort(duration)}!`);
     }
-    ElementEffects[element.type].config.start?.();
+    effect.config.start?.();
   },
   
-  updateActiveTypes() {
-    this.activeTypes.clear();
-    for (const element of this.active) {
-      this.activeTypes.add(element.type);
-    }
+  getTime(type) {
+    return this.data[type];
   },
   
-  getElement(type) {
-    return this.active.find(el => el.type === type);
-  },
-  
-  addRandomElement(time) {
+  addRandomElement(duration) {
     const type = ElementEffects.all.randomElement().id;
-    this.add({ type, time });
+    this.add(type, duration);
   }
 }
 

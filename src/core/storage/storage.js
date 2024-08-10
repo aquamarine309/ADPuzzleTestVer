@@ -473,7 +473,6 @@ export const GameStorage = {
     ui.view.tutorialState = player.tutorialState;
     ui.view.tutorialActive = player.tutorialActive;
 
-    GameElements.updateActiveTypes();
     ECTimeStudyState.invalidateCachedRequirements();
     Glyphs.initial();
     recalculateAllGlyphs();

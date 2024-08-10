@@ -530,6 +530,16 @@ export const migrations = {
       if (player.eternities.gte(2)) {
         player.logic.upgReqs |= (1 << 10);
       }
+    },
+    70: player => {
+      if (Array.isArray(player.elements)) {
+        const result = ElementEffects.all.mapToObject(x => x.id, x => 0);
+        for (const el of player.elements) {
+          if (!result[el.type]) continue;
+          result[el.type] = el.time;
+        }
+        player.elements = result;
+      }
     }
   },
 

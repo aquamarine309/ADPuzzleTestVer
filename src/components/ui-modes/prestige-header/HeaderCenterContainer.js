@@ -24,6 +24,7 @@ export default {
       isDoomed: false,
       antimatter: new BE(0),
       antimatterPerSec: new BE(0),
+      reduceAntimatter: false
     };
   },
   methods: {
@@ -35,6 +36,7 @@ export default {
       this.isDoomed = Pelle.isDoomed;
       this.antimatter.copyFrom(Currency.antimatter.value);
       this.hasRealityButton = PlayerProgress.realityUnlocked() || TimeStudy.reality.isBought;
+      this.reduceAntimatter = GameElements.isActive("reduceAntimatter");
       if (!this.hasRealityButton) this.antimatterPerSec.copyFrom(Currency.antimatter.productionPerSecond);
     },
   },
@@ -43,7 +45,12 @@ export default {
     v-if="shouldDisplay"
     class="c-prestige-button-container"
   >
-    <span>You have <span class="c-game-header__antimatter">{{ format(antimatter, 2, 1) }}</span> antimatter.</span>
+    <span>You have
+      <i
+        class="fas fa-arrow-down c-reduce-antimatter"
+        v-if="reduceAntimatter"
+      />
+      <span class="c-game-header__antimatter">{{ format(antimatter, 2, 1) }}</span> antimatter.</span>
     <div
       v-if="hasRealityButton"
       class="c-reality-container"

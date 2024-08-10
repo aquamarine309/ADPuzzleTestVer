@@ -5,6 +5,7 @@ import { AUTOMATOR_MODE, AUTOMATOR_TYPE } from "./automator/automator-backend.js
 import { BEC } from "./constants.js";
 import { deepmergeAll } from "../utility/deepmerge.js";
 import { GlyphTypes } from "./glyph-effects.js";
+import { ElementEffects } from "./elements.js";
 import { DEV } from "../env.js";
 
 // This is actually reassigned when importing saves
@@ -51,7 +52,7 @@ window.player = {
       row: 6
     }
   },
-  elements: new Set(),
+  elements: ElementEffects.all.mapToObject(x => x.id, x => 0),
   challengeFactorBits: 0,
   eternitiesBeforeRefresh: 0,
   buyUntil10: true,
@@ -421,7 +422,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: BEC.D0,
-  version: 69,
+  version: 70,
   bigCrunches: 0,
   bigEternities: 0,
   infinityPower: BEC.D1,
