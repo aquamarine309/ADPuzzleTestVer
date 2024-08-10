@@ -57,7 +57,7 @@ export default {
     </div>
     <div
       v-else
-      @click="hideChallengeFactor = true"
+      @click="hideChallengeFactor = false"
     >(Details hidden, click to unhide)</div>
   </div>
   `

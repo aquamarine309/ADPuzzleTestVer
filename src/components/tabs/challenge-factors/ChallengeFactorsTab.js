@@ -24,7 +24,7 @@ export default {
       return ChallengeFactors.current;
     },
     canRestart() {
-      return this.gainedTimeCores.gte(1);
+      return this.gainedTimeCores.gte(ChallengeFactors.requirement);
     },
     reduceUpg: () => ReduceRefreshTimeUpgrade,
     halfUpg: () => HalfRefreshTimeUpgrade
