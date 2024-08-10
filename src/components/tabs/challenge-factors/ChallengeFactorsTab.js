@@ -19,15 +19,13 @@ export default {
       gainedTimeCores: new BE(0),
       tdMult: new BE(0),
       nextTDmult: new BE(0),
-      type: 0
+      type: 0,
+      canRestart: false
     }
   },
   computed: {
     currentFactors() {
       return ChallengeFactors.current;
-    },
-    canRestart() {
-      return this.gainedTimeCores.gte(ChallengeFactors.requirement);
     },
     reduceUpg: () => ReduceRefreshTimeUpgrade,
     halfUpg: () => HalfRefreshTimeUpgrade,
@@ -45,6 +43,7 @@ export default {
       this.tdMult = ChallengeFactors.tdMult;
       this.nextTDmult = ChallengeFactors.tdMultAt(this.timeCores.add(this.gainedTimeCores));
       this.type = player.options.challengeFactorType;
+      this.canRestart = ChallengeFactors.canRestart;
     },
   },
   created() {

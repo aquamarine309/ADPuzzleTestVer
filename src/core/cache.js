@@ -129,7 +129,9 @@ export const GameCache = {
     }
   }),
   
-  timeCoresFactor: new Lazy(() => timeCoresFactor())
+  timeCoresFactor: new Lazy(() => timeCoresFactor()),
+  
+  gainedTimeCores: new Lazy(() => getGainedTimeCores())
 };
 
 EventHub.logic.on(GAME_EVENT.GLYPHS_CHANGED, () => {

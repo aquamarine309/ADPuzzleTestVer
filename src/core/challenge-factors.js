@@ -142,6 +142,10 @@ export const ChallengeFactors = {
     return player.logic.refreshTimer === this.refreshPeriod;
   },
   
+  get canRestart() {
+    return gainedTimeCores().gte(this.requirement) || player.refreshChallenge;
+  },
+  
   // real diff
   tick(diff) {
     if (!PlayerProgress.eternityUnlocked() || this.canRefresh) return;
@@ -174,8 +178,12 @@ export function timeCoresFactor() {
   return { fromChallenge, fromLP, fromChallengeFactor, staticDivisor };
 }
 
-export function gainedTimeCores() {
+export function getGainedTimeCores() {
   return Object.values(GameCache.timeCoresFactor.value).reduce(BE.prodReducer);
+}
+
+export function gainedTimeCores() {
+  return GameCache.gainedTimeCores.value;
 }
 
 function random() {

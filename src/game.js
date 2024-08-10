@@ -518,6 +518,7 @@ export function gameLoop(passDiff, options = {}) {
   
   if (PlayerProgress.eternityUnlocked() || Player.canEternity) {
     GameCache.timeCoresFactor.invalidate();
+    GameCache.gainedTimeCores.invalidate();
   }
 
   const blackHoleDiff = realDiff;

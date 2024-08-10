@@ -11,13 +11,10 @@ export default {
       respec: false,
       canEternity: false,
       requirement: new BE(0),
-      canRefresh: false
+      canRestart: false
     }
   },
   computed: {
-    canRestart() {
-      return this.gainedTC.gte(this.requirement) || this.canRefresh;
-    },
     title() {
       return this.canEternity ? "Eternity" : `Restart the Eternity`;
     },
@@ -28,7 +25,7 @@ export default {
       this.respec = player.refreshChallenge;
       this.canEternity = Player.canEternity;
       this.requirement = ChallengeFactors.requirement;
-      this.canRefresh = player.refreshChallenge;
+      this.canRestart = ChallengeFactors.canRestart;
     },
     restart() {
       if (!this.canRestart) return;

@@ -27,7 +27,7 @@ export const challengeFactors = {
   logicalFallacy: {
     id: 2,
     name: "Logical Fallacy",
-    description: x => `The multiplier from Logic Points ${formatPow(x)}.`,
+    description: x => `The multiplier from Logic Points ${formatPow(x, 0, 3)}.`,
     symbol: "<i class='fas fa-plus-circle'></i>",
     color: "#63e6c4",
     type: CHALLENGE_FACTOR_TYPE.NERF,
