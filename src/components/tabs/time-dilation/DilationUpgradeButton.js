@@ -35,7 +35,7 @@ export default {
       isAffordable: false,
       isAutoUnlocked: false,
       isAutobuyerOn: false,
-      boughtAmount: 0,
+      boughtAmount: new BE(0),
       currentDT: new BE(0),
       currentDTGain: new BE(0),
       timeEstimate: "",
@@ -84,7 +84,7 @@ export default {
         this.isAffordable = upgrade.isAffordable;
         this.isCapped = upgrade.isCapped;
         const autobuyer = Autobuyer.dilationUpgrade(upgrade.id);
-        this.boughtAmount = upgrade.boughtAmount;
+        this.boughtAmount.copyFrom(upgrade.boughtAmount);
         if (!autobuyer) return;
         this.isAutoUnlocked = autobuyer.isUnlocked;
         this.isAutobuyerOn = autobuyer.isActive;
@@ -128,7 +128,7 @@ export default {
           data-v-dilation-upgrade-button
         />
         <EffectDisplay
-          :key="boughtAmount"
+          :key="boughtAmount.toString()"
           br
           :config="upgrade.config"
           data-v-dilation-upgrade-button

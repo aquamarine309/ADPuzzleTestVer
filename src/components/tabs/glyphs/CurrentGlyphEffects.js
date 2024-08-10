@@ -25,7 +25,7 @@ export default {
       isColored: false,
       hasEffarig: false,
       hasReality: false,
-      logTotalSacrifice: 0,
+      logTotalSacrifice: new BE(0),
       pelleChaosEffect: {},
     };
   },
@@ -110,7 +110,7 @@ export default {
     </div>
     <CurrentGlyphEffect
       v-for="effect in effects"
-      :key="effect.id + logTotalSacrifice"
+      :key="effect.id + logTotalSacrifice.toString()"
       :effect="effect"
       :is-colored="isColored"
     />

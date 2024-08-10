@@ -32,9 +32,9 @@ export const GlyphSelection = {
   },
 
   glyphList(countIn, level, config) {
-    // Always generate at least 4 choices so that the RNG never diverges based on
-    // the 4-choice perk.
-    const count = Math.clampMin(countIn, 4);
+    // Always generate at least 5 choices so that the RNG never diverges based on
+    // the 5-choice perk.
+    const count = Math.clampMin(countIn, 5);
     let glyphList = [];
     const rng = config.rng || new GlyphGenerator.RealGlyphRNG();
     const types = [];
@@ -54,7 +54,7 @@ export const GlyphSelection = {
     }
 
     this.glyphUncommonGuarantee(glyphList, rng);
-    // If we generated extra choices due to always generating at least 4 choices,
+    // If we generated extra choices due to always generating at least 5 choices,
     // we remove the extra choices here.
     glyphList = glyphList.slice(0, countIn);
     // If we passed an explicit RNG in, we assume it'll get finalized later.
@@ -104,15 +104,15 @@ export const GlyphSelection = {
       return this.glyphList(this.choiceCount, gainedGlyphLevel(), { isChoosingGlyph: false });
     }
 
-    const group = this.glyphList(4, gainedGlyphLevel(), { isChoosingGlyph: false });
+    const group = this.glyphList(5, gainedGlyphLevel(), { isChoosingGlyph: false });
     return [group[this.indexWithoutSTART]];
   },
 
-  // The uniformity code behaves poorly without START, so we generate actually generate them 4 at a time and then
+  // The uniformity code behaves poorly without START, so we generate actually generate them 5 at a time and then
   // deterministically pick one of them randomly
   get indexWithoutSTART() {
     const lexIndex = player.realities.toNumber() * ((player.reality.initialSeed % 5) + 3);
-    return permutationIndex(4, lexIndex)[0];
+    return permutationIndex(5, lexIndex)[0];
   }
 };
 
@@ -169,7 +169,7 @@ export function processManualReality(sacrifice, glyphID) {
     Glyphs.addToInventory(GlyphGenerator.startingGlyph(gainedGlyphLevel()));
     Glyphs.addToInventory(GlyphGenerator.companionGlyph(Currency.eternityPoints.value));
   } else if (Perk.firstPerk.isEffectActive) {
-    // If we have firstPerk, we pick from 4+ glyphs, and glyph generation functions as normal.
+    // If we have firstPerk, we pick from 5+ glyphs, and glyph generation functions as normal.
     GlyphSelection.generate(GlyphSelection.choiceCount);
 
     // If we don't actually have a chosen ID, that means a manual reality was done with the modal disabled or the
@@ -203,7 +203,7 @@ export function processManualReality(sacrifice, glyphID) {
     // perk. We explicitly generate 4 glyphs every time here because otherwise this has some poor interactions
     // when the uniformity code is still active (selected types become highly biased). Therefore, we generate
     // the whole group and then choose a glyph randomly (but deterministically) instead
-    GlyphSelection.generate(4);
+    GlyphSelection.generate(5);
     GlyphSelection.select(GlyphSelection.indexWithoutSTART, sacrifice);
   }
 
@@ -624,9 +624,9 @@ export function finishProcessReality(realityProps) {
   player.bigCrunches = 0;
   player.bigEternities = 0;
   Currency.infinitiesBanked.reset();
-  player.records.bestInfinity.time = 999999999999;
-  player.records.bestInfinity.realTime = 999999999999;
-  player.records.thisInfinity.time = 0;
+  player.records.bestInfinity.time = BE.NUMBER_MAX_VALUE;
+  player.records.bestInfinity.realTime = Number.MAX_VALUE;
+  player.records.thisInfinity.time = BE.NUMBER_MAX_VALUE;
   player.records.thisInfinity.lastBuyTime = 0;
   player.records.thisInfinity.realTime = 0;
   player.dimensionBoosts = BEC.D0;
@@ -634,7 +634,7 @@ export function finishProcessReality(realityProps) {
   player.partInfinityPoint = 0;
   player.partInfinitied = 0;
   player.break = false;
-  player.IPMultPurchases = 0;
+  player.IPMultPurchases = BEC.D0;
   Currency.infinityPower.reset();
   Currency.timeShards.reset();
   Replicanti.reset(true);
@@ -644,10 +644,10 @@ export function finishProcessReality(realityProps) {
   // This has to be reset before Currency.eternities to make the bumpLimit logic work correctly
   EternityUpgrade.epMult.reset();
   if (!PelleUpgrade.eternitiesNoReset.canBeApplied) Currency.eternities.reset();
-  player.records.thisEternity.time = 0;
+  player.records.thisEternity.time = BEC.D0;
   player.records.thisEternity.realTime = 0;
-  player.records.bestEternity.time = 999999999999;
-  player.records.bestEternity.realTime = 999999999999;
+  player.records.bestEternity.time = BE.NUMBER_MAX_VALUE;
+  player.records.bestEternity.realTime = Number.MAX_VALUE;
   if (!PelleUpgrade.keepEternityUpgrades.canBeApplied) player.eternityUpgrades.clear();
   player.totalTickGained = BEC.D0;
   if (!PelleUpgrade.keepEternityChallenges.canBeApplied) player.eternityChalls = {};
@@ -665,7 +665,7 @@ export function finishProcessReality(realityProps) {
   } else {
     Player.resetRequirements("reality");
   }
-  player.records.thisReality.time = 0;
+  player.records.thisReality.time = BEC.D0;
   player.records.thisReality.realTime = 0;
   player.records.thisReality.maxReplicanti = BEC.D0;
   if (!PelleUpgrade.timeStudiesNoReset.canBeApplied) Currency.timeTheorems.reset();
@@ -677,12 +677,12 @@ export function finishProcessReality(realityProps) {
   if (!PelleUpgrade.dilationUpgradesNoReset.canBeApplied) {
     player.dilation.upgrades.clear();
     player.dilation.rebuyables = {
-      1: 0,
-      2: 0,
-      3: 0,
-      11: 0,
-      12: 0,
-      13: 0
+      1: BEC.D0,
+      2: BEC.D0,
+      3: BEC.D0,
+      11: BEC.D0,
+      12: BEC.D0,
+      13: BEC.D0
     };
   }
   if (!PelleUpgrade.tachyonParticlesNoReset.canBeApplied) {
@@ -715,12 +715,13 @@ export function finishProcessReality(realityProps) {
   player.records.thisInfinity.bestIPmin = BEC.D0;
   player.records.bestInfinity.bestIPminEternity = BEC.D0;
   player.records.thisEternity.bestEPmin = BEC.D0;
+  player.records.thisEternity.maxLP = BEC.D0;
   player.records.thisEternity.bestInfinitiesPerMs = BEC.D0;
   player.records.thisEternity.bestIPMsWithoutMaxAll = BEC.D0;
   player.records.bestEternity.bestEPminReality = BEC.D0;
   player.records.thisReality.bestEternitiesPerMs = BEC.D0;
-  player.records.thisReality.bestRSmin = 0;
-  player.records.thisReality.bestRSminVal = 0;
+  player.records.thisReality.bestRSmin = BEC.D0;
+  player.records.thisReality.bestRSminVal = BEC.D0;
   resetTimeDimensions();
   resetTickspeed();
   AchievementTimers.marathon2.reset();

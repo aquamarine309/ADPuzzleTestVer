@@ -1,7 +1,9 @@
+import { BEC } from "../constants.js";
+
 // This actually deals with both sacrifice and refining, but I wasn't 100% sure what to call it
 export const GlyphSacrificeHandler = {
   // Anything scaling on sacrifice caps at this value, even though the actual sacrifice values can go higher
-  maxSacrificeForEffects: 1e100,
+  maxSacrificeForEffects: BEC.E100,
   // This is used for glyph UI-related things in a few places, but is handled here as a getter which is only called
   // sparingly - that is, whenever the cache is invalidated after a glyph is sacrificed. Thus it only gets recalculated
   // when glyphs are actually sacrificed, rather than every render cycle.
@@ -10,7 +12,7 @@ export const GlyphSacrificeHandler = {
     // should check for -Infinity, but the clampMin works in practice because the minimum possible sacrifice
     // value is greater than 1 for even the weakest possible glyph
     return BASIC_GLYPH_TYPES.reduce(
-      (tot, type) => tot + Math.log10(Math.clampMin(player.reality.glyphs.sac[type], 1)), 0);
+      (tot, type) => player.reality.glyphs.sac[type].clampMin(1).log10().add(tot), BEC.D0);
   },
   get canSacrifice() {
     return RealityUpgrade(19).isBought;
@@ -41,13 +43,13 @@ export const GlyphSacrificeHandler = {
     else Modal.glyphDelete.show({ idx: glyph.idx });
   },
   glyphSacrificeGain(glyph) {
-    if (!this.canSacrifice || Pelle.isDoomed) return 0;
-    if (glyph.type === "reality") return 0.01 * glyph.level * Achievement(171).effectOrDefault(1);
-    const pre10kFactor = Math.pow(Math.clampMax(glyph.level, 10000) + 10, 2.5);
-    const post10kFactor = 1 + Math.clampMin(glyph.level - 10000, 0) / 100;
+    if (!this.canSacrifice || Pelle.isDoomed) return BEC.D0;
+    if (glyph.type === "reality") return glyph.level.times(0.01 * Achievement(171).effectOrDefault(1));
+    const pre10kFactor = glyph.level.clampMax(10000).add(10).pow(2.5);
+    const post10kFactor = glyph.level.minus(1e4).clampMin(0).div(100).add(1);
     const power = Ra.unlocks.maxGlyphRarityAndShardSacrificeBoost.effectOrDefault(1);
-    return Math.pow(pre10kFactor * post10kFactor * glyph.strength *
-      Teresa.runRewardMultiplier * Achievement(171).effectOrDefault(1), power);
+    return pre10kFactor.times(post10kFactor).times(glyph.strength).times
+      (Teresa.runRewardMultiplier).timesEffectOf(Achievement(171)).pow(power);
   },
   sacrificeGlyph(glyph, force = false) {
     if (Pelle.isDoomed) return;
@@ -70,7 +72,7 @@ export const GlyphSacrificeHandler = {
   },
   // Scaling function to make refinement value ramp up with higher glyph levels
   levelRefinementValue(level) {
-    return Math.pow(level, 3) / 1e8;
+    return leve.pow(3).div(1e8).toNumberMax(25000);
   },
   // Refined glyphs give this proportion of their maximum attainable value from their level
   glyphRefinementEfficiency: 0.05,

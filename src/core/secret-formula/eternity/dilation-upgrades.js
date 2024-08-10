@@ -14,7 +14,7 @@ function rebuyable(config) {
     formatEffect: config.formatEffect,
     formatCost: config.formatCost,
     purchaseCap: config.purchaseCap,
-    reachedCap: () => player.dilation.rebuyables[config.id] >= config.purchaseCap,
+    reachedCap: () => player.dilation.rebuyables[config.id].gte(config.purchaseCap),
     pelleOnly: Boolean(config.pelleOnly),
     rebuyable: true
   };
@@ -88,7 +88,7 @@ export const dilationUpgrades = {
     id: 4,
     cost: 5e6,
     description: () => `Gain twice as many Tachyon Galaxies, up to ${formatInt(500)} base Galaxies`,
-    effect: 2
+    effect: BEC.D2
   },
   tdMultReplicanti: {
     id: 5,

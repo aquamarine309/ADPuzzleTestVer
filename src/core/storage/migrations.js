@@ -519,6 +519,12 @@ export const migrations = {
     },
     67: player => {
       player.eternitiesBeforeRefresh = player.eternities.toNumberMax(1e8);
+    },
+    68: player => {
+      player.blackHole.forEach(bh => {
+        bh.phase = parseFloat(bh.phase) || 0;
+        bh.activations = parseInt(bh.activations) || 0;
+      });
     }
   },
 

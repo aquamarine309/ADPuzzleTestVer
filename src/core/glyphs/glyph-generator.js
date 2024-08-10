@@ -55,12 +55,13 @@ class GlyphRNG {
 
 export const GlyphGenerator = {
   // Glyph choices will have more uniformly-distributed properties up for this many groups
-  // of uniform glyphs. The size of a uniformity group is 5, so this gives uniformly-distributed
+  // of uniform glyphs. The size of a uniformity group is 6, so this gives uniformly-distributed
   // properties up to a reality count one more than 5x this value; the modified RNG for uniform
   // glyphs excludes the first fixed glyph and only starts from the 2nd one onward
-  uniformityGroups: 4,
+  uniformityGroups: 5,
+  count: 6,
   get isUniformityActive() {
-    return player.realities.lte(5 * this.uniformityGroups);
+    return player.realities.lte(this.count * this.uniformityGroups);
   },
 
   fakeSeed: Date.now() % Math.pow(2, 32),
@@ -300,19 +301,19 @@ export const GlyphGenerator = {
   uniformGlyphs(level, rng, realityCount) {
     // Reality count divided by 5 determines which group of 5 we're in, while count mod 5 determines the index
     // within that block. Note that we have a minus 1 because we want to exclude the first fixed glyph
-    const groupNum = Math.floor((realityCount.toNumber() - 1) / 5);
-    const groupIndex = (realityCount.toNumber() - 1) % 5;
+    const groupNum = Math.floor((realityCount.toNumber() - 1) / this.count);
+    const groupIndex = (realityCount.toNumber() - 1) % this.count;
 
     // The usage of the initial seed is complicated in order to prevent future prediction without using information
     // not normally available in-game (ie. the console). This makes it appear less predictable overall
     const initSeed = player.reality.initialSeed;
-    const typePerm = permutationIndex(5, (31 + initSeed % 7) * groupNum + initSeed % 1123);
+    const typePerm = permutationIndex(this.count, (31 + initSeed % 7) * groupNum + initSeed % 1123);
 
     // Figure out a permutation index for each generated glyph type this reality by counting through the sets
     // for choices which have already been generated for options in previous realities for this group
-    const typePermIndex = Array.repeat(0, 5);
+    const typePermIndex = Array.repeat(0, this.count);
     for (let i = 0; i < groupIndex; i++) {
-      for (let type = 0; type < 5; type++) {
+      for (let type = 0; type < this.count; type++) {
         if (type !== typePerm[i]) typePermIndex[type]++;
       }
     }
@@ -321,22 +322,21 @@ export const GlyphGenerator = {
     // effect of each type, in the same type order as BASIC_GLYPH_TYPES). We use type, initial seed, and group index
     // to pick a random permutation, again to make it less predictable and to make sure they're generally different
     const uniformEffects = [];
-    const startID = BASIC_GLYPH_TYPES;
-    const typesThisReality = Array.range(0, 5);
+    const typesThisReality = Array.range(0, this.count);
     typesThisReality.splice(typePerm[groupIndex], 1);
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       const type = typesThisReality[i];
-      const effectPerm = permutationIndex(4, 5 * type + (7 + initSeed % 5) * groupNum + initSeed % 11);
-      uniformEffects.push(GlyphTypes[startID[i]].indexEffect(effectPerm[typePermIndex[type]]).id);
+      const effectPerm = permutationIndex(4, this.count * type + (7 + initSeed % this.count) * groupNum + initSeed % 11);
+      uniformEffects.push(GlyphTypes[BASIC_GLYPH_TYPES[type]].indexEffect(effectPerm[typePermIndex[type]]).id);
     }
 
-    // Generate the glyphs without uniformity applied first, assuming 4 glyph choices early on, then fix it to contain
+    // Generate the glyphs without uniformity applied first, assuming 5 glyph choices early on, then fix it to contain
     // the new effect. This fixing process is a 50% chance to add to existing effects and 50% to replace them instead.
     // Note that if this would give us "too many" effects, we remove one of the existing ones, and the threshold for
     // having "too many" depends on if the player has the upgrade that improves effect count - we don't want the
     // uniformity code to make glyph generation disproportionately worse in that case
     const glyphs = [];
-    for (let i = 0; i < 4; ++i) {
+    for (let i = 0; i < 5; ++i) {
       const newGlyph = GlyphGenerator.randomGlyph(level, rng, BASIC_GLYPH_TYPES[typesThisReality[i]]);
       const newSet = (initSeed + realityCount.toNumber() + i) % 2 === 0
         ? new Set([uniformEffects[i]])

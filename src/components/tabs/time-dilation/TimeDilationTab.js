@@ -15,7 +15,7 @@ export default {
       galaxyThreshold: new BE(),
       baseGalaxies: new BE(),
       totalGalaxies: new BE(),
-      tachyonGalaxyGain: 0,
+      tachyonGalaxyGain: new BE(),
       hasPelleDilationUpgrades: false,
       galaxyTimeEstimate: "",
       maxDT: new BE(),
@@ -109,9 +109,9 @@ export default {
       if (this.baseGalaxies.lt(500) && DilationUpgrade.doubleGalaxies.isBought) {
         this.tachyonGalaxyGain = DilationUpgrade.doubleGalaxies.effectValue;
       } else {
-        this.tachyonGalaxyGain = 1;
+        this.tachyonGalaxyGain = new BE(1);
       }
-      this.tachyonGalaxyGain *= DilationUpgrade.galaxyMultiplier.effectValue;
+      this.tachyonGalaxyGain = this.tachyonGalaxyGain.times(DilationUpgrade.galaxyMultiplier.effectValue);
       this.maxDT.copyFrom(player.records.thisReality.maxDT);
 
       const estimateText = getDilationTimeEstimate(this.maxDT);
@@ -152,7 +152,7 @@ export default {
     </span>
     <span>
       Next
-      <span v-if="tachyonGalaxyGain > 1">{{ formatInt(tachyonGalaxyGain) }}</span>
+      <span v-if="tachyonGalaxyGain.gt(1)">{{ formatInt(tachyonGalaxyGain) }}</span>
       {{ pluralize("Tachyon Galaxy", tachyonGalaxyGain) }} at
       <span
         class="c-dilation-tab__galaxy-threshold"

@@ -1,16 +1,16 @@
 import { GameMechanicState } from "../game-mechanics/index.js";
 
 export const orderedEffectList = ["powerpow", "infinitypow", "replicationpow", "timepow",
-  "dilationpow", "timeshardpow", "powermult", "powerdimboost", "powerbuy10",
+  "dilationpow", "timeshardpow", "logicpow", "powermult", "powerdimboost", "powerbuy10",
   "dilationTTgen", "infinityinfmult", "infinityIP", "timeEP",
   "dilationDT", "replicationdtgain", "replicationspeed",
   "timeetermult", "dilationgalaxyThreshold", "infinityrate", "replicationglyphlevel",
-  "timespeed",
+  "timespeed", "logicbonus", "logicunknown1", "logicunknown2",
   "effarigrm", "effarigglyph", "effarigblackhole", "effarigachievement",
   "effarigforgotten", "effarigdimensions", "effarigantimatter",
   "cursedgalaxies", "cursedtickspeed", "curseddimensions", "cursedEP",
   "realityglyphlevel", "realitygalaxies", "realityrow1pow", "realityDTglyph",
-  "companiondescription", "companionEP", "logicpow"];
+  "companiondescription", "companionEP"];
 
 export const generatedTypes = ["power", "infinity", "time", "replication", "dilation", "effarig", "logic"];
 
@@ -657,7 +657,7 @@ export const Glyphs = {
     return getAdjustedGlyphEffect("effarigglyph").plusEffectOf(ImaginaryUpgrade(7)).add(1000);
   },
   get hyperInstabilityThreshold() {
-    return 3000 + this.instabilityThreshold;
+    return this.instabilityThreshold.add(3000);
   },
   clearUndo() {
     player.reality.glyphs.undo = [];

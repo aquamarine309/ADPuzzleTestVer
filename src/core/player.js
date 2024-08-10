@@ -421,7 +421,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: BEC.D0,
-  version: 67,
+  version: 68,
   bigCrunches: 0,
   bigEternities: 0,
   infinityPower: BEC.D1,
@@ -494,14 +494,14 @@ window.player = {
       active: [],
       inventory: [],
       sac: {
-        power: 0,
-        infinity: 0,
-        time: 0,
-        replication: 0,
-        dilation: 0,
-        effarig: 0,
-        reality: 0,
-        logic: 0
+        power: BEC.D0,
+        infinity: BEC.D0,
+        time: BEC.D0,
+        replication: BEC.D0,
+        dilation: BEC.D0,
+        effarig: BEC.D0,
+        reality: BEC.D0,
+        logic: BEC.D0
       },
       undo: [],
       sets: new Array(7).fill({
@@ -606,17 +606,17 @@ window.player = {
   },
   blackHole: Array.range(0, 2).map(id => ({
     id,
-    intervalUpgrades: 0,
-    powerUpgrades: 0,
-    durationUpgrades: 0,
-    phase: BEC.D0,
+    intervalUpgrades: BEC.D0,
+    powerUpgrades: BEC.D0,
+    durationUpgrades: BEC.D0,
+    phase: 0,
     active: false,
     unlocked: false,
-    activations: BEC.D0,
+    activations: 0,
   })),
   blackHolePause: false,
   blackHoleAutoPauseMode: 0,
-  blackHolePauseTime: BEC.D0,
+  blackHolePauseTime: 0,
   blackHoleNegative: 1,
   celestials: {
     teresa: {

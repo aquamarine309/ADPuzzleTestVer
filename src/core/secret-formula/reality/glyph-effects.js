@@ -30,7 +30,7 @@ export const glyphEffects = {
     singleDesc: "Time Dimension power +{value}",
     totalDesc: "Time Dimension multipliers ^{value}",
     shortDesc: "TD power +{value}",
-    effect: (level, strength) => level.pow(0.32).times(Math.pow(strength, 0.45).div(75)).add(1.01),
+    effect: (level, strength) => level.pow(0.32).times(Math.pow(strength, 0.45) / 75).add(1.01),
     formatEffect: x => format(x, 3, 3),
     formatSingleEffect: x => format(x.sub(1), 3, 3),
     combine: GlyphCombiner.addExponents,
@@ -61,7 +61,7 @@ export const glyphEffects = {
     totalDesc: "Eternity gain ×{value}",
     genericDesc: "Eternity gain multiplier",
     shortDesc: "Eternities ×{value}",
-    effect: (level, strength) => BE.pow((strength.add(3)).times(level), 0.9)
+    effect: (level, strength) => level.times(strength + 3).pow(0.9)
       .times(BE.pow(3, GlyphAlteration.sacrificeBoost("time"))),
     formatEffect: x => format(x, 2, 2),
     combine: GlyphCombiner.multiply,
@@ -177,7 +177,7 @@ export const glyphEffects = {
     shortDesc: "Replication speed ×{value}",
     effect: (level, strength) => (GlyphAlteration.isEmpowered("replication")
       ? BEC.D1_007.pow(level).times(10)
-      : BE.times(level, strength).times(3)),
+      : level.times(strength).times(3)),
     formatEffect: x => format(x, 2, 1),
     combine: GlyphCombiner.multiply,
     alteredColor: () => GlyphAlteration.getEmpowermentColor("replication"),
@@ -300,7 +300,7 @@ export const glyphEffects = {
     shortDesc: () => (GlyphAlteration.isAdded("infinity")
       ? "IP ×{value} and ^{value2}"
       : "IP ×{value}"),
-    effect: (level, strength) => BE.pow(level.times(strength.add(1)), 6).times(1e4),
+    effect: (level, strength) => BE.pow(level.times(strength + 1), 6).times(1e4),
     formatEffect: x => format(x, 2, 3),
     combine: GlyphCombiner.multiply,
     // eslint-disable-next-line no-negated-condition
@@ -650,12 +650,49 @@ export const glyphEffects = {
     shortDesc: "LP power +{value}",
     effect: (level, strength) => (GlyphAlteration.isEmpowered("logic")
       ? level.pow(0.3).div(32).add(1)
-      : level.pow(0.25).times(Math.pow(strength, 0.4)).div(125).add(1)),
+      : level.pow(0.25).times(Math.pow(strength, 0.6)).div(105).add(1)),
     formatEffect: x => format(x, 3, 3),
     formatSingleEffect: x => format(x.sub(1), 3, 3),
-    combine: GlyphCombiner.multiply,
+    combine: GlyphCombiner.addExponents,
     alteredColor: () => GlyphAlteration.getEmpowermentColor("logic"),
     alterationType: ALTERATION_TYPE.EMPOWER,
     isGenerated: true,
-  }
+  },
+  logicbonus: {
+    id: "logicbonus",
+    glyphTypes: ["logic"],
+    totalDesc: "Extra Bonus multiplier ^{value}",
+    singleDesc: "Extra Bonus power +{value}",
+    genericDesc: "Extra Bonus multiplier ^x",
+    shortDesc: "LC5 Bonus ^{value}",
+    effect: (level, strength) => level.pow(0.3).times(Math.pow(strength, 0.4) / 45).add(1.07),
+    formatEffect: x => format(x, 3, 3),
+    formatSingleEffect: x => format(x.sub(1), 3, 3),
+    combine: GlyphCombiner.addExponents,
+    isGenerated: true
+  },
+  logicunknown1: {
+    id: "logicunknown1",
+    glyphTypes: ["logic"],
+    totalDesc: "Placeholder {value}",
+    singleDesc: "Placeholder {value}",
+    genericDesc: "Placeholder",
+    shortDesc: "Placeholder {value}",
+    effect: (level, strength) => BEC.D1,
+    formatEffect: x => format(x, 3, 3),
+    combine: GlyphCombiner.multiply,
+    isGenerated: true
+  },
+  logicunknown2: {
+    id: "logicunknown2",
+    glyphTypes: ["logic"],
+    totalDesc: "Placeholder {value}",
+    singleDesc: "Placeholder {value}",
+    genericDesc: "Placeholder",
+    shortDesc: "Placeholder {value}",
+    effect: (level, strength) => BEC.D1,
+    formatEffect: x => format(x, 3, 3),
+    combine: GlyphCombiner.multiply,
+    isGenerated: true
+  },
 };

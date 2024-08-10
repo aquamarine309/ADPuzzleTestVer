@@ -221,7 +221,7 @@ function getGlyphLevelSources() {
   eternityPoints = BE.max(player.records.thisReality.maxEP, eternityPoints);
   const epCoeff = 0.016;
   const epBase = eternityPoints.pLog10().max(1).pow(0.5).times(epCoeff);
-  const replPow = 0.4 + getAdjustedGlyphEffect("replicationglyphlevel").toNumber();
+  const replPow = getAdjustedGlyphEffect("replicationglyphlevel").add(0.4);
   const replCoeff = 0.025;
   const replBase = player.records.thisReality.maxReplicanti.log10().max(1).pow(replPow).times(replCoeff);
   const dtPow = getAdjustedGlyphEffect("realityDTglyph").add(1.3);
@@ -233,7 +233,7 @@ function getGlyphLevelSources() {
       name: "EP",
       value: epBase,
       coeff: epCoeff,
-      exp: 0.5,
+      exp: BEC.D0_5
     },
     repl: {
       name: "Replicanti",
@@ -252,7 +252,7 @@ function getGlyphLevelSources() {
       value: eterBase,
       // These are copied from Reality Upgrade 18's gameDB entry
       coeff: 0.45,
-      exp: 0.5,
+      exp: BEC.D0_5,
     }
   };
 }
@@ -292,7 +292,7 @@ export function getGlyphLevelInputs() {
     const powEffect = Math.pow(4 * weight, blendExp);
     source.value = (input.gt(0) ? input.times(preScale).pow(powEffect).div(preScale) : BEC.D0);
     source.coeff = Math.pow(preScale, powEffect - 1) * Math.pow(source.coeff, powEffect);
-    source.exp *= powEffect;
+    source.exp = source.exp.times(powEffect);
   };
   adjustFactor(sources.ep, weights.ep / 100);
   adjustFactor(sources.repl, weights.repl / 100);

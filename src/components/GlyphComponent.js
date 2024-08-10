@@ -757,7 +757,7 @@ export default {
       :show-deletion-text="showSacrifice"
       :display-level="displayLevel"
       :component="componentID"
-      :change-watcher="logTotalSacrifice"
+      :change-watcher="logTotalSacrifice.toString()"
       data-v-glyph-component
     />
     <div

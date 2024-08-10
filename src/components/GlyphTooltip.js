@@ -28,7 +28,7 @@ export default {
       default: 0,
     },
     sacrificeReward: {
-      type: Number,
+      type: BE,
       required: false,
       default: 0,
     },
@@ -61,7 +61,7 @@ export default {
       default: new BE(0),
     },
     changeWatcher: {
-      type: Number,
+      type: String,
       required: true
     }
   },
