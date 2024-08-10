@@ -99,7 +99,7 @@ export function baseEquationGenerator(answer = randomInt(10)) {
   }
   const numbers = operator.genBase(answer);
   const result = operator.fn(...numbers);
-  const equation = `${numbers.map(n => n >= 0 ? n : formatBracket(n)).join(operator.name)}`
+  const equation = numbers.map(n => n >= 0 ? n : formatBracket(n)).join(operator.name);
   return {
     equation,
     result,
@@ -165,10 +165,10 @@ function calc(str) {
     const result = eval(str.replace(/×/g, "*")
     .replace(/\d+/g, match => parseInt(match, 10).toString())
     .replace(/\^/g, "**").replace(/--/g, "+"));
-    if (!Number.isFinite(result) || Number.isNaN(result)) return NaN;
+    if (!Number.isFinite(result)) return NaN;
     return Math.round(result * 1e8) / 1e8;
   } catch (e) {
-    console.log(e);
+    // console.log(e);
     return NaN;
   }
 }
@@ -177,8 +177,8 @@ function checkRow(row) {
   if (row.countWhere(c => c === "=") !== 1) return false;
   const str = row.join("");
   if (str.includes("/*") || str.includes("*/")) return false;
-  const split = str.split("=");
   if (str.includes("××")) return false;
+  const split = str.split("=");
   return calc(split[0]) === calc(split[1]);
 }
 
@@ -374,7 +374,6 @@ export default {
         this.currentRow = player.lc3Game.currentRow;
         this.stage = player.lc3Game.stage;
       } else {
-        this.currentRow = 0;
         if (
           this.minResult === this.maxResult && this.minResult === 0 &&
           this.minLength === this.maxLength && this.maxLength === 6
@@ -382,12 +381,12 @@ export default {
           this.showNotify(`Cannot start with the options with a minimum result of 0 and a length less than 6.`);
           return;
         }
+        this.currentRow = 0;
         this.question = questionGenerator(this.maxResult, this.minResult, this.maxLength, this.minLength);
         this.blockRows = Array.range(0, this.row).map(() => Array.repeat("", this.len));
         this.stage = GAME_STAGE.NOT_COMPLETE;
         player.lc3Game.question = this.question;
         player.lc3Game.rows = this.blockRows.map(r => [].slice.call(r));
-        player.lc3Game.currentRow = 0;
         player.lc3Game.stage = GAME_STAGE.NOT_COMPLETE;
       }
     },

@@ -73,8 +73,8 @@ class ChallengeFactorState extends GameMechanicState {
   get isPositive() {
     const diff = this.config.difficulty;
     // Currency is not defined.
-    if (typeof diff === "function") return diff(0);
-    return diff;
+    if (typeof diff === "function") return diff(0) > 0;
+    return diff > 0;
   }
   
   get level() {
@@ -126,7 +126,7 @@ export const ChallengeFactors = {
   },
   
   tdMultAt(x) {
-    return BEC.D2.pow(x.div(4)).add(1);
+    return BEC.D2.pow(x.sqrt()).add(1);
   },
   
   get tdMult() {

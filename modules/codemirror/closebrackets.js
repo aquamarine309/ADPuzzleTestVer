@@ -1,14 +1,7 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: https://codemirror.net/LICENSE
-import CodeMirror from "../../lib/codemirror.js"
-(function(mod) {
-  if (typeof exports == "object" && typeof module == "object") // CommonJS
-    mod(require("../../lib/codemirror"));
-  else if (typeof define == "function" && define.amd) // AMD
-    define(["../../lib/codemirror"], mod);
-  else // Plain browser env
-    mod(CodeMirror);
-})(function(CodeMirror) {
+import CodeMirror from "./codemirror.js";
+(function(CodeMirror) {
   var defaults = {
     pairs: "()[]{}''\"\"",
     closeBefore: ")]}'\":;>",
@@ -198,4 +191,4 @@ import CodeMirror from "../../lib/codemirror.js"
     return /\bstring/.test(token.type) && token.start == pos.ch &&
       (pos.ch == 0 || !/\bstring/.test(cm.getTokenTypeAt(pos)))
   }
-});
+})(CodeMirror);
