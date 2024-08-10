@@ -26,7 +26,7 @@ export const glyphSacrifice = {
       if (Pelle.isDisabled("glyphsac")) return BEC.D1;
       const sac = player.reality.glyphs.sac.infinity.add(added ?? 0);
       const capped = sac.clampMax(GlyphSacrificeHandler.maxSacrificeForEffects);
-      return capped.pow(0.2).add(1).div(100).log10().add(1);
+      return capped.pow(0.2).div(100).add(1).log10().add(1);
     },
     description: amount => `${formatX(amount, 2, 2)} bigger multiplier when buying 8th Infinity Dimension`,
     cap: () => GlyphSacrificeHandler.maxSacrificeForEffects

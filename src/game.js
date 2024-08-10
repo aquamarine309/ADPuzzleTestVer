@@ -457,6 +457,11 @@ export function gameLoop(passDiff, options = {}) {
   const realDiff = diff === undefined
     ? Math.clamp(thisUpdate - player.lastUpdate, 1, 8.64e7)
     : diff;
+    
+  if (!isFinite(realDiff)) {
+    throw new Error(`[GameLoop Error]RealDiff is NaN`);
+  }
+  
   if (!GameStorage.ignoreBackupTimer) player.backupTimer += realDiff;
 
   // For single ticks longer than a minute from the GameInterval loop, we assume that the device has gone to sleep or
@@ -986,6 +991,7 @@ export function simulateTime(seconds, real, fast) {
   // whether the user *will* press "Speed up" at some point, dividing remaining time
   // by remaining ticks seems like the best thing to do.
   let loopFn = i => {
+    if (i === 0) return;
     const diff = remainingRealSeconds / i;
     gameLoop(1000 * diff);
     remainingRealSeconds -= diff;

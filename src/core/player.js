@@ -1127,13 +1127,13 @@ export function guardFromNaNValues(obj) {
         get: () => value,
         set: function guardedSetter(newValue) {
           if (newValue === null || newValue === undefined) {
-            throw new Error("null/undefined player property assignment");
+            throw new Error(`null/undefined player property assignment ${key}`);
           }
           if (typeof newValue !== "number") {
-            throw new Error("Non-Number assignment to Number player property");
+            throw new Error(`Non-Number assignment to Number player property ${key}`);
           }
           if (!isFinite(newValue)) {
-            throw new Error("NaN player property assignment");
+            throw new Error(`NaN player property assignment ${key}`);
           }
           value = newValue;
         }
@@ -1147,13 +1147,13 @@ export function guardFromNaNValues(obj) {
         get: () => value,
         set: function guardedSetter(newValue) {
           if (newValue === null || newValue === undefined) {
-            throw new Error("null/undefined player property assignment");
+            throw new Error(`null/undefined player property assignment ${key}`);
           }
           if (!(newValue instanceof BE)) {
-            throw new Error("Non-BE assignment to BE player property");
+            throw new Error(`Non-BE assignment to BE player property ${key}`);
           }
           if (!isFinite(newValue.mag) || !isFinite(newValue.layer) || !isFinite(newValue.sign)) {
-            throw new Error("NaN player property assignment");
+            throw new Error(`NaN player property assignment ${key}`);
           }
           value = newValue;
         }

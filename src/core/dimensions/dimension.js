@@ -39,13 +39,18 @@ export class DimensionState {
   }
 
   produceCurrency(currency, diff) {
-    currency.add(this.productionForDiff(diff));
+    const amount = this.productionForDiff(diff);
+    if (amount.isNan()) {
+      console.log(this, diff);
+      throw "[Dimension Error] Unexpected NaN production";
+    }
+    currency.add(amount);
   }
 
   produceDimensions(dimension, diff) {
     const amount = dimension.amount.plus(this.productionForDiff(diff));
     if (amount.isNan()) {
-      console.log(dimension, diff);
+      console.log(this, dimension, diff);
       throw "[Dimension Error] Unexpected NaN production";
     }
     dimension.amount = amount;
