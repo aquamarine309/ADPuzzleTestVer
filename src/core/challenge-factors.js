@@ -99,7 +99,7 @@ export function timeCoresFactor() {
   const fromLP = totalLP.log10().pow(0.5).add(1);
   
   const difficulty = ChallengeFactors.currentDifficulty;
-  const fromChallengeFactor = BE.pow(1.25, Math.abs(difficulty));
+  const fromChallengeFactor = BE.pow(1.25, difficulty);
   
   const staticDivisor = 1 / 10;
   
