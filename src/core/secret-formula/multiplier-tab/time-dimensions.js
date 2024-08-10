@@ -75,7 +75,7 @@ export const TD = {
         .reduce((x, y) => x.times(y), BEC.D1);
     },
     isActive: dim => (dim
-      ? ImaginaryUpgrade(14).canBeApplied || (dim === 8 && GlyphSacrifice.time.effectValue > 1)
+      ? ImaginaryUpgrade(14).canBeApplied || (dim === 8 && GlyphSacrifice.time.effectValue.gt(1))
       : TimeDimension(1).isProducing),
     icon: dim => MultiplierTabIcons.PURCHASE("TD", dim),
   },
@@ -84,7 +84,7 @@ export const TD = {
     multValue: () => (TimeDimension(8).isProducing
       ? BE.pow(GlyphSacrifice.time.effectValue, BE.clampMax(TimeDimension(8).bought, 1e8))
       : BEC.D1),
-    isActive: () => GlyphSacrifice.time.effectValue > 1,
+    isActive: () => GlyphSacrifice.time.effectValue.gt(1),
     icon: MultiplierTabIcons.SACRIFICE("time"),
   },
   powPurchase: {
@@ -177,8 +177,8 @@ export const TD = {
       ).times(EternityChallenge(7).isRunning ? Tickspeed.perSecond : BEC.D1);
       if (EternityChallenge(9).isRunning) {
         allMult = allMult.times(
-          BE.pow(Math.clampMin(Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate / 7)
-            .log2(), 1), 4).clampMin(1));
+          Currency.infinityPower.value.pow(InfinityDimensions.powerConversionRate.div(7))
+            .log2().clampMin(1).pow(4).clampMin(1));
       }
       return BE.pow(allMult, dim ? 1 : MultiplierTabHelper.activeDimCount("TD"));
     },
@@ -218,7 +218,7 @@ export const TD = {
   },
   glyph: {
     name: "Glyph Effects",
-    powValue: () => getAdjustedGlyphEffect("timepow") * getAdjustedGlyphEffect("effarigdimensions"),
+    powValue: () => getAdjustedGlyphEffect("timepow").times(getAdjustedGlyphEffect("effarigdimensions")),
     isActive: () => PlayerProgress.realityUnlocked(),
     icon: MultiplierTabIcons.GENERIC_GLYPH
   },
@@ -260,7 +260,7 @@ export const TD = {
   nerfCursed: {
     name: "Cursed Glyphs",
     powValue: () => getAdjustedGlyphEffect("curseddimensions"),
-    isActive: () => getAdjustedGlyphEffect("curseddimensions") !== 1,
+    isActive: () => getAdjustedGlyphEffect("curseddimensions").neq(1),
     icon: MultiplierTabIcons.SPECIFIC_GLYPH("cursed"),
   },
   logicChallenge: {
@@ -268,5 +268,11 @@ export const TD = {
     powValue: () => LogicChallenge(7).effects.dimPow.effectValue,
     isActive: () => LogicChallenge(7).canBeApplied,
     icon: MultiplierTabIcons.CHALLENGE("logic")
+  },
+  timeCores: {
+    name: "Time Cores",
+    multValue: () => ChallengeFactors.tdMult,
+    isActive: () => PlayerProgress.eternityUnlocked(),
+    icon: MultiplierTabIcons.CHALLENGE_FACTOR
   }
 };

@@ -525,7 +525,7 @@ export const tabs = [
       {
         key: "challenge factors",
         name: "Challenge Factors",
-        symbol: "<i class='fas fa-map-signs'></i>",
+        symbol: "<i class='fas fa-object-ungroup'></i>",
         component: "ChallengeFactorsTab",
         id: 1,
         condition: () => PlayerProgress.eternityUnlocked(),

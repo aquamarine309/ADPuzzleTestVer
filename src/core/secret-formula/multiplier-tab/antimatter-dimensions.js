@@ -328,8 +328,8 @@ export const AD = {
       return BE.pow(mult, dim ? 1 : MultiplierTabHelper.activeDimCount("AD"));
     },
     powValue: () => {
-      const totalPow = getAdjustedGlyphEffect("powerpow") * getAdjustedGlyphEffect("effarigdimensions");
-      return totalPow * (player.dilation.active ? getAdjustedGlyphEffect("dilationpow") : 1);
+      const totalPow = getAdjustedGlyphEffect("powerpow").times(getAdjustedGlyphEffect("effarigdimensions"));
+      return totalPow.times(player.dilation.active ? getAdjustedGlyphEffect("dilationpow") : 1);
     },
     isActive: () => PlayerProgress.realityUnlocked() && !EternityChallenge(11).isRunning && !LC3.isrunning,
     icon: MultiplierTabIcons.GENERIC_GLYPH,

@@ -102,7 +102,7 @@ export const ID = {
     multValue: () => (InfinityDimension(8).isProducing
       ? BE.pow(GlyphSacrifice.infinity.effectValue, InfinityDimension(8).baseAmount.div(10).floor())
       : BEC.D1),
-    isActive: () => GlyphSacrifice.infinity.effectValue > 1,
+    isActive: () => GlyphSacrifice.infinity.effectValue.gt(1),
     icon: MultiplierTabIcons.SACRIFICE("infinity"),
   },
   powPurchase: {
@@ -228,7 +228,7 @@ export const ID = {
   glyph: {
     name: "Glyph Effects",
     multValue: () => 1,
-    powValue: () => getAdjustedGlyphEffect("infinitypow") * getAdjustedGlyphEffect("effarigdimensions"),
+    powValue: () => getAdjustedGlyphEffect("infinitypow").times(getAdjustedGlyphEffect("effarigdimensions")),
     isActive: () => PlayerProgress.realityUnlocked(),
     icon: MultiplierTabIcons.GENERIC_GLYPH,
   },
