@@ -525,6 +525,11 @@ export const migrations = {
         bh.phase = parseFloat(bh.phase) || 0;
         bh.activations = parseInt(bh.activations) || 0;
       });
+    },
+    69: player => {
+      if (player.eternities.gte(2)) {
+        player.logic.upgReqs |= (1 << 10);
+      }
     }
   },
 
