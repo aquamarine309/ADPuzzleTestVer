@@ -43,7 +43,7 @@ class LogicUpgradeState extends BitPurchasableMechanicState {
     const logicUnlocked = PlayerProgress.infinityUnlocked();
     if (!logicUnlocked || this.isAvailableForPurchase || !this.config.checkRequirement()) return;
     player.logic.upgReqs |= (1 << this.id);
-    GameUI.notify.success(`You've unlocked a Logic Upgrade: ${this.config.name}`);
+    GameUI.notify.logic(`You've unlocked a Logic Upgrade: ${this.config.name}`);
     this.hasPlayerLock = false;
   }
   

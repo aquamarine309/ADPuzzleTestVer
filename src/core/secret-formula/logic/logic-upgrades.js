@@ -66,7 +66,7 @@ export const logicUpgrades = [
   {
     name: "Lucky Upgrade",
     id: 6,
-    description: () => `Unlock a new Antimatter Dimension.${disabledText()}`,
+    description: () => `Unlock a new Antimatter Dimension. ${disabledText()}`,
     requirement: () => `TBD`,
     checkRequirement: () => false,
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
@@ -76,7 +76,7 @@ export const logicUpgrades = [
   {
     name: "Not Over Yet",
     id: 7,
-    description: () => `Unlock a new Antimatter Dimension.${disabledText()}`,
+    description: () => `Unlock a new Antimatter Dimension. ${disabledText()}`,
     requirement: () => `TBD`,
     checkRequirement: () => false,
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
@@ -113,7 +113,7 @@ export const logicUpgrades = [
       const autobuyer = Autobuyer.antimatterDimension(3);
       return autobuyer.isUnlocked && autobuyer.hasMaxedInterval;
     },
-    checkEvent: [GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
+    checkEvent: [GAME_EVENT.ETERNITY_RESET_AFTER, GAME_EVENT.REALITY_RESET_AFTER, GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT],
     hasFailed: () => {
       const autobuyer = Autobuyer.antimatterDimension(3);
       return !autobuyer.isUnlocked || (Currency.infinityPoints.lt(autobuyer.cost) && !autobuyer.hasMaxedInterval);

@@ -191,12 +191,11 @@ export function initializeChallengeCompletions(isReality) {
   LogicChallenges.clearCompletions();
   if (!isReality && EternityMilestone.keepAutobuyers.isReached || Pelle.isDoomed) {
     NormalChallenges.completeAll();
-    LogicUpgrade(10).tryUnlock();
   }
   if (Achievement(133).isUnlocked && !Pelle.isDoomed) InfinityChallenges.completeAll();
   player.challenge.normal.current = 0;
+  if (player.challenge.infinity.current === 10) GameCache.dimensionMultDecrease.invalidate();
   player.challenge.infinity.current = 0;
-  if (player.challenge.logic.current === 10) GameCache.dimensionMultDecrease.invalidate();
   player.challenge.logic.current = 0;
 }
 
