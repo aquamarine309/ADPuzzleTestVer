@@ -10194,9 +10194,13 @@ input.o-automator-block-input {
 .c-tc-amount {
   font-size: 2.1rem;
   font-weight: bold;
-  background: linear-gradient(to bottom, var(--color-logic), var(--color-eternity));
-  background-clip: text;
-  color: transparent;
+  color: var(--color-logic);
+  @supports (-webkit-background-clip: text) or (background-clip: text) {
+    background: linear-gradient(to bottom, var(--color-logic), var(--color-eternity));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
 }
 
 .c-challenge-factor-component {
