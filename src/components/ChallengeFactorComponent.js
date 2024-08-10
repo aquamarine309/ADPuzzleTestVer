@@ -1,5 +1,11 @@
 import ChallengeFactorTooltip from "./ChallengeFactorTooltip.js";
 
+const CHALLENGE_FACTOR_INFO_TYPE = {
+  NONE: 0,
+  LEVEL: 1,
+  DIFFICULTY: 2
+}
+
 export default {
   name: "ChallengeFactorComponent",
   props: {
@@ -8,6 +14,12 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      type: CHALLENGE_FACTOR_INFO_TYPE.NONE,
+      info: ""
+    }
+  }, 
   components: {
     ChallengeFactorTooltip
   },
@@ -36,6 +48,19 @@ export default {
       throw `Unknown type of Challenge Factor`;
     }
   },
+  methods: {
+    update() {
+      // I don't like to use "switch ... case ..."
+      this.type = player.options.challengeFactorType;
+      if (this.type === CHALLENGE_FACTOR_INFO_TYPE.NONE) {
+        this.info = "";
+      } else if (this.type === CHALLENGE_FACTOR_INFO_TYPE.LEVEL) {
+        this.info = `Lv. ${this.factor.displayLevel}`;
+      } else if (this.type === CHALLENGE_FACTOR_INFO_TYPE.DIFFICULTY) {
+        this.info = `Diff. ${format(this.factor.difficulty, 2, 1)}`;
+      }
+    }
+  }, 
   template: `
   <div
     class="c-challenge-factor-component"
@@ -50,6 +75,9 @@ export default {
         class="fas"
         :class="typeClass"
       />
+    </div>
+    <div class="c-challenge-factor-level">
+      {{ info }}
     </div>
     <ChallengeFactorTooltip :factor="factor" />
   </div>

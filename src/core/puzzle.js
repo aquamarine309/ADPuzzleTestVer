@@ -6,7 +6,7 @@ export const Puzzle = {
   get maxTier() {
     if (!PlayerProgress.infinityUnlocked()) return 8;
     if (LogicChallenge(7).isRunning) return 1;
-    let tier = GameCache.maxTier.value
+    let tier = GameCache.maxTier.value;
     ChallengeFactor.dimensionOverflow.applyEffect(v => tier = Math.min(tier, v));
     return tier;
   },

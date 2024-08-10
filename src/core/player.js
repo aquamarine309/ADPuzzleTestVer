@@ -876,6 +876,7 @@ window.player = {
     showTimeSinceSave: true,
     saveFileName: "",
     exportedFileCount: 0,
+    challengeFactorType: 0,
     hideCompletedAchievementRows: false,
     glyphTextColors: true,
     headerTextColored: false,

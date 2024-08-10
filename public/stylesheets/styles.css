@@ -10298,8 +10298,25 @@ input.o-automator-block-input {
   right: 20%;
 }
 
+.c-challenge-factor-level {
+  position: absolute;
+  font-size: 0.9rem;
+  bottom: -5%;
+  right: -5%;
+  background-color: rgba(64, 64, 64, 95%);
+  padding: 0.1rem 0.2rem;
+  font-weight: bold;
+  color: white;
+}
+
 .c-challenge-factor-tooltip--score {
   font-size: 0.8rem;
+}
+
+.c-challenge-factor-tooltip--level-info {
+  font-size: 0.8rem;
+  margin-bottom: 0.1rem;
+  font-style: italic;
 }
 
 .c-restart-eternity-btn {

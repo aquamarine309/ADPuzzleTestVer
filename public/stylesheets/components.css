@@ -5836,6 +5836,10 @@ AutobuyerBox components will always render in page order regardless of internal 
   margin: 0;
 }
 
+.o-clickable[data-v-challenge-facfor-preview] {
+  cursor: pointer;
+}
+
 .ui-wrapper[data-v-game-ui-component] {
   display: flex;
   position: relative;

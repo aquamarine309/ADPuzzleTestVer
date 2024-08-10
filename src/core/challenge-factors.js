@@ -1,7 +1,57 @@
 import { GameMechanicState } from "./game-mechanics/index.js";
 import { BEC } from "./constants.js";
+// import { deepmergeAll } from "../utility/deepmerge.js"
 
 class ChallengeFactorState extends GameMechanicState {
+  constructor(config) {
+    const configCopy = { ...config };
+    const effect = config.effect;
+    if (effect) {
+      configCopy.effect = () => effect(this.level);
+    }
+    super(configCopy);
+    this._cost = new Lazy(() => this.costAt(this.level));
+    this._level = new Lazy(() => this.levelAt(Currency.timeCores.value));
+    
+    this._cost.invalidateOn(GAME_EVENT.ETERNITY_RESET_AFTER);
+    this._level.invalidateOn(GAME_EVENT.ETERNITY_RESET_AFTER);
+  }
+  
+  get baseCost() {
+    return this.config.baseCost;
+  }
+  
+  get costMultiplier() {
+    return this.config.costMultiplier;
+  }
+  
+  get displayLevel() {
+    return formatInt(this.level + 1);
+  }
+  
+  get cost() {
+    return this._cost.value;
+  }
+  
+  get levelCap() {
+    return this.config.levelCap ?? Number.MAX_VALUE;
+  }
+  
+  get levelCapped() {
+    return this.level >= this.levelCap;
+  }
+  
+  // UI only
+  costAt(level) {
+    if (this.levelCapped) return null;
+    return BE.pow(this.costMultiplier, level).times(this.baseCost);
+  }
+  
+  levelAt(tc) {
+    if (this.levelCap === 0 || tc.lt(this.baseCost)) return 0;
+    return tc.div(this.baseCost).log(this.costMultiplier).add(1).floor().toNumberMax(this.levelCap);
+  }
+  
   get isActive() {
     return (player.challengeFactorBits & (1 << this.id)) !== 0;
   }
@@ -15,7 +65,25 @@ class ChallengeFactorState extends GameMechanicState {
   }
   
   get difficulty() {
-    return this.config.difficulty;
+    const diff = this.config.difficulty;
+    if (typeof diff === "function") return diff(this.level);
+    return diff;
+  }
+  
+  get isPositive() {
+    const diff = this.config.difficulty;
+    // Currency is not defined.
+    if (typeof diff === "function") return diff(0);
+    return diff;
+  }
+  
+  get level() {
+    return this._level.value;
+  }
+  
+  get description() {
+    const effect = this.config.effect ? this.effectValue : 0;
+    return this.config.description(effect);
   }
 };
 
@@ -27,9 +95,9 @@ export const ChallengeFactor = mapGameDataToObject(
 export const ChallengeFactors = {
   all: ChallengeFactor.all,
   
-  positiveDifficulties: ChallengeFactor.all.filter(f => f.difficulty > 0),
+  positiveDifficulties: ChallengeFactor.all.filter(f => f.isPositive),
   
-  negativeDifficulties: ChallengeFactor.all.filter(f => f.difficulty < 0),
+  negativeDifficulties: ChallengeFactor.all.filter(f => !f.isPositive),
   
   _current: new Lazy(() => {
     const result = [];

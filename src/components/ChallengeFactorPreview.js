@@ -37,8 +37,10 @@ export default {
   template: `
   <div class="c-challenge-factor-preview">
     <div><i
+      class="o-clickable"
       :class="classText"
       @click="hideChallengeFactor = !hideChallengeFactor"
+      data-v-challenge-facfor-preview
     /> <b>Current Challenge Factors (Difficulty: {{ averageDifficulty }}):</b></div>
     <div v-if="!hideChallengeFactor">
       <div
