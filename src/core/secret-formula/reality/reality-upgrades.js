@@ -181,7 +181,7 @@ export const realityUpgrades = [
     cost: BEC.D50,
     requirement: () => `Eternity for ${format(BEC.E4000)} Eternity Points without Time Dim. 5-8`,
     hasFailed: () => !Array.range(5, 4).every(i => TimeDimension(i).amount.equals(0)),
-    checkRequirement: () => Currency.eternityPoints.gte(NEC.E4000) &&
+    checkRequirement: () => Currency.eternityPoints.gte(BEC.E4000) &&
       Array.range(5, 4).every(i => TimeDimension(i).amount.equals(0)),
     checkEvent: GAME_EVENT.ETERNITY_RESET_AFTER,
     canLock: true,
