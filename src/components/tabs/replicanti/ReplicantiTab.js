@@ -43,7 +43,8 @@ export default {
       cooldownTime: new BE(),
       boostCost: 0,
       boosts: new BE(),
-      holding: 0
+      holding: 0,
+      destroyedText: ""
     };
   },
   computed: {
@@ -110,6 +111,7 @@ export default {
       );
     },
     amountClass() {
+      if (Player.eternityUnocked()) return "";
       return Array.range(1, Math.min(this.boosts, 3)).map
       (x => `c-replicanti-description__accent--level-${x}`);
     },
@@ -147,6 +149,7 @@ export default {
       this.isUnlocked = Replicanti.areUnlocked;
       if (this.isDoomed) this.scrambledText = this.vacuumText();
       if (!this.isUnlocked) {
+        this.destroyedText = wordShift.wordCycle(["Destroyed", "Annihilated", "Nullified"]);
         this.isUnlockAffordable = LC3.isCompleted;
         return;
       }
@@ -220,9 +223,16 @@ export default {
       class="o-primary-btn--replicanti-unlock"
       onclick="Replicanti.unlock();"
     >
-      Unlock Replicanti
-      <br>
-      Cost: ??? IP
+      <template v-if="isUnlockAffordable">
+        Unlock Replicanti
+        <br>
+        for free
+      </template>
+      <template v-else>
+        Replicanti have been
+        <br>
+        <b class="extra-bonus-destoryed">{{ destroyedText }}</b>
+      </template>
     </PrimaryButton>
     <template v-else>
       <div

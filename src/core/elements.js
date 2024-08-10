@@ -38,7 +38,7 @@ export const GameElements = {
     } else {
       this.active.add(element);
       this.activeTypes.add(element.type);
-      GameUI.notify.info(`You have got Element "${element.type}" for ${timeDisplayShort(element.time)}!`);
+      GameUI.notify.info(`You have got Element "${ElementEffects[element.type].name}" for ${timeDisplayShort(element.time)}!`);
     }
     ElementEffects[element.type].config.start?.();
   },
@@ -67,6 +67,10 @@ class ElementEffectState extends GameMechanicState {
   
   get symbol() {
     return this.config.symbol;
+  }
+  
+  get name() {
+    return this.config.name;
   }
 };
 

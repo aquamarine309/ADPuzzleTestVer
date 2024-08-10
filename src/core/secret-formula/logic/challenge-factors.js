@@ -51,7 +51,7 @@ export const challengeFactors = {
   luckyFactor: {
     id: 4,
     name: "Lucky Factor",
-    description:  () => "Become more fortunate.",
+    description:  () => "Become luckier.",
     symbol: "<i class='fas fa-diamond'></i>",
     color: "#99ccff",
     type: CHALLENGE_FACTOR_TYPE.IMPROVE,

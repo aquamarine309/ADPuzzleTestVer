@@ -51,13 +51,14 @@ export default {
   },
   template: `
   <div>
+    <ButtonCycle
+      class="o-primary-btn"
+      text="Challenge Factor Info:"
+      :labels="infoLabels"
+      v-model="type"
+    />
+    <br>
     <div class="c-tc-info">
-      <ButtonCycle
-        class="o-primary-btn"
-        text="Challenge Factor Info:"
-        :labels="infoLabels"
-        v-model="type"
-      />
       <div>You have <span class="c-tc-amount">{{ format(timeCores, 2, 1) }}</span> {{ pluralize("Time Core", timeCores) }}.</div>
       <div>You will gain {{ quantify("Time Core", gainedTimeCores, 2, 1) }} after Eternity.</div>
       <div class="c-challenge-factor-tooltip--level-info">(See Multiplier Breakdown Tab)</div>

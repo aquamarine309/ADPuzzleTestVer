@@ -165,7 +165,7 @@ export default {
     >
       <div v-if="isDoomed || factorDisabled">
         Extra Bonus has been
-        <b class="ad-bonus-destoryed">
+        <b class="extra-bonus-destoryed">
           {{ description }}
         </b>
       </div>

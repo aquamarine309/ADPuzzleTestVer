@@ -730,7 +730,7 @@ export const AntimatterDimensions = {
     }
     
     if (GameElements.isActive("reduceAntimatter") && Currency.antimatter.productionPerSecond.gt(0)) {
-      Currency.antimatter.divide(BEC.D2.pow(diff.div(1000)));
+      Currency.antimatter.divide(Currency.antimatter.productionPerSecond.pow(diff.div(1000)));
     }
     // Production may overshoot the goal on the final tick of the challenge
     if (Currency.antimatter.gt(Player.infinityLimit)) Currency.antimatter.dropTo(Player.infinityLimit);
