@@ -20,7 +20,7 @@ export default {
       if (!this.canRespec) {
         return `${timeDisplayShort(this.time)}/${timeDisplayShort(this.totalTime)}`;
       } else {
-        return "Avaliable";
+        return "Available";
       }
     }
   },

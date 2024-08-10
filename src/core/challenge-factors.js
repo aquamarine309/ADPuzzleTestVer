@@ -208,7 +208,7 @@ class RefreshTimeUpgradeState extends GameMechanicState {
   get isCustomEffect() { return true; }
   
   get isAffordable() {
-    return Currency.timeCores.gte(this.cost);
+    return Currency.timeCores.gte(this.cost) && this.isAvailableForPurchase;
   }
   
   purchase() {
@@ -220,6 +220,10 @@ class RefreshTimeUpgradeState extends GameMechanicState {
   
   get description() {
     throw new NotImplementedError();
+  }
+  
+  get isAvailableForPurchase() {
+    return true;
   }
   
   onPurchased() {}
@@ -240,11 +244,11 @@ class ReduceRefreshTimeUpgradeState extends RefreshTimeUpgradeState {
   }
   
   get description() {
-    return `${formatPercents(0.2)} smaller interval (Permanent)`;
+    return `${formatPercents(0.15)} smaller interval (Permanent)`;
   }
   
   get effectValue() {
-     return Math.pow(0.8, this.boughtAmount);
+     return Math.pow(0.85, this.boughtAmount);
   }
   
   get showEffect() { return true; }
@@ -272,6 +276,10 @@ class HalfRefreshTimeUpgradeState extends RefreshTimeUpgradeState {
   
   onPurchased() {
     player.logic.refreshTimer += (ChallengeFactors.refreshPeriod - player.logic.refreshTimer) * 0.6;
+  }
+  
+  get isAvailableForPurchase() {
+    return !ChallengeFactors.canRefresh;
   }
 }
 
