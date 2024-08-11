@@ -111,7 +111,7 @@ export default {
       );
     },
     amountClass() {
-      if (Player.eternityUnocked()) return "";
+      if (PlayerProgress.eternityUnocked()) return "";
       return Array.range(1, Math.min(this.boosts, 3)).map
       (x => `c-replicanti-description__accent--level-${x}`);
     },
