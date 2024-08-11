@@ -330,7 +330,7 @@ export const normalTimeStudies = [
     description: () => (Achievement(138).isUnlocked
       ? `You can get ${formatPercents(0.5)} more Replicanti Galaxies`
       : `Automatic Replicanti Galaxies are disabled, but you can get ${formatPercents(0.5)} more`),
-    effect: () => Math.floor(player.replicanti.boughtGalaxyCap.div(2))
+    effect: () => player.replicanti.boughtGalaxyCap.div(2).floor()
   },
   {
     id: 132,

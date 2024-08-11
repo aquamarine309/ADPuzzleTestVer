@@ -1831,6 +1831,9 @@ br {
 .o-primary-btn--replicanti-galaxy-toggle {
   width: 18rem;
   font-size: 1.2rem;
+  height: auto;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
 }
 
 .o-primary-btn--time-study-options {
