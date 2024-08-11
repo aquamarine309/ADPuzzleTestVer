@@ -20,7 +20,7 @@ export default {
         return "Stopped (storing real time)";
       }
       const speed = this.formatNumber(this.baseSpeed);
-      if (this.isEC12) {
+      if (this.isEC12 || this.isFreezeActive) {
         return `${speed} (fixed)`;
       }
       return `${speed}`;

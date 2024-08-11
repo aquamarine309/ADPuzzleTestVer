@@ -48,12 +48,12 @@ export const MultiplierTabHelper = {
     let galFrac, tickFrac;
     if (effectiveCount.lt(3)) {
       let baseMult = 1.1245;
-      if (player.galaxies === 1) baseMult = 1.11888888;
-      if (player.galaxies === 2) baseMult = 1.11267177;
+      if (player.galaxies.eq(1)) baseMult = 1.11888888;
+      if (player.galaxies.eq(2)) baseMult = 1.11267177;
       if (NormalChallenge(5).isRunning) {
         baseMult = 1.08;
-        if (player.galaxies === 1) baseMult = 1.07632;
-        if (player.galaxies === 2) baseMult = 1.072;
+        if (player.galaxies.eq(1)) baseMult = 1.07632;
+        if (player.galaxies.eq(2)) baseMult = 1.072;
       }
       // This is needed for numerical consistency with the other conditional case
       baseMult /= 0.965 ** 2;
@@ -67,7 +67,7 @@ export const MultiplierTabHelper = {
     } else {
       effectiveCount = effectiveCount.minus(2);
       effectiveCount = effectiveCount.times(effects);
-      effectiveCount = effectiveCount.times(getAdjustedGlyphEffect("realitygalaxies") * (1 + ImaginaryUpgrade(9).effectOrDefault(0)));
+      effectiveCount = effectiveCount.times(getAdjustedGlyphEffect("realitygalaxies").times(1 + ImaginaryUpgrade(9).effectOrDefault(0)));
       effectiveCount = effectiveCount.times(Pelle.specialGlyphEffect.power);
 
       // These all need to be framed as INCREASING x/sec tick rate (ie. all multipliers > 1, all logs > 0)

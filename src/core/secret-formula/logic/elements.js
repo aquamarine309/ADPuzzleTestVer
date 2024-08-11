@@ -3,7 +3,7 @@ export const elements = {
     id: "freeze",
     name: "Freeze",
     description: "游戏速度大幅下降",
-    effect: 0.1
+    effect: 0.01
   },
   vertigo: {
     id: "vertigo",

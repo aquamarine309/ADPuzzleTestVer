@@ -573,6 +573,7 @@ export const Replicanti = {
       boughtGalaxyCap: BEC.D0,
       galaxies: BEC.D0,
       galCost: BEC.E170,
+      cooldownTime: BEC.E3
     };
   },
   unlock(freeUnlock = false) {

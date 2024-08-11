@@ -321,7 +321,7 @@ export function getGameSpeedupFactor(effectsToConsider, blackHolesActiveOverride
   }
 
   if (effects.includes(GAME_SPEED_EFFECT.FIXED_SPEED)) {
-    if (EternityChallenge(12).isRunning) {
+    if (EternityChallenge(12).isRunning || GameElements.isActive("freeze")) {
       return BEC.D0_001;
     }
   }
@@ -349,10 +349,6 @@ export function getGameSpeedupFactor(effectsToConsider, blackHolesActiveOverride
   
   if (effects.includes(GAME_SPEED_EFFECT.EXTRA_BONUS)) {
     factor = factor.timesEffectOf(ExtraBonus.extraBonusToGamespeed);
-  }
-  
-  if (effects.includes(GAME_SPEED_EFFECT.ELEMENT)) {
-    factor = factor.timesEffectOf(ElementEffects.freeze);
   }
 
   if (effects.includes(GAME_SPEED_EFFECT.SINGULARITY_MILESTONE)) {
