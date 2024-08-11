@@ -225,8 +225,6 @@ export default {
     >
       <template v-if="isUnlockAffordable">
         Unlock Replicanti
-        <br>
-        for free
       </template>
       <template v-else>
         Replicanti have been
