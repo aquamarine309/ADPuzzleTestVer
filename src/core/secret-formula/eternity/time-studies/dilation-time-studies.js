@@ -2,7 +2,7 @@ export const dilationTimeStudies = [
   {
     id: 1,
     description: "Unlock Time Dilation",
-    cost: 5000,
+    cost: 7500,
     requirement: () => {
       const ttRequirement = Currency.timeTheorems.max.gte(TimeStudy.dilation.totalTimeTheoremRequirement);
       if (Ra.unlocks.autoUnlockDilation.canBeApplied &&

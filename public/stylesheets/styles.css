@@ -1796,6 +1796,14 @@ br {
   height: 5rem;
   font-size: 1rem;
   padding: 0.1rem 0.6rem;
+
+  -webkit-touch-callout: none;
+
+  -webkit-touch-callout: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .o-primary-btn--replicanti-upgrade-toggle {
@@ -1832,8 +1840,8 @@ br {
   width: 18rem;
   font-size: 1.2rem;
   height: auto;
-  padding-top: 0.1rem;
-  padding-bottom: 0.1rem;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
 }
 
 .o-primary-btn--time-study-options {
