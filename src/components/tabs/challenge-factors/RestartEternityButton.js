@@ -29,10 +29,8 @@ export default {
     },
     restart() {
       if (!this.canRestart) return;
-
-      // force: true
-      // auto: this.canEternity
-      eternity(true, this.canEternity);
+      // force: !this.canEternity
+      eternity(!this.canEternity, false);
     }
   },
   template: `
