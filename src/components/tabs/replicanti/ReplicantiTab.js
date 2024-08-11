@@ -43,7 +43,7 @@ export default {
       cooldownTime: new BE(),
       boostCost: 0,
       boosts: new BE(),
-      holding: 0,
+      holding: false,
       destroyedText: ""
     };
   },
@@ -72,7 +72,7 @@ export default {
           upgrade.isCapped
         ) {
           // Checking isCapped() prevents text overflow when formatted as "__ ➜ __"
-          return TimeSpan.fromMilliseconds(intervalNum).toStringShort(false);
+          return TimeSpan.fromMilliseconds(actualInterval).toStringShort(false);
         }
         if (actualInterval.lt(0.01)) return `< ${format(0.01, 2, 2)}ms`;
         if (actualInterval.gt(1000))

@@ -22,7 +22,7 @@ export default {
       const isAbove308 = Replicanti.isUncapped && replicantiAmount.gt(BE.NUMBER_MAX_VALUE);
 
       if (isAbove308) {
-        const postScale = Math.log10(ReplicantiGrowth.scaleFactor).div(ReplicantiGrowth.scaleLog10);
+        const postScale = BE.log10(ReplicantiGrowth.scaleFactor).div(ReplicantiGrowth.scaleLog10);
         const gainFactorPerSecond = logGainFactorPerTick
           .times(postScale)
           .plus(1)

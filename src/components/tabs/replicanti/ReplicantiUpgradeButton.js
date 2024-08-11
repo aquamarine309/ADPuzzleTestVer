@@ -21,7 +21,8 @@ export default {
       isCapped: false,
       isAutoUnlocked: false,
       isAutobuyerOn: false,
-      isEC8Running: false
+      isEC8Running: false,
+      holding: false
     };
   },
   computed: {
@@ -48,6 +49,7 @@ export default {
       this.isAutoUnlocked = autobuyer.isUnlocked;
       this.isAutobuyerOn = autobuyer.isActive;
       this.isEC8Running = EternityChallenge(8).isRunning;
+      if (this.holding && !this.isAutobuyerOn) this.upgrade.purchase();
     }
   },
   template: `
@@ -56,6 +58,8 @@ export default {
       :enabled="canBeBought"
       class="o-primary-btn--replicanti-upgrade"
       @click="upgrade.purchase()"
+      @touchstart="holding = true"
+      @touchend="holding = false"
     >
       <span v-html="description" />
       <template v-if="!isCapped">
