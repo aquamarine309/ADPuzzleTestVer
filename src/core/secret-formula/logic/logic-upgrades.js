@@ -27,7 +27,8 @@ export const logicUpgrades = [
     checkEvent: [
       GAME_EVENT.INFINITY_UPGRADE_BOUGHT,
       GAME_EVENT.REALITY_RESET_AFTER,
-      GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT
+      GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT,
+      GAME_EVENT.ETERNITY_RESET_AFTER
     ],
     cost: 1e27,
     effect: 1
