@@ -156,7 +156,7 @@ export const normalTimeStudies = [
     requirement: [61, () => Perk.studyECRequirement.isBought || !EternityChallenge(12).isUnlocked],
     reqType: TS_REQUIREMENT_TYPE.DIMENSION_PATH,
     description: "Dimensional Sacrifice affects all other Antimatter Dimensions with reduced effect",
-    effect: () => Sacrifice.totalBoost.pow(0.25).clampMin(1),
+    effect: () => Sacrifice.totalBoost.pow(0.05).clampMin(1),
     cap: BEC.E210000,
     formatEffect: value => formatX(value, 2, 1)
   },
@@ -168,7 +168,7 @@ export const normalTimeStudies = [
         (!EternityChallenge(11).isUnlocked && !EternityChallenge(12).isUnlocked)],
     reqType: TS_REQUIREMENT_TYPE.DIMENSION_PATH,
     description: "Dimensional Sacrifice affects 4th Infinity Dimension with greatly reduced effect",
-    effect: () => Sacrifice.totalBoost.pow(0.04).clampMin(1),
+    effect: () => Sacrifice.totalBoost.pow(0.01).clampMin(1),
     cap: BEC.E30000,
     formatEffect: value => formatX(value, 2, 1)
   },
@@ -178,7 +178,7 @@ export const normalTimeStudies = [
     requirement: [61, () => Perk.studyECRequirement.isBought || !EternityChallenge(11).isUnlocked],
     reqType: TS_REQUIREMENT_TYPE.DIMENSION_PATH,
     description: "Dimensional Sacrifice affects 3rd Time Dimension with greatly reduced effect",
-    effect: () => Sacrifice.totalBoost.pow(0.005).clampMin(1),
+    effect: () => Sacrifice.totalBoost.pow(0.0003).clampMin(1),
     cap: BEC.E1300,
     formatEffect: value => formatX(value, 2, 1)
   },

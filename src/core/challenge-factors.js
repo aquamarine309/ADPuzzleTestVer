@@ -49,7 +49,7 @@ class ChallengeFactorState extends GameMechanicState {
   
   levelAt(tc) {
     if (this.levelCap === 0 || tc.lt(this.baseCost)) return 0;
-    return tc.div(this.baseCost).log(this.costMultiplier).add(1).floor().toNumberMax(this.levelCap);
+    return tc.div(this.baseCost).ln().div(BE.ln(this.costMultiplier)).add(1).floor().toNumberMax(this.levelCap);
   }
   
   get isActive() {
