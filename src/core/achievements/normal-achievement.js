@@ -83,6 +83,7 @@ class AchievementState extends GameMechanicState {
       player.speedrun.achievementTimes[this.id] = Math.floor(player.records.realTimePlayed);
     }
     Achievements._power.invalidate();
+    Achievements._unlockedCount.invalidate();
     EventHub.dispatch(GAME_EVENT.ACHIEVEMENT_UNLOCKED);
   }
 }

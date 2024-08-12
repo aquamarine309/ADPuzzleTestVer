@@ -540,6 +540,11 @@ export const migrations = {
         }
         player.elements = result;
       }
+    },
+    71: player => {
+      const purchasedTT = player.timestudy.amBought.add(player.timestudy.ipBought).add(player.timestudy.epBought);
+      player.timestudy.theorem = player.timestudy.theorem.minus(purchasedTT).clampMin(0);
+      player.timestudy.maxTheorem = player.timestudy.maxTheorem.minus(purchasedTT).clampMin(0);
     }
   },
 

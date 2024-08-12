@@ -218,6 +218,20 @@ class TimeDimensionState extends DimensionState {
     }
     return cost;
   }
+  
+  get continuumAmount() {
+    if (!Continuum.isOn("TD")) return BEC.D0;
+    return Continuum.timeDimContinuum(this);
+  }
+  
+  get totalBought() {
+    if (Continuum.isOn("TD")) return this.continuumAmount;
+    return this.bought;
+  }
+  
+  get totalAmount() {
+    return this.amount.max(this.continuumAmount);
+  }
 
   get isUnlocked() {
     return this._tier < 5 || TimeStudy.timeDimension(this._tier).isBought;
@@ -243,7 +257,7 @@ class TimeDimensionState extends DimensionState {
       );
 
     const dim = TimeDimension(tier);
-    const bought = tier === 8 ? BE.clampMax(dim.bought, 1e8) : dim.bought;
+    const bought = tier === 8 ? BE.clampMax(dim.totalBought, 1e8) : dim.totalBought;
     mult = mult.times(BE.pow(dim.powerMultiplier, bought));
 
     mult = mult.pow(getAdjustedGlyphEffect("timepow"));

@@ -28,6 +28,12 @@ export default {
         ip: new BE(0),
         ep: new BE(0)
       },
+      continuums: {
+        am: new BE(0),
+        ip: new BE(0),
+        ep: new BE(0)
+      },
+      continuum: false,
       showST: false,
       STamount: 0,
       hasTTGen: false,
@@ -44,7 +50,7 @@ export default {
         return format;
       }
       if (!(Teresa.isRunning || Enslaved.isRunning) &&
-        getAdjustedGlyphEffect("dilationTTgen").gt(0) && !DilationUpgrade.ttGenerator.isBought) {
+        getAdjustedGlyphEffect("dilationTTgen").gt(0) && !DilationUpgrade.ttGenerator.isBought || this.continuum) {
         return formatFloat;
       }
       return formatInt;
@@ -118,6 +124,12 @@ export default {
       this.hasTTAutobuyer = Autobuyer.timeTheorem.isUnlocked;
       this.isAutobuyerOn = Autobuyer.timeTheorem.isActive;
       this.minimizeAvailable = DilationUpgrade.ttGenerator.isBought || this.hasTTAutobuyer;
+      this.continuum = Continuum.isOn("TT");
+      if (this.continuum) {
+        this.continuums.am = TimeTheoremPurchaseType.am.continuumValue;
+        this.continuums.ip = TimeTheoremPurchaseType.ip.continuumValue;
+        this.continuums.ep = TimeTheoremPurchaseType.ep.continuumValue;
+      }
       const budget = this.budget;
       budget.am.copyFrom(TimeTheoremPurchaseType.am.currency);
       budget.ip.copyFrom(TimeTheoremPurchaseType.ip.currency);
@@ -230,20 +242,27 @@ export default {
           :cost="costs.am"
           :format-cost="formatAM"
           :action="buyWithAM"
+          :continuum="continuum"
+          :continuum-value="continuums.am"
         />
         <TimeTheoremBuyButton
           :budget="budget.ip"
           :cost="costs.ip"
           :format-cost="formatIP"
           :action="buyWithIP"
+          :continuum="continuum"
+          :continuum-value="continuums.ip"
         />
         <TimeTheoremBuyButton
           :budget="budget.ep"
           :cost="costs.ep"
           :format-cost="formatEP"
           :action="buyWithEP"
+          :continuum="continuum"
+          :continuum-value="continuums.ep"
         />
         <div
+          v-if="!continuum"
           class="l-tt-buy-max-vbox"
           data-v-time-theorem-shop
         >

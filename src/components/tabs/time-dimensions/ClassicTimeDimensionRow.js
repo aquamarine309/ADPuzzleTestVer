@@ -36,6 +36,8 @@ export default {
       ttCost: 0,
       ttGen: new BE(),
       currTT: new BE(),
+      continuum: false,
+      continuumAmount: new BE()
     };
   },
   computed: {
@@ -46,6 +48,7 @@ export default {
       return `${TimeDimension(this.tier).shortDisplayName} Time Dimension`;
     },
     buttonContents() {
+      if (this.continuum) return `Continuum: ${formatFloat(this.continuumAmount, 2)}`;
       if (this.showTTCost) return this.formattedTTCost;
       return this.formattedEPCost;
     },
@@ -87,8 +90,12 @@ export default {
       this.isCapped = Enslaved.isRunning && dimension.bought.gt(0);
       this.isUnlocked = dimension.isUnlocked;
       this.multiplier.copyFrom(dimension.multiplier);
-      this.amount.copyFrom(dimension.amount);
+      this.amount.copyFrom(dimension.totalAmount);
       this.bought.copyFrom(dimension.bought);
+      this.continuum = Continuum.isOn("TD");
+      if (this.continuum) {
+        this.continuumAmount = dimension.continuumAmount;
+      }
       if (tier < 8) {
         this.rateOfChange.copyFrom(dimension.rateOfChange);
       }
@@ -133,28 +140,31 @@ export default {
       <PrimaryButton
         :enabled="isAvailableForPurchase && !isCapped"
         class="o-primary-btn--buy-td o-primary-btn--buy-dim c-dim-tooltip-container"
-        :class="{ 'l-dim-row-small-text': hasLongText }"
+        :class="{ 'l-dim-row-small-text': hasLongText, 'o-continuum': continuum }"
         @click="buyTimeDimension"
+        data-v-classic-time-dimension-row
       >
         {{ buttonContents }}
         <div class="c-dim-purchase-count-tooltip">
           <span v-html="tooltipContents" />
         </div>
       </PrimaryButton>
-      <PrimaryToggleButton
-        v-if="areAutobuyersUnlocked"
-        v-model="isAutobuyerOn"
-        class="o-primary-btn--buy-td-auto"
-        label="Auto:"
-      />
-      <PrimaryButton
-        v-else
-        :enabled="isAvailableForPurchase && !isCapped"
-        class="o-primary-btn--buy-td-auto"
-        @click="buyMaxTimeDimension"
-      >
-        Buy Max
-      </PrimaryButton>
+      <template v-if="!continuum">
+        <PrimaryToggleButton
+          v-if="areAutobuyersUnlocked"
+          v-model="isAutobuyerOn"
+          class="o-primary-btn--buy-td-auto"
+          label="Auto:"
+        />
+        <PrimaryButton
+          v-else
+          :enabled="isAvailableForPurchase && !isCapped"
+          class="o-primary-btn--buy-td-auto"
+          @click="buyMaxTimeDimension"
+        >
+          Buy Max
+        </PrimaryButton>
+      </template>
     </div>
   </div>
   `

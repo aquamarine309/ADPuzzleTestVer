@@ -146,6 +146,7 @@ class InfinityIPMultUpgrade extends GameMechanicState {
   }
 
   get purchaseCount() {
+    if (Continuum.isOn("ipMult")) return Continuum.ipMultContinuum();
     return player.IPMultPurchases;
   }
 

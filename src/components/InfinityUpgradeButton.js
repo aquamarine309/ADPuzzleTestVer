@@ -13,6 +13,11 @@ export default {
     upgrade: {
       type: Object,
       required: true
+    },
+    continuum: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {
@@ -58,7 +63,8 @@ export default {
         "o-infinity-upgrade-btn--chargeable": !this.isCharged && this.chargePossible &&
           (this.showingCharged || this.shiftDown),
         "o-infinity-upgrade-btn--charged": this.isCharged,
-        "o-pelle-disabled-pointer": this.isUseless
+        "o-pelle-disabled-pointer": this.isUseless,
+        "o-continuum": this.continuum
       };
     },
     isImprovedByTS31() {
@@ -103,6 +109,7 @@ export default {
     @mouseenter="showingCharged = canBeCharged"
     @mouseleave="showingCharged = false"
     @click="upgrade.purchase()"
+    data-v-infinity-upgrade-button
   >
     <span :class="{ 'o-pelle-disabled': isUseless }">
       <DescriptionDisplay
@@ -123,7 +130,7 @@ export default {
       </template>
     </span>
     <CostDisplay
-      v-if="!isBought"
+      v-if="!isBought && !continuum"
       br
       :config="config"
       name="Infinity Point"

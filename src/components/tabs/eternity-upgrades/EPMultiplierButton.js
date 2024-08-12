@@ -13,7 +13,8 @@ export default {
       isAutoUnlocked: false,
       isAffordable: false,
       multiplier: new BE(),
-      cost: new BE()
+      cost: new BE(),
+      continuum: false
     };
   },
   computed: {
@@ -35,7 +36,8 @@ export default {
       return {
         "o-eternity-upgrade": true,
         "o-eternity-upgrade--available": this.isAffordable,
-        "o-eternity-upgrade--unavailable": !this.isAffordable
+        "o-eternity-upgrade--unavailable": !this.isAffordable,
+        "o-continuum": this.continuum
       };
     },
     isDoomed: () => Pelle.isDoomed,
@@ -53,6 +55,7 @@ export default {
       this.multiplier.copyFrom(upgrade.effectValue);
       this.cost.copyFrom(upgrade.cost);
       this.isAffordable = upgrade.isAffordable;
+      this.continuum = Continuum.isOn("epMult");
     },
     purchaseUpgrade() {
       if (RealityUpgrade(15).isLockingMechanics) RealityUpgrade(15).tryShowWarningModal();
@@ -67,27 +70,32 @@ export default {
     <button
       :class="classObject"
       @click="purchaseUpgrade"
+      data-v-ep-multiplier-button
     >
       <div :class="{ 'o-pelle-disabled': isDoomed }">
         Multiply Eternity Points from all sources by {{ formatX(5) }}
         <br>
         Currently: {{ formatX(multiplier, 2, 0) }}
       </div>
-      <br>
-      Cost: {{ quantify("Eternity Point", cost, 2, 0) }}
+      <template v-if="!continuum">
+        <br>
+        Cost: {{ quantify("Eternity Point", cost, 2, 0) }}
+      </template>
     </button>
-    <PrimaryButton
-      class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
-      @click="upgrade.buyMax(false)"
-    >
-      Max Eternity Point mult
-    </PrimaryButton>
-    <PrimaryToggleButton
-      v-if="isAutoUnlocked"
-      v-model="isAutobuyerActive"
-      label="Autobuy EP mult"
-      class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
-    />
+    <template v-if="!continuum">
+      <PrimaryButton
+        class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
+        @click="upgrade.buyMax(false)"
+      >
+        Max Eternity Point mult
+      </PrimaryButton>
+      <PrimaryToggleButton
+        v-if="isAutoUnlocked"
+        v-model="isAutobuyerActive"
+        label="Autobuy EP mult"
+        class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
+      />
+    </template>
   </div>
   `
 };

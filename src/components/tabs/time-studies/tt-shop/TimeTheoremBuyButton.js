@@ -10,6 +10,15 @@ export default {
       type: Function,
       required: true
     },
+    continuum: {
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    continuumValue: {
+      type: BE,
+      required: true
+    }
   },
   data() {
     return {
@@ -22,9 +31,13 @@ export default {
       return this.budget.gte(this.cost);
     },
     enabledClass() {
-      if (!this.isEnabled || this.isLocked) return "c-tt-buy-button--locked";
-
-      return "c-tt-buy-button--unlocked";
+      const locked = !this.isEnabled || this.isLocked
+      if (this.continuum) return "o-continuum";
+      return locked ? "c-tt-buy-button--locked" : "c-tt-buy-button--unlocked";
+    },
+    text() {
+      if (this.continuum) return formatFloat(this.continuumValue, 2);
+      return this.isLocked ? "Requires an Eternity to unlock" : this.formatCost(this.cost);
     }
   },
   methods: {
@@ -37,8 +50,9 @@ export default {
     class="l-tt-buy-button c-tt-buy-button"
     :class="enabledClass"
     @click="action"
+    data-v-time-theorem-buy-button
   >
-    {{ isLocked ? "Requires an Eternity to unlock" : formatCost(cost) }}
+    {{ text }}
   </button>
   `
 };

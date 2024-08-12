@@ -117,3 +117,4 @@ export * from "./extra-bonus.js";
 
 export * from "./challenge-factors.js";
 export * from "./elements.js";
+export * from "./continuum.js";

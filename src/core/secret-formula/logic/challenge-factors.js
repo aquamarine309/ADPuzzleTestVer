@@ -33,7 +33,7 @@ export const challengeFactors = {
     type: CHALLENGE_FACTOR_TYPE.NERF,
     difficulty: level => 10 + 5 * Math.pow(level, 0.2),
     baseCost: 1000,
-    costMultiplier: 100,
+    costMultiplier: 50,
     effect: level => 0.8 / Math.pow(level + 1, 0.2)
   },
   inexpensiveUpgrade: {
@@ -67,7 +67,7 @@ export const challengeFactors = {
     symbol: "<i class='fas fa-tags'></i>",
     color: "#93e388",
     type: CHALLENGE_FACTOR_TYPE.NERF,
-    effect: level => 1 - Math.pow(0.85, Math.pow(level, 0.8)),
+    effect: level => 1 - Math.pow(0.85, Math.pow(level + 1, 0.8)),
     difficulty: level => 15 + 5 * Math.pow(level, 0.3),
     baseCost: 600,
     costMultiplier: 30
@@ -82,8 +82,7 @@ export const challengeFactors = {
     effect: level => 1.2 + Math.pow(level, 0.25) / 60,
     difficulty: level => 20 + Math.pow(level, 0.25),
     baseCost: 100,
-    costMultiplier: 80
-    
+    costMultiplier: 40
   },
   noExtra: {
     id: 7,

@@ -13,7 +13,8 @@ export default {
     return {
       isAutobuyerActive: false,
       isAutoUnlocked: false,
-      isCapped: false
+      isCapped: false,
+      continuum: false
     };
   },
   computed: {
@@ -31,6 +32,7 @@ export default {
       this.isAutoUnlocked = Autobuyer.ipMult.isUnlocked;
       this.isAutobuyerActive = Autobuyer.ipMult.isActive;
       this.isCapped = this.upgrade.isCapped;
+      this.continuum = Continuum.isOn("ipMult");
     },
     buyMaxIPMult() {
       InfinityUpgrade.ipMult.buyMax();
@@ -41,24 +43,27 @@ export default {
     <InfinityUpgradeButton
       :upgrade="upgrade"
       class="o-infinity-upgrade-btn--multiplier"
+      :continuum="continuum"
     >
       <template v-if="isCapped">
         <br>
         <span>(Capped at {{ quantify("Infinity Point", upgrade.config.costCap) }})</span>
       </template>
     </InfinityUpgradeButton>
-    <PrimaryButton
-      class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
-      @click="buyMaxIPMult()"
-    >
-      Max Infinity Point mult
-    </PrimaryButton>
-    <PrimaryToggleButton
-      v-if="isAutoUnlocked"
-      v-model="isAutobuyerActive"
-      label="Autobuy IP mult"
-      class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
-    />
+    <template v-if="!continuum">
+      <PrimaryButton
+        class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
+        @click="buyMaxIPMult()"
+      >
+        Max Infinity Point mult
+      </PrimaryButton>
+      <PrimaryToggleButton
+        v-if="isAutoUnlocked"
+        v-model="isAutobuyerActive"
+        label="Autobuy IP mult"
+        class="l--spoon-btn-group__little-spoon o-primary-btn--small-spoon"
+      />
+    </template>
   </div>
   `
 };

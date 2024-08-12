@@ -17,7 +17,7 @@ export default {
       shardsPerSecond: new BE(0),
       incomeType: "",
       areAutobuyersUnlocked: false,
-      showLockedDimCostNote: true,
+      showLockedDimCostNote: true
     };
   },
   computed: {

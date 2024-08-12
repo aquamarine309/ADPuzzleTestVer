@@ -215,7 +215,7 @@ Currency.antimatter = new class extends BECurrency {
     if (ChallengeFactor.elementImbalance.isActive) {
       const goal = Player.infinityLimit.pow(0.5);
       if (player.records.thisInfinity.maxAM.lt(goal) && gainedAM.gt(goal)) {
-        GameElements.addRandomElement(5e3);
+        GameElements.addRandomElement(ChallengeFactor.elementImbalance.effectValue * 1e3);
       }
     }
     
@@ -338,6 +338,10 @@ Currency.eternityPoints = new class extends BECurrency {
       player.records.bestReality.bestEP = value;
       player.records.bestReality.bestEPSet = Glyphs.copyForRecords(Glyphs.active.filter(g => g !== null));
     }
+    
+    if (Continuum.isOn("epMult")) {
+      EternityUpgrade.epMult.cachedEffectValue.invalidate();
+    }
 
     if (Pelle.isDoomed) {
       player.celestials.pelle.records.totalEternityPoints =
@@ -367,16 +371,21 @@ Currency.timeShards = new class extends BECurrency {
 }();
 
 Currency.timeTheorems = new class extends BECurrency {
-  get value() { return player.timestudy.theorem; }
+  get value() {
+    return player.timestudy.theorem.add(TimeTheorems.totalValue);
+  }
+
   set value(value) {
     player.timestudy.theorem = value;
     player.timestudy.maxTheorem = value.plus(TimeTheorems.calculateTimeStudiesCost());
   }
 
-  get max() { return player.timestudy.maxTheorem; }
+  get max() {
+    return player.timestudy.maxTheorem.add(TimeTheorems.totalValue);
+  }
 
   add(amount) {
-    super.add(amount);
+    this.value = player.timestudy.theorem.add(amount);
     player.timestudy.maxTheorem = player.timestudy.maxTheorem.plus(amount);
   }
 

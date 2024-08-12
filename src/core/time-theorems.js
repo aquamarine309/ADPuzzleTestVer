@@ -53,12 +53,12 @@ export class TimeTheoremPurchaseType {
     const buyFn = cost => (Perk.ttFree.canBeApplied ? this.currency.gte(cost) : this.currency.purchase(cost));
     // This will sometimes buy one too few for EP, so we just have to buy 1 after.
     if (bulk && buyFn(this.bulkCost(amount))) {
-      Currency.timeTheorems.add(amount);
+      // Currency.timeTheorems.add(amount);
       this.add(amount);
       purchased = true;
     }
     if (buyFn(this.cost)) {
-      Currency.timeTheorems.add(1);
+      // Currency.timeTheorems.add(1);
       this.add(1);
       purchased = true;
     }
@@ -68,11 +68,20 @@ export class TimeTheoremPurchaseType {
   }
 
   get canAfford() {
-    return this.currency.gte(this.cost) && !player.eternities.eq(0);
+    return this.currency.gte(this.cost) && !player.eternities.eq(0) && !Continuum.isOn("TT");
   }
 
   reset() {
     this.amount = BEC.D0;
+  }
+  
+  get continuumValue() {
+    if (!Continuum.isOn("TT")) return BEC.D0;
+    return Continuum.ttContinuum(this);
+  }
+  
+  get totalAmount() {
+    return this.amount.max(this.continuumValue);
   }
 }
 
@@ -139,10 +148,16 @@ export const TimeTheorems = {
     return ttAM + ttIP + ttEP;
   },
 
+  get totalValue() {
+    return TimeTheoremPurchaseType.am.totalAmount.plus
+          (TimeTheoremPurchaseType.ip.totalAmount).plus
+          (TimeTheoremPurchaseType.ep.totalAmount);
+  },
+  
   totalPurchased() {
     return TimeTheoremPurchaseType.am.amount.plus
-          (TimeTheoremPurchaseType.ip.amount).plus
-          (TimeTheoremPurchaseType.ep.amount);
+      (TimeTheoremPurchaseType.ip.amount).plus
+      (TimeTheoremPurchaseType.ep.amount)
   },
 
   calculateTimeStudiesCost() {

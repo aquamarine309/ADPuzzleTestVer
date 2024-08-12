@@ -5840,6 +5840,36 @@ AutobuyerBox components will always render in page order regardless of internal 
   cursor: pointer;
 }
 
+.o-continuum[data-v-modern-infinity-dimension-row],
+.o-continuum[data-v-classic-infinity-dimension-row],
+.o-continuum[data-v-modern-time-dimension-row],
+.o-continuum[data-v-classic-time-dimension-row],
+.o-continuum[data-v-infinity-upgrade-button],
+.o-continuum[data-v-ep-multiplier-button],
+.o-continuum[data-v-time-theorem-buy-button] {
+  border-color: var(--color-laitela--accent) !important;
+  color: var(--color-laitela--accent) !important;
+  background: var(--color-laitela--base) !important;
+}
+
+.o-continuum[data-v-modern-infinity-dimension-row]
+:hover,
+.o-continuum[data-v-classic-infinity-dimension-row]
+:hover,
+.o-continuum[data-v-modern-time-dimension-row]
+:hover,
+.o-continuum[data-v-classic-time-dimension-row]
+:hover,
+.o-continuum[data-v-infinity-upgrade-button]
+:hover,
+.o-continuum[data-v-ep-multiplier-button]
+:hover,
+.o-continuum[data-v-time-theorem-buy-button]
+:hover {
+  border-color: var(--color-laitela--accent) !important;
+  color: var(--color-laitela--base) !important;
+  background: var(--color-laitela--accent) !important;
+}
 .ui-wrapper[data-v-game-ui-component] {
   display: flex;
   position: relative;

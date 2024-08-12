@@ -71,6 +71,20 @@ class InfinityDimensionState extends DimensionState {
   set baseAmount(value) {
     this.data.baseAmount = value;
   }
+  
+  get continuumAmount() {
+    if (!Continuum.isOn("ID")) return BEC.D0;
+    return Continuum.infinityDimContinuum(this);
+  }
+  
+  get totalPurchases() {
+    if (Continuum.isOn("ID")) return this.continuumAmount;
+    return this.purchases;
+  }
+  
+  get totalAmount() {
+    return this.amount.max(this.continuumAmount);
+  }
 
   get isUnlocked() {
     return this.data.isUnlocked;
@@ -129,7 +143,7 @@ class InfinityDimensionState extends DimensionState {
       (Laitela.isRunning && this.tier > Laitela.maxAllowedDimension)) {
       return BEC.D0;
     }
-    let production = this.amount;
+    let production = this.totalAmount;
     if (EternityChallenge(11).isRunning) {
       return production;
     }
@@ -151,7 +165,7 @@ class InfinityDimensionState extends DimensionState {
         tier === 4 ? TimeStudy(72) : null,
         tier === 1 ? EternityChallenge(2).reward : null
       );
-    mult = mult.times(BE.pow(this.powerMultiplier, BE.floor(this.baseAmount.div(10))));
+    mult = mult.times(BE.pow(this.powerMultiplier, this.totalPurchases));
 
 
     if (tier === 1) {
@@ -225,7 +239,7 @@ class InfinityDimensionState extends DimensionState {
   }
 
   get isCapped() {
-    return this.purchases.gte(this.purchaseCap);
+    return this.totalPurchases.gte(this.purchaseCap);
   }
 
   get hardcapIPAmount() {
@@ -290,7 +304,7 @@ class InfinityDimensionState extends DimensionState {
       return false;
     }
 
-    let purchasesUntilHardcap = this.purchaseCap.minus(this.purchases);
+    let purchasesUntilHardcap = this.purchaseCap.minus(this.totalPurchases);
     if (EternityChallenge(8).isRunning) {
       purchasesUntilHardcap = BE.clampMax(purchasesUntilHardcap, player.eterc8ids);
     }
@@ -366,7 +380,7 @@ export const InfinityDimensions = {
   canBuy() {
     return !EternityChallenge(2).isRunning &&
       !EternityChallenge(10).isRunning &&
-      (!EternityChallenge(8).isRunning || player.eterc8ids > 0);
+      (!EternityChallenge(8).isRunning || player.eterc8ids > 0) && !Continuum.isOn("ID");
   },
 
   canAutobuy() {

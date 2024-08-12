@@ -63,7 +63,7 @@ export const BEC = deepFreeze({
   D20:                  new BE("20"),
   D30:                  new BE("30"),
   D50:                  new BE("50"),
-  D500:                new BE("500"),
+  D500:                 new BE("500"),
   D1500:                new BE("1500"),
   D3600:                new BE("3600"),
   D6666:                new BE("6666"),

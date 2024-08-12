@@ -50,7 +50,6 @@ export class TimeStudyTreeLayout {
 
     const TS = id => (TimeStudy(id).isUnlocked ? TimeStudy(id) : null);
     const EC = id => TimeStudy.eternityChallenge(id);
-
     /**
      * @type {TimeStudyRow[]}
      */
