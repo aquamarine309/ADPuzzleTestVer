@@ -83,6 +83,7 @@ window.player = {
       half: 0
     }
   },
+  logicNodes: new Set(),
   extraBonusTimeLeft: BEC.D0,
   timeCores: BEC.D0,
   crunchPunishment: {
@@ -422,7 +423,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: BEC.D0,
-  version: 71,
+  version: 72,
   bigCrunches: 0,
   bigEternities: 0,
   infinityPower: BEC.D1,

@@ -545,6 +545,12 @@ export const migrations = {
       const purchasedTT = player.timestudy.amBought.add(player.timestudy.ipBought).add(player.timestudy.epBought);
       player.timestudy.theorem = player.timestudy.theorem.minus(purchasedTT).clampMin(0);
       player.timestudy.maxTheorem = player.timestudy.maxTheorem.minus(purchasedTT).clampMin(0);
+    },
+    72: player => {
+      const purchasedTT = player.timestudy.amBought.add(player.timestudy.ipBought).add(player.timestudy.epBought);
+      player.timestudy.theorem = purchasedTT;
+      player.timestudy.maxTheorem = purchasedTT;
+      player.timestudy.studies = [];
     }
   },
 

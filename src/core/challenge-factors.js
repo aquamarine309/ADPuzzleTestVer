@@ -332,7 +332,7 @@ class ReduceRefreshTimeUpgradeState extends RefreshTimeUpgradeState {
 
 class HalfRefreshTimeUpgradeState extends RefreshTimeUpgradeState {
   costAfterCount(x) {
-    return 5 + x * (x + 1) * (2 * x + 1) / 6;
+    return (5 + x * (x + 1) * (2 * x + 1) / 6) * (ReduceRefreshTimeUpgrade.boughtAmount + 1);
   }
   
   get boughtAmount() {

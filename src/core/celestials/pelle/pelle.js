@@ -296,7 +296,7 @@ export const Pelle = {
   },
 
   realityShardGain(remnants) {
-    return BE.pow10(remnants.pow((1 / 7.5)).times(4)).minus(1).div(1e3);
+    return BE.pow10(remnants.pow(1 / 7.5).times(4)).minus(1).div(1e3);
   },
 
   get realityShardGainPerSecond() {
@@ -352,7 +352,7 @@ export const Pelle = {
     return zalgo(str, Math.floor(stage ** 2 * 7));
   },
 
-  endTabNames: "End Is Nigh Destruction Is Imminent Help Us Good Bye Forever ?".split(" "),
+  endTabNames: "End Is Not Nigh Destruction Is Not Imminent Other New Things Await".split(" "),
 
   quotes: Quotes.pelle,
 };

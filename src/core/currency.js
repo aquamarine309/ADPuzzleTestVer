@@ -388,6 +388,10 @@ Currency.timeTheorems = new class extends BECurrency {
     this.value = player.timestudy.theorem.add(amount);
     player.timestudy.maxTheorem = player.timestudy.maxTheorem.plus(amount);
   }
+  
+  subtract(amount) {
+    this.value = player.timestudy.theorem.minus(amount);  
+  }
 
   reset() {
     respecTimeStudies(true);

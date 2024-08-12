@@ -530,6 +530,15 @@ export const tabs = [
         id: 1,
         condition: () => PlayerProgress.eternityUnlocked(),
         hidable: true
+      },
+      {
+        key: "tree",
+        name: "Logic tree",
+        symbol: "<i class='fas fa-chain'></i>",
+        component: "LogicTreeTab",
+        id: 2,
+        condition: () => PlayerProgress.eternityUnlocked(),
+        hidable: true
       }
     ]
   }
