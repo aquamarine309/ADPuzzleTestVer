@@ -10357,3 +10357,81 @@ input.o-automator-block-input {
   font-weight: bold;
   font-size: 2.5rem;
 }
+
+
+.c-logic-tree-layout {
+  width: 80rem;
+  height: 80rem;
+  border: 0.3rem solid var(--color-logic);
+  border-radius: var(--var-border-radius, 1rem);
+  position: relative;
+  margin: auto;
+}
+
+.c-logic-node {
+  --size: 6rem;
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  margin-top: calc(0rem - var(--size) / 2);
+  margin-left: calc(0rem - var(--size) / 2);
+  border: 0.2rem solid var(--color-node--base);
+  border-radius: var(--var-border-radius, 0.5rem);
+  background-color: var(--color-node--bg);
+  color: #181818;
+  -webkit-background-size: 100%;
+  background-size: 100%;
+}
+
+.c-logic-node--locked {
+  color: var(--color-node--base);
+  background-color: var(--color-base);
+}
+
+.c-logic-tree-connection {
+  stroke: #5CC793;
+  /* This one should be px, because it rem svg behaves weirdly under scale */
+  stroke-width: 8px;
+  transition: stroke 0.3s;
+}
+
+.c-logic-tree-svg, .c-logic-node-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: var(--var-border-radius, 1rem);
+}
+
+.c-logic-tree-svg {
+  background-color: #252338;
+  box-sizing: 0 0 1.5rem 0.2rem #252338 inset;
+}
+
+.c-logic-node-container {
+  z-index: 1;
+}
+
+.c-logic-node-symbol, .c-logic-node-symbol--blob {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.8rem;
+}
+
+.c-logic-node-symbol--blob {
+  font-size: 3rem;
+}
+
+.c-logic-tree-connection--locked {
+  stroke: #37805C;
+}
+
+.c-logic-tree-bg-text {
+  fill: var(--color-eternity);
+  opacity: 50%;
+}

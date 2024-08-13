@@ -107,6 +107,7 @@ window.GAME_EVENT = {
   LOGIC_CHALLENGE_COMPLETED: "LOGIC_CHALLENGE_COMPLETED",
   CHALLENGE_FACTOR_CHANGED: "CHALLENGE_FACTOR_CHANGED",
   EXCHANGE_LEVEL_UP: "EXCHANGE_LEVEL_UP",
+  LOGIC_NODE_UNLOCKED: "LOGIC_NODE_UNLOCKED",
 
   // Used by events to signify that they are triggered by a particular
   // event, not handled by the event hub

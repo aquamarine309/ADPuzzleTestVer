@@ -294,6 +294,8 @@ window.player = {
     themes: new Set(),
     viewSecretTS: false,
     cancerAchievements: false,
+    logicNodeBlobUnlocked: false,
+    logicNodeBlobShow: true
   },
   shownRuns: {
     Reality: true,
@@ -311,6 +313,7 @@ window.player = {
       onlyAD8: true,
       noAD1: true,
       noRG: true,
+      noMatter: true
     },
     reality: {
       noAM: true,

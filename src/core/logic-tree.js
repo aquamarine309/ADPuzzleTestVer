@@ -33,6 +33,7 @@ class LogicNodeState extends GameMechanicState {
   unlock() {
     player.logicNodes.add(this.id);
     GameUI.notify.logic(`You've unlocked Logic Node "${this.name}"`);
+    EventHub.dispatch(GAME_EVENT.LOGIC_NODE_UNLOCKED);
   }
 
   lock() {
@@ -70,10 +71,16 @@ LogicTree.getNodeById = (function() {
 })();
 
 LogicTree.connections = (function() {
-  const LN = LogicTree.getNodeById;
   return [
-    [LN(0), LN(1)]
-  ]
+    [0, 1],
+    [1, 2],
+    [0, 3],
+    [3, 4],
+    [3, 5],
+    [0, 6],
+    [6, 7],
+    [6, 8]
+  ].map(c => c.map(x => LogicTree.getNodeById(x)))
 })();
 
 // Initialize
