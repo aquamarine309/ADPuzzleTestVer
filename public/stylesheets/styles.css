@@ -10313,7 +10313,7 @@ input.o-automator-block-input {
   position: absolute;
   font-size: 0.9rem;
   bottom: -5%;
-  right: -5%;
+  left: 95%;
   background-color: rgba(64, 64, 64, 95%);
   padding: 0.1rem 0.2rem;
   font-weight: bold;
@@ -10366,6 +10366,7 @@ input.o-automator-block-input {
   border-radius: var(--var-border-radius, 1rem);
   position: relative;
   margin: auto;
+  overflow: hidden;
 }
 
 .c-logic-node {
@@ -10434,4 +10435,81 @@ input.o-automator-block-input {
 .c-logic-tree-bg-text {
   fill: var(--color-eternity);
   opacity: 50%;
+}
+
+.c-logic-node-tooltip {
+  position: absolute;
+  left: 70%;
+  bottom: 60%;
+  width: 22rem;
+  background-color: var(--color-base);
+  border: 0.2rem solid var(--color-node--base);
+  border-radius: var(--var-border-radius, 0.5rem);
+  padding: 0.2rem 1rem;
+  transform: scale(0);
+  transform-origin: bottom left;
+  transition-duration: 0.2s;
+  z-index: 2;
+  color: var(--color-node--base);
+}
+
+.c-logic-node:hover .c-logic-node-tooltip {
+  transform: scale(1);
+}
+
+.c-logic-tree-bg__gear {
+  position: absolute;
+  color: var(--color-eternity);
+  font-size: 15rem;
+  opacity: 50%;
+  width: 22.5rem;
+  height: 22.5rem;
+}
+
+.c-logic-tree-bg__gear--top-left {
+  top: 15%;
+  left: 10%;
+  animation: a-logic-tree-bg__gearing 2.5s ease-in-out forwards;
+}
+
+.c-logic-tree-bg__gear--bottom-right {
+  bottom: 15%;
+  right: 10%;
+  animation: a-logic-tree-bg__gearing 2.5s ease-in-out forwards;
+}
+
+@keyframes a-logic-tree-bg__gearing {
+  0% {
+    transform: rotate(0);
+  }
+  
+  40% {
+    transform: rotate(360deg);
+  }
+  
+  50% {
+    transform: translateY(0);
+  }
+  
+  60% {
+    transform: translateY(-10rem);
+  }
+  
+  100% {
+    transform: translateY(80rem);
+  }
+}
+
+.c-logic-node-tooltip__name {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.c-logic-node-tooltip__requirement {
+  font-weight: bold;
+  color: var(--color-good);
+}
+
+.c-logic-node-tooltip__requirement--bad {
+  color: var(--color-bad);
 }

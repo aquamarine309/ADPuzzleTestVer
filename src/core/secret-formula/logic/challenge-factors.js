@@ -9,7 +9,8 @@ export const challengeFactors = {
     difficulty: level => 10 + 5 * Math.sqrt(level),
     baseCost: 60,
     costMultiplier: 5,
-    effect: level => 5 * Math.pow(2, level)
+    effect: level => 5 * Math.pow(2, level),
+    levelCap: 5
   },
   dimensionOverflow: {
     id: 1,
@@ -79,7 +80,7 @@ export const challengeFactors = {
     symbol: "Δ",
     color: "#c23df3",
     type: CHALLENGE_FACTOR_TYPE.NERF,
-    effect: level => 1.2 + Math.pow(level, 0.25) / 60,
+    effect: level => 1.2 + Math.pow(level, 0.4) / 20,
     difficulty: level => 20 + Math.pow(level, 0.25),
     baseCost: 100,
     costMultiplier: 40

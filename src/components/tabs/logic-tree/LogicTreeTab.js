@@ -58,8 +58,13 @@ export default {
         <BlobNode
           :node-radius="nodeRadius"
           :container-size="containerSize"
-          :key="'blob-node' + updatedKey"
         />
+        <div class="c-logic-tree-bg__gear c-logic-tree-bg__gear--top-left">
+          <i class="fas fa-gear" />
+        </div>
+        <div class="c-logic-tree-bg__gear c-logic-tree-bg__gear--bottom-right">
+          <i class="fas fa-gear" />
+        </div>
       </div>
       <svg
         ref="svg"

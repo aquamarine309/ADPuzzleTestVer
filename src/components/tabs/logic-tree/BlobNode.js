@@ -31,16 +31,17 @@ export default {
     styleObject() {
       // 1% is margin
       return {
-        "top": `${1 + this.divisor / 2}%`,
-        "left": `${1 + this.divisor / 2}%`,
+        top: `${1 + this.divisor / 2}%`,
+        left: `${1 + this.divisor / 2}%`,
         "--color-node--base": "#fbc21b",
         "--color-node--bg": "#ffd867",
-        "opacity": this.visible ? 1 : 0,
-        "transition": "0.3s"
+        opacity: this.visible ? 1 : 0,
+        transition: "0.3s",
+        cursor: this.blob || this.isUnlocked ? "pointer" : "default"
       }
     },
     symbol() {
-      // Blob + active: "think"
+      // Blob: "think"
       // other: "sleep"
       return this.blob ? "\uE011" : "\uE01a";
     }
@@ -60,7 +61,7 @@ export default {
       this.$recompute("isUnlocked");
     },
     handleClick() {;
-      if (!this.isUnlocked && Theme.currentName() === "S11") {
+      if (!this.isUnlocked && this.blob) {
         this.unlock();
       } else {
         this.show = !this.show;

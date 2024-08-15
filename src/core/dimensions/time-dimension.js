@@ -73,35 +73,43 @@ export function buyMaxTimeDimension(tier, portionToSpend = 1, isMaxAll = false) 
     firstCost: dim.cost,
   }, dim.bought); */
   let moneyLeft = canSpend;
+  let bulk = BEC.D0;
   if (PelleRifts.paradox.milestones[0].canBeApplied && tier > 4) {
     moneyLeft = canSpend.pow(2).times(BEC.E2250);
   }
-  const costThresholds = dim._costIncreaseThresholds;
-  let bulk = BEC.D0;
-  // Calculate purchases of each part
-  const costMultIncreases = [1, 1.5, 2.2];
-  for (let i = 0; i < costThresholds.length; i++) {
-    const threshold = costThresholds[i];
-    const costMult = dim.costMultiplier.times(costMultIncreases[i]);
-    // Check if this part has been purchased
-    if (BE.pow(costMult, dim.bought).times(dim.baseCost).gt(threshold)) continue;
-    // In the part, cost scaling is linear
-    // 1, 3, 9, 27 ...
+  if (tier > 4 && moneyLeft.lt(BEC.E6000)) {
     const scaling = new LinearCostScaling(
-      moneyLeft.clampMax(threshold),
-      BE.pow(costMult, dim.bought.add(bulk)).times(dim.baseCost),
-      costMult
+      moneyLeft,
+      dim.baseCost,
+      dim.costMultiplier
     );
-    // If cost is not affordable in this part, it is also affordable in next parts.
-    if (scaling.purchases.lte(0) || moneyLeft.lt(scaling.totalCost)) break;
-
+    
+    if (scaling.purchases.lte(0) || moneyLeft.lt(scaling.totalCost)) return;
     moneyLeft = moneyLeft.sub(scaling.totalCost);
-    bulk = bulk.add(scaling.purchases);
-    if (moneyLeft.lt(threshold)) break;
-  }
+    bulk = scaling.purchases;
+  } else {
+      const costThresholds = dim._costIncreaseThresholds;
+      // Calculate purchases of each part
+      const costMultIncreases = [1, 1.5, 2.2];
+      for (let i = 0; i < costThresholds.length; i++) {
+        const threshold = costThresholds[i];
+        const costMult = dim.costMultiplier.times(costMultIncreases[i]);
+        // Check if this part has been purchased
+        if (BE.pow(costMult, dim.bought).times(dim.baseCost).gt(threshold)) continue;
+        const scaling = new LinearCostScaling(
+          moneyLeft.clampMax(threshold),
+          BE.pow(costMult, dim.bought.add(bulk)).times(dim.baseCost),
+          costMult
+        );
+        if (scaling.purchases.lte(0) || moneyLeft.lt(scaling.totalCost)) break;
+        moneyLeft = moneyLeft.sub(scaling.totalCost);
+        bulk = bulk.add(scaling.purchases);
+        if (moneyLeft.lt(threshold)) break;
+      }
+    }
   
-  const totalAmount = dim.bought.add(bulk);
-  if (totalAmount.add(1).gte(dim.e6000ScalingAmount)) {
+    const totalAmount = dim.bought.add(bulk);
+    if (totalAmount.add(1).gte(dim.e6000ScalingAmount)) {
     const scaling = TimeDimensions.scalingPast1e6000;
     const base = dim.costMultiplier.times(tier <= 4 ? 2.2 : 1);
     bulk = moneyLeft.log(base).add(scaling.minus(1).times(dim.e6000ScalingAmount)).div(scaling).minus(dim.bought).floor();

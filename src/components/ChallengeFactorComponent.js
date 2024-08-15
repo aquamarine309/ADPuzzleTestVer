@@ -46,15 +46,16 @@ export default {
       }
       
       throw `Unknown type of Challenge Factor`;
+    },
+    showInfo() {
+      return this.type !== CHALLENGE_FACTOR_INFO_TYPE.NONE;
     }
   },
   methods: {
     update() {
       // I don't like to use "switch ... case ..."
       this.type = player.options.challengeFactorType;
-      if (this.type === CHALLENGE_FACTOR_INFO_TYPE.NONE) {
-        this.info = "";
-      } else if (this.type === CHALLENGE_FACTOR_INFO_TYPE.LEVEL) {
+      if (this.type === CHALLENGE_FACTOR_INFO_TYPE.LEVEL) {
         this.info = `Lv. ${this.factor.displayLevel}`;
       } else if (this.type === CHALLENGE_FACTOR_INFO_TYPE.DIFFICULTY) {
         this.info = `Diff. ${format(this.factor.difficulty, 2, 1)}`;
@@ -76,7 +77,10 @@ export default {
         :class="typeClass"
       />
     </div>
-    <div class="c-challenge-factor-level">
+    <div
+      v-if="showInfo"
+      class="c-challenge-factor-level"
+    >
       {{ info }}
     </div>
     <ChallengeFactorTooltip :factor="factor" />

@@ -69,7 +69,7 @@ export default {
   methods: {
     update() {
       this.runs = this.clone(this.getRuns());
-      this.hasEmptyRecord = this.runs[0][0] === BE.NUMBER_MAX_VALUE;
+      this.hasEmptyRecord = this.runs[0][0].eq(BE.NUMBER_MAX_VALUE);
       this.runs.push(this.averageRun);
       this.isRealityUnlocked = PlayerProgress.current.isRealityUnlocked;
       this.shown = player.shownRuns[this.singular];

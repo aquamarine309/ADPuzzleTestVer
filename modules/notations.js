@@ -179,7 +179,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
   function formatSeparator(separator, count) {
     if (separator.trim() === "") separator = "e";
     if (count <= 6) return separator.repeat(count);
-    return "(".concat(separator).concat("^").concat(count).concat(")");
+    return "(".concat(separator).concat("^").concat(count >= 1e3 ? count.toFixed(2) : count).concat(")");
   }
 
   var Notation = function () {

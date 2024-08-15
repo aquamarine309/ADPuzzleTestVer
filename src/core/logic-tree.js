@@ -8,7 +8,7 @@ class LogicNodeState extends GameMechanicState {
   }
 
   updateReqNodes() {
-    if (this.reqNodes) throw `Logic Node ${this.id} is already initialized.`;
+    if (this.reqNodes) throw `Logic Node ${this.id} has been initialized.`;
     const reqNodes = this.config.reqNodes
       ? this.config.reqNodes.map(id => LogicTree.getNodeById(id))
       : [];
@@ -32,7 +32,7 @@ class LogicNodeState extends GameMechanicState {
 
   unlock() {
     player.logicNodes.add(this.id);
-    GameUI.notify.logic(`You've unlocked Logic Node "${this.name}"`);
+    GameUI.notify.logic(`You've unlocked Logic Node "${this.config.name}"`);
     EventHub.dispatch(GAME_EVENT.LOGIC_NODE_UNLOCKED);
   }
 
@@ -79,7 +79,9 @@ LogicTree.connections = (function() {
     [3, 5],
     [0, 6],
     [6, 7],
-    [6, 8]
+    [6, 8],
+    [4, 9],
+    [9, 10]
   ].map(c => c.map(x => LogicTree.getNodeById(x)))
 })();
 

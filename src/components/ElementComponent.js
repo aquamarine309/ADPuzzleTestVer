@@ -31,7 +31,7 @@ export default {
     :class="elementClass"
   >
     {{ symbol }}
-    <div class="c-element-time">
+    <div class="c-element-time">{{ timeLeft }}</time>
   </div>
   `
 }

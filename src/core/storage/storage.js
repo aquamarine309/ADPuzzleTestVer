@@ -424,7 +424,7 @@ export const GameStorage = {
     this.saved = 0;
 
     const checkString = this.checkPlayerObject(playerObject);
-    if (playerObject === Player.defaultStart || checkString !== "") {
+    if (playerObject === Player.defaultStart || checkString !== "" || playerObject.options?.tester) {
       if (DEV && checkString !== "") {
         // eslint-disable-next-line no-console
         console.log(`Savefile was invalid and has been reset - ${checkString}`);
