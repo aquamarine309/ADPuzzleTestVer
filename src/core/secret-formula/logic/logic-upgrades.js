@@ -29,7 +29,7 @@ export const logicUpgrades = [
       GAME_EVENT.REALITY_RESET_AFTER,
       GAME_EVENT.REALITY_UPGRADE_TEN_BOUGHT,
       GAME_EVENT.ETERNITY_RESET_AFTER,
-      GAME_EVENT.APPLY_EL2_AFTER
+      GAME_EVENT.APPLY_EL1_AFTER
     ],
     cost: 1e27,
     effect: 1

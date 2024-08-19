@@ -32,5 +32,5 @@ export function applyEL1() {
       player.infinityUpgrades.add(infU.id);
     }
   }
-  EventHub.dispatch(GAME_EVENT.APPLY_EL2_AFTER);
+  EventHub.dispatch(GAME_EVENT.APPLY_EL1_AFTER);
 }

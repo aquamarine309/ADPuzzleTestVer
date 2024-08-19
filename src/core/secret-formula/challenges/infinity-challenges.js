@@ -46,7 +46,7 @@ export const infinityChallenges = [
       multiplier on all Antimatter Dimensions which increases based on Antimatter Galaxies.`,
     goal: BEC.E5000,
     isQuickResettable: false,
-    effect: () => player.galaxies.times(GameElement(2).canBeApplied ? 3 : 0.1).add(1.05).pow(player.totalTickBought),
+    effect: () => player.galaxies.times(GameElement(2).canBeApplied ? 12 : 0.1).add(1.05).pow(player.totalTickBought),
     formatEffect: value => formatX(value, 2, 2),
     reward: {
       description: `Antimatter Dimension multiplier based on Antimatter Galaxies and Tickspeed purchases`,
