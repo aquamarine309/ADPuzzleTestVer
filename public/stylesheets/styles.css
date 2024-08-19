@@ -10513,3 +10513,132 @@ input.o-automator-block-input {
 .c-logic-node-tooltip__requirement--bad {
   color: var(--color-bad);
 }
+
+.l-element-table-container {
+  width: 90rem;
+  height: auto;
+  position: relative;
+}
+
+.o-element-grid {
+  position: absolute;
+  width: 4.6rem;
+  height: 4.6rem;
+  border: 0.2rem solid;
+  background-color: #343434;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border-radius: var(--var-border-radius, 0.4rem);
+  flex-direction: column;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.c-element-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.l-element-star-1, .l-element-star-2 {
+  position: absolute;
+
+  width: 4rem;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  left: 10.2rem;
+  font-size: 1.5rem;
+}
+
+.l-element-star-1 {
+  top: 40rem;
+}
+
+.l-element-star-2 {
+  top: 45rem;
+}
+
+.c-element-id {
+  color: white;
+}
+
+.c-element-name-artificial {
+  color: white;
+  font-size: 1.6rem;
+}
+
+.o-element-grid--radioactive {
+  color: #fe7583;
+}
+
+.o-element-grid--non-metallic {
+  border-color: #ee8844;
+}
+
+.o-element-grid--metallic {
+  border-color: #4488ee;
+}
+
+.o-element-grid--noble-gas {
+  border-color: #44ee88;
+}
+
+.o-element-grid--non-metallic--available {
+  background-color: var(--color-prestige--accent);
+  color: #ee8844;
+}
+
+.o-element-grid--metallic--available {
+  background-color: var(--color-prestige--accent);
+  color: #4488ee;
+}
+
+.o-element-grid--noble-gas--available {
+  background-color: var(--color-prestige--accent);
+  color: #44ee88;
+}
+
+.o-element-grid--non-metallic--unlocked {
+  background-color: rgba(238, 136, 68, 50%);
+  color: white;
+}
+
+.o-element-grid--metallic--unlocked {
+  background-color: rgba(68, 136, 238, 50%);
+  color: white;
+}
+
+.o-element-grid--noble-gas--unlocked {
+  background-color: rgba(68, 238, 136, 50%);
+  color: white;
+}
+
+.c-element-info {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  height: 10rem;
+}
+
+.c-element-info span {
+  font-size: 1.7rem;
+}
+
+.c-element-info-text {
+  color: #E3A748;
+}
+
+.c-small-effect {
+  font-size: 1.2rem !important;
+}
+
+.c-element-effect {
+  color: #93c0e0;
+  font-size: 1.4rem !important;
+}
+

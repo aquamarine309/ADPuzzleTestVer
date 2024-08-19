@@ -74,12 +74,12 @@ export class TimeTheoremPurchaseType {
   reset() {
     this.amount = BEC.D0;
   }
-  
+
   get continuumValue() {
     if (!Continuum.isOn("TT")) return BEC.D0;
     return Continuum.ttContinuum(this);
   }
-  
+
   get totalAmount() {
     return this.amount.max(this.continuumValue);
   }
@@ -153,7 +153,7 @@ export const TimeTheorems = {
           (TimeTheoremPurchaseType.ip.totalAmount).plus
           (TimeTheoremPurchaseType.ep.totalAmount);
   },
-  
+
   totalPurchased() {
     return TimeTheoremPurchaseType.am.amount.plus
       (TimeTheoremPurchaseType.ip.amount).plus

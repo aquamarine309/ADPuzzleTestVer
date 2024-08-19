@@ -14,7 +14,6 @@ const passiveIPMult = () => {
     : normalValue;
 };
 
-
 /**
  * List of time study specifications and attributes
  * {

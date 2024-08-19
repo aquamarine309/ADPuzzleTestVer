@@ -240,11 +240,11 @@ class FunctionalGlyphType {
   get isUnlocked() {
     return this._isUnlocked?.() ?? true;
   }
-  
+
   indexEffect(i) {
     return this.effects[i];
   }
-  
+
   indexOf(id) {
     return this.effects.findIndex(e => e.id === id);
   }

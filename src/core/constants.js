@@ -24,7 +24,7 @@ export const BEC = deepFreeze({
   /* eslint-disable key-spacing */
   DM1:                  new BE("-1"),
   D0:                   new BE("0"),
-  
+
   EN300:                new BE("1e-300"),
   D6E_6:                new BE("6e-6"),
   D0_001:               new BE("0.001"),
@@ -63,6 +63,7 @@ export const BEC = deepFreeze({
   D16:                  new BE("16"),
   D20:                  new BE("20"),
   D30:                  new BE("30"),
+  D49:                  new BE("49"),
   D50:                  new BE("50"),
   D500:                 new BE("500"),
   D1500:                new BE("1500"),
@@ -118,8 +119,10 @@ export const BEC = deepFreeze({
   E60:                  new BE("1e60"),
   E63:                  new BE("1e63"),
   E70:                  new BE("1e70"),
+  E72:                  new BE("1e72"),
   E75:                  new BE("1e75"),
   E80:                  new BE("1e80"),
+  E85:                  new BE("1e85"),
   E90:                  new BE("1e90"),
   E100:                 new BE("1e100"),
   E140:                 new BE("1e140"),
@@ -129,6 +132,7 @@ export const BEC = deepFreeze({
   E175:                 new BE("1e175"),
   E200:                 new BE("1e200"),
   E250:                 new BE("1e250"),
+  E256:                 new BE("1e256"),
   E260:                 new BE("1e260"),
   E280:                 new BE("1e280"),
   E300:                 new BE("1e300"),
@@ -152,6 +156,7 @@ export const BEC = deepFreeze({
   E616:                 new BE("1e616"),
   E650:                 new BE("1e650"),
   E750:                 new BE("1e750"),
+  E820:                 new BE("1e820"),
   E850:                 new BE("1e850"),
   E900:                 new BE("1e900"),
   E925:                 new BE("1e925"),
@@ -574,3 +579,9 @@ window.CHALLENGE_FACTOR_TYPE = {
   NERF: 1,
   IMPROVE: 2
 };
+
+window.ELEMENT_TYPE = {
+  NON_METALLIC: 0,
+  METALLIC: 1,
+  NOBLE_GAS: 2
+}

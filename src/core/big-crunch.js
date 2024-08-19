@@ -10,7 +10,7 @@ function handleChallengeCompletion(enteringAntimatterChallenge) {
   if (!challenge && !NormalChallenge(1).isCompleted) {
     NormalChallenge(1).complete();
   }
-  
+
   const inLC = LogicChallenge.isRunning;
   if (!challenge && !inLC) return;
 
@@ -22,6 +22,8 @@ function handleChallengeCompletion(enteringAntimatterChallenge) {
     if (currentLC.canComplete) {
       if (!currentLC.isCompleted) {
         currentLC.complete();
+      } else {
+        EventHub.dispatch(GAME_EVENT.LOGIC_CHALLENGE_COMPLETED, currentLC.id);
       }
       currentLC.updateChallengeTime();
       if (!player.options.retryChallenge) {
@@ -29,17 +31,17 @@ function handleChallengeCompletion(enteringAntimatterChallenge) {
       }
     }
   }
-  
+
   if (challenge) {
     challenge.complete();
     challenge.updateChallengeTime();
   }
-  
+
   if (!player.options.retryChallenge) {
     player.challenge.normal.current = 0;
     player.challenge.infinity.current = 0;
   }
-  
+
 }
 
 export function manualBigCrunchResetRequest() {
@@ -77,21 +79,21 @@ export function bigCrunchReset(
   }
 
   bigCrunchResetValues(enteringAntimatterChallenge);
-  
+
   GameCache.currentBonus.invalidate();
   EventHub.dispatch(GAME_EVENT.BIG_CRUNCH_AFTER);
 }
 
 function bigCrunchGiveRewards(enteringAntimatterChallenge) {
   bigCrunchUpdateStatistics();
-  
+
   const infinityPoints = gainedInfinityPoints();
   Currency.infinityPoints.add(infinityPoints);
   Currency.infinities.add(gainedInfinities().round());
   ++player.bigCrunches;
-  
+
   bigCrunchTabChange(!PlayerProgress.infinityUnlocked(), enteringAntimatterChallenge);
-  
+
   bigCrunchCheckUnlocks();
 }
 

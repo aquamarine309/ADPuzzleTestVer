@@ -27,7 +27,7 @@ export default {
       canRespec: false,
       respecTimeStr: "",
       desceiption: "",
-      lc5Completed: false,
+      showBtn: false,
       extraBonusTimeLeft: new BE(0),
       factorDisabled: false
     };
@@ -71,10 +71,10 @@ export default {
       if (!ShopPurchaseData.respecAvailable && !this.canRespec) {
         this.respecTimeStr = ShopPurchaseData.timeUntilRespec.toStringShort();
       }
-      this.lc5Completed = LogicChallenge(5).isCompleted;
-      if (this.lc5Completed) {
+      this.showBtn = LogicChallenge(5).isCompleted;
+      if (this.showBtn) {
         this.factorDisabled = ChallengeFactor.noExtra.canBeApplied;
-        if (this.isDoomed) {
+        if (this.isDoomed || this.factorDisabled) {
           this.description = wordShift.wordCycle(["Destroyed", "Annihilated", "Nullified"]);
           return;
         }
@@ -159,7 +159,7 @@ export default {
       </PrimaryButton>
     </div>
     <button
-      v-if="lc5Completed"
+      v-if="showBtn"
       class="extra-bonus-btn"
       @click="getBonus"
     >

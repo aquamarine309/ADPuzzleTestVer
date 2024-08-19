@@ -47,14 +47,14 @@ class LogicChallengeState extends GameMechanicState {
 
   complete() {
     player.challenge.logic.completedBits |= 1 << this.id;
-    EventHub.dispatch(GAME_EVENT.LOGIC_CHALLENGE_COMPLETED);
+    EventHub.dispatch(GAME_EVENT.LOGIC_CHALLENGE_COMPLETED, this.id);
     LogicChallenges._completions.invalidate();
   }
 
   get isEffectActive() {
     return this.isRunning;
   }
-  
+
   get canComplete() {
     return player.records.thisInfinity.maxAM.gte(this.goal) && Player.canCrunch;
   }
@@ -127,9 +127,9 @@ export const LogicChallenges = {
   get completed() {
     return LogicChallenges.all.filter(lc => lc.isCompleted);
   },
-  
+
   _completions: new Lazy(() => LogicChallenges.all.countWhere(challenge => challenge.isCompleted)),
-  
+
   get completions() {
     return this._completions.value;
   }
@@ -154,7 +154,7 @@ class LC3UpgradeState extends RebuyableMechanicState {
   get effectValue() {
     return this.config.effect(this.effectiveAmount);
   }
-  
+
   buyMax(auto) {
     if (!this.isAffordable) return false;
     if (this.iscCapped) return false;
@@ -165,11 +165,11 @@ class LC3UpgradeState extends RebuyableMechanicState {
     this.boughtAmount = bulk;
     return true;
   }
-  
+
   get cappedAmount() {
     return this.config.cappedAmount ?? BE.MAX_VALUE;
   }
-  
+
   get effectiveAmount() {
     const base = this.boughtAmount.clampMax(this.cappedAmount);
     if (this.id === "cpPow" && LC3.game.isCompleted) {
@@ -177,11 +177,11 @@ class LC3UpgradeState extends RebuyableMechanicState {
     }
     return base;
   }
-  
+
   get isCapped() {
     return this.boughtAmount.gte(this.cappedAmount);
   }
-  
+
   get isAffordable() {
     return this.currency.gt(this.cost);
   }
@@ -200,11 +200,11 @@ export const LC3 = {
   get isRunning() {
     return this.challenge.isUnlocked && this.challenge.isRunning;
   },
-  
+
   get isCompleted() {
     return this.challenge.isCompleted;
   },
-  
+
   get cpPerSecond() {
     if (!this.isRunning) return BEC.D1;
     if (Player.isInAntimatterChallenge && Player.canCrunch) return BEC.D1;
@@ -213,41 +213,41 @@ export const LC3 = {
     const pow = LC3Upgrade.cpPow.effectValue;
     return base1.times(base2).pow(pow);
   },
-  
+
   tick(diff) {
     if (!this.isRunning) return;
     if (Player.isInAntimatterChallenge && Player.canCrunch) return;
     Currency.challengePower.multiply(this.cpPerSecond.pow(diff.div(1e3)));
   },
-  
+
   get helpThreshold() {
     return BEC.E1200;
   },
-  
+
   reset() {
     if (this.isRunning) return;
     Currency.challengePower.reset();
     this.game.reset();
     LC3Upgrade.all.forEach(u => u.boughtAmount = BEC.D0);
   },
-  
+
   game: {
     get stage() {
       return player.lc3Game.stage;
     },
-    
+
     get isRunning() {
       return this.stage === GAME_STAGE.NOT_COMPLETE;
     },
-    
+
     get isCompleted() {
       return this.stage === GAME_STAGE.COMPLETED;
     },
-    
+
     get isFailed() {
       return this.stage === GAME_STAGE.FAILED;
     },
-    
+
     reset() {
       player.lc3Game.stage = GAME_STAGE.NOT_COMPLETE;
       player.lc3Game.rows = null;

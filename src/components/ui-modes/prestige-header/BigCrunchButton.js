@@ -29,7 +29,7 @@ export default {
       };
     },
     // Show IP/min below this threshold, color the IP number above it
-    rateThreshold: () => 5e11,
+    rateThreshold: () => 5e13,
     amountStyle() {
       if (!this.headerTextColored || this.currentIP.lt(this.rateThreshold)) return {
         "transition-duration": "0s"
@@ -126,7 +126,7 @@ export default {
       <br>
       complete the challenge
     </template>
-    
+
     <template v-else-if="inLogicChallenge">
       Cannot gain IP
       <br>

@@ -114,13 +114,13 @@ export const GameCache = {
   challengeTimeSum: new Lazy(() => player.challenge.normal.bestTimes.reduce(BE.sumReducer)),
 
   infinityChallengeTimeSum: new Lazy(() => player.challenge.infinity.bestTimes.reduce(BE.sumReducer)),
-  
+
   logicChallengeTimeSum: new Lazy(() => player.challenge.logic.bestTimes.reduce(BE.sumReducer)),
-  
+
   logicPoints: new Lazy(() => getLogicPoints()),
-  
+
   maxTier: new Lazy(() => 1 + Effects.sum(...Array.range(1, 7).map(id => LogicUpgrade(id))).toNumber()),
-  
+
   currentBonus: new Lazy(() => {
     for (let i = ExtraBonus.all.length - 1; i >= 0; i--) {
       if (ExtraBonus.all[i].isUnlocked) {
@@ -128,9 +128,9 @@ export const GameCache = {
       }
     }
   }),
-  
+
   timeCoresFactor: new Lazy(() => timeCoresFactor()),
-  
+
   gainedTimeCores: new Lazy(() => getGainedTimeCores())
 };
 

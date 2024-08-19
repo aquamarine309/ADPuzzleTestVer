@@ -21,14 +21,19 @@ export function updateNormalAndInfinityChallenges(diff) {
   }
 
   if (NormalChallenge(3).isRunning) {
-    const multiplier = Currency.infinities.value.add(1).ln().times(DimBoost.purchasedBoosts).add(1).ln().pow(1.3).add(1);
-    player.chall3Pow = player.chall3Pow.times(BEC.D1_0025.pow(multiplier.times(diff))).clampMax(BEC.E200.pow(1 / Math.pow(Puzzle.maxTier, 2)));
+    const multiplier = Currency.infinities.value.add(1).ln()
+      .times(DimBoost.purchasedBoosts).add(1).ln()
+      .add(Currency.eternities.value.times(5))
+      .pow(1.3).add(1);
+    player.chall3Pow = player.chall3Pow.times(BEC.D1_0025.pow(multiplier.times(diff))).clampMax(BEC.E200.pow(1 / Math.pow(Puzzle.maxTier, GameElement(2).canBeApplied ? -0.5 : 2)));
   }
 
   if (NormalChallenge(2).isRunning) {
-    player.chall2Pow = Math.min(player.chall2Pow + diff.div(100 * 1800).toNumberMax(1), 1);
+    player.chall2Pow = Math.min(player.chall2Pow + diff.div(
+      GameElement(2).canBeApplied ? 1.8e3 : 1.8e6
+    ).toNumberMax(1), 1);
   }
-
+  
   if (InfinityChallenge(2).isRunning) {
     if (player.ic2Count >= 400) {
       if (AntimatterDimension(8).amount.gt(0)) {
@@ -114,7 +119,7 @@ class NormalChallengeState extends GameMechanicState {
     GameCache.cheapestAntimatterAutobuyer.invalidate();
     NormalChallenges._completions.invalidate();
   }
-  
+
   get isBroken() {
     if (Enslaved.isRunning && Enslaved.BROKEN_CHALLENGES.includes(this.id)) return true;
     if (LogicChallenge(2).isRunning && player.break) return true;
@@ -146,6 +151,10 @@ class NormalChallengeState extends GameMechanicState {
     bigCrunchReset(true, false);
     if (!Enslaved.isRunning) Tab.dimensions.antimatter.show();
   }
+  
+  get isEffectActive() {
+    return this.isRunning;
+  }
 }
 
 /**
@@ -175,14 +184,14 @@ export const NormalChallenges = {
   completeAll() {
     for (const challenge of NormalChallenges.all) challenge.complete();
   },
-  
+
   clearCompletions() {
     player.challenge.normal.completedBits = 0;
     NormalChallenges._completions.invalidate();
   },
-  
+
   _completions: new Lazy(() => NormalChallenges.all.countWhere(challenge => challenge.isCompleted)),
-  
+
   get completions() {
     return this._completions.value;
   }

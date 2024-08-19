@@ -10,8 +10,7 @@ export default {
       isStopped: false,
       isEC12: false,
       isPulsing: false,
-      isFreezeActive: false,
-      freezeTime: 0
+      isFreezeActive: false
     };
   },
   computed: {
@@ -20,7 +19,7 @@ export default {
         return "Stopped (storing real time)";
       }
       const speed = this.formatNumber(this.baseSpeed);
-      if (this.isEC12 || this.isFreezeActive) {
+      if (this.isEC12) {
         return `${speed} (fixed)`;
       }
       return `${speed}`;
@@ -34,15 +33,6 @@ export default {
         ? "The game is running at normal speed."
         : `Game speed is altered: ${this.baseSpeedText}`;
     },
-    freezeClass() {
-      return {
-        "c-frozen": this.isFreezeActive
-      }
-    },
-    iconClass() {
-      if (this.isFreezeActive) return "fa-snowflake";
-      return null;
-    },
     frozenTimeLeft() {
       return timeDisplayShort(this.freezeTime);
     }
@@ -55,9 +45,6 @@ export default {
       this.isStopped = Enslaved.isStoringRealTime;
       this.isEC12 = EternityChallenge(12).isRunning;
       this.isPulsing = this.baseSpeed.neq(this.pulsedSpeed) && Enslaved.canRelease(true);
-      this.isFreezeActive = GameElements.isActive("freeze");
-      if (!this.isFreezeActive) return;
-      this.freezeTime = GameElements.getTime("freeze");
     },
     formatNumber(num) {
       if (num.gte(0.001) && num.lt(1e4) && num.neq(1)) {
@@ -72,19 +59,11 @@ export default {
   template: `
   <span
     class="c-gamespeed"
-    :class="freezeClass"
     data-v-game-speed-display
   >
-    <span v-if="iconClass !== null">
-      <i
-        class="fas"
-        :class="iconClass"
-      />
-    </span>
     <span>
       {{ baseText }}
     </span>
-    <span v-if="isFreezeActive">(<i class="fas fa-clock u-fa-padding" /> {{ frozenTimeLeft }})</span>
     <span v-if="isPulsing">(<i class="fas fa-expand-arrows-alt u-fa-padding" /> {{ pulseSpeedText }})</span>
   </span>
   `

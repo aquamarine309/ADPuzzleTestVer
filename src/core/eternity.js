@@ -75,9 +75,9 @@ export function eternity(force, auto, specialConditions = {}) {
   // Annoyingly, we need to check for studies right here; giveEternityRewards removes studies if we're in an EC,
   // so doing the check later doesn't give us the initial state of having studies or not.
   const noStudies = player.timestudy.studies.length === 0;
-  
+
   ChallengeFactorHandler.updateHandler();
-  
+
   if (!force) {
     if (!Player.canEternity) return false;
     if (RealityUpgrade(10).isLockingMechanics) {
@@ -92,7 +92,7 @@ export function eternity(force, auto, specialConditions = {}) {
     giveEternityRewards(auto);
     player.requirementChecks.reality.noEternities = false;
   }
-  
+
   Currency.timeCores.add(gainedTimeCores());
   player.eternitiesBeforeRefresh++;
 
@@ -102,7 +102,7 @@ export function eternity(force, auto, specialConditions = {}) {
   if (force) {
     player.challenge.eternity.current = 0;
   }
-  
+
   initializeChallengeCompletions();
   initializeResourcesAfterEternity();
 
@@ -151,10 +151,10 @@ export function eternity(force, auto, specialConditions = {}) {
   ResourceExchangeUpgrade.reset();
 
   PelleStrikes.eternity.trigger();
-  
+
   GameCache.currentBonus.invalidate();
   ChallengeFactorHandler.updatePlayer();
-  
+
   EventHub.dispatch(GAME_EVENT.ETERNITY_RESET_AFTER);
   return true;
 }
@@ -297,12 +297,12 @@ class EPMultiplierState extends GameMechanicState {
   get isAffordable() {
     return !Pelle.isDoomed && Currency.eternityPoints.gte(this.cost) && !Continuum.isOn("epMult");
   }
-  
+
   get continuumValue() {
     if (!Continuum.isOn("epMult")) return BEC.D0;
     return Continuum.epMultContinuum();
   }
-  
+
   get amount() {
     return player.epmultUpgrades.max(this.continuumValue);
   }
@@ -374,7 +374,7 @@ class EPMultiplierState extends GameMechanicState {
       bulk = bulk.add(scaling.purchases);
       if (moneyLeft.lt(threshold)) break;
     }
-    
+
     // The cost above e4000 EP is 1000^((x-1334)^1.2+x)*500,
     // It starts at 1333 purchases
     const totalAmount = this.boughtAmount.add(bulk);
@@ -401,7 +401,7 @@ class EPMultiplierState extends GameMechanicState {
         bulk = bulk.add(1333).minus(this.boughtAmount).floor();
       }
     }
-    
+
     if (bulk.lte(0)) return false;
     Currency.eternityPoints.value = moneyLeft;
     this.boughtAmount = this.boughtAmount.plus(bulk);

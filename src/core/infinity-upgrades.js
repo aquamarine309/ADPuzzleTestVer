@@ -78,6 +78,10 @@ export class InfinityUpgradeState extends SetPurchasableMechanicState {
   disCharge() {
     player.celestials.ra.charged.delete(this.id);
   }
+
+  shouldApplyEL1() {
+    return true
+  }
 }
 
 export function totalIPMult() {

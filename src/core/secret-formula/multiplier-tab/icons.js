@@ -225,7 +225,7 @@ export const MultiplierTabIcons = {
     color: "var(--color-logic)",
   },
   CHALLENGE_FACTOR: {
-    symbol: `<i class="fas fa-object-ungroup" />`,
+    symbol: `<i class="fas fa-object-ungroup"></i>`,
     color: "linear-gradient(135deg, var(--color-logic), var(--color-eternity))",
   },
   FROZEN: {

@@ -25,7 +25,8 @@ export const normalChallenges = [
     isQuickResettable: false,
     description:
       () => "buying Antimatter Dimensions or Tickspeed upgrades halts production of all Antimatter Dimensions. " +
-      `Production gradually returns to normal over ${formatInt(3)} minutes.`,
+      `Production gradually returns to normal over ${formatInt(3)} ` +
+      (GameElement(2).canBeApplied ? "seconds." : "minutes."),
     name: "2nd Antimatter Dimension Autobuyer",
     reward: "Upgradeable 2nd Antimatter Dimension Autobuyer",
     lockedAt: BEC.D0,
@@ -35,7 +36,7 @@ export const normalChallenges = [
     legacyId: 3,
     isQuickResettable: false,
     description:
-      `the 1st Antimatter Dimension is heavily weakened, but gets an exponentially increasing multiplier based on Dimension Boosts and Infinities.
+      `the 1st Antimatter Dimension is heavily weakened, but gets an exponentially increasing multiplier based on Dimension Boosts, Infinities and Eternities.
         This multiplier decreases based on unlocked dimensions and resets after Dimension Boosts and Antimatter Galaxies.`,
     name: "3rd Antimatter Dimension",
     reward: "Upgradeable 3rd Antimatter Dimension Autobuyer",
@@ -59,6 +60,7 @@ export const normalChallenges = [
       () => `the Tickspeed purchase multiplier starts at ${formatX(1.080, 0, 3)} instead of ${formatX(1.1245, 0, 3)}.`,
     name: "5th Antimatter Dimension Autobuyer",
     reward: "Upgradeable 5th Antimatter Dimension Autobuyer",
+    effect: 1.1,
     lockedAt: BEC.D0,
   },
   {
@@ -77,7 +79,7 @@ export const normalChallenges = [
     isQuickResettable: false,
     description: () =>
       `the multiplier from buying ${formatInt(10)} Antimatter Dimensions is reduced to ${formatX(1)}. This increases by
-        ${formatX(0.3, 1, 1)} per Dimension Boost, to a maximum of ${formatX(7)}, and is unaffected by any upgrades.`,
+        ${formatX(0.3, 1, 1)} per Dimension Boost, to a maximum of ${formatX(GameElement(2).canBeApplied ? 49 : 7)}, and is unaffected by any upgrades.`,
     name: "7th Antimatter Dimension Autobuyer",
     reward: "Upgradeable 7th Antimatter Dimension Autobuyer",
     lockedAt: BEC.D0,
@@ -117,9 +119,13 @@ export const normalChallenges = [
     legacyId: 12,
     isQuickResettable: true,
     description: () => `there is normal matter which rises once you have at least ${formatInt(1)} 2nd Antimatter ` +
-      "Dimension. If it exceeds your antimatter, it will Dimension Boost without giving the bonus.",
+      "Dimension. If it exceeds your antimatter, it will Dimension Boost without giving the bonus." +
+      `Dimensional Sacrifice affects 4th Infinity Dimension with greatly reduced effect`,
     name: "Automated Antimatter Galaxies",
     reward: "Antimatter Galaxies and their Autobuyer",
+    effect: () => Currency.matter.value.add(1).pow(0.25),
+    cap: BEC.E1000,
+    effectCondition: () => GameElement(2).canBeApplied,
     lockedAt: BEC.D16,
   },
   {

@@ -7,7 +7,7 @@ export const Continuum = {
     [214.96008703619793, 808.487600744309, 3382.46681466133],
     [160.94608945857607, 623.188793823, 2665.2585125978276]
   ],
-  
+
   timeDimPostE6000: [
     7322.145017116015,
     4627.715573960642,
@@ -18,7 +18,7 @@ export const Continuum = {
     561.8136621264795,
     455.56363240641565
   ],
-  
+
   isOn(name) {
     switch (name) {
       case "AD":
@@ -37,23 +37,23 @@ export const Continuum = {
         throw `Unexpect continuum ${name}`;
     }
   },
-  
+
   getLinearContinuum(money, baseCost, costMultiplier){
     if (money.lte(baseCost.div(costMultiplier))) return BEC.D0;
     return this.log(money.div(baseCost), costMultiplier).add(1).clampMin(0);
   },
-  
+
   getLinearCost(boughtAmount, baseCost, costMultiplier) {
     return BE.pow(costMultiplier, boughtAmount).times(baseCost);
   },
-  
+
   infinityDimContinuum(dim, currency) {
     const money = currency ?? Currency.infinityPoints.value;
     const baseCost = dim.baseCost;
     const costMultiplier = dim.costMultiplier;
     return this.getLinearContinuum(money, baseCost, costMultiplier);
   },
-  
+
   timeDimContinuum(dim, currency) {
     const tier = dim.tier;
     let money = currency ?? Currency.eternityPoints.value;
@@ -68,13 +68,13 @@ export const Continuum = {
         dim.costMultiplier
       );
     }
-    
+
     if (money.gte(BEC.E6000)) {
       const scaling = TimeDimensions.scalingPast1e6000;
       const base = dim.costMultiplier.times(tier <= 4 ? 2.2 : 1);
       return this.log(money.div(baseCost), base).add(scaling.minus(1).times(Continuum.timeDimPostE6000[tier - 1])).div(scaling);
     }
-    
+
     const costThresholds = dim._costIncreaseThresholds;
     let bulk = BEC.D0;
     const costMultIncreases = [1, 1.5, 2.2];
@@ -95,14 +95,14 @@ export const Continuum = {
       if (amount.lte(0)) return;
       bulk = bulk.add(amount);
     }
-    
+
     return bulk;
   },
-  
+
   ipMultContinuum(currency) {
     const money = currency ?? Currency.infinityPoints.value;
     if (money.lte(1)) return BEC.D0;
-    
+
     const upgrade = InfinityUpgrade.ipMult;
     const threshold = upgrade.config.costIncreaseThreshold;
     if (money.gte(threshold)) {
@@ -115,7 +115,7 @@ export const Continuum = {
       return money.log10();
     }
   },
-  
+
   epMultContinuum(currency) {
     const money = currency ?? Currency.eternityPoints.value;
     if (money.lte(1)) return BEC.D0;
@@ -136,7 +136,7 @@ export const Continuum = {
       bulk = bulk.add(amount);
       if (money.lt(threshold)) break;
     }
-    
+
     // The cost above e4000 EP is 1000^((x-1334)^1.2+x)*500,
     // It starts at 1333 purchases
     if (money.gte(BEC.E4000)) {
@@ -162,14 +162,14 @@ export const Continuum = {
     }
     return bulk;
   },
-  
+
   ttContinuum(type) {
     const money = type.currency.value;
     const baseCost = type.costBase;
     const costMultiplier = type.costIncrement;
     return this.getLinearContinuum(money, baseCost, costMultiplier);
   },
-  
+
   log(a, b) {
     return a.ln().div(b.ln());
   }

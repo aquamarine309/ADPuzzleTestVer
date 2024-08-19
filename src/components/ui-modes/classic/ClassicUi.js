@@ -2,7 +2,6 @@ import BigCrunchButton from "../BigCrunchButton.js";
 import GameHeader from "../GameHeader.js";
 import NewsTicker from "../NewsTicker.js";
 
-
 import ClassicSubtabBar from "./ClassicSubtabBar.js";
 import ClassicTabBar from "./ClassicTabBar.js";
 import EternityPointsHeader from "../../EternityPointsHeader.js";

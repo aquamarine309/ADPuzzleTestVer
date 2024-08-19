@@ -17,7 +17,6 @@ export const AUTOMATOR_MODE = Object.freeze({
   SINGLE_STEP: 3,
 });
 
-
 export const AUTOMATOR_VAR_TYPES = {
   NUMBER: { id: 0, name: "number" },
   STUDIES: { id: 1, name: "studies" },
@@ -451,7 +450,7 @@ export const AutomatorBackend = {
   },
 
   get currentInterval() {
-    return Math.clampMin(Math.pow(0.994, Currency.realities.value) * 500, 1);
+    return Math.clampMin(Math.pow(0.994, Currency.realities.value.toNumber()) * 500, 1);
   },
 
   get currentRawText() {

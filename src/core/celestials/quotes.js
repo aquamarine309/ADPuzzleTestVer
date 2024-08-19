@@ -145,7 +145,6 @@ class CelQuotes extends BitUpgradeState {
   }
 }
 
-
 export const Quotes = {
   teresa: mapGameDataToObject(
     GameDatabase.celestials.quotes.teresa,

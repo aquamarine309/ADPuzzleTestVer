@@ -2,6 +2,10 @@ import { BEC } from "../../constants.js";
 
 const nodeColors = {
   normal: {
+    baseColor: "var(--color-logic)",
+    bgColor: "#7ce4ab"
+  },
+  eternity: {
     baseColor: "var(--color-eternity)",
     bgColor: "#c896d9"
   },
@@ -23,47 +27,48 @@ const nodeColors = {
 // 目前仅测试版
 // 如果你发现了这个
 // 那也对你没有一点帮助
-// 你还是去测试挑战因子吧
+// 你还是去测试挑战因子(元素周期表)吧
 // awa
 // (Tester only)
 
 export const logicTree = {
-  resetEternity: {
+  start: {
     id: 0,
-    name: "时间回溯",
-    description: "你可以在达到一定的TC时重置本次永恒",
+    name: "离开新手村",
+    description: "增加难度",
     requirement: "达到永恒",
-    symbol: "<i class='fas fa-star'></i>",
+    symbol: "<i class='fas fa-graduation-cap'></i>",
     checkEvent: GAME_EVENT.ETERNITY_RESET_AFTER,
     checkRequirement: () => true,
     position: [0, 0],
-    color: nodeColors.normal
+    color: nodeColors.normal,
+    effect: 0.5
   },
-  achievement1: {
+  timeStable: {
     id: 1,
     reqNodes: [0],
-    name: "成就之力 1",
-    description: "成就增加IP的获取量",
-    requirement: () => `完成 ${formatInt(80)} 个成就`,
-    symbol: "<i class='fas fa-trophy'></i> <b>∞</b>",
-    checkEvent: GAME_EVENT.ACHIEVEMENT_UNLOCKED,
-    checkRequirement: () => Achievements.effectiveCount >= 80,
+    name: "时间稳定器",
+    description: "时间变得更加稳定并略微增强",
+    requirement: () => `在 C3 外达到 ${format(BEC.E75)} 反物质`,
+    symbol: "<i class='fas fa-clock'></i><i class='fas fa-wrench'></i>",
+    checkEvent: GAME_EVENT.GAME_TICK_AFTER,
+    checkRequirement: () => Currency.antimatter.gte(BEC.E75) && !NormalChallenge(3).isRunning,
     position: [0, -1],
-    color: nodeColors.achievement,
-    effect: () => BEC.D2.pow(Achievements.power.sqrt().minus(1)).clampMax(BEC.E1E6).times(Achievements.power),
+    color: nodeColors.eternity,
     formatEffect: value => formatX(value, 2, 2)
   },
-  achievement2: {
+  timePower: {
     id: 2,
     reqNodes: [1],
-    name: "成就之力 2",
-    description: "成就增加EP的获取量",
-    requirement: () => `完成 ${formatInt(90)} 个成就`,
-    symbol: "<i class='fas fa-trophy'></i> <b>Δ</b>",
-    checkEvent: GAME_EVENT.ACHIEVEMENT_UNLOCKED,
-    checkRequirement: () => Achievements.effectiveCount >= 90,
+    name: "时间增幅器",
+    description: () => `基础时间增幅 ${formatX(1.18, 0, 2)}`,
+    requirement: () => `在不游玩小游戏的情况下通关LC3`,
+    effect: 1.18,
+    symbol: "<i class='fas fa-clock'></i><i class='fas fa-rocket'></i>",
+    checkEvent: GAME_EVENT.LOGIC_CHALLENGE_COMPLETED,
+    checkRequirement: ([id]) => id === 3 && !LC3.game.isCompleted,
     position: [0, -2],
-    color: nodeColors.achievement
+    color: nodeColors.eternity
   },
   qolExchange1: {
     id: 3,
@@ -104,9 +109,9 @@ export const logicTree = {
   continuumIPmult: {
     id: 6,
     reqNodes: [0],
-    name: "Continuum IP Multiplier",
-    description: "Convert Infinity Dimension purchases to Continuum",
-    requirement: "TBD",
+    name: "莱特拉失业第一天",
+    description: "解锁IP倍增连续统",
+    requirement: "没想好",
     symbol: "<b>ᛝ ∞</b> <i class='fas fa-arrow-up'></i>",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
     checkRequirement: () => false,
@@ -154,5 +159,17 @@ export const logicTree = {
     checkRequirement: () => false,
     position: [1, 3],
     color: nodeColors.qol
-  }
+  },
+  matterNoReset: {
+    id: 11,
+    reqNodes: [1],
+    name: "无需贵物",
+    description: "维度提升不重置物质",
+    requirement: () => `达到 ${formatPostBreak(BEC.E5000)} 物质`,
+    symbol: "<i class='fas fa-hourglass-half'></i> <i class='fas fa-ban'></i>",
+    checkEvent: GAME_EVENT.GAME_TICK_AFTER,
+    checkRequirement: () => Currency.matter.gte(BEC.E5000),
+    position: [1, -1],
+    color: nodeColors.qol
+  },
 }

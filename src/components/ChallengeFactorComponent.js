@@ -44,7 +44,7 @@ export default {
         case CHALLENGE_FACTOR_TYPE.IMPROVE:
           return "fa-arrow-up";
       }
-      
+
       throw `Unknown type of Challenge Factor`;
     },
     showInfo() {

@@ -167,9 +167,9 @@ export const InfinityChallenges = {
   get completed() {
     return InfinityChallenges.all.filter(ic => ic.isCompleted);
   },
-  
+
   _completions: new Lazy(() => InfinityChallenges.all.countWhere(challenge => challenge.isCompleted)),
-  
+
   get completions() {
     return this._completions.value;
   }

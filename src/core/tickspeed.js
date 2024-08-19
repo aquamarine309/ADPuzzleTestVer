@@ -109,11 +109,11 @@ export function buyMaxTickSpeed() {
         purchases.logPrice = Tickspeed.costScale.calculateCost(purchases.quantity.sub(1));
         purchases.quantity = purchases.quantity.sub(1);
       }
-      
+
       Currency.antimatter.subtract(BE.pow10(purchases.logPrice));
       player.totalTickBought = player.totalTickBought.add(purchases.quantity);
     }
-    
+
     for (
         let i = 0; i < 5 && 
         (Tickspeed.isAffordable && AntimatterDimension(1).amount.gt(0));
@@ -121,7 +121,7 @@ export function buyMaxTickSpeed() {
       ) {
         buyTickSpeed();
       }
-    
+
     boughtTickspeed = true;
   }
 
@@ -129,11 +129,11 @@ export function buyMaxTickSpeed() {
     player.records.thisInfinity.lastBuyTime = player.records.thisInfinity.time;
     if (NormalChallenge(2).isRunning) player.chall2Pow = 0;
   }
-  
+
   if (player.dimensions.antimatter[0].amount.eq(0)) {
     Currency.antimatter.bumpTo(100);
   }
-  
+
   return boughtTickspeed;
 }
 
@@ -216,7 +216,6 @@ export const Tickspeed = {
     }
   }
 };
-
 
 export const FreeTickspeed = {
   BASE_SOFTCAP: BEC.D3E5,

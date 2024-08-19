@@ -146,7 +146,7 @@ export function secondEquationGenerator(answer = randomInt(10)) {
 export function questionGenerator(maxResult = 9, minResult = 1, maxLength = 10, minLength = 6) {
   const minAnswer = minLength <= 6 ? 1 : 0;
   const answer = randomInt(maxResult + 1, Math.max(minResult, minAnswer));
-  
+
   while (true) {
     const e1 = secondEquationGenerator(answer);
     const e2 = secondEquationGenerator(answer);

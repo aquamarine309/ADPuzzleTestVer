@@ -9,11 +9,17 @@ export const infinityChallenges = [
     isQuickResettable: true,
     reward: {
       description: () => {
-        const base = 1.3 + InfinityChallenge(9).reward.effectOrDefault(0);
-        return `${formatX(base, 1, 1)} on all Infinity Dimensions for each Infinity Challenge completed`
+        const base = Math.pow(
+          1.3 + InfinityChallenge(9).reward.effectOrDefault(0),
+          GameElement(2).canBeApplied ? 1.5 : 1
+        );
+        return `${formatX(base, 1, 2)} on all Infinity Dimensions for each Infinity Challenge completed`
       },
       effect: () => {
-        const base = 1.3 + InfinityChallenge(9).reward.effectOrDefault(0);
+        const base = Math.pow(
+          1.3 + InfinityChallenge(9).reward.effectOrDefault(0),
+          GameElement(2).canBeApplied ? 1.5 : 1
+        );
         return Math.pow(base, InfinityChallenges.completed.length)
       },
       formatEffect: value => formatX(value, 1, 1)
@@ -40,7 +46,7 @@ export const infinityChallenges = [
       multiplier on all Antimatter Dimensions which increases based on Antimatter Galaxies.`,
     goal: BEC.E5000,
     isQuickResettable: false,
-    effect: () => player.galaxies.times(0.1).add(1.05).pow(player.totalTickBought),
+    effect: () => player.galaxies.times(GameElement(2).canBeApplied ? 3 : 0.1).add(1.05).pow(player.totalTickBought),
     formatEffect: value => formatX(value, 2, 2),
     reward: {
       description: `Antimatter Dimension multiplier based on Antimatter Galaxies and Tickspeed purchases`,

@@ -33,7 +33,8 @@ export default {
       isDisabled: false,
       showingCharged: false,
       hasTS31: false,
-      ts31Effect: new BE(0)
+      ts31Effect: new BE(0),
+      hasEL1: false
     };
   },
   computed: {
@@ -95,6 +96,7 @@ export default {
       this.isUseless = Pelle.uselessInfinityUpgrades.includes(upgrade.id) && Pelle.isDoomed;
       this.hasTS31 = TimeStudy(31).canBeApplied;
       if (!this.isDisabled && this.isImprovedByTS31) this.ts31Effect = BE.pow(upgrade.config.effect(), 4);
+      this.hasEL1 = GameElement(1).canBeApplied && upgrade.shouldApplyEL1;
       if (upgrade.id !== "challengeMult") return;
       this.showWorstChallenge = upgrade.effectValue !== upgrade.cap &&
         player.challenge.normal.bestTimes.reduce(BE.sumReducer).lt(BE.MAX_VALUE);
@@ -129,12 +131,15 @@ export default {
         After TS31: {{ formatX(ts31Effect, 2, 2) }}
       </template>
     </span>
-    <CostDisplay
-      v-if="!isBought && !continuum"
-      br
-      :config="config"
-      name="Infinity Point"
-    />
+    <template v-if="!isBought && !continuum">
+      <br>
+      <span v-if="hasEL1">Auto: {{ quantify("Infinity Point", config.cost - 1, 2) }}</span>
+      <CostDisplay
+        v-else
+        :config="config"
+        name="Infinity Point"
+      />
+    </template>
     <slot />
   </button>
   `

@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     purchase() {
-      GameUI.notify.error("I heard you want to buy STD?");
+      GameUI.notify.error("The entrance to purchase STD has been closed.");
     }
   },
   template: `

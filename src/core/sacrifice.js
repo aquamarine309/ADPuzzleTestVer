@@ -6,12 +6,12 @@ export class Sacrifice {
   static get isVisible() {
     return Achievement(18).isUnlocked || PlayerProgress.realityUnlocked();
   }
-  
+
   static get requiredDimensionTier() {
     if (PlayerProgress.infinityUnlocked() && LogicChallenge(8).isCompleted) return Math.max(Puzzle.maxTier, 2);
     return 8;
   }
-  
+
   static get requiredDimension() {
     return AntimatterDimension(this.requiredDimensionTier);
   }
@@ -126,7 +126,7 @@ export class Sacrifice {
     if (NormalChallenge(8).isRunning) return multiplier.clampMin(this.c8SoftcappedMultiplier);
     return multiplier;
   }
-  
+
   static get c8SoftcappedMultiplier() {
     return BEC.E10000;
   }

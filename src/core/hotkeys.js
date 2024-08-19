@@ -24,7 +24,6 @@ import { GameKeyboard } from "./keyboard.js";
 // Free keys:
 // i, j, k, l, n, o, p, q, v, w
 
-
 export const shortcuts = [
   {
     name: "Toggle Autobuyers",
@@ -363,7 +362,6 @@ GameKeyboard.bind("ctrl+shift", () => setShiftKey(true), "keydown");
 GameKeyboard.bind("ctrl+shift", () => setShiftKey(false), "keyup");
 GameKeyboard.bind("alt+shift", () => setShiftKey(true), "keydown");
 GameKeyboard.bind("alt+shift", () => setShiftKey(false), "keyup");
-
 
 GameKeyboard.bindHotkey("alt+t", () => toggleAutobuyer(Autobuyer.tickspeed));
 GameKeyboard.bindHotkey("shift+alt+t", () => toggleBuySingles(Autobuyer.tickspeed));

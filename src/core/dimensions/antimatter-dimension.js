@@ -40,6 +40,7 @@ export function antimatterDimensionCommonMultiplier() {
     InfinityChallenge(3).reward,
     InfinityChallenge(8),
     EternityChallenge(10),
+    NormalChallenge(11),
     AlchemyResource.dimensionality,
     PelleUpgrade.antimatterDimensionMult,
     ResourceExchangeUpgrade,
@@ -169,19 +170,19 @@ function applyNDPowers(mult, tier) {
       PelleRifts.paradox,
       LogicChallenge(1).effects.dimensionPow,
       LogicChallenge(7).effects.dimPow,
-      LogicChallenge(8)
+      LogicChallenge(8),
+      LogicNode.start
     );
 
   multiplier = multiplier.pow(getAdjustedGlyphEffect("curseddimensions"));
 
   multiplier = multiplier.pow(VUnlocks.adPow.effectOrDefault(1));
-  
+
   multiplier = multiplier.pow(Ra.momentumValue);
 
   if (PelleStrikes.infinity.hasStrike) {
     multiplier = multiplier.pow(0.5);
   }
-
 
   return multiplier;
 }
@@ -212,7 +213,7 @@ export function buyOneDimension(tier) {
   if (Laitela.continuumActive || !dimension.isAvailableForPurchase || !dimension.isAffordable) return false;
 
   const cost = dimension.cost;
-  
+
   if (!Puzzle.hasDLC(tier)) return false;
   if (tier === 8 && Enslaved.isRunning && AntimatterDimension(8).bought.gte(1)) return false;
 
@@ -301,7 +302,7 @@ export function buyMaxDimension(tier, bulk = Infinity) {
   let bulkLeft = new BE(bulk);
   const goal = Player.infinityGoal;
   if (dimension.cost.gt(goal) && Player.isInAntimatterChallenge) return;
-  
+
   if (!Puzzle.hasDLC(tier)) return false;
   if (tier === 8 && Enslaved.isRunning) {
     buyOneDimension(8);
@@ -533,7 +534,7 @@ class AntimatterDimensionState extends DimensionState {
     if (!player.break && this.cost.gt(BE.NUMBER_MAX_VALUE)) return false;
     return this.cost.lte(this.currencyAmount);
   }
-  
+
   get hasDLC() {
     return Puzzle.hasDLC(this.tier);
   }
@@ -548,7 +549,6 @@ class AntimatterDimensionState extends DimensionState {
 
   get isAvailableForPurchase() {
     if (!EternityMilestone.unlockAllND.isReached && DimBoost.totalBoosts.plus(4).lt(this.tier)) return false;
-    if (GameElements.isActive("vertigo")) return false;
     const hasPrevTier = this.tier === 1 || AntimatterDimension(this.tier - 1).totalAmount.gt(0);
     if (!EternityMilestone.unlockAllND.isReached && !hasPrevTier) return false;
     return this.tier < 7 || !NormalChallenge(10).isRunning;
@@ -631,11 +631,11 @@ class AntimatterDimensionState extends DimensionState {
        )));
       }
     }
-    
+
     production = production.min(this.cappedProductionInNormalChallenges);
     return production;
   }
-  
+
   get isHighest() {
     return DimBoost.maxDimensionsUnlockable === this.tier;
   }
@@ -668,8 +668,8 @@ export const AntimatterDimensions = {
   },
 
   get buyTenMultiplier() {
-    if (NormalChallenge(7).isRunning) return BEC.D7.min(DimBoost.totalBoosts.times(0.3).plus(1));
-    
+    if (NormalChallenge(7).isRunning) return (GameElement(2).canBeApplied ? BEC.D49 : BEC.D7).min(DimBoost.totalBoosts.times(0.3).plus(1));
+
     if (LogicChallenge(1).isRunning) {
       return LogicChallenge(1).effects.
             buyTenMultiplier.effectValue;
@@ -680,7 +680,7 @@ export const AntimatterDimensions = {
       InfinityChallenge(10),
       InfinityChallenge(10).reward
     );
-    
+
     mult = mult.plusEffectsOf(
       Achievement(141).effects.buyTenMult,
       EternityChallenge(3).reward
@@ -723,14 +723,10 @@ export const AntimatterDimensions = {
         player.requirementChecks.eternity.noAD1 = false;
       }
       AntimatterDimension(1).produceCurrency(Currency.antimatter, diff);
-    
+
       if (NormalChallenge(12).isRunning) {
         AntimatterDimension(2).produceCurrency(Currency.antimatter, diff);
       }
-    }
-    
-    if (GameElements.isActive("reduceAntimatter") && Currency.antimatter.productionPerSecond.gt(0)) {
-      Currency.antimatter.divide(Currency.antimatter.productionPerSecond.pow(diff.div(1000)));
     }
     // Production may overshoot the goal on the final tick of the challenge
     if (Currency.antimatter.gt(Player.infinityLimit)) Currency.antimatter.dropTo(Player.infinityLimit);

@@ -9,6 +9,7 @@ import ChallengeFactorsTab from "./challenge-factors/ChallengeFactorsTab.js";
 import CelestialNavigationTab from "./celestial-navigation/CelestialNavigationTab.js";
 import ChallengeRecordsTab from "./challenge-records/ChallengeRecordsTab.js";
 import EffarigTab from "./celestial-effarig/EffarigTab.js";
+import ElementsTab from "./elements/ElementsTab.js";
 import EnslavedTab from "./celestial-enslaved/EnslavedTab.js";
 import EternityChallengesTab from "./eternity-challenges/EternityChallengesTab.js";
 import EternityMilestonesTab from "./eternity-milestones/EternityMilestonesTab.js";
@@ -91,8 +92,9 @@ const TabComponents = {
   ShopTab,
   MultiplierBreakdownTab,
   ResourceExchangeTab,
-  ChallengeFactorsTab,
-  LogicTreeTab
+  LogicTreeTab,
+  ElementsTab,
+  ChallengeFactorsTab
 };
 
 export default TabComponents;

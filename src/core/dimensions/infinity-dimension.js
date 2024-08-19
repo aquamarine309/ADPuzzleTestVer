@@ -71,17 +71,17 @@ class InfinityDimensionState extends DimensionState {
   set baseAmount(value) {
     this.data.baseAmount = value;
   }
-  
+
   get continuumAmount() {
     if (!Continuum.isOn("ID")) return BEC.D0;
     return Continuum.infinityDimContinuum(this);
   }
-  
+
   get totalPurchases() {
     if (Continuum.isOn("ID")) return this.continuumAmount;
     return this.purchases;
   }
-  
+
   get totalAmount() {
     return this.amount.max(this.continuumAmount);
   }
@@ -167,11 +167,9 @@ class InfinityDimensionState extends DimensionState {
       );
     mult = mult.times(BE.pow(this.powerMultiplier, this.totalPurchases));
 
-
     if (tier === 1) {
       mult = mult.times(PelleRifts.decay.milestones[0].effectOrDefault(1));
     }
-
 
     mult = mult.pow(getAdjustedGlyphEffect("infinitypow"));
     mult = mult.pow(getAdjustedGlyphEffect("effarigdimensions"));

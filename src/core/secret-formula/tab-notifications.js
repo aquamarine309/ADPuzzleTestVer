@@ -15,6 +15,10 @@ export const tabNotifications = {
       {
         parent: "statistics",
         tab: "prestige runs"
+      },
+      {
+        parent: "logic",
+        tab: "exchange"
       }
     ],
     condition: () => !PlayerProgress.realityUnlocked() &&
@@ -88,8 +92,12 @@ export const tabNotifications = {
       },
       {
         parent: "logic",
-        tab: "challenge factors"
-      }
+        tab: "tree"
+      },
+      {
+        parent: "logic",
+        tab: "elements"
+      },
     ],
     condition: () => !PlayerProgress.realityUnlocked() &&
       !PlayerProgress.eternityUnlocked(),

@@ -64,7 +64,7 @@ export default {
           this.effectValue = effect;
           return;
         }
-        
+
         if (isBE(effect)) {
           this.effectValue = BE.fromBE(effect);
           return;
@@ -108,7 +108,7 @@ export default {
             this.hasCap = true;
             return;
           }
-          
+
           if (isBE(cap)) {
             this.cap = BE.fromBE(cap);
             this.hasCap = true;

@@ -1,6 +1,5 @@
 import { BEC } from "./constants.js";
 
-
 /**
  * @abstract
  */
@@ -185,7 +184,6 @@ class NumberCurrency extends Currency {
   get startingValue() { return 0; }
 }
 
-
 /**
  * @abstract
  */
@@ -211,14 +209,6 @@ Currency.antimatter = new class extends BECurrency {
     }
     const gainedAM = value.clampMax(Player.infinityLimit);
     player.antimatter = gainedAM;
-    
-    if (ChallengeFactor.elementImbalance.isActive) {
-      const goal = Player.infinityLimit.pow(0.5);
-      if (player.records.thisInfinity.maxAM.lt(goal) && gainedAM.gt(goal)) {
-        GameElements.addRandomElement(ChallengeFactor.elementImbalance.effectValue * 1e3);
-      }
-    }
-    
     player.records.thisInfinity.maxAM = player.records.thisInfinity.maxAM.max(gainedAM);
     player.records.thisEternity.maxAM = player.records.thisEternity.maxAM.max(gainedAM);
     player.records.thisReality.maxAM = player.records.thisReality.maxAM.max(gainedAM);
@@ -338,7 +328,7 @@ Currency.eternityPoints = new class extends BECurrency {
       player.records.bestReality.bestEP = value;
       player.records.bestReality.bestEPSet = Glyphs.copyForRecords(Glyphs.active.filter(g => g !== null));
     }
-    
+
     if (Continuum.isOn("epMult")) {
       EternityUpgrade.epMult.cachedEffectValue.invalidate();
     }
@@ -388,7 +378,7 @@ Currency.timeTheorems = new class extends BECurrency {
     this.value = player.timestudy.theorem.add(amount);
     player.timestudy.maxTheorem = player.timestudy.maxTheorem.plus(amount);
   }
-  
+
   subtract(amount) {
     this.value = player.timestudy.theorem.minus(amount);  
   }
@@ -511,7 +501,7 @@ Currency.logicPoints = new class extends BECurrency {
   get value() {
     return GameCache.logicPoints.value.minus(player.logic.spentPoints);
   }
-  
+
   set value(value) {
     const spent = GameCache.logicPoints.value.minus(value);
     player.logic.spentPoints = player.logic.spentPoints.add(spent);
@@ -522,11 +512,11 @@ Currency.challengePower = new class extends BECurrency {
   get value() {
     return player.challengePower;
   }
-  
+
   set value(value) {
     player.challengePower = BE.clampMin(value, 1);
   }
-  
+
   get startingValue() {
     return BEC.E1;
   }
@@ -536,8 +526,9 @@ Currency.timeCores = new class extends BECurrency {
   get value() {
     return player.timeCores;
   }
-  
+
   set value(value) {
     player.timeCores = value;
+    EventHub.dispatch(GAME_EVENT.TIME_CORE_CHANGED);
   }
 }();

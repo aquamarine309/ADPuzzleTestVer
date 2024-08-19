@@ -84,7 +84,6 @@ export default {
           this.updateFunction = () => this.description = capitalize(description());
           return;
 
-
         }
 
         throw new Error(`DescriptionDisplay config.description is a function ` +

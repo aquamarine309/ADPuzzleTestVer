@@ -87,7 +87,6 @@ export default {
       </span>
     </span>
 
-
     <slot />
 
     <ModalConfirmationCheck

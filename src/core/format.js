@@ -49,7 +49,7 @@ window.formatPostBreak = function formatPostBreak(value, places, placesUnder1000
       : notation.formatVerySmallDecimal(decimal, placesUnder1000);
   }
 
-  if (decimal.abs().lt(3)) {
+  if (decimal.abs().lt(1000)) {
     const number = decimal.toNumber();
     return number < 0
       ? notation.formatNegativeUnder1000(Math.abs(number), placesUnder1000)

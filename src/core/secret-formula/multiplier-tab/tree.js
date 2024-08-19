@@ -7,7 +7,7 @@ const dynamicGenProps = ["TP", "DT", "infinities", "eternities", "gamespeed", "r
 const propList = {
   AD: ["purchase", "dimboost", "sacrifice", "achievementMult", "achievement", "infinityUpgrade",
     "breakInfinityUpgrade", "infinityPower", "infinityChallenge", "timeStudy", "eternityChallenge", "glyph", "v",
-    "alchemy", "pelle", "iap", "effectNC", "nerfIC", "nerfV", "nerfCursed", "nerfPelle", "DLC", "exchangeMult", "nerfLC"],
+    "alchemy", "pelle", "iap", "effectNC", "nerfIC", "nerfV", "nerfCursed", "nerfPelle", "DLC", "exchangeMult", "nerfLC", "nerfLN"],
   ID: ["purchase", "achievementMult", "achievement", "replicanti", "infinityChallenge", "timeStudy", "eternityUpgrade",
     "eternityChallenge", "glyph", "alchemy", "imaginaryUpgrade", "pelle", "iap", "nerfV", "nerfCursed", "nerfPelle", "logicChallenge"],
   TD: ["purchase", "achievementMult", "achievement", "timeStudy", "eternityUpgrade", "eternityChallenge",
@@ -184,7 +184,7 @@ const removedRegexes = ["AD_sacrifice", "AD_breakInfinityUpgrade", "AD_nerfIC", 
   "ID_replicanti", "ID_infinityChallenge", "ID_eternityUpgrades",
   "TD_achievement", "TD_eternityUpgrade", "TD_dilationUpgrade", "TD_realityUpgrade",
   ".._achievementMult", ".._glyph", ".._alchemy", ".._imaginaryUpgrade", ".._iap",
-  ".._nerfV", ".._nerfCursed", ".._nerfPelle", ".._pelle", ".._exchangeMult", ".._DLC", ".._nerfLC", ".._logicChallenge"
+  ".._nerfV", ".._nerfCursed", ".._nerfPelle", ".._pelle", ".._exchangeMult", ".._DLC", ".._nerfLC", ".._logicChallenge", ".._nerfLN"
 ];
 const removedProps = Object.keys(multiplierTabTree)
   .filter(key => removedRegexes.some(regex => key.match(regex)));

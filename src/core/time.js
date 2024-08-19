@@ -217,7 +217,6 @@ export const Time = {
     this.toMilliseconds(timespan, value => player.records.bestEternity.realTime = value, true);
   },
 
-
   /**
    * @returns {TimeSpan}
    */

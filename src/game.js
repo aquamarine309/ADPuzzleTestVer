@@ -175,7 +175,7 @@ export function gainedGlyphLevel() {
 export function resetChallengeStuff() {
   player.chall2Pow = 1;
   player.chall3Pow = BEC.D0_01;
-  Currency.matter.reset();
+  if (!LogicNode.matterNoReset.canBeApplied) Currency.matter.reset();
   player.chall8TotalSacrifice = BEC.D1;
   player.postC4Tier = 1;
 }
@@ -321,7 +321,7 @@ export function getGameSpeedupFactor(effectsToConsider, blackHolesActiveOverride
   }
 
   if (effects.includes(GAME_SPEED_EFFECT.FIXED_SPEED)) {
-    if (EternityChallenge(12).isRunning || GameElements.isActive("freeze")) {
+    if (EternityChallenge(12).isRunning) {
       return BEC.D0_001;
     }
   }
@@ -342,11 +342,11 @@ export function getGameSpeedupFactor(effectsToConsider, blackHolesActiveOverride
       }
     }
   }
-  
+
   if (effects.includes(GAME_SPEED_EFFECT.LOGIC_CHALLENGE)) {
     factor = factor.timesEffectOf(LogicChallenge(4));
   }
-  
+
   if (effects.includes(GAME_SPEED_EFFECT.EXTRA_BONUS)) {
     factor = factor.timesEffectOf(ExtraBonus.extraBonusToGamespeed);
   }
@@ -375,7 +375,6 @@ export function getGameSpeedupFactor(effectsToConsider, blackHolesActiveOverride
       factor = BE.pow(factor, nerfModifier);
     }
   }
-
 
   factor = factor.times(PelleUpgrade.timeSpeedMult.effectValue);
 
@@ -453,11 +452,11 @@ export function gameLoop(passDiff, options = {}) {
   const realDiff = diff === undefined
     ? Math.clamp(thisUpdate - player.lastUpdate, 1, 8.64e7)
     : diff;
-    
+
   if (!isFinite(realDiff)) {
     throw new Error(`[GameLoop Error]RealDiff is NaN`);
   }
-  
+
   if (!GameStorage.ignoreBackupTimer) player.backupTimer += realDiff;
 
   // For single ticks longer than a minute from the GameInterval loop, we assume that the device has gone to sleep or
@@ -490,13 +489,13 @@ export function gameLoop(passDiff, options = {}) {
   if (diff === undefined) {
     diff = Enslaved.nextTickDiff;
   }
-  
+
   diff = new BE(diff);
 
   if (diff.isNan()) {
     throw `[GameLoop Error]Diff is NaN`;
   }
-  
+
   Autobuyers.tick();
   Tutorial.tutorialLoop();
 
@@ -511,7 +510,7 @@ export function gameLoop(passDiff, options = {}) {
   GameCache.infinityDimensionCommonMultiplier.invalidate();
   GameCache.timeDimensionCommonMultiplier.invalidate();
   GameCache.totalIPMult.invalidate();
-  
+
   if (PlayerProgress.eternityUnlocked() || Player.canEternity) {
     GameCache.timeCoresFactor.invalidate();
     GameCache.gainedTimeCores.invalidate();
@@ -579,7 +578,6 @@ export function gameLoop(passDiff, options = {}) {
   if (!Pelle.isDoomed) {
     passivePrestigeGen();
   }
-
 
   applyAutoprestige(realDiff);
   updateImaginaryMachines(realDiff);
@@ -653,7 +651,6 @@ export function gameLoop(passDiff, options = {}) {
   GalaxyGenerator.loop(realDiff);
   LC3.tick(diff);
   ExtraBonus.tick(realDiff);
-  GameElements.tick(realDiff);
   ChallengeFactors.tick(realDiff);
   GameEnd.gameLoop(realDiff);
 
@@ -754,6 +751,7 @@ function applyAutoUnlockPerks() {
   if (Perk.autounlockDilation3.canBeApplied) buyDilationUpgrade(DilationUpgrade.ttGenerator.id);
   if (Perk.autounlockReality.canBeApplied) TimeStudy.reality.purchase(true);
   applyEU2();
+  applyEL1();
 }
 
 function laitelaRealityTick(realDiff) {
@@ -911,7 +909,11 @@ export function getTTPerSecond() {
 }
 
 export function unstableTimeMultiplier() {
-  return 0.8 + (Math.floor(Date.now() / 60) % 10) * 0.04;
+  const mul = (!LogicNode.timeStable.canBeApplied
+    ? 0.75 + (Math.floor(Date.now() / 60) % 10) * 0.05
+    : 1.3) * LogicNode.timePower.effectOrDefault(1);
+  if (PlayerProgress.eternityUnlocked()) return Math.pow(mul, 1000);
+  return mul;
 }
 
 // eslint-disable-next-line no-unused-vars

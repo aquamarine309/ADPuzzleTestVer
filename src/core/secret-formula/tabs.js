@@ -523,23 +523,32 @@ export const tabs = [
         hidable: true
       },
       {
-        key: "challenge factors",
-        name: "Challenge Factors",
-        symbol: "<i class='fas fa-object-ungroup'></i>",
-        component: "ChallengeFactorsTab",
+        key: "tree",
+        name: "Logic Tree",
+        symbol: "<i class='fas fa-tree'></i>",
+        component: "LogicTreeTab",
         id: 1,
         condition: () => PlayerProgress.eternityUnlocked(),
         hidable: true
       },
       {
-        key: "tree",
-        name: "Logic tree",
-        symbol: "<i class='fas fa-chain'></i>",
-        component: "LogicTreeTab",
+        key: "elements",
+        name: "Elements",
+        symbol: "<i class='fas fa-atom'></i>",
+        component: "ElementsTab",
         id: 2,
         condition: () => PlayerProgress.eternityUnlocked(),
         hidable: true
-      }
+      },
+      {
+        key: "challenge factors",
+        name: "Challenge Factors",
+        symbol: "<i class='fas fa-object-ungroup'></i>",
+        component: "ChallengeFactorsTab",
+        id: 3,
+        condition: () => false,
+        hidable: true
+      },
     ]
   }
 ];

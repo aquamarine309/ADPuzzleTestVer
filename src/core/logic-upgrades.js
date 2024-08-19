@@ -6,19 +6,19 @@ class LogicUpgradeState extends BitPurchasableMechanicState {
     super(config);
     this.registerEvents(config.checkEvent, () => this.tryUnlock());
   }
-  
+
   get requirement() {
     return typeof this.config.requirement === "function" ? this.config.requirement() : this.config.requirement;
   }
-  
+
   get currency() {
     return Currency.logicPoints;
   }
-  
+
   get name() {
     return this.config.name;
   }
-  
+
   get bitIndex() {
     return this.id;
   }
@@ -30,7 +30,7 @@ class LogicUpgradeState extends BitPurchasableMechanicState {
   set bits(value) {
     player.logic.upgradeBits = value;
   }
-  
+
   get isAvailableForPurchase() {
     return (player.logic.upgReqs & (1 << this.id)) !== 0;
   }
@@ -38,7 +38,7 @@ class LogicUpgradeState extends BitPurchasableMechanicState {
   get isPossible() {
     return this.config.hasFailed ? !this.config.hasFailed() : true;
   }
-  
+
   tryUnlock() {
     const logicUnlocked = PlayerProgress.infinityUnlocked();
     if (!logicUnlocked || this.isAvailableForPurchase || !this.config.checkRequirement()) return;
@@ -46,7 +46,7 @@ class LogicUpgradeState extends BitPurchasableMechanicState {
     GameUI.notify.logic(`You've unlocked a Logic Upgrade: ${this.config.name}`);
     this.hasPlayerLock = false;
   }
-  
+
   onPurchased() {
     const id = this.id;
     if (id <= 7) {
@@ -67,7 +67,7 @@ export const LogicUpgrades = {
    * @type {LogicUpgradeState[]}
    */
   all: LogicUpgradeState.index.compact(),
-  
+
   reset() {
     player.logic.upgradeBits = 0;
     player.logic.upgReqs = 0;

@@ -71,7 +71,6 @@ window.decimalDepressedCubicSolution = function decimalDepressedCubicSolution(b,
  * @property {BE} purchasePrice amount that needs to be paid to get that
  */
 
-
 // Please, for the love of god, do not use this for ANY equation that is decimal.
 // BBBS is far too weak and its worth just writing inverses (or picking an equation that has inverses)
 // This is simply because you would need to run cost equations 30+ times which is wasteful
@@ -1250,7 +1249,6 @@ window.Vector = class Vector {
     return Vector.unitFromRadians(deg * Math.PI / 180);
   }
 };
-
 
 window.Curve = class Curve {
   /**

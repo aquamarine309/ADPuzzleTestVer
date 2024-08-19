@@ -268,13 +268,13 @@ export const GlyphGenerator = {
       const unincluded = effectValues.effarigrm < effectValues.effarigglyph ? 20 : 21;
       effectValues[unincluded] = -1;
     }
-    
+
     for (const i of ["timepow", "infinitypow", "powerpow"]) {
       if (i in effectValues) {
         effectValues[i] = 2;
       }
     }
-    
+
     // Sort from highest to lowest value.
     const effects = Object.keys(effectValues).sort((a, b) => effectValues[b] - effectValues[a]).slice(0, count);
     return new Set(effects);

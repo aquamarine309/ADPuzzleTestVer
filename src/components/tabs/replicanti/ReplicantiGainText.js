@@ -85,7 +85,6 @@ export default {
         this.remainingTimeText += ` (${TimeSpan.fromSeconds(totalTime)} total)`;
       }
 
-
       if (Replicanti.galaxies.max.gt(0)) {
         // If the player has max RGs, don't display the "You are gaining blah" text
         if (player.replicanti.galaxies.eq(Replicanti.galaxies.max)) {

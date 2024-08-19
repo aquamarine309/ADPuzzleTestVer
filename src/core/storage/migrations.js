@@ -532,14 +532,14 @@ export const migrations = {
       }
     },
     70: player => {
-      if (Array.isArray(player.elements)) {
+      /* if (Array.isArray(player.elements)) {
         const result = ElementEffects.all.mapToObject(x => x.id, x => 0);
         for (const el of player.elements) {
           if (!result[el.type]) continue;
           result[el.type] = el.time;
         }
         player.elements = result;
-      }
+      } */
     },
     71: player => {
       const purchasedTT = player.timestudy.amBought.add(player.timestudy.ipBought).add(player.timestudy.epBought);
@@ -551,6 +551,9 @@ export const migrations = {
       player.timestudy.theorem = purchasedTT;
       player.timestudy.maxTheorem = purchasedTT;
       player.timestudy.studies = [];
+    },
+    73: player => {
+      player.elements = new Set();
     }
   },
 

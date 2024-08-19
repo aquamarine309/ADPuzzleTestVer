@@ -7,7 +7,6 @@ import NewsTicker from "../NewsTicker.js";
 
 import GameSpeedDisplay from "../../GameSpeedDisplay.js";
 
-
 export default {
   name: "ModernUi",
   components: {

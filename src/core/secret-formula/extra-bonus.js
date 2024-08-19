@@ -3,8 +3,8 @@
 export const extraBonus = {
   extraBonusToAD: {
     id: "extraBonusToAD",
-    // ×2 (Android) ➜ ×(AM^0.002)
-    effect: () => Currency.antimatter.value.pow(0.002).clampMin(2),
+    // ×2 (Android) ➜ ×(AM^0.01)
+    effect: () => Currency.antimatter.value.pow(0.01).clampMin(2),
     isUnlocked: () => true,
     description: value => `Antimatter Dimensions are multiplied by ${formatX(value, 2, 2)}`
   },

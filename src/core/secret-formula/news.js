@@ -10,7 +10,6 @@ function newsAnimSpd(seconds) {
   return seconds / player.options.news.speed;
 }
 
-
 export const news = [
   {
     id: "a1",

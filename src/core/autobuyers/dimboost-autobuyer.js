@@ -29,7 +29,7 @@ export class DimBoostAutobuyerState extends UpgradeableAutobuyerState {
   set limitDimBoosts(value) {
     this.data.limitDimBoosts = value;
   }
-  
+
   get buyMaxMode() {
     return this.data.buyMaxMode;
   }

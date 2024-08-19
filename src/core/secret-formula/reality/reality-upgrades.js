@@ -23,7 +23,6 @@ const rebuyable = props => {
   return props;
 };
 
-
 export const realityUpgrades = [
   rebuyable({
     name: "Temporal Amplifier",

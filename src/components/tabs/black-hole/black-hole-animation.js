@@ -275,7 +275,6 @@ export const BlackHoleAnimation = (function() {
 
       if (BlackHoles.arePaused && !BlackHoles.areNegative) return;
 
-
       // Time dilation factor (Realistic formula, but only actually used for particle speed)
       const dilationFactor = 1 / Math.sqrt(1 - holeSize / this.planet.distance);
       for (const particle of this.particles) {

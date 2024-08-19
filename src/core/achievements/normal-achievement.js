@@ -180,7 +180,7 @@ export const Achievements = {
   }),
 
   get power() {
-    if (GameElements.isActive("noAchievement") || Pelle.isDisabled("achievementMult")) return BEC.D1;
+    if (Pelle.isDisabled("achievementMult")) return BEC.D1;
     return Achievements._power.value;
   },
 

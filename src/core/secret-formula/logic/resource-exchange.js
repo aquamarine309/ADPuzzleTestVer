@@ -34,7 +34,8 @@ export const resourceExchange = {
       const cappedValue = value.div(BEC.E20000).clampMin(1);
       const capped = cappedValue.pow(0.004);
       return baseValue.times(capped);
-    }
+    },
+    min: BEC.D1
   },
   infinityPower: {
     id: 3,
@@ -42,7 +43,8 @@ export const resourceExchange = {
     shortName: "IPow",
     symbol: "Χ",
     currency: () => Currency.infinityPower,
-    value: value => value.pow(0.05).times(1.25).add(value.pow(0.1).div(10)).add(1)
+    value: value => value.pow(0.05).times(1.25).add(value.pow(0.1).div(10)).add(1),
+    min: BEC.D1
   },
   replicanti: {
     id: 4,

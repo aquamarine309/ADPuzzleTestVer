@@ -5,7 +5,6 @@ import { AUTOMATOR_MODE, AUTOMATOR_TYPE } from "./automator/automator-backend.js
 import { BEC } from "./constants.js";
 import { deepmergeAll } from "../utility/deepmerge.js";
 import { GlyphTypes } from "./glyph-effects.js";
-import { ElementEffects } from "./elements.js";
 import { DEV } from "../env.js";
 
 // This is actually reassigned when importing saves
@@ -52,7 +51,6 @@ window.player = {
       row: 6
     }
   },
-  elements: ElementEffects.all.mapToObject(x => x.id, x => 0),
   challengeFactorBits: 0,
   eternitiesBeforeRefresh: 0,
   buyUntil10: true,
@@ -83,6 +81,8 @@ window.player = {
       half: 0
     }
   },
+  elements: new Set(),
+  lastSelectedElementId: 0,
   logicNodes: new Set(),
   extraBonusTimeLeft: BEC.D0,
   timeCores: BEC.D0,
@@ -971,7 +971,7 @@ window.player = {
     hiddenTabBits: 0,
     hiddenSubtabBits: [...Array.repeat(0, 10), 1, 0],
     lastOpenTab: 0,
-    lastOpenSubtab: Array.repeat(0, 11),
+    lastOpenSubtab: Array.repeat(0, 12),
     perkLayout: 0,
     perkPhysicsEnabled: true,
     automatorEvents: {
@@ -1023,7 +1023,6 @@ export const Player = {
   },
 
   get canEternity() {
-    if (!DEV && !player.options.tester) return false;
     return player.records.thisEternity.maxIP.gte(Player.eternityGoal);
   },
 

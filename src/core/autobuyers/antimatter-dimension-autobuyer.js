@@ -99,7 +99,7 @@ export class AntimatterDimensionAutobuyerState extends UpgradeableAutobuyerState
 
     // General availability
     const dim = AntimatterDimension(this.tier);
-    const hasAutobuyer = dim.isAvailableForPurchase && dim.isAffordable && dim.hasDLC && !GameElements.isActive("vertigo");
+    const hasAutobuyer = dim.isAvailableForPurchase && dim.isAffordable && dim.hasDLC;
 
     // From IntervaledAutobuyerState.canTick
     const intervalTick = this.timeSinceLastTick >= this.interval;

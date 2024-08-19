@@ -23,8 +23,16 @@ export default {
           on the Statistics tab. You will also gain an Eternity Point and unlock various upgrades.`;
     },
     gainedEPOnEternity() {
-      return `You will gain ${quantify("Eternity", this.gainedEternities, 2)},
-      ${quantify("Eternity Point", this.gainedEternityPoints, 2)} and ${quantify("Time Core", this.gainedTimeCores, 2)} on Eternity.`;
+      const res = [];
+      res.push(
+        quantify("Eternity", this.gainedEternities, 2),
+        quantify("Eternity Point", this.gainedEternityPoints, 2)
+      );
+      if (false) {
+        res.push(quantify("Time Core", this.gainedTimeCores, 2));
+      }
+      const gainedResource = makeEnumeration(res);
+      return `You will gain ${gainedResource} on Eternity.`;
     },
     startWithIP() {
       return this.startingIP.gt(0)

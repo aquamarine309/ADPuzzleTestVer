@@ -78,7 +78,10 @@ export default {
     <div class="c-logic-node-tooltip">
       <div class="c-logic-node-tooltip__name">{{ name }}</div>
       <DescriptionDisplay :config="config" />
-      <EffectDisplay :config="config" />
+      <EffectDisplay
+        br
+        :config="config"
+      />
       <br>
       <div :class="reqClass">Requirement: {{ requirement }}</div>
     </div>

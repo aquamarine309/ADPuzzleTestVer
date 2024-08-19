@@ -17,8 +17,7 @@ export default {
       subtabVisibilities: [],
       showSubtabs: false,
       hasNotification: false,
-      tabName: "",
-      locked: false
+      tabName: ""
     };
   },
   computed: {
@@ -40,7 +39,6 @@ export default {
       this.isHidden = this.tab.isHidden;
       this.subtabVisibilities = this.tab.subtabs.map(x => x.isAvailable);
       this.showSubtabs = this.isAvailable && this.subtabVisibilities.length >= 1;
-      this.locked = GameElements.isActive("tabLock");
       this.hasNotification = this.tab.hasNotification;
       if (this.tabPosition < Pelle.endTabNames.length) {
         this.tabName = Pelle.transitionText(
@@ -67,10 +65,7 @@ export default {
       @click="tab.show(true)"
       data-v-modern-tab-button
     >
-      <i
-        v-if="locked"
-        class="fas fa-lock"
-      />{{ tabName }}
+      {{ tabName }}
       <div
         v-if="hasNotification"
         class="fas fa-circle-exclamation l-notification-icon"
@@ -95,14 +90,7 @@ export default {
           @click="subtab.show(true)"
           data-v-modern-tab-button
         >
-          <i
-            v-if="locked"
-            class="fas fa-lock"
-          />
-          <span
-            v-html="subtab.symbol"
-            v-else
-          />
+          <span v-html="subtab.symbol" />
           <div
             v-if="subtab.hasNotification"
             class="fas fa-circle-exclamation l-notification-icon"

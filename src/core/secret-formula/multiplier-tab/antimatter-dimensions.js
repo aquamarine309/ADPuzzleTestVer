@@ -399,7 +399,9 @@ export const AD = {
       if (NormalChallenge(3).isRunning) {
         dimMults[1] = dimMults[1].times(player.chall3Pow);
       }
-
+      if (NormalChallenge(11).isRunning && GameElement(2).canBeApplied) {
+        dimMults = dimMults.map(mul => mul.timesEffectOf(NormalChallenge(11)));
+      }
       if (NormalChallenge(12).isRunning) {
         dimMults[2] = AntimatterDimension(2).totalAmount.pow(6.5);
         dimMults[4] = AntimatterDimension(4).totalAmount.pow(4);
@@ -508,5 +510,11 @@ export const AD = {
     },
     isActive: () => LogicChallenge.isRunning && !EternityChallenge(11).isRunning && !LC3.isrunning,
     icon: MultiplierTabIcons.CHALLENGE("logic")
-  }
+  },
+  nerfLN: {
+    name: "Logic Node - 离开新手村",
+    powValue: () => LogicNode.start.effectOrDefault(1),
+    isActive: () => LogicNode.start.canBeApplied,
+    icon: MultiplierTabIcons.DIMENSION("TD"),
+  },
 };

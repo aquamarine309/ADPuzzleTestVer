@@ -138,7 +138,7 @@ class TabState {
   }
 
   show(manual, subtab = undefined) {
-    if (!manual && !player.options.automaticTabSwitching || Quote.isOpen || GameElements.isActive("tabLock")) return;
+    if (!manual && !player.options.automaticTabSwitching || Quote.isOpen) return;
     if (subtab !== undefined) {
       if (!Enslaved.isRunning) subtab.unhideTab();
       this._currentSubtab = subtab;
@@ -157,10 +157,6 @@ class TabState {
     if (player.tabNotifications.has(tabNotificationKey)) player.tabNotifications.delete(tabNotificationKey);
 
     if (manual) Modal.hideAll();
-    
-    if (Math.random() < ChallengeFactor.tabNerf.effectOrDefault(0)) {
-      GameElements.addRandomElement(5e3);
-    }
     EventHub.dispatch(GAME_EVENT.TAB_CHANGED, this, this._currentSubtab);
   }
 

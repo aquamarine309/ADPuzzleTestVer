@@ -113,13 +113,13 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     if (forcePositiveExponent === void 0) {
       forcePositiveExponent = false;
     }
-    
+
     return function (n, precision, precisionExponent) {
       var realBase = Math.pow(base, steps);
       var newDecimal = getSmallDecimal(n);
-      
+
       var exponent = Math.floor(newDecimal.decimal.log(realBase).toNumber()) * steps;
-      
+
       if (forcePositiveExponent) {
         exponent = Math.max(exponent, 0);
       }
@@ -175,7 +175,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
       return result;
     };
   }
-  
+
   function formatSeparator(separator, count) {
     if (separator.trim() === "") separator = "e";
     if (count <= 6) return separator.repeat(count);
@@ -203,13 +203,13 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
       }
 
       var decimal = Decimal__default["default"].fromValue_noAlloc(value);
-      
+
       if (Settings.isInfinite(decimal.abs()) || !decimal.isFinite()) {
         return decimal.sign < 0 ? this.negativeInfinite : this.infinite;
       }
-      
+
       decimal = decimal.normalize();
-      
+
       if (decimal.abs().lt(1e-300)) {
         return decimal.sign < 0 ? this.formatVerySmallNegativeDecimal(decimal.abs(), placesUnder1000) : this.formatVerySmallDecimal(decimal, placesUnder1000);
       }
@@ -553,9 +553,9 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     BracketsNotation.prototype.formatDecimal = function (value) {
       const newDecimal = getSmallDecimal(value);
       var log10 = newDecimal.decimal.log10().toNumber();
-      
+
       var table = [")", "[", "{", "]", "(", "}"];
-      
+
       var log6 = Math.LN10 / Math.log(6) * log10;
       var wholePartOfLog = Math.floor(log6);
       var decimalPartOfLog = log6 - wholePartOfLog;
@@ -648,7 +648,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
       }
       const newDecimal = getSmallDecimal(value);
       var log10 = newDecimal.decimal.log10().toNumber();
-      
+
       var maximums = log10 / MAX_LOG_10;
       var current = Math.pow(MAXIMUM, maximums - Math.floor(maximums));
       return formatSeparator("e", newDecimal.separatorCount).concat(this.romanize(current), "\u2191").concat(this.formatDecimal(new Decimal__default["default"](maximums)));

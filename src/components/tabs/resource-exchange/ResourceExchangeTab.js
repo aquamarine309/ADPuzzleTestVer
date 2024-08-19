@@ -23,6 +23,7 @@ export default {
       logicPoints: new BE(0),
       totalLogicPoints: new BE(0),
       multiplier: new BE(0),
+      showIPMultiplier: false,
       ipMult: new BE(0),
       sliderInterval: 1,
       rateType: PERCENTS_TYPE.NORMAL

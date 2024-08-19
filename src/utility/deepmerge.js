@@ -9,7 +9,7 @@ function cloneUnlessOtherwiseSpecified(value, options) {
   if (value instanceof BE) {
     return new BE(value);
   }
-  
+
   if (value instanceof Set) {
     return new Set(value);
   }
@@ -33,7 +33,8 @@ function mergeObject(target, source, options) {
     if (target[key] && target[key] instanceof BE) {
       destination[key] = new BE(source[key]);
     } else if (target[key] && target[key] instanceof Set) {
-      destination[key] = new Set(source[key]);
+      const isIterable = source[key][Symbol.iterator] !== void 0;
+      destination[key] = new Set(isIterable ? source[key] : void 0);
     } else if (!options.isMergeableObject(source[key]) || !target[key]) {
       destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
     } else {
@@ -46,7 +47,7 @@ function mergeObject(target, source, options) {
 export function deepmerge(target, source, options = {}) {
   options.arrayMerge = options.arrayMerge || defaultArrayMerge;
   options.isMergeableObject = options.isMergeableObject || isMergeableObject;
-  
+
   if (target instanceof BE) {
     return new BE(source);
   }

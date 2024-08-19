@@ -33,7 +33,6 @@ mergeIntoGlobal(AutomatorBlocks);
 import * as AutomatorTextEditor from "./components/tabs/automator/AutomatorTextEditor.js";
 mergeIntoGlobal(AutomatorTextEditor);
 
-
 import * as PerksTab from "./components/tabs/perks/PerksTab.js";
 mergeIntoGlobal(PerksTab);
 

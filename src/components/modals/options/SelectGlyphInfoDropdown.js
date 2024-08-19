@@ -12,7 +12,6 @@ export const GlyphInfoVue = {
     "Current Refinement Value", "Maximum Refinement Value"]
 };
 
-
 export default {
   name: "SelectGlyphInfoDropdown",
   computed: {

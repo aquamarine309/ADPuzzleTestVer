@@ -9,7 +9,6 @@ import wordShift from "../../word-shift.js";
 
 import zalgo from "./zalgo.js";
 
-
 const disabledMechanicUnlocks = {
   achievements: () => ({}),
   IPMults: () => ({}),
