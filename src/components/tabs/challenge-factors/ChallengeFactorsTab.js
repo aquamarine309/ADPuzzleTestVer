@@ -29,7 +29,10 @@ export default {
     },
     reduceUpg: () => ReduceRefreshTimeUpgrade,
     halfUpg: () => HalfRefreshTimeUpgrade,
-    infoLabels: () => ["None", "Level", "Difficulty"]
+    infoLabels: () => ["None", "Level", "Difficulty"],
+    challengeFactorUnlocked() {
+      return false;
+    }
   },
   watch: {
     type(value) {
@@ -52,6 +55,7 @@ export default {
   template: `
   <div>
     <ButtonCycle
+      v-if="challengeFactorUnlocked"
       class="o-primary-btn"
       text="Challenge Factor Info:"
       :labels="infoLabels"
@@ -68,15 +72,20 @@ export default {
         class="c-more-td-mult"
       >➜ {{ formatX(nextTDmult, 2, 1) }}</span></div>
     </div>
-    <ChallengeFactorPreview :factors="currentFactors" />
-    <div class="c-factor-button-row">
-      <RestartEternityButton />
-      <RespecButton />
-    </div>
-    <div class="c-factor-button-row">
-      <ReduceRefreshTimeUpgradeButton :upgrade="reduceUpg" />
-      <ReduceRefreshTimeUpgradeButton :upgrade="halfUpg" />
-    </div>
+    <template v-if="challengeFactorUnlocked">
+      <ChallengeFactorPreview :factors="currentFactors" />
+      <div class="c-factor-button-row">
+        <RestartEternityButton />
+        <RespecButton />
+      </div>
+      <div class="c-factor-button-row">
+        <ReduceRefreshTimeUpgradeButton :upgrade="reduceUpg" />
+        <ReduceRefreshTimeUpgradeButton :upgrade="halfUpg" />
+      </div>
+    </template>
+    <template v-else>
+      Challenge Factors are locked.
+    </template>
   </div>
   `
 }

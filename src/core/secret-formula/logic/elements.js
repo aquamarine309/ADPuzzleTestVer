@@ -33,7 +33,7 @@ export const elements = [
     name: "Be",
     position: [1, 1],
     type: ELEMENT_TYPE.METALLIC,
-    cost: BEC.EE404
+    cost: BEC.E13200
   },
   {
     id: 5,

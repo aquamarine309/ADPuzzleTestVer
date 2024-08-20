@@ -512,7 +512,7 @@ export const AD = {
     icon: MultiplierTabIcons.CHALLENGE("logic")
   },
   nerfLN: {
-    name: "Logic Node - 离开新手村",
+    name: "Logic Node - Hard Puzzle",
     powValue: () => LogicNode.start.effectOrDefault(1),
     isActive: () => LogicNode.start.canBeApplied,
     icon: MultiplierTabIcons.DIMENSION("TD"),

@@ -143,7 +143,7 @@ export const ChallengeFactors = {
   },
 
   get canRestart() {
-    return gainedTimeCores().gte(this.requirement) || player.refreshChallenge;
+    return Player.canEternity; // || gainedTimeCores().gte(this.requirement) || player.refreshChallenge;
   },
 
   // real diff
@@ -273,10 +273,16 @@ class RefreshTimeUpgradeState extends GameMechanicState {
     return this._cost.value;
   }
 
+  /**
+   * @abstract
+   */
   get boughtAmount() {
     throw new NotImplementedError();
   }
 
+  /**
+   * @abstract
+   */
   set boughtAmount(value) {
     throw new NotImplementedError();
   }
@@ -342,16 +348,17 @@ class HalfRefreshTimeUpgradeState extends RefreshTimeUpgradeState {
   set boughtAmount(value) {
     player.logic.upgrades.half = value;
     this._cost.invalidate();
+    HalfRefreshTimeUpgrade._cost.invalidate();
   }
 
   get description() {
-    return `${formatPercents(0.6)} smaller interval`;
+    return `${formatPercents(0.5)} smaller interval`;
   }
 
   get showEffect() { return false; }
 
   onPurchased() {
-    player.logic.refreshTimer += (ChallengeFactors.refreshPeriod - player.logic.refreshTimer) * 0.6;
+    player.logic.refreshTimer += (ChallengeFactors.refreshPeriod - player.logic.refreshTimer) * 0.5;
   }
 
   get isAvailableForPurchase() {

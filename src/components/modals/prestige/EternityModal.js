@@ -26,11 +26,9 @@ export default {
       const res = [];
       res.push(
         quantify("Eternity", this.gainedEternities, 2),
-        quantify("Eternity Point", this.gainedEternityPoints, 2)
+        quantify("Eternity Point", this.gainedEternityPoints, 2),
+        quantify("Time Core", this.gainedTimeCores, 2)
       );
-      if (false) {
-        res.push(quantify("Time Core", this.gainedTimeCores, 2));
-      }
       const gainedResource = makeEnumeration(res);
       return `You will gain ${gainedResource} on Eternity.`;
     },

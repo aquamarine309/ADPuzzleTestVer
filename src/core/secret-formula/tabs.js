@@ -546,7 +546,7 @@ export const tabs = [
         symbol: "<i class='fas fa-object-ungroup'></i>",
         component: "ChallengeFactorsTab",
         id: 3,
-        condition: () => false,
+        condition: () => PlayerProgress.eternityUnlocked(),
         hidable: true
       },
     ]

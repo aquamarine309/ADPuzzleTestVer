@@ -1094,6 +1094,7 @@ export const Player = {
           onlyAD8: true,
           noAD1: true,
           noRG: true,
+          noMatter: true
         };
       // eslint-disable-next-line no-fallthrough
       case "infinity":

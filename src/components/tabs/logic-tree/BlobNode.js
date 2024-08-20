@@ -56,7 +56,6 @@ export default {
       this.show = player.secretUnlocks.logicNodeBlobShow;
     },
     unlock() {
-      player.secretUnlocks.logicNodeBlobUnlocked = true;
       this.show = true;
       this.$recompute("isUnlocked");
     },

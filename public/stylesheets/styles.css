@@ -10518,6 +10518,7 @@ input.o-automator-block-input {
   width: 90rem;
   height: auto;
   position: relative;
+  margin: 2rem auto;
 }
 
 .o-element-grid {

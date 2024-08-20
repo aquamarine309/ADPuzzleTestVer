@@ -55,6 +55,9 @@ class ResourceExchangeState extends GameMechanicState {
 
   exchange() {
     if (!this.canExchange) return false;
+    if (this.id === 2) {
+      player.requirementChecks.eternity.noMatter = false;
+    }
     const leave = this.willLeave;
     this.data.value = this.newExchanged;
     this.currency.value = leave;
