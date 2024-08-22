@@ -50,6 +50,8 @@ export default {
       return {
         "o-element-grid": true,
         "o-element-grid--radioactive": this.radioactive,
+        "o-element-grid--unlocked": this.isUnlocked,
+        "o-element-grid--available": this.canBeBought,
         [typeClass]: true,
         [unlockedClass]: this.isUnlocked || this.canBeBought
       }

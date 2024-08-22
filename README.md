@@ -1,8 +1,8 @@
 # Antimatter Dimensions Puzzled
 
-This is a mod of the famous increamental game [Antimatter Dimensions](https://ivark.github.io/AntimatterDimensions).
+  This is a mod of the famous incremental game [Antimatter Dimensions](https://ivark.github.io/AntimatterDimensions).
 
-This mod changed some game mechanics to make the game full of puzzles (such as challenge combo). There is a new tab named "Logic". It will unlock when you reach Infinity.
+This mod changed some game mechanics to make the game full of puzzles (such as challenge combo). There is a new tab named "Logic". It will be unlocked when you reach Infinity.
 
 ### What does this mod change?
 
@@ -19,7 +19,7 @@ This mod changed some game mechanics to make the game full of puzzles (such as c
 
 ### Current endgame
 
-Reach 1e13,000 AM after Eternity.
+Reach 1e20,000 AM after Eternity.
 
 ### Known bugs
 1. Not every notation supports break_eternity.js Decimal (But common notataions can work correctly).

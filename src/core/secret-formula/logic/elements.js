@@ -24,7 +24,7 @@ export const elements = [
     name: "Li",
     position: [1, 0],
     type: ELEMENT_TYPE.METALLIC,
-    description: () => `Logic Point multiplier ${formatPow(1.8, 0, 1)}`,
+    description: () => `Logic Point multiplier ${formatPow(1.8, 0, 1)}.`,
     effect: 1.8,
     cost: BEC.E4000
   },
@@ -33,6 +33,7 @@ export const elements = [
     name: "Be",
     position: [1, 1],
     type: ELEMENT_TYPE.METALLIC,
+    description: "Reduce the goal of Logic Challenge.",
     cost: BEC.E13200
   },
   {

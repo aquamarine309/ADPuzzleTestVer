@@ -98,6 +98,10 @@ export const tabNotifications = {
         parent: "logic",
         tab: "elements"
       },
+      {
+        parent: "logic",
+        tab: "challenge factors"
+      },
     ],
     condition: () => !PlayerProgress.realityUnlocked() &&
       !PlayerProgress.eternityUnlocked(),

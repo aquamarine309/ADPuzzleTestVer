@@ -20,7 +20,7 @@ class LogicNodeState extends GameMechanicState {
   }
 
   get isAvailable() {
-    return this.id === 0 || this.reqNodes.some(x => x.isUnlocked);
+    return this.reqNodes.length === 0 || this.reqNodes.some(x => x.isUnlocked);
   }
 
   tryUnlock(args) {
@@ -72,18 +72,18 @@ LogicTree.getNodeById = (function() {
 
 LogicTree.connections = (function() {
   return [
-    [0, 1],
-    [1, 2],
-    [0, 3],
-    [3, 4],
-    [3, 5],
-    [0, 6],
-    [6, 7],
-    [6, 8],
-    [4, 9],
-    [9, 10],
-    [1, 11],
-    [3, 11]
+    [33, 32],
+    [32, 31],
+    [32, 42],
+    [33, 43],
+    [42, 43],
+    [43, 44],
+    [43, 53],
+    [44, 54],
+    [54, 55],
+    [33, 23],
+    [23, 13],
+    [23, 22]
   ].map(c => c.map(x => LogicTree.getNodeById(x)))
 })();
 

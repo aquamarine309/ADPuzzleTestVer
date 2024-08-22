@@ -171,6 +171,6 @@ export const Continuum = {
   },
 
   log(a, b) {
-    return a.ln().div(b.ln());
+    return a.log10().div(b.log10());
   }
 }

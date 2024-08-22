@@ -105,7 +105,7 @@ export const normalAchievements = [
       return `All Antimatter Dimensions are ${formatPercents(0.5)} stronger.`
     },
     effect: 1.5,
-    btnCondition: () => Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked() && player.galaxies.lte(1),
+    btnCondition: () => Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked() && player.galaxies.eq(0),
     text: "What is AG?",
     clickFn: () => GameUI.notify.info("Maybe you need some HELP.")
   },
@@ -115,7 +115,7 @@ export const normalAchievements = [
     description: "Buy the second Antimatter Galaxy.",
     checkRequirement: () => player.galaxies.gte(2),
     checkEvent: GAME_EVENT.GALAXY_RESET_AFTER,
-    btnCondition: () => Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked() && player.galaxies.lte(1),
+    btnCondition: () => Galaxy.canBeBought && Galaxy.requirement.isSatisfied && !PlayerProgress.infinityUnlocked() && player.galaxies.eq(1),
     btnText: "The literal meaning",
     clickFn: () => manualRequestGalaxyReset(1, false)
   },
@@ -682,10 +682,7 @@ export const normalAchievements = [
     checkRequirement: () =>
       (Replicanti.amount.eq(BE.NUMBER_MAX_VALUE) || player.replicanti.galaxies.gt(0)) &&
       Time.thisInfinityRealTime.totalHours.lt(1),
-    checkEvent: GAME_EVENT.REPLICANTI_TICK_AFTER,
-    btnCondition: () => !Achievement(95).isUnlocked && player.replicanti.unl,
-    clickFn: () => Achievement(95).unlock(),
-    btnText: "You really want this achievement, don't you?"
+    checkEvent: GAME_EVENT.REPLICANTI_TICK_AFTER
   },
   {
     id: 96,

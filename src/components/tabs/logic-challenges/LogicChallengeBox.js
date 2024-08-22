@@ -28,6 +28,12 @@ export default {
     },
     name() {
       return `LC${this.challenge.id}`;
+    },
+    goalText() {
+      const el4 = GameElement(4).canBeApplied;
+      const baseGoal = format(this.config.goal, 2);
+      if (el4) return `${baseGoal} ➜ ${format(this.config.el4Goal, 2)}`;
+      return baseGoal;
     }
   },
   methods: {
@@ -56,7 +62,7 @@ export default {
     </template>
     <template #bottom>
       <div class="l-challenge-box__bottom--infinity">
-        <span>Goal: {{ format(config.goal) }} antimatter</span>
+        <span>Goal: {{ goalText }} antimatter</span>
         <DescriptionDisplay
           :config="config.reward"
           title="Reward:"

@@ -52,7 +52,7 @@ export default {
     },
     infoText() {
       const info = [];
-      info.push(`Atomic number: ${this.element.id}`);
+      info.push(`Atomic number: ${formatInt(this.element.id)}`);
       info.push(`Name: ${this.name}`);
       info.push(`Group: ${this.group}`);
       return info.join(" | ");

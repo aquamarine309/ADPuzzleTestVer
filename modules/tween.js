@@ -881,4 +881,4 @@ TWEEN.Interpolation = {
 
 })(this);
 
-export { TWEEN as default }
+export { TWEEN as default };

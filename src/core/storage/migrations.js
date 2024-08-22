@@ -553,7 +553,9 @@ export const migrations = {
       player.timestudy.studies = [];
     },
     73: player => {
-      player.elements = new Set();
+      const oldLogicNode = [...player.logicNodes];
+      const newIdx = [33, 32, 31, 43, 44, 53, 23, 22, 13, 54, 55, 42];
+      player.logicNodes = new Set(oldLogicNode.map(id => newIdx[id]));
     }
   },
 

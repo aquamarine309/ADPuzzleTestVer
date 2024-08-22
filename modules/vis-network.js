@@ -50871,6 +50871,6 @@
 
 }));
 //# sourceMappingURL=vis-network.js.map
-const DataSet = vis.DataSet
-const Network = vis.Network
-export { DataSet, Network }
+const DataSet = vis.DataSet;
+const Network = vis.Network;
+export { DataSet, Network };

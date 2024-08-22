@@ -1,4 +1,4 @@
-import Vue from "./vue.js"
+import Vue from "./vue.js";
 
 export default (function (exports, Vue) { 'use strict';
 

@@ -28,12 +28,10 @@ const nodeColors = {
 // 如果你发现了这个
 // 那也对你没有一点帮助
 // 你还是去测试挑战因子(元素周期表)吧
-// awa
-// (Tester only)
 
 export const logicTree = {
   start: {
-    id: 0,
+    id: 33,
     name: "Hard Puzzle",
     description: () => `Antimatter Dimensions multiplier ${formatPow(0.5, 0, 1)}. But something becomes powerful`,
     requirement: "Complete your first Eternity",
@@ -45,8 +43,8 @@ export const logicTree = {
     effect: 0.5
   },
   timeStable: {
-    id: 1,
-    reqNodes: [0],
+    id: 32,
+    reqNodes: [33],
     name: "Time Stabler",
     description: "Time become stable and a bit stronger",
     requirement: () => `Reach ${format(BEC.E75)} antimatter out of C3`,
@@ -58,8 +56,8 @@ export const logicTree = {
     formatEffect: value => formatX(value, 2, 2)
   },
   timePower: {
-    id: 2,
-    reqNodes: [1],
+    id: 31,
+    reqNodes: [32],
     name: "Time Amplifier",
     description: () => `Basic stable time multiplier ${formatX(1.18, 0, 2)}`,
     requirement: () => `Complete LC3 without completing LC3 mini-game`,
@@ -71,8 +69,8 @@ export const logicTree = {
     color: nodeColors.eternity
   },
   qolExchange1: {
-    id: 3,
-    reqNodes: [0],
+    id: 43,
+    reqNodes: [33, 42],
     name: "Free Exchange",
     description: "Exchange no longer spends your resource",
     requirement: "Eternity without exchanging matter",
@@ -83,8 +81,8 @@ export const logicTree = {
     color: nodeColors.qol
   },
   qolExchange2: {
-    id: 4,
-    reqNodes: [3],
+    id: 44,
+    reqNodes: [43],
     name: "Auto-exchange",
     description: "Unlock Exchange Autobuyer",
     requirement: "TBD",
@@ -95,8 +93,8 @@ export const logicTree = {
     color: nodeColors.qol
   },
   qolChallenge1: {
-    id: 5,
-    reqNodes: [3],
+    id: 53,
+    reqNodes: [43],
     name: "Boring Game",
     description: "The reward of LC3 mini-game is always effective",
     requirement: "TBD",
@@ -107,8 +105,8 @@ export const logicTree = {
     color: nodeColors.qol
   },
   continuumIPmult: {
-    id: 6,
-    reqNodes: [0],
+    id: 23,
+    reqNodes: [33],
     name: "Lai'tela: ?",
     description: "Unlock IP multiplier upgrade continuum",
     requirement: "TBD",
@@ -119,8 +117,8 @@ export const logicTree = {
     color: nodeColors.continuum
   },
   continuumIPmult2: {
-    id: 7,
-    reqNodes: [6],
+    id: 22,
+    reqNodes: [23],
     name: "Increase IP Mult gain",
     description: "Convert Infinity Dimension purchases to Continuum",
     requirement: "TBD",
@@ -131,8 +129,8 @@ export const logicTree = {
     color: nodeColors.continuum
   },
   continuumEPmult: {
-    id: 8,
-    reqNodes: [6],
+    id: 13,
+    reqNodes: [23],
     name: "Continuum EP multiplier",
     description: "Convert Infinity Dimension purchases to Continuum",
     requirement: "TBD",
@@ -143,8 +141,8 @@ export const logicTree = {
     color: nodeColors.continuum
   },
   autoMatter1: {
-    id: 9,
-    reqNodes: [4],
+    id: 54,
+    reqNodes: [44],
     name: "Matter",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
     checkRequirement: () => false,
@@ -152,17 +150,17 @@ export const logicTree = {
     color: nodeColors.qol
   },
   autoMatter2: {
-    id: 10,
-    reqNodes: [9],
+    id: 55,
+    reqNodes: [54],
     name: "Matter 2",
     checkEvent: GAME_EVENT.ACHIEVEMENT_EVENT_OTHER,
     checkRequirement: () => false,
-    position: [1, 3],
+    position: [2, 2],
     color: nodeColors.qol
   },
   matterNoReset: {
-    id: 11,
-    reqNodes: [1],
+    id: 42,
+    reqNodes: [32],
     name: "No Matter Required",
     description: "Dimboost no longer matter (doesn't work when antimatter is not enough)",
     requirement: () => `Reach ${formatPostBreak(BEC.E5000)} matter`,

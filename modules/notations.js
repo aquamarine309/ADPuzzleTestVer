@@ -148,7 +148,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
         m = "";
       }
 
-      const result = "".concat(formatSeparator(separator, newDecimal.separatorCount)).concat(m).concat(separator).concat(e);
+      const result = "".concat(formatSeparator(separator, newDecimal.separatorCount, exponentFormatting, precisionExponent)).concat(m).concat(separator).concat(e);
       return result;
     };
   }
@@ -176,10 +176,10 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     };
   }
 
-  function formatSeparator(separator, count) {
+  function formatSeparator(separator, count, exponentFormatting, precisionExponent) {
     if (separator.trim() === "") separator = "e";
     if (count <= 6) return separator.repeat(count);
-    return "(".concat(separator).concat("^").concat(count >= 1e3 ? count.toFixed(2) : count).concat(")");
+    return "(".concat(separator).concat("^").concat(exponentFormatting(count, precisionExponent)).concat(")");
   }
 
   var Notation = function () {
@@ -527,7 +527,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     LogarithmNotation.prototype.formatDecimal = function (value, places, placesExponent) {
       const newDecimal = getSmallDecimal(value);
       var log10 = newDecimal.decimal.log10().toNumber();
-      return formatSeparator("e", newDecimal.separatorCount + 1).concat(this.formatExponent(log10, places, function (n, p) {
+      return formatSeparator("e", newDecimal.separatorCount + 1, this.formatExponent, places).concat(this.formatExponent(log10, places, function (n, p) {
         return n.toFixed(p);
       }, placesExponent));
     };
@@ -569,7 +569,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
         string = table[remainder] + string;
       }
 
-      string = formatSeparator("e", newDecimal.separatorCount + 1).concat(table[wholePartOfLog]).concat(string, ".");
+      string = formatSeparator("e", newDecimal.separatorCount + 1, x => x.toString(6).replace(/\d/g, m => table[m] ?? m), null).concat(table[wholePartOfLog]).concat(string, ".");
       string += table[Math.floor(decimalPartTimes36 / 6)];
       string += table[decimalPartTimes36 % 6];
       return string;
@@ -651,7 +651,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
 
       var maximums = log10 / MAX_LOG_10;
       var current = Math.pow(MAXIMUM, maximums - Math.floor(maximums));
-      return formatSeparator("e", newDecimal.separatorCount).concat(this.romanize(current), "\u2191").concat(this.formatDecimal(new Decimal__default["default"](maximums)));
+      return formatSeparator("e", newDecimal.separatorCount, this.romanize, null).concat(this.romanize(current), "\u2191").concat(this.formatDecimal(new Decimal__default["default"](maximums)));
     };
 
     RomanNotation.prototype.romanize = function (value) {
@@ -722,7 +722,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
       var log = newDecimal.decimal.log(254).toNumber();
       var exponent = Math.floor(log - 2);
       var mantissa = Math.pow(254, log - exponent);
-      return formatSeparator("e", newDecimal.separatorCount).concat(this.dotify(exponent), "\u28FF").concat(this.dotify(mantissa * 254));
+      return formatSeparator("e", newDecimal.separatorCount, this.dotify, null).concat(this.dotify(exponent), "\u28FF").concat(this.dotify(mantissa * 254));
     };
 
     DotsNotation.prototype.dotify = function (rawValue, pad) {
@@ -791,7 +791,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
       var scaled = log10 / 66666 * 1000;
       var displayPart = Number(scaled.toFixed(2));
       var zalgoPart = Math.floor(Math.abs(Math.pow(2, 30) * (scaled - displayPart)));
-      var displayChars = Array.from(formatSeparator("e", newDecimal.separatorCount).concat(formatWithCommas(displayPart)));
+      var displayChars = Array.from(formatSeparator("e", newDecimal.separatorCount, formatWithCommas).concat(formatWithCommas(displayPart)));
       var zalgoIndices = Array.from(zalgoPart.toString() + scaled.toFixed(0));
 
       for (var i = 0; i < zalgoIndices.length; i++) {

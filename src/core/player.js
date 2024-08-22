@@ -426,7 +426,7 @@ window.player = {
     previousRuns: {}
   },
   IPMultPurchases: BEC.D0,
-  version: 72,
+  version: 73,
   bigCrunches: 0,
   bigEternities: 0,
   infinityPower: BEC.D1,
@@ -457,6 +457,7 @@ window.player = {
     amBought: BEC.D0,
     ipBought: BEC.D0,
     epBought: BEC.D0,
+    tcBought: BEC.D0,
     studies: [],
     shopMinimized: false,
     preferredPaths: [[], 0],

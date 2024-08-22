@@ -21,17 +21,20 @@ export default {
       budget: {
         am: new BE(0),
         ip: new BE(0),
-        ep: new BE(0)
+        ep: new BE(0),
+        tc: new BE(0)
       },
       costs: {
         am: new BE(0),
         ip: new BE(0),
-        ep: new BE(0)
+        ep: new BE(0),
+        tc: new BE(0)
       },
       continuums: {
         am: new BE(0),
         ip: new BE(0),
-        ep: new BE(0)
+        ep: new BE(0),
+        tc: new BE(0)
       },
       continuum: false,
       showST: false,
@@ -113,6 +116,12 @@ export default {
     buyWithEP() {
       TimeTheorems.buyOne(false, "ep");
     },
+    formatTC(tc) {
+      return `${format(tc, 2, 0)} TC`;
+    },
+    buyWithTC() {
+      TimeTheorems.buyOne(false, "tc");
+    },
     buyMaxTheorems() {
       TimeTheorems.buyMax(false);
     },
@@ -129,15 +138,18 @@ export default {
         this.continuums.am = TimeTheoremPurchaseType.am.continuumValue;
         this.continuums.ip = TimeTheoremPurchaseType.ip.continuumValue;
         this.continuums.ep = TimeTheoremPurchaseType.ep.continuumValue;
+        this.continuums.tc = TimeTheoremPurchaseType.tc.continuumValue;
       }
       const budget = this.budget;
       budget.am.copyFrom(TimeTheoremPurchaseType.am.currency);
       budget.ip.copyFrom(TimeTheoremPurchaseType.ip.currency);
       budget.ep.copyFrom(TimeTheoremPurchaseType.ep.currency);
+      budget.tc.copyFrom(TimeTheoremPurchaseType.tc.currency);
       const costs = this.costs;
       costs.am.copyFrom(TimeTheoremPurchaseType.am.cost);
       costs.ip.copyFrom(TimeTheoremPurchaseType.ip.cost);
       costs.ep.copyFrom(TimeTheoremPurchaseType.ep.cost);
+      costs.tc.copyFrom(TimeTheoremPurchaseType.tc.cost);
       this.showST = V.spaceTheorems > 0 && !Pelle.isDoomed;
       this.STamount = V.availableST;
       this.hasTTGen = this.theoremGeneration.gt(0);
@@ -260,6 +272,14 @@ export default {
           :action="buyWithEP"
           :continuum="continuum"
           :continuum-value="continuums.ep"
+        />
+        <TimeTheoremBuyButton
+          :budget="budget.tc"
+          :cost="costs.tc"
+          :format-cost="formatTC"
+          :action="buyWithTC"
+          :continuum="continuum"
+          :continuum-value="continuums.tc"
         />
         <div
           v-if="!continuum"

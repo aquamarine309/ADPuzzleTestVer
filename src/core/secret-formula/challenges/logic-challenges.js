@@ -7,6 +7,7 @@ export const logicChallenges = [
       Dimensions multiplier will multiply the amount instead of the production, except for the highest dimension.
       Buy ten multiplier is reduced to ${formatX(0.2, 0, 1)}.`,
     goal: BE.NUMBER_MAX_VALUE,
+    el4Goal: BE.NUMBER_MAX_VALUE,
     effects: {
       dimensionPow: 0.4,
       buyTenMultiplier: BEC.D0_2
@@ -19,6 +20,7 @@ export const logicChallenges = [
     id: 2,
     description: () => `Normal Challenges are broken. Dimension Boost multiplier is reduced to ${formatX(1)} and Galaxies are disabled.`,
     goal: BEC.E1650,
+    el4Goal: BEC.E1500,
     reward: {
       description: "Decrease the requirement of Galaxies. Unlock exchange rate"
     },
@@ -27,6 +29,7 @@ export const logicChallenges = [
     id: 3,
     description: () => `Antimatter Dimension multiplier is always ${formatX(1)}, but ...`,
     goal: BEC.E4000,
+    el4Goal: BEC.E3000,
     reward: {
       description: "Unlock Replicanti"
     }
@@ -35,6 +38,7 @@ export const logicChallenges = [
     id: 4,
     description: "Infinity Power provide a multiplier to game speed instead of Antimatter Dimensions.",
     goal: BEC.E10000,
+    el4Goal: BEC.E8000,
     effect: () => Currency.infinityPower.value.plus(1).log10().pow(InfinityDimensions.powerConversionRate).clamp(1, 1e30),
     formatEffect: value => format(value, 3, 3),
     reward: {
@@ -49,6 +53,7 @@ export const logicChallenges = [
       Tickspeed no longer affect Antimatter Dimensions production. Disable the multiplier from Logic Points and Exchange Level.
       Decrease conversion rate of Infinity Power.`,
     goal: BEC.E5000,
+    el4Goal: BEC.E4000,
     effect: () => BEC.D2.pow(BE.pow(1.03, effectiveBaseGalaxies())),
     formatEffect: value => formatX(value, 3, 3),
     reward: {
@@ -59,6 +64,7 @@ export const logicChallenges = [
     id: 6,
     description: "Decrease cost and strength of Galaxies.",
     goal: BEC.E20000,
+    el4Goal: BEC.E13200,
     effect: 0.3,
     reward: {
       description: "Galaxies are stronger based on highest Antimatter Dimension",
@@ -77,6 +83,7 @@ export const logicChallenges = [
       Antimatter production: ${formatInt(10)}^x ➜ ${formatInt(10)}^(x^${format(1.026, 0, 4)}).
     `,
     goal: BEC.E10000,
+    el4Goal: BEC.E5000,
     effects: {
       galMul: 1.5,
       achPow: 2,
@@ -99,6 +106,7 @@ export const logicChallenges = [
       player.galaxies.clampMin(1).toNumberMax(Number.MAX_SAFE_INTEGER)
     ),
     goal: BEC.E32000,
+    el4Goal: BEC.E18000,
     reward: {
       description: `Dimensional Sacrifice can automatically adjust the required dimensions`
     }

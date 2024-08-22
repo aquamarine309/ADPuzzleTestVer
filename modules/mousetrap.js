@@ -1040,7 +1040,7 @@ export default (function(window, document, undefined) {
     };
 
     Mousetrap.init();
-    
+
     return Mousetrap
-    
-}) (typeof window !== 'undefined' ? window : null, typeof  window !== 'undefined' ? document : null);
+
+})(typeof window !== 'undefined' ? window : null, typeof window !== 'undefined' ? document : null);

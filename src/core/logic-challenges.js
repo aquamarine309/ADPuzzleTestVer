@@ -71,7 +71,7 @@ class LogicChallengeState extends GameMechanicState {
   }
 
   get goal() {
-    return this.config.goal;
+    return GameElement(4).canBeApplied ? this.config.el4Goal : this.config.goal;
   }
 
   updateChallengeTime() {

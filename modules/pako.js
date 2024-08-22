@@ -6719,5 +6719,5 @@ export default (function (exports) { 'use strict';
   exports.ungzip = ungzip_1;
 
   Object.defineProperty(exports, '__esModule', { value: true });
-  return exports
+  return exports;
 })({});

@@ -910,8 +910,8 @@ const sha512 = (function () {
   exports.sha384.hmac = createHmacMethod(384);
   exports.sha512_256.hmac = createHmacMethod(256);
   exports.sha512_224.hmac = createHmacMethod(224);
-  return exports
+  return exports;
 })();
 
-const sha512_256 = sha512.sha512_256
-export { sha512_256 }
+const sha512_256 = sha512.sha512_256;
+export { sha512_256 };

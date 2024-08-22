@@ -117,6 +117,15 @@ TimeTheoremPurchaseType.ep = new class extends TimeTheoremPurchaseType {
   }
 }();
 
+TimeTheoremPurchaseType.tc = new class extends TimeTheoremPurchaseType {
+  get amount() { return player.timestudy.tcBought; }
+  set amount(value) { player.timestudy.tcBought = value; }
+
+  get currency() { return Currency.timeCores; }
+  get costBase() { return BEC.D1; }
+  get costIncrement() { return BEC.D2; }
+}();
+
 export const TimeTheorems = {
   checkForBuying(auto) {
     if (PlayerProgress.realityUnlocked() || TimeDimension(1).bought) return true;
@@ -137,7 +146,8 @@ export const TimeTheorems = {
     const ttAM = this.buyOne(true, "am");
     const ttIP = this.buyOne(true, "ip");
     const ttEP = this.buyOne(true, "ep");
-    return ttAM + ttIP + ttEP;
+    const ttTC = this.buyOne(true, "tc");
+    return ttAM + ttIP + ttEP + ttTC;
   },
 
   buyMax(auto = false) {
@@ -145,19 +155,22 @@ export const TimeTheorems = {
     const ttAM = TimeTheoremPurchaseType.am.purchase(true);
     const ttIP = TimeTheoremPurchaseType.ip.purchase(true);
     const ttEP = TimeTheoremPurchaseType.ep.purchase(true);
-    return ttAM + ttIP + ttEP;
+    const ttTC = TimeTheoremPurchaseType.ep.purchase(true);
+    return ttAM + ttIP + ttEP + ttTC;
   },
 
   get totalValue() {
     return TimeTheoremPurchaseType.am.totalAmount.plus
           (TimeTheoremPurchaseType.ip.totalAmount).plus
-          (TimeTheoremPurchaseType.ep.totalAmount);
+          (TimeTheoremPurchaseType.ep.totalAmount).plus
+          (TimeTheoremPurchaseType.tc.totalAmount);
   },
 
   totalPurchased() {
     return TimeTheoremPurchaseType.am.amount.plus
       (TimeTheoremPurchaseType.ip.amount).plus
-      (TimeTheoremPurchaseType.ep.amount)
+      (TimeTheoremPurchaseType.ep.amount).plus
+      (TimeTheoremPurchaseType.tc.amount)
   },
 
   calculateTimeStudiesCost() {

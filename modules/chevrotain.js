@@ -9595,8 +9595,8 @@ function indent(howMuch, text) {
 /***/ })
 /******/ ]);
 })();
-const createToken = chevrotain.createToken
-const Lexer = chevrotain.Lexer
-const EOF = chevrotain.EOF
-const Parser = chevrotain.Parser
-export { Lexer, createToken, EOF, Parser }
+const createToken = chevrotain.createToken;
+const Lexer = chevrotain.Lexer;
+const EOF = chevrotain.EOF;
+const Parser = chevrotain.Parser;
+export { Lexer, createToken, EOF, Parser };

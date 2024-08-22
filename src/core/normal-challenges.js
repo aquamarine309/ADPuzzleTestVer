@@ -128,7 +128,7 @@ class NormalChallengeState extends GameMechanicState {
 
   get goal() {
     if (this.isBroken) {
-      return BEC.E1E15;
+      return BE.MAX_VALUE;
     }
     return BE.NUMBER_MAX_VALUE;
   }

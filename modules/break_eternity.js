@@ -4454,7 +4454,7 @@ export default (function () { 'use strict';
   BE.NUMBER_MAX_VALUE = FC(1, 0, Number.MAX_VALUE);
   BE.NUMBER_MIN_VALUE = FC(1, 0, Number.MIN_VALUE);
   BE.fromStringCache = new LRUCache(DEFAULT_FROM_STRING_CACHE_SIZE);
-  BE.MAX_VALUE = FC(1, Number.MAX_VALUE, 1);
+  BE.MAX_VALUE = FC(1, Number.MAX_SAFE_INTEGER, 1);
   // return BE;
   // Optimise BE aliases.
   // We can't do this optimisation before BE is assigned.
