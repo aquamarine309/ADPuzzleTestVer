@@ -24,9 +24,7 @@ Reach 1e20,000 AM after Eternity.
 ### Known bugs
 1. Not every notation supports break_eternity.js Decimal (But common notataions can work correctly).
 
-2. LC3 mini-game may generate a wrong question (Such as 10 = 11 - 8 - 7).
-
-3. Converting b_i to b_e has not finished yet. It still has many bugs.
+2. Converting b_i to b_e has not finished yet. It still has many bugs.
 
 ### Something that need improve
 

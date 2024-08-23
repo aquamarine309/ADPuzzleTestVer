@@ -31,8 +31,10 @@ export default {
         :element="element"
         @click.native="handleClick(element.id)"
       />
+      <div class="l-element-display-star-1">*</div>
+      <div class="l-element-display-star-2">**</div>
       <div class="l-element-star-1">*</div>
-      <div class="l-element-star-2">*</div>
+      <div class="l-element-star-2">**</div>
     </div>
   </div>
   `

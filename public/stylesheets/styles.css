@@ -10542,25 +10542,40 @@ input.o-automator-block-input {
   font-weight: bold;
 }
 
-.l-element-star-1, .l-element-star-2 {
+.l-element-display-star-1,
+.l-element-display-star-2,
+.l-element-star-1,
+.l-element-star-2
+{
   position: absolute;
-
   width: 4rem;
   height: 4rem;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  left: 10.2rem;
   font-size: 1.5rem;
 }
 
+.l-element-display-star-1 {
+  top: 25rem;
+  left: 10.2rem;
+}
+
+.l-element-display-star-2 {
+  top: 30rem;
+  left: 10.2rem;
+
+  
+}
 .l-element-star-1 {
   top: 40rem;
+  left: 6.2rem;
 }
 
 .l-element-star-2 {
   top: 45rem;
+  left: 6.2rem;
 }
 
 .c-element-id {

@@ -552,7 +552,8 @@ export const migrations = {
       player.timestudy.maxTheorem = purchasedTT;
       player.timestudy.studies = [];
     },
-    73: player => {
+    74: player => {
+      if (player.logicNodes.has(33)) return;
       const oldLogicNode = [...player.logicNodes];
       const newIdx = [33, 32, 31, 43, 44, 53, 23, 22, 13, 54, 55, 42];
       player.logicNodes = new Set(oldLogicNode.map(id => newIdx[id]));

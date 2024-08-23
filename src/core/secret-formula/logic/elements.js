@@ -404,7 +404,7 @@ export const elements = [
   {
     id: 57,
     name: "La",
-    position: [5, 2],
+    position: [8, 2],
     type: ELEMENT_TYPE.METALLIC,
     cost: BEC.EE404
   },
@@ -634,7 +634,7 @@ export const elements = [
   {
     id: 89,
     name: "Ac",
-    position: [6, 2],
+    position: [9, 2],
     radioactive: true,
     type: ELEMENT_TYPE.METALLIC,
     cost: BEC.EE404

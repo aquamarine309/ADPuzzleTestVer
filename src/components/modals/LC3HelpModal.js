@@ -5,6 +5,7 @@ import SliderComponent from "../SliderComponent.js";
 const operators = [
   {
     name: "+",
+    forceBracket: false,
     fn: (a, b) => a + b,
     genBase: r => {
       const a = randomInt(r);
@@ -16,6 +17,7 @@ const operators = [
   },
   {
     name: "-",
+    forceBracket: true,
     fn: (a, b) => a - b,
     genBase: r => {
       const b = randomInt(20, 1);
@@ -23,10 +25,11 @@ const operators = [
       return [a, b];
     },
     canGen: () => true,
-    priority: 2
+    priority: 0
   },
   {
     name: "×",
+    forceBracket: false,
     fn: (a, b) => a * b,
     genBase: r => {
       let a, b;
@@ -46,12 +49,13 @@ const operators = [
       }
       return false;
     },
-    priority: 3
+    priority: 1
   },
   {
     name: "/",
+    forceBracket: true,
     fn: (a, b) => a / b,
-    priority: 4,
+    priority: 1,
     genBase: r => {
       const b = randomInt(10, 2);
       const a = b * r;
@@ -61,8 +65,9 @@ const operators = [
   },
   {
     name: "^",
+    forceBracket: false,
     fn: (a, b) => Math.pow(a, b),
-    priority: 5,
+    priority: 2,
     genBase: r => {
       if (r === 0) {
         return [0, randomInt(10, 1)];
@@ -125,13 +130,17 @@ export function secondEquationGenerator(answer = randomInt(10)) {
   }
   const number = operator.genBase(answer);
   const base1 = baseEquationGenerator(number[0]);
-  if (operator.priority > base1.priority ||
-    (operator.priority >= base1.priority && operator.priority >= 5)
+  if (
+    operator.priority > base1.priority ||
+    operator.priority === base1.priority && operator.priority >= 2
   ) {
     base1.equation = formatBracket(base1.equation);
   }
   const base2 = baseEquationGenerator(number[1]);
-  if (operator.priority > base2.priority) {
+  if (
+    operator.priority > base2.priority ||
+    operator.forceBracket && operator.priority === base2.priority
+  ) {
     base2.equation = formatBracket(base2.equation);
   }
   const result = operator.fn(base1.result, base2.result);
@@ -162,9 +171,9 @@ function calc(str) {
   if (left !== right) return NaN;
   // It is the worst way, but maybe it can't cause bugs.
   try {
-    const result = eval(str.replace(/×/g, "*")
+    const result = (new Function(str.replace(/×/g, "*")
     .replace(/\d+/g, match => parseInt(match, 10).toString())
-    .replace(/\^/g, "**").replace(/--/g, "+"));
+    .replace(/\^/g, "**").replace(/--/g, "+")))();
     if (!Number.isFinite(result)) return NaN;
     return Math.round(result * 1e8) / 1e8;
   } catch (e) {
@@ -229,8 +238,8 @@ export default {
       return this.stage === GAME_STAGE.FAILED;
     },
     title() {
-      if (!this.lc3Running) return "LC3 Mini-game";
-      return "Boost Upgrades";
+      if (this.lc3Running) return "Boost Upgrades";
+      return "LC3 Mini-game";
     },
     sliderProps() {
       return {
@@ -398,7 +407,7 @@ export default {
   },
   template: `
   <ModalWrapperChoice
-    :key="count + 'ct'"
+    :key="count + 'count'"
     :showConfirm="isCompleted"
     :showCancel="isFailed"
     class="l-lc3-modal"
@@ -438,13 +447,13 @@ export default {
       <div
         class="c-game-block-row"
         v-for="(row, index) in inputRows"
-        :key="index + 'ipt'"
+        :key="index + 'input'"
       >
         <div
           class="c-game-block c-game-block--small"
           :class="getInputClass(char)"
           v-for="(char, idx) in row"
-          :key="\`\${id(index, idx)}\${count}ipt\`"
+          :key="\`\${id(index, idx)}\${count}input\`"
           @click.stop="input(char)"
         >
           {{ char }}
