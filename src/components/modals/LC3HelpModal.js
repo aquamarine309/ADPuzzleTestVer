@@ -171,7 +171,7 @@ function calc(str) {
   if (left !== right) return NaN;
   // It is the worst way, but maybe it can't cause bugs.
   try {
-    const result = (new Function(str.replace(/×/g, "*")
+    const result = (new Function("return " + str.replace(/×/g, "*")
     .replace(/\d+/g, match => parseInt(match, 10).toString())
     .replace(/\^/g, "**").replace(/--/g, "+")))();
     if (!Number.isFinite(result)) return NaN;
