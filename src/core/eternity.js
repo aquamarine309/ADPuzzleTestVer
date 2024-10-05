@@ -149,6 +149,7 @@ export function eternity(force, auto, specialConditions = {}) {
   ECTimeStudyState.invalidateCachedRequirements();
   resetAllResourceExchange();
   ResourceExchangeUpgrade.reset();
+  GameElements.clearAll();
 
   PelleStrikes.eternity.trigger();
 

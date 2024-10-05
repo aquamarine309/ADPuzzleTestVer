@@ -114,7 +114,7 @@ export const infinityUpgrades = {
     id: "timeMult2",
     cost: 3,
     description: "Antimatter Dimensions gain a multiplier based on time spent in current Infinity",
-    effect: () => BE.max(Time.thisInfinity.totalMinutes.div(4).pow(0.25), 1),
+    effect: () => Time.thisInfinity.totalMinutes.div(4).pow(0.25).max(1),
     formatEffect: value => formatX(value, 2, 2),
     charged: {
       description:

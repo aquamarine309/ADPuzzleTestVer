@@ -66,7 +66,7 @@ export default {
       <div>You have <span class="c-tc-amount">{{ format(timeCores, 2, 1) }}</span> {{ pluralize("Time Core", timeCores) }}.</div>
       <div>You will gain {{ quantify("Time Core", gainedTimeCores, 2, 1) }} after Eternity.</div>
       <div class="c-challenge-factor-tooltip--level-info">(See Multiplier Breakdown Tab)</div>
-      <div>TD {{ formatX(tdMult, 2, 1) }}
+      <div>Time Dimensions {{ formatX(tdMult, 2, 1) }} (based on Time Cores)
       <span
         v-if="canRestart"
         class="c-more-td-mult"

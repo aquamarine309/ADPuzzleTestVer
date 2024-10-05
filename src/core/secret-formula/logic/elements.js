@@ -15,7 +15,7 @@ export const elements = [
     id: 2,
     name: "He",
     position: [0, 17],
-    type: ELEMENT_TYPE.NOBLE_GAS,
+    type: ELEMENT_TYPE.INERT,
     description: "Improve the effects of challenges.",
     cost: BEC.E820
   },
@@ -38,10 +38,13 @@ export const elements = [
   },
   {
     id: 5,
-    name: "Be",
+    name: "B",
     position: [1, 12],
     type: ELEMENT_TYPE.NON_METALLIC,
-    cost: BEC.EE404
+    description: "Logic point multiplier is effective based on time spent in current Infinity.",
+    effect: () => Time.thisInfinity.totalSeconds.sqrt().div(20).add(1).recip().add(1).sqrt(),
+    formatEffect: value => formatPow(value, 2, 3),
+    cost: BEC.E16000
   },
   {
     id: 6,
@@ -75,7 +78,7 @@ export const elements = [
     id: 10,
     name: "Ne",
     position: [1, 17],
-    type: ELEMENT_TYPE.NOBLE_GAS,
+    type: ELEMENT_TYPE.INERT,
     cost: BEC.EE404
   },
   {
@@ -131,7 +134,7 @@ export const elements = [
     id: 18,
     name: "Ar",
     position: [2, 17],
-    type: ELEMENT_TYPE.NOBLE_GAS,
+    type: ELEMENT_TYPE.INERT,
     cost: BEC.EE404
   },
   {
@@ -257,7 +260,7 @@ export const elements = [
     id: 36,
     name: "Kr",
     position: [3, 17],
-    type: ELEMENT_TYPE.NOBLE_GAS,
+    type: ELEMENT_TYPE.INERT,
     cost: BEC.EE404
   },
   {
@@ -384,7 +387,7 @@ export const elements = [
     id: 54,
     name: "Xe",
     position: [4, 17],
-    type: ELEMENT_TYPE.NOBLE_GAS,
+    type: ELEMENT_TYPE.INERT,
     cost: BEC.EE404
   },
   {
@@ -612,7 +615,7 @@ export const elements = [
     name: "Rn",
     position: [5, 17],
     radioactive: true,
-    type: ELEMENT_TYPE.NOBLE_GAS,
+    type: ELEMENT_TYPE.INERT,
     cost: BEC.EE404
   },
   {
@@ -892,7 +895,7 @@ export const elements = [
     position: [6, 17],
     radioactive: true,
     artificial: true,
-    type: ELEMENT_TYPE.NOBLE_GAS,
+    type: ELEMENT_TYPE.INERT,
     cost: BEC.EE404
   },
 ]

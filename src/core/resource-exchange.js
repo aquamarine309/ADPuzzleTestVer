@@ -131,9 +131,10 @@ export const ResourceExchange = mapGameDataToObject(
 );
 
 Object.defineProperty(ResourceExchange, "selected", {
-  get: function() {
+  value: function() {
     return this.all[player.logic.resourceExchange.lastOpenId];
-  }
+  },
+  writable: false
 });
 
 export function getLogicPoints() {
@@ -195,7 +196,8 @@ class ResourceExchangeUpgradeState extends GameMechanicState {
         effectivePoints.add(1).log10().plus(1).log10().plus(1)
       ).timesEffectsOf(
         ChallengeFactor.logicalFallacy,
-        GameElement(3)
+        GameElement(3),
+        GameElement(5)
       )
     );
   }

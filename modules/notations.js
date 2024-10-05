@@ -38,29 +38,28 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     decimalPointSplit[0] = decimalPointSplit[0].replace(/\w+$/g, addCommas);
     return decimalPointSplit.join(".");
   }
+
+  const MAX_ES_IN_A_ROW = 5;
+
   function getSmallDecimal(value) {
-    var n = Decimal__default["default"].fromValue_noAlloc(value);
-    var newDecimal = new Decimal__default["default"](0);
-    newDecimal.mag = n.mag;
-    newDecimal.layer = n.layer;
-    newDecimal.sign = n.sign;
+    var decimal = new Decimal__default["default"](value).normalize();
     var separatorCount = 0;
-    if ((newDecimal.layer === 0 || newDecimal.layer >= 5) && newDecimal.mag > LOG10_MAX_VALUE) {
-      ++newDecimal.layer;
-      newDecimal.mag = Math.log10(newDecimal.mag);
-    }
-    if (newDecimal.layer > 1) {
-      separatorCount = newDecimal.layer - 1;
-      newDecimal.layer = 1;
+    if (decimal.layer > 1) {
+      const keepedLayer = decimal.layer >= MAX_ES_IN_A_ROW && !isExponentFullyShown(decimal.mag) ? 0 : 1;
+      separatorCount = decimal.layer - keepedLayer;
+      decimal.layer = keepedLayer;
     }
     return {
-      decimal: newDecimal,
+      decimal,
       separatorCount
     }
   }
   function toEngineering(value) {
     var exponentOffset = value.exponent % 3;
-    return Decimal__default["default"].fromMantissaExponent_noNormalize(value.mantissa * Math.pow(10, exponentOffset), value.exponent - exponentOffset);
+    return {
+      mantissa: value.mantissa * Math.pow(10, exponentOffset),
+      exponent: value.exponent - exponentOffset
+    };
   }
   var STANDARD_ABBREVIATIONS = ["K", "M", "B", "T", "Qa", "Qt", "Sx", "Sp", "Oc", "No"];
   var STANDARD_PREFIXES = [["", "U", "D", "T", "Qa", "Qt", "Sx", "Sp", "O", "N"], ["", "Dc", "Vg", "Tg", "Qd", "Qi", "Se", "St", "Og", "Nn"], ["", "Ce", "Dn", "Tc", "Qe", "Qu", "Sc", "Si", "Oe", "Ne"]];
@@ -116,14 +115,14 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
 
     return function (n, precision, precisionExponent) {
       var realBase = Math.pow(base, steps);
-      var newDecimal = getSmallDecimal(n);
+      var data = getSmallDecimal(n);
 
-      var exponent = Math.floor(newDecimal.decimal.log(realBase).toNumber()) * steps;
+      var exponent = Math.floor(data.decimal.log(realBase).toNumber()) * steps;
 
       if (forcePositiveExponent) {
         exponent = Math.max(exponent, 0);
       }
-      var mantissa = newDecimal.decimal.div(Decimal__default["default"].pow(base, exponent)).toNumber();
+      var mantissa = data.decimal.div(Decimal__default["default"].pow(base, exponent)).toNumber();
 
       if (!(1 <= mantissa && mantissa < realBase)) {
         var adjust = Math.floor(Math.log(mantissa) / Math.log(realBase));
@@ -148,7 +147,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
         m = "";
       }
 
-      const result = "".concat(formatSeparator(separator, newDecimal.separatorCount, exponentFormatting, precisionExponent)).concat(m).concat(separator).concat(e);
+      const result = "".concat(formatSeparator(separator, data.separatorCount, exponentFormatting, precisionExponent)).concat(m).concat(separator).concat(e);
       return result;
     };
   }
@@ -178,7 +177,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
 
   function formatSeparator(separator, count, exponentFormatting, precisionExponent) {
     if (separator.trim() === "") separator = "e";
-    if (count <= 6) return separator.repeat(count);
+    if (count <= MAX_ES_IN_A_ROW) return separator.repeat(count);
     return "(".concat(separator).concat("^").concat(exponentFormatting(count, precisionExponent)).concat(")");
   }
 
@@ -367,7 +366,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
       var value = getSmallDecimal(n);
       var engineering = toEngineering(value.decimal);
       var mantissa = engineering.mantissa.toFixed(places);
-      return formatSeparator("e", value.separatorCount) + mantissa + this.mantissaExponentSeparator + this.transcribe(engineering.exponent).join(this.separator);
+      return formatSeparator(this.separator, value.separatorCount, exp => this.format(exp)) + mantissa + this.mantissaExponentSeparator + this.transcribe(engineering.exponent).join(this.separator);
     };
 
     CustomNotation.prototype.transcribe = function (exponent) {
@@ -527,7 +526,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
     LogarithmNotation.prototype.formatDecimal = function (value, places, placesExponent) {
       const newDecimal = getSmallDecimal(value);
       var log10 = newDecimal.decimal.log10().toNumber();
-      return formatSeparator("e", newDecimal.separatorCount + 1, this.formatExponent, places).concat(this.formatExponent(log10, places, function (n, p) {
+      return formatSeparator("e", newDecimal.separatorCount + 1, this.formatExponent.bind(this), places).concat(this.formatExponent(log10, places, function (n, p) {
         return n.toFixed(p);
       }, placesExponent));
     };
@@ -928,7 +927,7 @@ export const ADNotations = (function (exports, Decimal, tslib) { 'use strict';
 
     Object.defineProperty(ImperialNotation.prototype, "name", {
       get: function get() {
-        return "Imperial";
+        return "Imperial (Incomplete)";
       },
       enumerable: false,
       configurable: true

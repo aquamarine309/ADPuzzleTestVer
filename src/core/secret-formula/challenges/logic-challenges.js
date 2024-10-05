@@ -83,7 +83,7 @@ export const logicChallenges = [
       Antimatter production: ${formatInt(10)}^x ➜ ${formatInt(10)}^(x^${format(1.026, 0, 4)}).
     `,
     goal: BEC.E10000,
-    el4Goal: BEC.E5000,
+    el4Goal: BEC.E4500,
     effects: {
       galMul: 1.5,
       achPow: 2,

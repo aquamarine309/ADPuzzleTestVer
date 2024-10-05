@@ -71,7 +71,8 @@ export default {
         class="c-logic-tree-svg"
       >
         <text
-          v-for="info in bgText"
+          v-for="(info, index) in bgText"
+          :key="index + 'background-time'"
           :x="info.x"
           :y="info.y"
           :font-size="info.fontSize"

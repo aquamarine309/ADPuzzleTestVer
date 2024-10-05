@@ -27,7 +27,7 @@ export default {
       if (p[0] >= 8) return "IIIB";
       if (p[1] < 7) return ["IA", "IIA", "IIIB", "IVB", "VB", "VIB", "VIIB"][p[1]];
       if (p[1] >= 7 && p[1] < 10) return "VIII";
-      return ["IB", "IIB", "IIIA", "IVA", "VA", "VIA", "VIIA", "O"][p[1] - 10];
+      return ["IB", "IIB", "IIIA", "IVA", "VA", "VIA", "VIIA", "0"][p[1] - 10];
     },
     type() {
       const type = [];
@@ -39,7 +39,7 @@ export default {
           if (p[1] === 16) type.push("halogen");
           else type.push("non-metallic");
           break;
-        case ELEMENT_TYPE.NOBLE_GAS:
+        case ELEMENT_TYPE.INERT:
           type.push("inert");
           break;
         case ELEMENT_TYPE.METALLIC:

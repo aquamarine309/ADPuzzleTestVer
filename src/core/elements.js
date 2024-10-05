@@ -10,7 +10,20 @@ class GameElementState extends SetPurchasableMechanicState {
   }
 
   onPurchased() {
+    GameElements._speedPower.invalidate();
     this.config.onPurchased?.();
+  }
+
+  get isNonMetallic() {
+    return this.config.type === ELEMENT_TYPE.NON_METALLIC;
+  }
+
+  get isMetallic() {
+    return this.config.type === ELEMENT_TYPE.METALLIC;
+  }
+
+  get isInert() {
+    return this.config.type === ELEMENT_TYPE.INERT;
   }
 };
 
@@ -21,6 +34,32 @@ export const GameElements = {
 
   get selected() {
     return GameElement(player.lastSelectedElementId);
+  },
+
+  get nonMetallicElements() {
+    return GameElements.all.filter(el => el.isNonMetallic);
+  },
+
+  get metallicElements() {
+    return GameElements.all.filter(el => el.isMetallic);
+  },
+  
+  get inertElements() {
+    return GameElements.all.filter(el => el.isInert);
+  },
+
+  _speedPower: new Lazy(() => {
+    const nonMetallics = GameElements.nonMetallicElements.countWhere(el => el.isBought);
+    const metallics = GameElements.metallicElements.countWhere(el => el.isBought);
+    return (1 - 0.15 * Math.sqrt(nonMetallics)) * (1 + 0.5 * metallics);
+  }),
+
+  get speedPower() {
+    return GameElements._speedPower.value;
+  },
+  
+  clearAll() {
+    player.elements = new Set();
   }
 }
 

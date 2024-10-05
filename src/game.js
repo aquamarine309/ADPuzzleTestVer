@@ -350,6 +350,10 @@ export function getGameSpeedupFactor(effectsToConsider, blackHolesActiveOverride
   if (effects.includes(GAME_SPEED_EFFECT.EXTRA_BONUS)) {
     factor = factor.timesEffectOf(ExtraBonus.extraBonusToGamespeed);
   }
+  
+  if (effects.includes(GAME_SPEED_EFFECT.ELEMENT)) {
+    factor = factor.times(GameElements.speedPower);
+  }
 
   if (effects.includes(GAME_SPEED_EFFECT.SINGULARITY_MILESTONE)) {
     factor = factor.timesEffectOf(SingularityMilestone.gamespeedFromSingularities);

@@ -324,7 +324,7 @@ export default {
       player.lc3Game.rows[this.currentRow] = row.slice();
     },
     id(a, b) {
-      return 5 * a + b;
+      return this.len * a + b;
     },
     showNotify(text) {
       this.notify = text;

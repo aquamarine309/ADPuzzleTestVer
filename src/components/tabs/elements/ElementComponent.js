@@ -37,23 +37,19 @@ export default {
         case ELEMENT_TYPE.NON_METALLIC:
           typeClass = "o-element-grid--non-metallic";
           break;
-        case ELEMENT_TYPE.NOBLE_GAS:
+        case ELEMENT_TYPE.INERT:
           typeClass = "o-element-grid--noble-gas";
           break;
         case ELEMENT_TYPE.METALLIC:
           typeClass = "o-element-grid--metallic";
           break;
       }
-      let unlockedClass;
-      if (this.isUnlocked) unlockedClass = `${typeClass}--unlocked`;
-      else if (this.canBeBought) unlockedClass = `${typeClass}--available`;
       return {
         "o-element-grid": true,
         "o-element-grid--radioactive": this.radioactive,
         "o-element-grid--unlocked": this.isUnlocked,
         "o-element-grid--available": this.canBeBought,
-        [typeClass]: true,
-        [unlockedClass]: this.isUnlocked || this.canBeBought
+        [typeClass]: true
       }
     },
     styleObject() {

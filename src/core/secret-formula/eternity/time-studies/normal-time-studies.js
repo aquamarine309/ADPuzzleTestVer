@@ -98,14 +98,14 @@ export const normalTimeStudies = [
   },
   {
     id: 40,
-    cost: 6,
+    cost: 3,
     requirement: [31],
     reqType: TS_REQUIREMENT_TYPE.AT_LEAST_ONE,
     description: () => (Enslaved.isRunning
       ? "There is not enough space in this Reality"
       : `Replicanti can go beyond ${format(replicantiCap(), 2, 1)}, but growth slows down at higher amounts`),
-    // 1.2 × 15 = 18
-    effect: 15
+    // 1.2 × 100 = 1200
+    effect: 100
   },
   {
     id: 41,
